@@ -1,0 +1,18 @@
+{
+  "name": "dex-pkm",
+  "version": "1.0.0",
+  "description": "Dex - Personal Knowledge Management System",
+  "private": true,
+  "scripts": {
+    "meeting-sync": "node .scripts/meeting-intel/sync-from-granola.cjs",
+    "meeting-sync:dry-run": "node .scripts/meeting-intel/sync-from-granola.cjs --dry-run",
+    "meeting-sync:force": "node .scripts/meeting-intel/sync-from-granola.cjs --force"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.4.0",
+    "js-yaml": "^4.1.0",
+    "openai": "^4.77.3"
+  }
+}
