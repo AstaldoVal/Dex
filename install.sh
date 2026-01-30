@@ -127,13 +127,16 @@ fi
 # Skip .env creation - it's created during /setup if needed
 # (Most users don't need API keys - everything works through Cursor)
 
-# Create .mcp.json with current path
+# Create .mcp.json with current path and correct Python command
 if [ ! -f .mcp.json ]; then
     echo ""
     echo "📝 Creating .mcp.json with workspace path..."
     CURRENT_PATH="$(pwd)"
-    sed "s|{{VAULT_PATH}}|$CURRENT_PATH|g" System/.mcp.json.example > .mcp.json
+    
+    # Use the Python command we detected earlier (python3 or python)
+    sed "s|{{VAULT_PATH}}|$CURRENT_PATH|g; s|\"python\"|\"$PYTHON_CMD\"|g" System/.mcp.json.example > .mcp.json
     echo "   MCP servers configured for: $CURRENT_PATH"
+    echo "   Python command: $PYTHON_CMD"
 fi
 
 # Check for Granola (optional)

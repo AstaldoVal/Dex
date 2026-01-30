@@ -12,3 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- **install.sh:** Now uses detected Python command (`python3` or `python`) when creating `.mcp.json` instead of hardcoded "python"
+- **README:** Added MCP server troubleshooting section with common errors and fixes

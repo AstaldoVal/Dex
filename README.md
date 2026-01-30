@@ -147,7 +147,19 @@ Copy and paste this command and press Enter:
 
 **When it's done:** You'll see your cursor blinking again, ready for the next command.
 
-⚠️ **IMPORTANT: You're not done yet. Do Step 3 now to configure your role - this is what makes Dex work.**
+⚠️ **IMPORTANT: You're not done yet. Complete Steps 2B and 3 to finish setup.**
+
+**Verify MCP servers:** Cursor should automatically detect `.mcp.json` and enable the MCP servers. Look for the MCP icon in Cursor's bottom panel - you should see server names with green checkmarks.
+
+**If you see errors:** The most common issue is Python dependencies. Run this to fix:
+
+```bash
+pip3 install --user mcp pyyaml
+```
+
+Then restart Cursor.
+
+⚠️ **IMPORTANT: Complete Step 3 now to configure your role - this is what makes Dex work.**
 
 <details>
 <summary><strong>Troubleshooting: Common Setup Issues</strong></summary>
@@ -223,6 +235,48 @@ pip install --user mcp pyyaml
 python3 -m pip install --upgrade pip
 pip3 install --user mcp pyyaml
 ```
+
+---
+
+### MCP Servers Show Errors in Cursor
+
+If you see red error indicators next to MCP server names in Cursor:
+
+**"No server info found" error:**
+
+This means the Python MCP servers can't start. Most common fix:
+
+```bash
+pip3 install --user mcp pyyaml
+```
+
+Then **restart Cursor completely** (Cmd+Q and reopen, or File → Quit).
+
+**"Command 'python' not found" error:**
+
+Your `.mcp.json` might have the wrong Python command. Open `.mcp.json` in your vault and change all instances of:
+
+```json
+"command": "python"
+```
+
+to:
+
+```json
+"command": "python3"
+```
+
+(Or vice versa on Windows - use whichever command works in your terminal)
+
+Then restart Cursor.
+
+**Still not working?**
+
+Check the MCP server output:
+1. Click the error indicator in Cursor's MCP panel
+2. Click "Show Output"
+3. Look for the specific error message
+4. Common issues: missing Python packages, wrong file paths, Python version too old
 
 </details>
 
