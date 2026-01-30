@@ -161,6 +161,10 @@ elif command -v pip &> /dev/null; then
 fi
 
 if [ -n "$PIP_CMD" ]; then
+    # First, try to upgrade pip (silently, many users have old pip versions)
+    echo "   Upgrading pip..."
+    $PYTHON_CMD -m pip install --upgrade pip --quiet 2>/dev/null || true
+    
     # Try standard install first
     if $PIP_CMD install mcp pyyaml --quiet 2>/dev/null; then
         echo "✅ Work MCP dependencies installed"
@@ -175,10 +179,7 @@ if [ -n "$PIP_CMD" ]; then
             echo "Work MCP is critical - it syncs tasks across all your files."
             echo "Without it, checking off a task in one place won't update others."
             echo ""
-            echo "Try manually:"
-            echo "  $PIP_CMD install --user mcp pyyaml"
-            echo ""
-            echo "If that fails, you may need to upgrade pip:"
+            echo "Try manually (upgrade pip first):"
             echo "  $PYTHON_CMD -m pip install --upgrade pip"
             echo "  $PIP_CMD install --user mcp pyyaml"
             echo ""

@@ -151,9 +151,10 @@ Copy and paste this command and press Enter:
 
 **Verify MCP servers:** Cursor should automatically detect `.mcp.json` and enable the MCP servers. Look for the MCP icon in Cursor's bottom panel - you should see server names with green checkmarks.
 
-**If you see errors:** The most common issue is Python dependencies. Run this to fix:
+**If you see errors:** The most common issue is Python dependencies. First upgrade pip, then install packages:
 
 ```bash
+python3 -m pip install --upgrade pip
 pip3 install --user mcp pyyaml
 ```
 
@@ -215,25 +216,20 @@ Git for Windows isn't installed.
 
 ### All Platforms: "Could not install Python dependencies"
 
-The installer tries two methods automatically. If both fail:
+The installer tries two methods automatically. If both fail, your pip version might be too old.
 
-**Try manually:**
-
-```bash
-pip3 install --user mcp pyyaml
-```
-
-**Or on Windows:**
-
-```bash
-pip install --user mcp pyyaml
-```
-
-**If that also fails:**
+**Fix (upgrade pip first, then install):**
 
 ```bash
 python3 -m pip install --upgrade pip
 pip3 install --user mcp pyyaml
+```
+
+**Windows:**
+
+```bash
+python -m pip install --upgrade pip
+pip install --user mcp pyyaml
 ```
 
 ---
@@ -244,13 +240,18 @@ If you see red error indicators next to MCP server names in Cursor:
 
 **"No server info found" error:**
 
-This means the Python MCP servers can't start. Most common fix:
+This means the Python MCP servers can't start. Most common fix (upgrade pip first):
 
 ```bash
+python3 -m pip install --upgrade pip
 pip3 install --user mcp pyyaml
 ```
 
 Then **restart Cursor completely** (Cmd+Q and reopen, or File → Quit).
+
+**If you get "ERROR: Could not find a version that satisfies the requirement mcp":**
+
+Your pip is too old. Run the pip upgrade command above first, then try installing packages again.
 
 **"Command 'python' not found" error:**
 
