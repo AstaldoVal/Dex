@@ -14,7 +14,9 @@ description: Safely update Dex with one command (handles everything automaticall
 **What it handles:**
 - Downloads updates automatically
 - Protects your data (never touches your notes, tasks, projects)
-- Resolves conflicts automatically (keeps your customizations)
+- Preserves your CLAUDE.md customizations (USER_EXTENSIONS block)
+- Preserves your custom MCP servers (named `user-*` or `custom-*`)
+- Resolves conflicts with guided choices (not a merge editor)
 - Shows clear progress and confirmation
 
 **Time:** 2-5 minutes
@@ -275,36 +277,69 @@ Check which files have conflicts:
 git status | grep "both modified"
 ```
 
-**Automatic conflict resolution:**
+**Conflict resolution strategy:**
+
+**Step A: Preserve user blocks before merge**
+
+Before attempting merge, extract and store:
+1. `CLAUDE.md` USER_EXTENSIONS block (between `<!-- USER_EXTENSIONS_START -->` and `<!-- USER_EXTENSIONS_END -->`)
+2. Any MCP entries in `.mcp.json` named `user-*` or `custom-*`
+
+**Step B: Auto-resolve protected files**
 
 For each conflicting file:
 
-1. **If file is in protected list** (user data):
-   - 00-Inbox/, 01-07/: Keep user version
-   - System/user-profile.yaml: Keep user version
-   - System/pillars.yaml: Keep user version
-   
-   Run: `git checkout --ours <file>`
+1. **If file is user data** (00-Inbox/, 01-07/, System/user-profile.yaml, System/pillars.yaml):
+   - Keep user version
+   - Run: `git checkout --ours <file>`
 
-2. **If file is in core list** (Dex updates):
-   - .claude/skills/*.md: Keep upstream version
-   - core/mcp/*.py: Keep upstream version
-   - .scripts/*.cjs: Keep upstream version
-   
-   Run: `git checkout --theirs <file>`
+2. **If file is CLAUDE.md**:
+   - Take upstream version
+   - Re-insert preserved USER_EXTENSIONS block
+   - Validate markers still present
 
-3. **If file is CLAUDE.md** (hybrid):
-   - Check if user has `CLAUDE-custom.md`
-   - If yes: Keep upstream version of CLAUDE.md
-   - If no: Keep user version, but suggest creating CLAUDE-custom.md
+3. **If file is .mcp.json**:
+   - Take upstream version
+   - Re-insert preserved user-owned MCP entries (`user-*`, `custom-*`)
+   - Validate JSON is valid
 
-4. **Mark as resolved:**
-   ```bash
-   git add <file>
-   ```
+**Step C: AskQuestion for core file conflicts**
 
-**After resolving all conflicts:**
+For any remaining conflicts (core skills, scripts, MCP server logic that user edited):
+
+Use AskQuestion to present guided choices:
+
+```
+Title: Dex update conflict: {{file_name}}
+
+Your change:
+{{user_change_summary}}
+Enables: {{user_use_case_summary}}
+
+Dex update:
+{{dex_change_summary}}
+Enables: {{dex_use_case_summary}}
+
+Options:
+1) Keep my version (preserve my changes)
+2) Use Dex version (take upstream changes)
+3) Keep both (rename one)
+4) Let me tell you what to do (I'll write instructions)
+```
+
+**If "Keep both" selected:**
+- For MCP: rename user's to `{{name}}-custom`
+- For skill: rename folder to `{{name}}-custom/`
+
+**If "Custom instructions" selected:**
+- Prompt for free-text instructions
+- Apply deterministically (rename, merge fields, or choose one)
+- If ambiguous, ask one clarification question
+
+**Step D: Finalize**
+
 ```bash
+git add .
 git commit --no-edit
 ```
 
@@ -312,10 +347,10 @@ git commit --no-edit
 ```
 ✓ Updates applied successfully
 
-Handled conflicts automatically:
-• Kept your notes and customizations
-• Updated core Dex features
-• Protected your data
+Handled conflicts:
+• Preserved your USER_EXTENSIONS block
+• Preserved your custom MCP servers
+• Resolved overlapping changes with your choices
 
 [See what changed]
 ```
