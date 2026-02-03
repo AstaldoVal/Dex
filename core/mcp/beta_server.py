@@ -133,6 +133,33 @@ You are working in a Dex vault - a personal knowledge management system.
                 import shutil
                 shutil.copy(template, dest)
 
+        # Copy Pi-related skills to user's skills folder
+        skills_template_dir = BETA_TEMPLATES_DIR / 'pi' / 'skills'
+        skills_dest_dir = BASE_DIR / '.claude' / 'skills'
+        if skills_template_dir.exists():
+            import shutil
+            for skill_dir in skills_template_dir.iterdir():
+                if skill_dir.is_dir():
+                    dest_skill_dir = skills_dest_dir / skill_dir.name
+                    if not dest_skill_dir.exists():
+                        shutil.copytree(skill_dir, dest_skill_dir)
+                        logger.info(f"Copied Pi skill: {skill_dir.name}")
+
+        # Copy Pi-related hooks to user's hooks folder
+        hooks_template_dir = BETA_TEMPLATES_DIR / 'pi' / 'hooks'
+        hooks_dest_dir = BASE_DIR / '.claude' / 'hooks'
+        if hooks_template_dir.exists():
+            hooks_dest_dir.mkdir(parents=True, exist_ok=True)
+            import shutil
+            for hook_file in hooks_template_dir.iterdir():
+                if hook_file.is_file() and hook_file.suffix in ['.cjs', '.js', '.sh']:
+                    dest_hook = hooks_dest_dir / hook_file.name
+                    if not dest_hook.exists():
+                        shutil.copy(hook_file, dest_hook)
+                        # Make executable
+                        dest_hook.chmod(dest_hook.stat().st_mode | 0o111)
+                        logger.info(f"Copied Pi hook: {hook_file.name}")
+
         logger.info("Pi integration setup complete")
         return True
     except Exception as e:
