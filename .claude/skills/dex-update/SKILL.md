@@ -282,26 +282,34 @@ git status | grep "both modified"
 - `CLAUDE.md` contains a user block:
   - `USER_EXTENSIONS_START` ... `USER_EXTENSIONS_END`
 
-**User-owned MCP entries (preserved by name):**
-- Any MCP server name starting with `user-` or `custom-` is treated as user-owned
-- Example: `user-gmail`, `custom-hubspot`
+**Custom MCP servers (preserved by name):**
+- Any MCP server name starting with `custom-` is preserved
+- Example: `custom-gmail`, `custom-hubspot`
+
+**Custom skills (preserved by name):**
+- Any skill folder ending with `-custom` is preserved
+- Example: `meeting-prep-custom`, `daily-plan-custom`
 
 **When conflicts occur:**
 
 1. **If file is user data** (00-07, System/user-profile.yaml, System/pillars.yaml):
-   - Keep user version  
+   - Keep user version
    - Run: `git checkout --ours <file>`
 
 2. **If file contains protected user block** (CLAUDE.md):
-   - Take upstream version  
-   - Re-insert preserved user block(s) verbatim  
-   - Validate markers still present  
+   - Take upstream version
+   - Re-insert preserved user block(s) verbatim
+   - Validate markers still present
 
 3. **If file is .mcp.json**:
-   - Preserve any MCP entries named `user-*` or `custom-*`
+   - Preserve any MCP entries named `custom-*`
    - Continue with Dex core updates for all other MCPs
 
-4. **If file is core Dex** (skills, core MCP, scripts) **and user edited it**:
+4. **If skill folder ends with `-custom`**:
+   - Preserve entirely, never modify
+   - These are user's personal skills
+
+5. **If file is core Dex** (skills, core MCP, scripts) **and user edited it**:
    - Use AskUserQuestion to resolve, instead of a merge editor
 
 **AskUserQuestion flow (generic, parameterized):**
@@ -455,7 +463,7 @@ Add to summary if installed: "✓ Enabled automatic meeting sync (runs every 30 
 
 2. Check MCP configuration:
    - `.mcp.json` exists and is valid JSON
-   - Custom MCP entries (`user-*` / `custom-*`) still present
+   - Custom MCP entries (`custom-*`) still present
 
 3. Check CLAUDE.md:
    - `USER_EXTENSIONS_START/END` markers still present
@@ -626,7 +634,8 @@ If automatic updates don't work, you can update manually:
    ✓ 07-Archives/ (entire folder)
    ✓ .env (if it exists)
    ✓ Your `USER_EXTENSIONS` block from `CLAUDE.md`
-   ✓ Any custom MCP entries named `user-*` or `custom-*` from `.mcp.json`
+   ✓ Any custom MCP entries named `custom-*` from `.mcp.json`
+   ✓ Any custom skills ending with `-custom`
 
 3. **DON'T copy:**
    ✗ .claude/skills/ (use new version)
