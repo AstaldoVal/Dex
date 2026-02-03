@@ -48,3 +48,13 @@ core/mcp-premium/
 
 # User customization notes
 System/my-customizations.md
+
+# ============================================
+# Beta Features (created on activation)
+# ============================================
+
+# Pi integration (created when user activates Pi beta)
+.pi/
+
+# Beta documentation (created on feature activation)
+System/Beta/
