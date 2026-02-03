@@ -103,21 +103,24 @@ You still decide. But now you have a thinking partner who's done the analysis.
 
 ---
 
-**Technical Details (for the curious):**
+**How it works (under the hood):**
 
-New Work MCP tools power all of this:
-- `get_week_progress()` — Midweek priority status with task counts
-- `get_meeting_context()` — Project, person, and task intelligence for any meeting
-- `get_commitments_due()` — Surfaces promises from meeting notes by due date
-- `classify_task_effort()` — Quick/medium/deep work classification
-- `analyze_calendar_capacity()` — Day shapes and available focus blocks
-- `suggest_task_scheduling()` — Matches tasks to appropriate calendar slots
+Six new capabilities power the intelligence:
 
-Updated skills:
-- `/daily-plan` — Midweek awareness, meeting prep, commitment tracking, scheduling suggestions
-- `/daily-review` — Daily plan completion rate, meeting follow-up tracking
-- `/week-plan` — Intelligent priority suggestions
-- `/week-review` — Concrete milestones instead of percentages
+| What Dex can now do | Why it matters |
+|---------------------|----------------|
+| Check your week's progress | Knows which priorities are on track vs slipping |
+| Understand meeting context | Connects each meeting to related projects and people |
+| Find your commitments | Scans notes for promises you made and when they're due |
+| Judge task effort | Knows a strategy doc needs focus time, an email doesn't |
+| Read your calendar shape | Sees which days have deep work time vs meeting chaos |
+| Match tasks to time | Suggests what to work on based on available blocks |
+
+**What to try:**
+
+- Run `/daily-plan` on a Wednesday — see midweek awareness in action
+- Check `/week-plan` — get intelligent priority suggestions instead of a blank page
+- Before a big meeting, run `/meeting-prep` — watch it pull together everything relevant
 
 ---
 
