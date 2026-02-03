@@ -8,64 +8,53 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased]
 
-### 🎉 Safe Personalization — Make Dex Yours Without Fear of Updates
+### 🎉 Personalize Dex Without Losing Your Changes
 
-This release solves one of the biggest tensions in using Dex: **wanting to customize it, but worrying that updates will undo your work.**
+**What's this about?**
 
-Previously, personalizing Dex felt risky. You might add custom instructions, connect your own tools, or tweak how things work — but then an update would come along and overwrite everything. You'd have to choose: stay stuck on an old version, or lose your customizations.
+Many of you have been making Dex your own — adding personal instructions, connecting your own tools like Gmail or Notion, tweaking how things work. That's exactly what Dex is designed for.
 
-**Now you can have both.** Customize freely, update confidently.
+But until now, there was a tension: when I release updates to Dex with new features and improvements, your personal changes could get overwritten. Some people avoided updating to protect their setup. Others updated and had to redo their customizations.
 
----
-
-#### What's Protected
-
-**Your personal instructions in CLAUDE.md**
-
-Before: Any text you added to CLAUDE.md would get overwritten when you updated Dex.
-
-Now: Add your personal instructions between the `USER_EXTENSIONS_START` and `USER_EXTENSIONS_END` markers. Everything inside stays exactly as you wrote it, no matter how many times you update.
+This release fixes that. Your personalizations and my updates now work together.
 
 ---
 
-**Your custom integrations (MCP servers)**
+**What stays protected:**
 
-Before: If you connected Gmail, Notion, or any other tool, updates might overwrite your configuration. You'd have to set it up again.
+**Your personal instructions**
 
-Now: Name your integrations with `user-` or `custom-` prefix (like `user-gmail` or `custom-notion`), and they're automatically protected. Updates will never touch them.
+If you've added notes to yourself in the CLAUDE.md file — reminders about how you like things done, specific workflows, preferences — those are now protected. Put them between the clearly marked `USER_EXTENSIONS` section, and they'll never be touched by updates.
 
-**New skill: `/dex-add-mcp`** — Adds integrations the safe way automatically. No config files to edit, no prefixes to remember. Just run the command and your integration is protected by default.
+**Your connected tools**
 
-**New safeguard:** If you try to add an integration without protection, Dex will gently remind you and suggest the safe approach.
+If you've connected Dex to other apps (like your email, calendar, or note-taking tools), those connections are now protected too. When you add a tool, Dex automatically names it in a way that keeps it safe from updates.
 
----
-
-**Guided conflict resolution**
-
-Before: When your changes overlapped with an update, you'd see a scary "merge conflict" screen with cryptic symbols. Most people would panic or give up.
-
-Now: Dex walks you through any conflicts with simple choices:
-- "Keep my version" — preserve what you had
-- "Use Dex version" — take the update
-- "Keep both" — rename one so nothing is lost
-
-No technical knowledge needed. Just pick what you want, and Dex handles the rest.
+**New command: `/dex-add-mcp`** — When you want to connect a new tool, just run this command. It handles the technical bits and makes sure your connection is protected. No config files to edit.
 
 ---
 
-#### Why This Matters
+**What happens when there's a conflict?**
 
-Dex gets better over time. New features, bug fixes, improvements. But those updates are only valuable if you can actually use them.
+Sometimes my updates will change a file that you've also changed. When that happens, Dex now guides you through it with simple choices:
 
-With safe personalization, you're no longer stuck choosing between "my customizations" and "latest features." You get both. Update whenever you want, knowing your personal setup is protected.
+- **"Keep my version"** — Your changes stay, skip this part of the update
+- **"Use the new version"** — Take the update, replace your changes
+- **"Keep both"** — Dex will keep both versions so nothing is lost
 
-**This is how Dex should have worked from the start.** Now it does.
+No technical knowledge needed. Dex explains what changed and why, then you decide.
+
+---
+
+**Why this matters**
+
+I want you to make Dex truly yours. And I want to keep improving it with new features you'll find useful. Now both can happen. Update whenever you like, knowing your personal setup is safe.
 
 ---
 
 ### Background Meeting Sync (Granola Users)
 
-**Before:** To get your Granola meetings into Dex, you had to manually run `/process-meetings`. Each time, you'd wait for the MCP server to start, watch it process, then continue your work. Easy to forget, tedious when you remembered.
+**Before:** To get your Granola meetings into Dex, you had to manually run `/process-meetings`. Each time, you'd wait for it to process, then continue your work. Easy to forget, tedious when you remembered.
 
 **Now:** A background job syncs your meetings from Granola every 30 minutes automatically. One-time setup, then it just runs.
 
@@ -77,7 +66,7 @@ With safe personalization, you're no longer stuck choosing between "my customiza
 
 ### Prompt Improvement Works Everywhere
 
-**Before:** The `/prompt-improver` skill required an Anthropic API key configured separately. In restricted environments or when the API was unavailable, it just failed.
+**Before:** The `/prompt-improver` command required extra configuration. In some setups, it just didn't work.
 
 **Now:** It automatically uses whatever AI is available — no special configuration needed.
 
@@ -87,12 +76,12 @@ With safe personalization, you're no longer stuck choosing between "my customiza
 
 ### Easier First-Time Setup
 
-**Before:** New users hit cryptic error messages during setup. "Python version mismatch" or "pip install failed" with no guidance on what to do next. Many got stuck and needed help.
+**Before:** New users sometimes hit confusing error messages during setup, with no clear guidance on what to do next.
 
 **Now:**
 - Clear error messages explain exactly what's wrong and how to fix it
-- Python 3.10+ requirement is checked upfront with installation instructions
-- MCP server configuration is streamlined with fewer manual steps
+- Requirements are checked upfront with step-by-step instructions
+- Fewer manual steps to get everything working
 
 **Result:** New users get up and running faster with less frustration.
 
