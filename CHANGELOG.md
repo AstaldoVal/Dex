@@ -2,7 +2,7 @@
 
 All notable changes to Dex will be documented in this file.
 
-**For users:** This changelog tells you what's new and why it matters to you. Each entry explains the benefit, not just what changed technically.
+**For users:** Each entry explains what was frustrating before, what's different now, and why you'll care.
 
 ---
 
@@ -10,52 +10,59 @@ All notable changes to Dex will be documented in this file.
 
 ### Your Customizations Are Now Protected
 
-**What changed:** When you run `/dex-update`, Dex now carefully preserves things you've personalized:
+**Before:** Every time you updated Dex, you risked losing personal tweaks. If you'd added custom instructions to CLAUDE.md or connected your own integrations, updates could overwrite them. You had to manually back things up and restore them after each update.
 
-- **Your personal instructions in CLAUDE.md** — Any text you add between the `USER_EXTENSIONS_START` and `USER_EXTENSIONS_END` markers stays exactly as you wrote it, even after updates.
+**Now:** Dex recognizes and preserves your customizations automatically:
+- Personal instructions in CLAUDE.md (between the `USER_EXTENSIONS` markers) stay untouched
+- Custom integrations named `user-*` or `custom-*` are protected
+- When your changes overlap with an update, you get a simple menu instead of a confusing merge screen
 
-- **Your custom integrations** — If you've added MCP servers with names starting with `user-` or `custom-` (like `user-gmail` or `custom-hubspot`), they won't be touched during updates.
-
-- **Smoother conflict handling** — If your changes overlap with a Dex update, you'll get a simple choice menu instead of a confusing merge screen. Pick "Keep mine", "Use Dex version", or "Keep both" — no technical knowledge needed.
-
-**Why this matters:** You can safely customize Dex without worrying that updates will erase your work. Personalize freely, update confidently.
+**Result:** Customize freely, update confidently. Your personal setup survives every update.
 
 ---
 
 ### Prompt Improvement Works Everywhere
 
-**What changed:** The `/prompt-improver` skill now works even without an Anthropic API key. It automatically uses whatever AI is available.
+**Before:** The `/prompt-improver` skill required an Anthropic API key configured separately. In restricted environments or when the API was unavailable, it just failed.
 
-**Why this matters:** If you're in an environment with restricted API access, prompt improvement still works. No configuration needed — it just adapts.
+**Now:** It automatically uses whatever AI is available — no special configuration needed.
+
+**Result:** Prompt improvement just works, regardless of your setup.
 
 ---
 
 ### Background Meeting Sync (Granola Users)
 
-**What changed:** New automation that syncs your meetings from Granola every 30 minutes in the background. One-time setup, then it just works.
+**Before:** To get your Granola meetings into Dex, you had to manually run `/process-meetings`. Each time, you'd wait for the MCP server to start, watch it process, then continue your work. Easy to forget, tedious when you remembered.
 
-**To enable:** Run the setup script in `.scripts/meeting-intel/install-automation.sh`
+**Now:** A background job syncs your meetings from Granola every 30 minutes automatically. One-time setup, then it just runs.
 
-**Why this matters:** Your meeting notes stay current without you doing anything. When you run `/daily-plan` or look up a person, their recent meetings are already there.
+**To enable:** Run `.scripts/meeting-intel/install-automation.sh`
+
+**Result:** Your meeting notes are always current. When you run `/daily-plan` or look up a person, their recent meetings are already there — no manual step needed.
 
 ---
 
 ### Easier First-Time Setup
 
-**What changed:**
-- Clearer error messages when Python version is too old (now requires 3.10+)
-- Better guidance when pip packages fail to install
-- Streamlined MCP server configuration
+**Before:** New users hit cryptic error messages during setup. "Python version mismatch" or "pip install failed" with no guidance on what to do next. Many got stuck and needed help.
 
-**Why this matters:** New users hit fewer roadblocks during setup. If something goes wrong, the error message tells you exactly what to do.
+**Now:**
+- Clear error messages explain exactly what's wrong and how to fix it
+- Python 3.10+ requirement is checked upfront with installation instructions
+- MCP server configuration is streamlined with fewer manual steps
+
+**Result:** New users get up and running faster with less frustration.
 
 ---
 
 ### New Skill: `/dex-add-mcp`
 
-**What it does:** Adds new integrations (MCP servers) with the right settings automatically. Names them with `user-` prefix so they're protected during updates.
+**Before:** Adding a new integration (Gmail, Notion, etc.) meant editing config files manually and hoping you got the format right. And if you named it wrong, the next Dex update might overwrite it.
 
-**Why this matters:** When you want to connect a new tool (Gmail, Notion, etc.), this skill handles the technical setup correctly. Your integrations stay safe during future updates.
+**Now:** `/dex-add-mcp` handles the technical setup correctly and names your integration with a `user-` prefix so it's automatically protected during updates.
+
+**Result:** Connect new tools without touching config files, and know they'll survive future updates.
 
 ---
 
@@ -66,7 +73,7 @@ All notable changes to Dex will be documented in this file.
 Dex is your AI-powered personal knowledge system. It helps you organize your professional life — meetings, projects, people, ideas, and tasks — with an AI assistant that learns how you work.
 
 **Core features:**
-- **Daily planning** (`/daily-plan`) — Start each day with a clear focus
+- **Daily planning** (`/daily-plan`) — Start each day with clear priorities
 - **Meeting capture** — Extract action items, update person pages automatically
 - **Task management** — Track what matters with smart prioritization
 - **Person pages** — Remember context about everyone you work with
