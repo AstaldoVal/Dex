@@ -23,6 +23,10 @@ Your data is **completely separate** from the Dex application. Updates only touc
 
 It's like updating Microsoft Word. The app gets better, but your documents stay exactly as they are.
 
+**Your customizations are preserved too:**
+- **CLAUDE.md personal notes:** Anything between `USER_EXTENSIONS_START/END` is preserved during updates
+- **Custom MCP servers:** Name them with `user-` or `custom-` (e.g., `user-gmail`) so updates always keep them
+
 ---
 
 ## What You Need to Know First
@@ -628,37 +632,23 @@ You're never forced to update - you always confirm first.
 
 ### What if I made changes to Dex itself?
 
-**Your customizations are preserved automatically:**
+**Customizations in recommended places:**
+- `.claude/skills-custom/` - Your custom skills
+- `core/mcp-custom/` - Your custom integrations
+- `CLAUDE-custom.md` - Your prompt customizations
 
-1. **CLAUDE.md customizations** - Put your personal instructions between the markers:
-   ```markdown
-   <!-- USER_EXTENSIONS_START -->
-   Your personal instructions here...
-   <!-- USER_EXTENSIONS_END -->
-   ```
-   This block is preserved verbatim during updates. Dex will never overwrite content between these markers.
-
-2. **Custom MCP servers** - Name them with `user-` or `custom-` prefix:
-   ```json
-   "user-gmail": { ... },
-   "custom-notion": { ... }
-   ```
-   These entries are preserved during updates. If Dex adds a new built-in Gmail MCP, yours stays separate.
-
-3. **Custom skills folders** - Put in `.claude/skills-custom/`
-
-These locations are protected. Updates won't touch them.
+These are protected. Updates won't touch them.
 
 **Changes to core Dex files:**
 
 If you edited a core file (like `.claude/skills/daily-plan/SKILL.md`), and an update also changes that file, Dex will:
 1. Detect the overlap
-2. Show you what you changed vs what Dex changed
-3. Ask which version to keep (or keep both with a rename)
+2. Ask which version to keep
+   - If AskUserQuestion is available, Dex shows a guided choice
+   - If not, Dex shows a CLI prompt with the same options + tradeoffs
+3. Usually keep your version (your customizations)
 
-You'll see clear options - no merge editors or command-line gymnastics.
-
-**Best practice:** Use the protected locations above so your customizations never conflict with core updates.
+But **better practice:** Put your customizations in the `-custom` folders so they never conflict.
 
 ---
 

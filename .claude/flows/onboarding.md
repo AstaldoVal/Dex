@@ -93,14 +93,24 @@ Accept numbers, role names, or hybrid descriptions like "I'm mostly PM but do so
 
 Ask: "What's your company size?"
 
-```
-1. 1-100 people (startup/small)
-2. 100-1,000 people (scaling)
-3. 1,000-10,000 people (enterprise)
-4. 10,000+ people (large enterprise)
+Use the AskQuestion tool:
+```json
+{
+  "questions": [{
+    "id": "company_size",
+    "prompt": "What's your company size?",
+    "allow_multiple": false,
+    "options": [
+      {"id": "startup", "label": "1-100 people (startup/small)"},
+      {"id": "scaling", "label": "100-1,000 people (scaling)"},
+      {"id": "enterprise", "label": "1,000-10,000 people (enterprise)"},
+      {"id": "large_enterprise", "label": "10,000+ people (large enterprise)"}
+    ]
+  }]
+}
 ```
 
-**After receiving company size:** Call `validate_and_save_step(step_number=3, step_data={"company": "...", "company_size": "..."})` to validate and save.
+**After receiving company size:** Call `validate_and_save_step(step_number=3, step_data={"company": "...", "company_size": "[selected id]"})` to validate and save. The `company_size` value should be the option id (startup, scaling, enterprise, or large_enterprise).
 
 ---
 
@@ -169,7 +179,7 @@ You'll see this hierarchy in action as you use the system."
 
 Say: "Quick preferences check—how should I communicate with you?"
 
-Use the AskQuestion tool to present 3 questions:
+Use the AskUserQuestion tool to present 3 questions. If AskUserQuestion is not available, ask the same questions via CLI with numbered options and capture the selections:
 
 1. **Formality Level:**
    - Formal (professional, structured)
@@ -216,18 +226,30 @@ Say: "One more thing—do you use **Obsidian** to view your notes?
 
 **Obsidian is completely optional** - Dex works perfectly either way. Some people love the graph visualization, others prefer terminal/Cursor. Both are first-class experiences.
 
-**New to Obsidian?** [Watch this beginner's guide](https://www.youtube.com/watch?v=gafuqdKwD_U) to see what it can do (5 min).
+**New to Obsidian?** [Watch this beginner's guide](https://www.youtube.com/watch?v=gafuqdKwD_U) to see what it can do (5 min)."
 
-**If you want to try it later:** You can always enable Obsidian mode with `/dex-obsidian-setup` and we'll convert your existing notes (takes 1-2 minutes even for large vaults).
+Use the AskQuestion tool:
+```json
+{
+  "questions": [{
+    "id": "obsidian_mode",
+    "prompt": "Do you use Obsidian, or want to try it?",
+    "allow_multiple": false,
+    "options": [
+      {"id": "yes", "label": "Yes - I use Obsidian or want to try it"},
+      {"id": "no", "label": "No - I'll use Cursor/terminal"},
+      {"id": "later", "label": "Not sure - I'll decide later"}
+    ]
+  }]
+}
+```
 
-Do you use Obsidian, or want to try it?"
-
-**If YES:**
+**If YES (id: "yes"):**
 1. Set `obsidian_mode: true` in session data
 2. Say: "Great! I'll format all references as wiki links for easy navigation."
 3. Optional: "Want me to generate an Obsidian config optimized for Dex? (Recommended settings, hotkeys, etc.)"
 
-**If NO:**
+**If NO or LATER (id: "no" or "later"):**
 1. Set `obsidian_mode: false` in session data
 2. Say: "No problem! Your notes will use plain text references. You can enable Obsidian mode anytime with `/dex-obsidian-setup`"
 

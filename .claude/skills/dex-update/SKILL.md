@@ -14,9 +14,8 @@ description: Safely update Dex with one command (handles everything automaticall
 **What it handles:**
 - Downloads updates automatically
 - Protects your data (never touches your notes, tasks, projects)
-- Preserves your CLAUDE.md customizations (USER_EXTENSIONS block)
-- Preserves your custom MCP servers (named `user-*` or `custom-*`)
-- Resolves conflicts with guided choices (not a merge editor)
+- Preserves protected user blocks and user-owned MCP entries
+- Resolves conflicts with a guided choice (no manual merge editor)
 - Shows clear progress and confirmation
 
 **Time:** 2-5 minutes
@@ -277,40 +276,37 @@ Check which files have conflicts:
 git status | grep "both modified"
 ```
 
-**Conflict resolution strategy:**
+**Automatic conflict resolution (protected blocks + guided choices):**
 
-**Step A: Preserve user blocks before merge**
+**Protected user blocks (preserved verbatim):**
+- `CLAUDE.md` contains a user block:
+  - `USER_EXTENSIONS_START` ... `USER_EXTENSIONS_END`
 
-Before attempting merge, extract and store:
-1. `CLAUDE.md` USER_EXTENSIONS block (between `<!-- USER_EXTENSIONS_START -->` and `<!-- USER_EXTENSIONS_END -->`)
-2. Any MCP entries in `.mcp.json` named `user-*` or `custom-*`
+**User-owned MCP entries (preserved by name):**
+- Any MCP server name starting with `user-` or `custom-` is treated as user-owned
+- Example: `user-gmail`, `custom-hubspot`
 
-**Step B: Auto-resolve protected files**
+**When conflicts occur:**
 
-For each conflicting file:
-
-1. **If file is user data** (00-Inbox/, 01-07/, System/user-profile.yaml, System/pillars.yaml):
-   - Keep user version
+1. **If file is user data** (00-07, System/user-profile.yaml, System/pillars.yaml):
+   - Keep user version  
    - Run: `git checkout --ours <file>`
 
-2. **If file is CLAUDE.md**:
-   - Take upstream version
-   - Re-insert preserved USER_EXTENSIONS block
-   - Validate markers still present
+2. **If file contains protected user block** (CLAUDE.md):
+   - Take upstream version  
+   - Re-insert preserved user block(s) verbatim  
+   - Validate markers still present  
 
 3. **If file is .mcp.json**:
-   - Take upstream version
-   - Re-insert preserved user-owned MCP entries (`user-*`, `custom-*`)
-   - Validate JSON is valid
+   - Preserve any MCP entries named `user-*` or `custom-*`
+   - Continue with Dex core updates for all other MCPs
 
-**Step C: AskQuestion for core file conflicts**
+4. **If file is core Dex** (skills, core MCP, scripts) **and user edited it**:
+   - Use AskUserQuestion to resolve, instead of a merge editor
 
-For any remaining conflicts (core skills, scripts, MCP server logic that user edited):
-
-Use AskQuestion to present guided choices:
-
+**AskUserQuestion flow (generic, parameterized):**
 ```
-Title: Dex update conflict: {{file_name}}
+Title: Dex update conflict: {{item_name}}
 
 Your change:
 {{user_change_summary}}
@@ -327,19 +323,18 @@ Options:
 4) Let me tell you what to do (I'll write instructions)
 ```
 
-**If "Keep both" selected:**
-- For MCP: rename user's to `{{name}}-custom`
-- For skill: rename folder to `{{name}}-custom/`
+**If AskUserQuestion is not available (non-Claude Code):**
+- Use a simple CLI prompt with the same 4 options.
+- Add one-line tradeoffs to each option (what you keep vs lose).
+- If user types an invalid choice, re-prompt once and default to "Use Dex version".
 
-**If "Custom instructions" selected:**
-- Prompt for free-text instructions
-- Apply deterministically (rename, merge fields, or choose one)
-- If ambiguous, ask one clarification question
+**If user chooses "Keep both":**
+- MCP: `name` → `name-custom`
+- Skill folder: `name/` → `name-custom/`
 
-**Step D: Finalize**
-
+**After resolving all conflicts:**
 ```bash
-git add .
+git add <file>
 git commit --no-edit
 ```
 
@@ -348,9 +343,9 @@ git commit --no-edit
 ✓ Updates applied successfully
 
 Handled conflicts:
-• Preserved your USER_EXTENSIONS block
-• Preserved your custom MCP servers
-• Resolved overlapping changes with your choices
+• Preserved your protected blocks
+• Updated core Dex features
+• Resolved overlapping changes with your choice
 
 [See what changed]
 ```
@@ -433,7 +428,11 @@ pip3 install -r core/mcp/requirements.txt
    - `.claude/skills/daily-plan/SKILL.md`
 
 2. Check MCP configuration:
-   - `.mcp.json` exists
+   - `.mcp.json` exists and is valid JSON
+   - Custom MCP entries (`user-*` / `custom-*`) still present
+
+3. Check CLAUDE.md:
+   - `USER_EXTENSIONS_START/END` markers still present
 
 3. Try loading user profile:
    - Read `System/user-profile.yaml`
@@ -581,7 +580,7 @@ If automatic updates don't work, you can update manually:
 1. **Download latest Dex:**
    https://github.com/davekilleen/dex/archive/refs/heads/main.zip
 
-2. **Copy your data:**
+2. **Copy your data and custom blocks:**
    From OLD Dex folder, copy these to NEW Dex folder:
    
    ✓ System/user-profile.yaml
@@ -594,6 +593,8 @@ If automatic updates don't work, you can update manually:
    ✓ 05-Areas/ (entire folder)
    ✓ 07-Archives/ (entire folder)
    ✓ .env (if it exists)
+   ✓ Your `USER_EXTENSIONS` block from `CLAUDE.md`
+   ✓ Any custom MCP entries named `user-*` or `custom-*` from `.mcp.json`
 
 3. **DON'T copy:**
    ✗ .claude/skills/ (use new version)

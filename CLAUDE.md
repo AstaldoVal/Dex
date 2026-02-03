@@ -64,11 +64,11 @@ Read these files when users ask about system details, features, or setup.
 
 ## User Extensions (Protected Block)
 
-Add any personal instructions between these markers. The `/dex-update` process preserves this block verbatim during updates.
+Add any personal instructions between these markers. The `/dex-update` process preserves this block verbatim.
 
-<!-- USER_EXTENSIONS_START -->
-<!-- Add your personal customizations here. They will not be overwritten by Dex updates. -->
-<!-- USER_EXTENSIONS_END -->
+## USER_EXTENSIONS_START
+<!-- Add your personal customizations here. -->
+## USER_EXTENSIONS_END
 
 ---
 

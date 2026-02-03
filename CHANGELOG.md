@@ -8,12 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Protected user extensions in CLAUDE.md** - Add personal instructions between `USER_EXTENSIONS_START/END` markers. These persist through updates.
-- **User-owned MCP preservation** - MCP servers named `user-*` or `custom-*` are automatically preserved during `/dex-update`
-- **Guided conflict resolution** - `/dex-update` now uses interactive choices instead of merge editors for core file conflicts
+- Protected user extensions block in `CLAUDE.md` preserved by `/dex-update`
+- `/dex-add-mcp` skill to add MCP servers with user scope by default
+- PreToolUse hook to enforce explicit MCP scope on `claude mcp add`
 
 ### Changed
-- `/dex-update` skill now extracts and re-inserts user blocks before merging, preventing accidental overwrites
-- Update documentation expanded with protected locations guidance
+- `/dex-update` now preserves user-owned MCP entries (`user-` / `custom-`) and uses a guided AskQuestion conflict flow
+- Update documentation clarifies preserved customizations and MCP naming guidance
+- AskUserQuestion flows now include CLI fallback when the tool is unavailable
 
 ### Fixed
