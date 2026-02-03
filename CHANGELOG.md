@@ -58,7 +58,7 @@ I want you to make Dex truly yours. And I want to keep improving it with new fea
 
 ---
 
-### Background Meeting Sync (Granola Users)
+### 🔄 Background Meeting Sync (Granola Users)
 
 **Before:** To get your Granola meetings into Dex, you had to manually run `/process-meetings`. Each time, you'd wait for it to process, then continue your work. Easy to forget, tedious when you remembered.
 
@@ -70,7 +70,7 @@ I want you to make Dex truly yours. And I want to keep improving it with new fea
 
 ---
 
-### Prompt Improvement Works Everywhere
+### ✨ Prompt Improvement Works Everywhere
 
 **Before:** The `/prompt-improver` command required extra configuration. In some setups, it just didn't work.
 
@@ -80,7 +80,7 @@ I want you to make Dex truly yours. And I want to keep improving it with new fea
 
 ---
 
-### Easier First-Time Setup
+### 🚀 Easier First-Time Setup
 
 **Before:** New users sometimes hit confusing error messages during setup, with no clear guidance on what to do next.
 
@@ -95,7 +95,7 @@ I want you to make Dex truly yours. And I want to keep improving it with new fea
 
 ## [1.0.0] - 2026-01-25
 
-### Initial Release
+### 📦 Initial Release
 
 Dex is your AI-powered personal knowledge system. It helps you organize your professional life — meetings, projects, people, ideas, and tasks — with an AI assistant that learns how you work.
 
