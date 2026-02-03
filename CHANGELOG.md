@@ -8,6 +8,12 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased]
 
+*Nothing yet - changes appear here until the next push to GitHub.*
+
+---
+
+## [1.1.0] - 2026-02-03
+
 ### 🎉 Personalize Dex Without Losing Your Changes
 
 **What's this about?**
