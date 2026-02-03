@@ -8,26 +8,58 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased]
 
-### Your Customizations Are Now Protected
+### 🎉 Safe Personalization — Make Dex Yours Without Fear of Updates
 
-**Before:** Every time you updated Dex, you risked losing personal tweaks. If you'd added custom instructions to CLAUDE.md or connected your own integrations, updates could overwrite them. You had to manually back things up and restore them after each update.
+This release solves one of the biggest tensions in using Dex: **wanting to customize it, but worrying that updates will undo your work.**
 
-**Now:** Dex recognizes and preserves your customizations automatically:
-- Personal instructions in CLAUDE.md (between the `USER_EXTENSIONS` markers) stay untouched
-- Custom integrations named `user-*` or `custom-*` are protected
-- When your changes overlap with an update, you get a simple menu instead of a confusing merge screen
+Previously, personalizing Dex felt risky. You might add custom instructions, connect your own tools, or tweak how things work — but then an update would come along and overwrite everything. You'd have to choose: stay stuck on an old version, or lose your customizations.
 
-**Result:** Customize freely, update confidently. Your personal setup survives every update.
+**Now you can have both.** Customize freely, update confidently.
 
 ---
 
-### Prompt Improvement Works Everywhere
+#### What's Protected
 
-**Before:** The `/prompt-improver` skill required an Anthropic API key configured separately. In restricted environments or when the API was unavailable, it just failed.
+**Your personal instructions in CLAUDE.md**
 
-**Now:** It automatically uses whatever AI is available — no special configuration needed.
+Before: Any text you added to CLAUDE.md would get overwritten when you updated Dex.
 
-**Result:** Prompt improvement just works, regardless of your setup.
+Now: Add your personal instructions between the `USER_EXTENSIONS_START` and `USER_EXTENSIONS_END` markers. Everything inside stays exactly as you wrote it, no matter how many times you update.
+
+---
+
+**Your custom integrations (MCP servers)**
+
+Before: If you connected Gmail, Notion, or any other tool, updates might overwrite your configuration. You'd have to set it up again.
+
+Now: Name your integrations with `user-` or `custom-` prefix (like `user-gmail` or `custom-notion`), and they're automatically protected. Updates will never touch them.
+
+**New skill: `/dex-add-mcp`** — Adds integrations the safe way automatically. No config files to edit, no prefixes to remember. Just run the command and your integration is protected by default.
+
+**New safeguard:** If you try to add an integration without protection, Dex will gently remind you and suggest the safe approach.
+
+---
+
+**Guided conflict resolution**
+
+Before: When your changes overlapped with an update, you'd see a scary "merge conflict" screen with cryptic symbols. Most people would panic or give up.
+
+Now: Dex walks you through any conflicts with simple choices:
+- "Keep my version" — preserve what you had
+- "Use Dex version" — take the update
+- "Keep both" — rename one so nothing is lost
+
+No technical knowledge needed. Just pick what you want, and Dex handles the rest.
+
+---
+
+#### Why This Matters
+
+Dex gets better over time. New features, bug fixes, improvements. But those updates are only valuable if you can actually use them.
+
+With safe personalization, you're no longer stuck choosing between "my customizations" and "latest features." You get both. Update whenever you want, knowing your personal setup is protected.
+
+**This is how Dex should have worked from the start.** Now it does.
 
 ---
 
@@ -43,6 +75,16 @@ All notable changes to Dex will be documented in this file.
 
 ---
 
+### Prompt Improvement Works Everywhere
+
+**Before:** The `/prompt-improver` skill required an Anthropic API key configured separately. In restricted environments or when the API was unavailable, it just failed.
+
+**Now:** It automatically uses whatever AI is available — no special configuration needed.
+
+**Result:** Prompt improvement just works, regardless of your setup.
+
+---
+
 ### Easier First-Time Setup
 
 **Before:** New users hit cryptic error messages during setup. "Python version mismatch" or "pip install failed" with no guidance on what to do next. Many got stuck and needed help.
@@ -53,16 +95,6 @@ All notable changes to Dex will be documented in this file.
 - MCP server configuration is streamlined with fewer manual steps
 
 **Result:** New users get up and running faster with less frustration.
-
----
-
-### New Skill: `/dex-add-mcp`
-
-**Before:** Adding a new integration (Gmail, Notion, etc.) meant editing config files manually and hoping you got the format right. And if you named it wrong, the next Dex update might overwrite it.
-
-**Now:** `/dex-add-mcp` handles the technical setup correctly and names your integration with a `user-` prefix so it's automatically protected during updates.
-
-**Result:** Connect new tools without touching config files, and know they'll survive future updates.
 
 ---
 
