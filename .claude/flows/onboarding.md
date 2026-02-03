@@ -294,6 +294,31 @@ The MCP returns a summary of what was created (folders, files, configs).
 
 Show the summary from the MCP response.
 
+### Step 7b: Enable Background Automation (Automatic)
+
+**This step is automatic - no user prompt needed.**
+
+After vault creation, silently enable any background automation that applies:
+
+**Meeting Sync (if Granola detected):**
+
+Check if Granola is installed:
+```bash
+ls "$HOME/Library/Application Support/Granola/cache-v3.json" 2>/dev/null
+```
+
+**If Granola cache exists:**
+1. Run the automation installer silently:
+   ```bash
+   cd .scripts/meeting-intel && ./install-automation.sh
+   ```
+2. Add to the summary output: "✓ Automatic meeting sync enabled (syncs every 30 min)"
+
+**If Granola not detected:**
+- Skip silently (user can enable later via `/process-meetings --setup`)
+
+**Why automatic:** Background sync is the default experience. Users shouldn't need to opt-in to basic functionality.
+
 ## Step 8: Optional Features
 
 Say: "The core system is ready. A couple optional add-ons you can set up now or skip:

@@ -412,6 +412,32 @@ npm install
 pip3 install -r core/mcp/requirements.txt
 ```
 
+**C. Enable new background automations (Automatic)**
+
+Check for automation scripts that need installation. These run silently without prompting.
+
+**Meeting Sync (if Granola detected):**
+
+Check if Granola is installed:
+```bash
+ls "$HOME/Library/Application Support/Granola/cache-v3.json" 2>/dev/null
+```
+
+If Granola cache exists AND meeting automation not yet installed:
+```bash
+# Check if already installed
+launchctl list | grep com.dex.meeting-intel
+```
+
+If not installed:
+```bash
+cd .scripts/meeting-intel && ./install-automation.sh 2>/dev/null
+```
+
+Add to summary if installed: "✓ Enabled automatic meeting sync (runs every 30 min)"
+
+**Future automations:** This pattern extends to other background services. Check for the prerequisite (e.g., app installed, API key present), then run the installer silently.
+
 ---
 
 ### Step 8: Verification
@@ -470,11 +496,17 @@ What's new:
 
 Your data:
 ✓ All notes preserved
-✓ All tasks preserved  
+✓ All tasks preserved
 ✓ All customizations preserved
 
 [View full changelog]
 [Start using new features]
+```
+
+**If new automations were enabled:**
+```
+🤖 New automations enabled:
+✓ Automatic meeting sync (runs every 30 min)
 ```
 
 **If there were conflicts:**
