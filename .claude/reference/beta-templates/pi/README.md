@@ -1,180 +1,148 @@
 # Pi Integration Beta
 
-Welcome to the Pi Integration beta! This feature enables Claude Code to delegate complex coding tasks to Pi, a specialized coding agent that can work autonomously on your codebase.
+Welcome to the Pi Integration beta! Pi is a minimal, self-extending coding agent created by Mario Zechner that's generating serious excitement in the AI community.
 
-## Overview
+## What is Pi?
 
-Pi Integration allows you to:
+Pi is different from other coding agents:
 
-- **Delegate tasks** - Hand off complex coding work to Pi
-- **Review before applying** - See what Pi plans to do before execution
-- **MCP bridge communication** - Seamless communication between Claude and Pi
+- **Minimal core** — Under 1,000 tokens of system prompt (vs thousands in other tools)
+- **Self-extending** — Instead of waiting for features, you describe what you want and Pi builds it
+- **Transparent** — You can see exactly what Pi is doing, no "black box" magic
+- **Powers OpenClaw** — The viral AI assistant with 145k+ GitHub stars is built on Pi
 
-## Prerequisites
-
-Before using Pi Integration, ensure:
-
-1. **Pi is installed** - Download from [pi.anthropic.com](https://pi.anthropic.com)
-2. **Pi is running** - Start Pi before delegating tasks
-3. **MCP bridge is configured** - The bridge enables Claude-Pi communication
+Tobi Lutke (Shopify CEO) called it the *"Dawn of the age of malleable software."*
 
 ## Quick Start
 
-### 1. Verify Pi is Running
+### 1. Verify Installation
+
+Pi was installed during beta activation. Verify it's working:
 
 ```bash
-# Check if Pi is running
-ps aux | grep -i pi
+pi --version
 ```
 
-### 2. Basic Delegation
+You should see version 0.45+ or later.
 
-Tell Claude what you want Pi to do:
+### 2. Start Pi
 
-```
-"Hey Pi, create a new MCP server that tracks user sessions"
-```
+In a terminal:
 
-Claude will:
-1. Formulate the task for Pi
-2. Show you what Pi will do
-3. Wait for your approval
-4. Execute via Pi
-
-### 3. Review Pi's Work
-
-After Pi completes a task, review the changes:
-
-```
-"Show me what Pi did"
+```bash
+pi
 ```
 
-## Capabilities
+Pi will start and be ready to build tools for you.
 
-### pi_delegate
+### 3. Build Your First Extension
 
-Delegate a coding task to Pi with full context.
+Ask Pi to create something:
 
-**Example:**
 ```
-Delegate to Pi: Refactor the user authentication module to use JWT tokens
-```
-
-### pi_review
-
-Review Pi's most recent work before applying changes.
-
-**Example:**
-```
-Review Pi's changes to the auth module
+Build me a tool that lists all my overdue tasks from the Dex task system
 ```
 
-### pi_bridge
+Pi will:
+1. Understand what you need
+2. Write the code
+3. Save it to `.pi/extensions/`
+4. The tool is now available
 
-Direct communication with Pi for complex multi-step tasks.
+## How Pi Connects to Dex
 
-**Example:**
-```
-Start a Pi session to work on the payment integration
-```
+Pi communicates with Dex through an **MCP bridge** — a translator that lets Pi read your tasks, calendar, and other Dex data.
+
+This means tools Pi builds can:
+- Access your task list
+- Read your calendar
+- Look up people pages
+- Query meeting notes
+
+The bridge is pre-configured in `.pi/extensions/dex-mcp-bridge.ts`.
+
+## What to Build with Pi
+
+Pi excels at **analytical and cross-cutting tools**:
+
+- Pattern detection across meetings
+- Relationship health tracking
+- Custom alerts and notifications
+- Ad-hoc dashboards
+- Role-specific workflows
+
+For **deterministic operations** (task CRUD, calendar writes), continue using Dex directly — reliability matters more than flexibility there.
+
+## Pi vs Claude Code
+
+| | Claude Code (Dex) | Pi |
+|---|---|---|
+| **Add features** | Edit skill files | Describe what you want |
+| **Iteration** | Find file → edit → test | "Also do X" → done |
+| **Best for** | Structured workflows | Custom tools |
+| **Reliability** | High (deterministic) | Good (probabilistic) |
+
+**Use together**: Claude Code for reliable operations, Pi for building new analytical tools.
 
 ## Configuration
 
-### MCP Bridge Setup
+### MCP Bridge
 
-The MCP bridge connects Claude Code to Pi. Configuration is stored in your Claude Code settings.
+The bridge is pre-installed at `.pi/extensions/dex-mcp-bridge.ts`. It connects to:
 
-Add to your MCP config:
+- **task-mcp** — For task operations
+- **calendar-mcp** — For calendar access
 
-```json
-{
-  "mcpServers": {
-    "pi-bridge": {
-      "command": "python",
-      "args": ["-m", "core.mcp.pi_bridge_server"],
-      "env": {
-        "PI_HOST": "localhost",
-        "PI_PORT": "3142"
-      }
-    }
-  }
-}
-```
+### AGENTS.md
 
-### Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PI_HOST` | `localhost` | Pi server host |
-| `PI_PORT` | `3142` | Pi server port |
-| `PI_TIMEOUT` | `300` | Request timeout (seconds) |
-
-## Best Practices
-
-### Good Delegation Patterns
-
-1. **Be specific about outcomes**
-   - Good: "Create a REST endpoint that returns paginated user data"
-   - Bad: "Make the API better"
-
-2. **Provide context**
-   - Good: "Using our existing UserService, add a method for bulk updates"
-   - Bad: "Add bulk updates"
-
-3. **Set boundaries**
-   - Good: "Only modify files in src/auth/"
-   - Bad: "Fix authentication everywhere"
-
-### When to Use Pi
-
-Pi excels at:
-- Implementing well-defined features
-- Refactoring with clear patterns
-- Writing tests for existing code
-- Creating new files from templates
-
-Keep human review for:
-- Architecture decisions
-- Security-sensitive changes
-- Performance-critical code
-- Breaking changes
+Pi's context about your Dex vault is in `.pi/AGENTS.md`. Edit this to give Pi more context about your specific setup.
 
 ## Troubleshooting
 
-### Pi Not Responding
+### Pi command not found
 
-1. Check if Pi is running: `ps aux | grep pi`
-2. Check the port: `lsof -i :3142`
-3. Restart Pi and try again
+Reinstall Pi:
 
-### Bridge Connection Failed
+```bash
+npm install -g @mariozechner/pi-coding-agent
+```
 
-1. Verify MCP config in `System/.mcp.json`
-2. Check environment variables
-3. Ensure no firewall blocking
+### Pi can't access Dex data
 
-### Task Timeout
+Check the MCP bridge is present:
 
-For long-running tasks:
-- Increase `PI_TIMEOUT` environment variable
-- Break large tasks into smaller pieces
-- Use `pi_bridge` for interactive sessions
+```bash
+ls .pi/extensions/dex-mcp-bridge.ts
+```
+
+If missing, run `/beta-activate PILAUNCH2026` again.
+
+### Extension not working
+
+Pi extensions are TypeScript. Check for errors:
+
+```bash
+cat .pi/extensions/your-extension.ts
+```
+
+Ask Pi to fix any issues: "The extension has an error, can you fix it?"
 
 ## Feedback
 
-This is a beta feature! Your feedback shapes its development.
+Your feedback shapes this integration. Message Dave directly on WhatsApp with:
 
-- Run `/beta-feedback pi` to share your thoughts
-- Report bugs with specific reproduction steps
-- Suggest features you'd find valuable
+- What you tried to build
+- What happened
+- What you expected
+- How it felt (even "confusing" is useful)
 
 ## Version History
 
 ### 0.1.0 (Current)
 - Initial beta release
-- Basic delegation and review
-- MCP bridge communication
+- MCP bridge to Dex task and calendar systems
+- Auto-installation during activation
 
 ---
 
-*Thank you for being a Pi Integration beta tester!*
+*Thanks for being a Pi beta tester! Built on Mario Zechner's Pi coding agent.*

@@ -54,8 +54,37 @@ USER_PROFILE_FILE = BASE_DIR / 'System' / 'user-profile.yaml'
 
 
 def setup_pi_integration() -> bool:
-    """Set up Pi integration when activated - creates .pi/ folder and documentation"""
+    """Set up Pi integration when activated - creates .pi/ folder, installs Pi, and documentation"""
+    import subprocess
+
     try:
+        # Check if Pi is already installed
+        pi_installed = False
+        try:
+            result = subprocess.run(['pi', '--version'], capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                pi_installed = True
+                logger.info(f"Pi already installed: {result.stdout.strip()}")
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+        # Install Pi via npm if not present
+        if not pi_installed:
+            logger.info("Installing Pi via npm...")
+            try:
+                result = subprocess.run(
+                    ['npm', 'install', '-g', '@mariozechner/pi-coding-agent'],
+                    capture_output=True,
+                    text=True,
+                    timeout=120
+                )
+                if result.returncode == 0:
+                    logger.info("Pi installed successfully")
+                else:
+                    logger.warning(f"Pi installation may have issues: {result.stderr}")
+            except Exception as e:
+                logger.warning(f"Could not auto-install Pi: {e}. User may need to install manually.")
+
         # Create .pi directory structure
         pi_dir = BASE_DIR / '.pi'
         (pi_dir / 'extensions').mkdir(parents=True, exist_ok=True)
