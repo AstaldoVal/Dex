@@ -337,7 +337,7 @@ Dave could use your help improving Dex. By sharing anonymous feature usage—thi
 • **What's tracked:** Only Dex built-in features (not anything you customize or add)
 • **What Dave never sees:** What you DO with features—just that you used them
 • **Never sent:** Your content, names, notes, conversations, or anything personal
-• **Your control:** You can change this anytime in System/user-profile.yaml
+• **Your control:** To opt out later, just say "turn off Dex analytics" anytime
 
 Help improve Dex?"
 

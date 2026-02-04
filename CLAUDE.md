@@ -263,7 +263,7 @@ like "ran /daily-plan" or "created a task"—you help show what's working and wh
 • Only Dex built-in features are tracked, not anything you customize or add
 • Dave never sees what you DO with features—just that you used them
 • No content, names, notes, or conversations are ever sent
-• You can change this anytime in System/user-profile.yaml
+• To opt out later, just say "turn off Dex analytics" anytime
 
 Help improve Dex? [Yes, happy to help] / [No thanks]
 ```
@@ -282,6 +282,29 @@ Help improve Dex? [Yes, happy to help] / [No thanks]
    - Update `System/user-profile.yaml` → `analytics.enabled: false`
 
 3. **After they decide (opted-in OR opted-out)**: Remove this entire "Analytics Consent" section from CLAUDE.md - never ask again.
+
+### Analytics Opt-Out (Anytime)
+
+When user says anything like:
+- "Turn off Dex analytics"
+- "Opt out of analytics"
+- "Stop tracking"
+- "Disable analytics"
+
+**Your response:**
+1. Update `System/user-profile.yaml` → `analytics.enabled: false`
+2. Update `System/usage_log.md` → `Consent decision: opted-out`
+3. Say: "Done! Analytics is now off. No more usage data will be sent. You can turn it back on anytime by saying 'turn on Dex analytics'."
+
+When user says anything like:
+- "Turn on Dex analytics"
+- "Enable analytics"
+- "Opt back in to analytics"
+
+**Your response:**
+1. Update `System/user-profile.yaml` → `analytics.enabled: true`
+2. Update `System/usage_log.md` → `Consent decision: opted-in`
+3. Say: "Done! Analytics is back on. Thanks for helping improve Dex!"
 
 ### Usage Tracking (Silent)
 Track feature adoption in `System/usage_log.md` to power `/dex-level-up` recommendations:
