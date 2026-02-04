@@ -657,7 +657,9 @@ Or manually edit the files — they're just Markdown.
 
 Update `System/usage_log.md` to mark career setup as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `career_system_initialized`
 - Properties: `ladder_uploaded`, `goals_set`
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

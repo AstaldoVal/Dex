@@ -243,10 +243,16 @@ Person and company context hooks run automatically when reading files:
 
 ### Analytics Consent (One-Time Ask)
 
-**Check `System/usage_log.md` → Analytics Consent section before running any major skill.**
+**Beta Feature:** Only applies if user has activated the analytics beta.
 
-If `Consent decision: pending`:
-1. During `/daily-plan`, `/week-plan`, `/review`, or `/week-review`, ask ONCE per session:
+**Before any major skill, check:**
+1. Call `check_beta_enabled(feature="analytics")` from Beta MCP
+2. If NOT enabled → skip analytics entirely (no prompt, no tracking)
+3. If enabled → check `System/usage_log.md` → Analytics Consent section
+
+**If analytics beta is enabled AND `Consent decision: pending`:**
+
+During `/daily-plan`, `/week-plan`, `/review`, or `/week-review`, ask ONCE per session:
 
 ```
 Quick question before we continue:

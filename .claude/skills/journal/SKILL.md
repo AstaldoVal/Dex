@@ -175,7 +175,9 @@ Perfect. Your morning journal is saved. Ready to build your daily plan around th
 
 Update `System/usage_log.md` to mark journaling as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `journal_entry_created`
 - Properties: `type` (morning/evening/weekly)
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

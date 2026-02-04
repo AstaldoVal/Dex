@@ -107,8 +107,35 @@ def check_consent() -> str:
     return decision
 
 
+def is_beta_activated() -> bool:
+    """Check if the analytics beta feature is activated."""
+    try:
+        import yaml
+    except ImportError:
+        return False
+    
+    profile_path = get_vault_path() / 'System' / 'user-profile.yaml'
+    if not profile_path.exists():
+        return False
+    
+    with open(profile_path, 'r') as f:
+        profile = yaml.safe_load(f) or {}
+    
+    beta = profile.get('beta', {})
+    activated = beta.get('activated', {})
+    return 'analytics' in activated
+
+
 def is_analytics_enabled() -> bool:
-    """Check if analytics is enabled (user opted in)."""
+    """
+    Check if analytics is enabled.
+    
+    Requires BOTH:
+    1. Analytics beta feature activated
+    2. User opted in to consent
+    """
+    if not is_beta_activated():
+        return False
     return check_consent() == 'opted-in'
 
 

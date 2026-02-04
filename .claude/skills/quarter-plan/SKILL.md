@@ -411,7 +411,9 @@ Display summary:
 
 Update `System/usage_log.md` to mark quarterly planning as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `quarter_plan_completed`
 - Properties: `goals_count`, `pillars_covered`
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

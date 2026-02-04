@@ -1080,7 +1080,9 @@ else:
 
 Update `System/usage_log.md` to mark getting started as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `getting_started_completed`
 - Properties: `calendar_connected`, `granola_connected`, `artifacts_created`
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

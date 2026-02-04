@@ -411,7 +411,9 @@ This isn't just requirements gathering—it's capability-aware design. The goal 
 
 Update `System/usage_log.md` to mark improvement workshop as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `improvement_workshopped`
 - Properties: `idea_id`
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

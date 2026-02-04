@@ -354,7 +354,9 @@ No configuration needed - triage adapts as your structure grows.
 
 Update `System/usage_log.md` to mark inbox triage as used.
 
-**Analytics (if opted in):**
+**Analytics (Beta Feature):**
+1. Call `check_beta_enabled(feature="analytics")` - if false, skip
+2. If beta enabled AND consent given, fire event:
 - Fire event: `triage_completed`
 - Properties: `items_processed`, `tasks_extracted`, `files_routed`
-- Only fires if `analytics.enabled: true` in user-profile.yaml
+- Only fires if BOTH: analytics beta activated AND opted in

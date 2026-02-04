@@ -47,6 +47,31 @@ features:
       enable_pi_tools: true
       enable_pi_mcp: true
 
+  analytics:
+    name: "Dex Analytics"
+    description: "Optional, privacy-first analytics to help Dave improve Dex. Only tracks which Dex features are used, never content or what you do with them."
+    version: "0.1.0"
+    status: "active"
+
+    # SHA-256 hash of "analytics-beta-2026:DEXANALYTICS2026"
+    code_hash: "ac431af12e2805764d7645e04ac23be614752e102a617a925ae836d6c86eff74"
+    code_salt: "analytics-beta-2026"
+
+    # Documentation
+    instructions_file: "System/Beta/analytics/README.md"
+
+    # What this enables
+    capabilities:
+      - "analytics_consent"     # One-time consent prompt
+      - "analytics_events"      # Event firing to Pendo
+      - "analytics_journey"     # Journey metadata tracking
+
+    min_dex_version: "1.2.0"
+
+    feature_flags:
+      enable_analytics_prompt: true
+      enable_pendo_tracking: true
+
 # Template for adding new beta features:
 #
 #   feature_key:

@@ -321,7 +321,14 @@ ls "$HOME/Library/Application Support/Granola/cache-v3.json" 2>/dev/null
 
 ## Step 8: Analytics Consent
 
-**This is asked for ALL new users.**
+**Beta Feature:** Only applies if user has activated the analytics beta.
+
+**Check first:**
+1. Call `check_beta_enabled(feature="analytics")` from Beta MCP
+2. If NOT enabled → **Skip this step entirely** (no prompt)
+3. If enabled → Continue with consent prompt below
+
+**If analytics beta is enabled:**
 
 Say: "One quick question before we finish:
 
