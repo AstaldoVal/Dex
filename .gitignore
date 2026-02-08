@@ -40,9 +40,11 @@ google_drive_token.json
 # User Customizations - Protected from Updates
 # ============================================
 
-# User configuration
+# User configuration and personal data
 System/user-profile.yaml
 System/pillars.yaml
+System/usage_log.md
+System/Session_Learnings/
 System/.last-update-check
 
 # Custom extensions (user-created, never in upstream)
@@ -59,6 +61,8 @@ core/mcp-premium/
 04-Projects/
 05-Areas/
 07-Archives/
+Inbox/
+CV Examples/
 
 # User customization notes
 System/my-customizations.md
