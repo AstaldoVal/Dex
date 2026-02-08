@@ -1,0 +1,12 @@
+{
+  "name": "google-calendar",
+  "description": "Google Calendar via OAuth2 (no macOS Calendar.app). Use for Gmail calendar.",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/google_calendar_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "Requires: 1) pip install -r core/mcp/requirements-google-calendar.txt 2) OAuth credentials from Google Cloud Console. See .claude/reference/mcp-servers.md → Google Calendar MCP."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "linkedin",
+  "description": "LinkedIn automation via browser (Playwright). ⚠️ WARNING: May violate LinkedIn ToS. Use at your own risk.",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/linkedin_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "⚠️ WARNING: Uses browser automation - NO official API. May violate LinkedIn Terms of Service. Account suspension possible. Requires: 1) pip install -r core/mcp/requirements-linkedin.txt 2) playwright install chromium 3) Run linkedin_login first. See .claude/reference/linkedin-mcp-setup.md"
+}

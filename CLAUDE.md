@@ -40,12 +40,14 @@ The system automatically suggests `/getting-started` at next session if vault < 
 ## User Profile
 
 <!-- Updated during onboarding -->
-**Name:** Not yet configured
-**Role:** Not yet configured
-**Company Size:** Not yet configured
+**Name:** Roman
+**Role:** Product Manager
+**Company Size:** Enterprise (1,000–10,000)
 **Working Style:** Not yet configured
 **Pillars:**
-- Not yet configured
+- Job search: Senior Product Manager, Head of Product, CPO, Compliance Product Manager
+- Land new role (fast)
+**Job search:** Considers only remote positions. Filter out on-site when presenting or processing job digests.
 
 ---
 
@@ -68,6 +70,20 @@ Add any personal instructions between these markers. The `/dex-update` process p
 
 ## USER_EXTENSIONS_START
 <!-- Add your personal customizations here. -->
+
+### Markdown: только списки, без таблиц
+В MD-файлах не использовать таблицы. Всегда оформлять данные нумерованными или маркированными списками.
+
+Формат для пунктов с подпунктами и ссылками:
+- Заголовок пункта (например, **Компания**) — с новой строки подпункты с дефисом: ` - Ключ: значение.`
+- Блок «Смотреть:» — с новой строки нумерованный список ссылок (1. url, 2. url), ссылки — голые URL.
+
+### Apply edits automatically — no acceptance prompts
+All changes are accepted automatically. Do not ask the user to accept, confirm, or approve any edit. Do not say "accept these changes", "confirm if you want to apply", or similar. Make the edits, then briefly summarize what was done. Only ask before acting when the change is destructive (e.g. deleting many files, overwriting unique content) or when the user explicitly asks to confirm.
+
+### Automate routine work; no manual fallback
+All routine work must be automated. Do not suggest the user do repetitive or manual steps as the primary solution. If something cannot be automated with current tools or selectors, propose a **debug path** to make automation possible (e.g. add --debug, save HTML/state, then fix selectors or logic and re-run). Only as a last resort mention manual work, and only in the context of one-off recovery, not as the main workflow.
+
 ## USER_EXTENSIONS_END
 
 ---
@@ -103,6 +119,12 @@ When the user shares meeting notes or says they had a meeting:
 3. Link to relevant projects
 4. Suggest follow-ups
 5. If meeting with manager and Career folder exists, extract career development context
+
+### Job digest: remote-only filter
+When `System/user-profile.yaml` has `job_search.consider_only_remote: true`, treat a vacancy as **on-site (exclude or mark)** if the job description or snippet contains any of:
+- "based in [Country/City]" or "based in [City]" (e.g. "based in Malaysia", "based in London") and the same sentence does not say "Remote" or "remote"
+- "relocate to", "on-site", "office-based", "join their team based in"
+Do **not** exclude if the text says "Remote", "Malta, Remote", "Remote, Malta", "Remote (country)", or similar. When presenting digest entries or answering "is this remote?", automatically identify and filter out (or label) non-remote roles using the above rules.
 
 ### Task Completion (Natural Language)
 When the user says they completed a task (any phrasing):
@@ -329,13 +351,15 @@ Skills extend Dex capabilities and are invoked with `/skill-name`. Common skills
 - `/week-plan`, `/week-review` - Weekly workflow
 - `/quarter-plan`, `/quarter-review` - Quarterly planning
 - `/triage`, `/meeting-prep`, `/process-meetings` - Meetings and inbox
+- `/email-process` - Automatically process emails: classify, extract tasks, mark as read, archive, unsubscribe
 - `/project-health`, `/product-brief` - Projects
-- `/career-coach`, `/resume-builder` - Career development
+- `/career-coach`, `/resume-builder`, `/job-summary`, `/job-digest`, `/igaming-vacancy-track` - Career development
 - `/dex-level-up`, `/dex-backlog`, `/dex-improve` - System improvements
 - `/dex-update` - Update Dex automatically (shows what's new, updates if confirmed, no technical knowledge needed)
 - `/dex-rollback` - Undo last update if something went wrong
 - `/getting-started` - Interactive post-onboarding tour (adaptive to your setup)
 - `/integrate-mcp` - Connect tools from Smithery.ai marketplace
+- `/ai-digest` - Ежедневный дайджест новостей AI за последние сутки (OpenAI, Cloud, Gemini и др.)
 
 **Complete catalog:** Run `/dex-level-up` or see `.claude/skills/README.md`
 
@@ -408,7 +432,7 @@ Domain matching is configured during onboarding or can be updated manually in `S
 - `System/pillars.yaml` — Strategic pillars config
 
 **Technical reference (read when needed):**
-- `.claude/reference/mcp-servers.md` — MCP server setup and integration
+- `.claude/reference/mcp-servers.md` — MCP server setup and integration. **Cursor:** run `python3 .scripts/cursor-sync-mcp.py` and fully restart Cursor so calendar and Gmail MCPs load in every new chat (see also `.claude/reference/gmail-mcp-setup.md`).
 - `.claude/reference/meeting-intel.md` — Meeting processing details
 - `.claude/reference/demo-mode.md` — Demo mode usage
 

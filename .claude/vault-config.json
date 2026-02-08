@@ -1,0 +1,9 @@
+{
+  "user": {
+    "name": "Roman",
+    "role": "Product Manager",
+    "companySize": "enterprise",
+    "pillars": ["job_search", "land_role"]
+  },
+  "createdAt": "2026-02-04"
+}

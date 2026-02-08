@@ -1,0 +1,12 @@
+{
+  "name": "job-digest",
+  "description": "Job digest MCP - automatically generates resume summaries for job vacancies with CV selection based on job type",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/job_digest_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "Prepares data for job summary generation. Detects job type (iGaming/compliance vs AI/other) and selects appropriate CV. Summary generation happens in Cursor context via /job-summary skill or directly."
+}

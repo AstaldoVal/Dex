@@ -1,0 +1,10 @@
+{
+  "name": "user-ai-updates",
+  "description": "Обновления OpenAI, Google Cloud, Grok, Manus, Gemini и ежедневный AI-дайджест",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/ai_updates_server.py"],
+    "env": { "VAULT_PATH": "${workspaceFolder}" }
+  },
+  "notes": "Установка: pip install -r core/mcp/requirements-ai-updates.txt. Инструменты: get_openai_updates, get_google_cloud_updates, get_grok_updates, get_manus_updates, get_gemini_updates, get_daily_ai_summary, get_all_ai_updates."
+}

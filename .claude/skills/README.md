@@ -4,6 +4,17 @@
 
 ---
 
+## Mandatory: No Manual Fallback
+
+**All skills must automate fully. Never make the user do routine or repetitive steps manually.**
+
+- **Do:** Use available tools (MCP, browser, scripts) to complete the entire workflow yourself.
+- **Do not:** Give the user a "list of links to click", "steps to do in Gmail", or "open this file and do X" as the primary solution.
+- **If something cannot be automated today:** Propose a **debug path** (e.g. add logging, save HTML/state, fix selectors) so it can be automated next time. Mention manual work only as a last resort for one-off recovery, not as the main workflow.
+- **Reference:** See `.claude/reference/skill-automation-rule.md` for the full rule and examples.
+
+---
+
 ## What Are Skills?
 
 **Skills** are commands that extend what Claude can do - like giving Claude new capabilities. Each skill is a set of instructions for a specific workflow.
@@ -200,6 +211,9 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/meeting-prep` - Prepare for meetings
 - `/process-meetings` - Process Granola meetings
 
+**Email Management:**
+- `/email-process` - Automatically process emails: classify, extract tasks, mark as read, archive, unsubscribe
+
 **Career Development:**
 - `/career-setup` - Initialize career system
 - `/career-coach` - Career reflections and assessments
@@ -221,6 +235,7 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/dex-obsidian-setup` - Enable Obsidian integration and migrate vault to wiki links
 - `/integrate-mcp` - Integrate existing MCP servers from Smithery.ai marketplace
 - `/create-mcp` - Create new MCP integrations
+- `/ai-digest` - Ежедневный дайджест новостей AI за последние сутки (OpenAI, Cloud, Gemini и др.)
 
 ### Anthropic Skills (General-Purpose)
 

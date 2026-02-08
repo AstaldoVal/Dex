@@ -1,0 +1,14 @@
+{
+  "name": "gmail",
+  "description": "Gmail for personal account: read emails, search inbox, manage labels, archive, mark as read, send replies",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/gmail_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}",
+      "GMAIL_CREDENTIALS_PATH": "${workspaceFolder}/credentials.json",
+      "GMAIL_TOKEN_PATH": "${workspaceFolder}/gmail_token.json"
+    }
+  },
+  "notes": "Requires: 1) pip install -r core/mcp/requirements-gmail.txt 2) Enable Gmail API in Google Cloud Console (same project as Calendar/Drive). See .claude/reference/gmail-mcp-setup.md"
+}

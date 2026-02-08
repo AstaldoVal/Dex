@@ -1,0 +1,12 @@
+{
+  "name": "google-drive",
+  "description": "Google Drive: search files, list folders, read document content, get metadata.",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/google_drive_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "Requires: 1) pip install -r core/mcp/requirements-google-drive.txt 2) Enable Drive API and OAuth credentials in Google Cloud Console. See .claude/reference/google-drive-mcp-setup.md"
+}

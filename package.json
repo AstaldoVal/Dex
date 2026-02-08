@@ -6,13 +6,46 @@
   "scripts": {
     "meeting-sync": "node .scripts/meeting-intel/sync-from-granola.cjs",
     "meeting-sync:dry-run": "node .scripts/meeting-intel/sync-from-granola.cjs --dry-run",
-    "meeting-sync:force": "node .scripts/meeting-intel/sync-from-granola.cjs --force"
+    "meeting-sync:force": "node .scripts/meeting-intel/sync-from-granola.cjs --force",
+    "job-search": "node .scripts/job-search/fetch-gaming-pm-jobs.cjs",
+    "job-search:rss": "node .scripts/job-search/fetch-remote-pm-rss.cjs",
+    "job-search:rss-only": "node .scripts/job-search/fetch-remote-pm-rss.cjs --no-merge",
+    "job-search:bettingjobs": "node .scripts/job-search/fetch-bettingjobs-product.cjs",
+    "job-search:bettingjobs-search": "node .scripts/job-search/fetch-bettingjobs-product.cjs --search",
+    "job-search:bettingjobs-dry-run": "node .scripts/job-search/fetch-bettingjobs-product.cjs --dry-run",
+    "job-search:dry-run": "node .scripts/job-search/fetch-gaming-pm-jobs.cjs --dry-run",
+    "job-search:email": "node .scripts/job-search/parse-linkedin-job-emails.cjs && node .scripts/job-search/generate-digest-open-links.cjs",
+    "job-search:email:dry-run": "node .scripts/job-search/parse-linkedin-job-emails.cjs --dry-run",
+    "job-search:email:verbose": "node .scripts/job-search/parse-linkedin-job-emails.cjs --verbose",
+    "job-digest": "node .scripts/job-search/run-job-digest.cjs",
+    "job-search:step1": "node .scripts/job-search/parse-linkedin-job-emails.cjs",
+    "job-search:step2": "node .scripts/job-search/filter-digest-from-export.cjs",
+    "job-search:step2-batch": "node .scripts/job-search/filter-digest-from-export.cjs",
+    "job-search:step3": "node .scripts/job-search/add-summaries-to-digest.cjs",
+    "job-search:step4": "node .scripts/job-search/open-digest-jobs-for-teal.cjs --html",
+    "job-search:all": "node .scripts/job-search/parse-linkedin-job-emails.cjs && node .scripts/job-search/filter-digest-from-export.cjs && node .scripts/job-search/add-summaries-to-digest.cjs && node .scripts/job-search/open-digest-jobs-for-teal.cjs --html",
+    "job-search:filter-remote": "node .scripts/job-search/filter-digest-from-export.cjs",
+    "job-search:filter-from-export": "node .scripts/job-search/filter-digest-from-export.cjs",
+    "job-search:inject-from-export": "node .scripts/job-search/inject-job-descriptions-from-export.cjs",
+    "job-search:open-links": "node .scripts/job-search/generate-digest-open-links.cjs",
+    "job-search:open-links:serve": "node .scripts/job-search/generate-digest-open-links.cjs --serve",
+    "job-search:apply-filter-state": "node .scripts/job-search/apply-filter-state.cjs",
+    "job-search:filter-remote-playwright": "node .scripts/job-search/filter-digest-remote-playwright.cjs",
+    "job-search:linkedin-login": "node .scripts/job-search/filter-digest-remote-playwright.cjs --login",
+    "job-search:scrape-search": "node .scripts/job-search/scrape-linkedin-search-playwright.cjs",
+    "job-search:teal-add": "node .scripts/job-search/add-digest-jobs-to-teal-playwright.cjs",
+    "job-search:teal-setup": "node .scripts/job-search/add-digest-jobs-to-teal-playwright.cjs --setup",
+    "job-search:teal-add-app": "node .scripts/job-search/add-digest-jobs-to-teal-playwright.cjs --app",
+    "job-search:teal-setup-app": "node .scripts/job-search/add-digest-jobs-to-teal-playwright.cjs --app --setup"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@google/generative-ai": "^0.21.0",
     "dotenv": "^16.4.0",
+    "imapflow": "^1.0.200",
     "js-yaml": "^4.1.0",
-    "openai": "^4.77.3"
+    "mailparser": "^3.7.0",
+    "openai": "^4.77.3",
+    "playwright": "^1.49.0"
   }
 }

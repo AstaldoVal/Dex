@@ -79,6 +79,139 @@ Dex automatically:
 
 **Tools:** `calendar_list_calendars`, `calendar_get_today`, `calendar_get_events_with_attendees`
 
+**Using Google Calendar (Gmail):**  
+Dex reads from the **macOS Calendar.app**. To use your Google/Gmail calendar:
+
+1. On your Mac: **System Settings** → **Internet Accounts** (or **Mail** → **Accounts** → **Add Account**).
+2. Add **Google** and sign in with your Gmail account.
+3. Enable **Calendar** for that account (checkbox).
+4. Open **Calendar.app** — your Google calendars will appear there and stay in sync.
+5. In Cursor, ensure the **Calendar MCP** is enabled (e.g. in `.claude/mcp/calendar.json` or Cursor MCP settings). Dex will then read today’s events and attendees from Calendar.app (including Google events).
+
+No separate Google Calendar MCP or API keys are needed; Calendar.app is the bridge.
+
+---
+
+### Google Calendar MCP (`google_calendar_server.py`)
+
+**What it does:**  
+Connects to **Google Calendar directly** via OAuth2. Use this when you prefer not to add your Google account to macOS—calendar access stays in Cursor only.
+
+**Why it's an MCP:**  
+Same benefits as Calendar MCP (live events, attendees, day-at-a-glance) but without depending on Calendar.app. Ideal for Gmail users who don’t want system-wide Google sync.
+
+**Power:**
+- **No Mac integration** - No need to add Google in System Settings
+- **Same tool shape** - `gcal_*` tools mirror calendar MCP (list calendars, get today, get events with attendees, next event)
+- **Person page links** - Attendees are matched to vault person pages when available
+- **OAuth once** - First run opens browser for consent; token is stored and reused
+
+**Tools:** `gcal_list_calendars`, `gcal_get_today`, `gcal_get_events`, `gcal_get_events_with_attendees`, `gcal_get_next_event`
+
+**Setup:**
+
+1. **Install Python deps** (from repo root):
+   ```bash
+   pip install -r core/mcp/requirements-google-calendar.txt
+   ```
+
+2. **Google Cloud Console**
+   - Create or select a project → enable **Google Calendar API**
+   - **APIs & Services** → **Credentials** → **Create credentials** → **OAuth 2.0 Client ID**
+   - Application type: **Desktop app** → Create → download the JSON
+
+3. **Credentials**
+   - Save the downloaded file as `credentials.json` in the project root, **or** set `GOOGLE_CALENDAR_CREDENTIALS_PATH` in `.env` to its path.
+   - Optional: set `GOOGLE_CALENDAR_TOKEN_PATH` if you want the token file elsewhere (default: same directory as credentials, file `google_calendar_token.json`).
+
+4. **First run**
+   - Enable the MCP in Cursor (e.g. add or enable `.claude/mcp/google-calendar.json`). On first tool use, a browser window opens for Google sign-in and consent. After that, the token is saved and no browser is needed.
+
+5. **Use in Dex**
+   - For `/daily-plan` and meeting context, use the **gcal_** tools instead of **calendar_** when you rely on Google Calendar only (e.g. `gcal_get_today`, `gcal_get_events_with_attendees`).
+
+---
+
+### Google Drive MCP (`google_drive_server.py`)
+
+**What it does:**  
+Connects to **Google Drive** via OAuth2. Search files, list folders, read document content (Docs → text, Sheets → CSV), and get metadata.
+
+**Why it's an MCP:**  
+Drive holds documents and spreadsheets; the MCP gives Dex structured access without leaving Cursor—search by name or full-text, read content, list folder trees.
+
+**Power:**
+- **Search** - By file name or full-text inside documents
+- **List** - Files and folders in any folder or root
+- **Read** - Google Docs as plain text, Sheets as CSV, other text files as-is
+- **Metadata** - Id, name, mimeType, size, dates, links, parents
+- **Same credentials** - Can reuse `credentials.json` from Google Calendar MCP (enable Drive API in the same project); token is separate (`google_drive_token.json`)
+
+**Tools:** `gdrive_list_files`, `gdrive_search`, `gdrive_get_metadata`, `gdrive_read_file`, `gdrive_get_folder_info`
+
+**Setup:**
+
+1. **Install Python deps** (from repo root):
+   ```bash
+   pip install -r core/mcp/requirements-google-drive.txt
+   ```
+
+2. **Google Cloud Console**
+   - In the same project as Calendar (or new): enable **Google Drive API**
+   - Use the same OAuth 2.0 Desktop client credentials as Calendar, or create new → download JSON
+
+3. **Credentials**
+   - Same `credentials.json` as Calendar is fine; or set `GOOGLE_DRIVE_CREDENTIALS_PATH` in `.env`
+   - Token is stored in `google_drive_token.json` (or `GOOGLE_DRIVE_TOKEN_PATH`)
+
+4. **First run**
+   - Enable the MCP in Cursor (e.g. `.claude/mcp/google-drive.json`). On first tool use, browser opens for Google sign-in and Drive consent.
+
+5. **Reference**
+   - Full setup: `.claude/reference/google-drive-mcp-setup.md`
+
+---
+
+### LinkedIn MCP (`linkedin_server.py`)
+
+⚠️ **WARNING:** Uses browser automation (Playwright) - **NO official LinkedIn API**. May violate LinkedIn Terms of Service. Account suspension possible. Use at your own risk.
+
+**What it does:**  
+Automates LinkedIn interactions via browser automation. Follow companies, get company info. **No official API access** - uses Playwright to control browser.
+
+**Why it's an MCP:**  
+LinkedIn doesn't provide public API for following companies. Browser automation enables this functionality, but with significant risks.
+
+**Power:**
+- **Login** - Save session state (cookies) for reuse
+- **Follow companies** - Single or batch follow by LinkedIn company URLs
+- **Get company info** - Read company name from page (read-only)
+- **Session persistence** - Cookies saved, no re-login needed
+
+**Tools:** `linkedin_login`, `linkedin_follow_company`, `linkedin_follow_companies_batch`, `linkedin_get_company_info`
+
+**Setup:**
+
+1. **Install Python deps** (from repo root):
+   ```bash
+   pip install -r core/mcp/requirements-linkedin.txt
+   playwright install chromium
+   ```
+
+2. **First login**
+   - Enable MCP in Cursor (e.g. `.claude/mcp/linkedin.json`)
+   - Run `linkedin_login` - browser opens, login manually
+   - Session (cookies) saved to `.claude/linkedin/context_state.json`
+
+3. **Use with caution**
+   - Add delays between actions (3-5 seconds minimum)
+   - Limit batch size (max 10 companies per batch)
+   - Use visible browser (`headless: false`) for monitoring
+   - Risk of account suspension if LinkedIn detects automation
+
+4. **Reference**
+   - Full setup: `.claude/reference/linkedin-mcp-setup.md`
+
 ---
 
 ### Granola MCP (`granola_server.py`)
@@ -259,6 +392,24 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 
 ---
 
+### AI Updates MCP (`ai_updates_server.py`) — user/custom
+
+**What it does:**  
+Следит за обновлениями OpenAI, Google Cloud, Grok (xAI), Manus и Gemini. Даёт ежедневный дайджест самых заметных изменений в сфере AI за последние сутки.
+
+**Setup:**  
+1. `pip install -r core/mcp/requirements-ai-updates.txt`  
+2. Добавить в MCP конфиг сервер `user-ai-updates` (файл `.claude/mcp/user-ai-updates.json`).
+
+**Tools:**  
+- `get_openai_updates`, `get_google_cloud_updates`, `get_grok_updates`, `get_manus_updates`, `get_gemini_updates` — последние посты/обновления по каждой платформе  
+- `get_daily_ai_summary` — дайджест AI за последние N часов (OpenAI, Google Cloud, Gemini)  
+- `get_all_ai_updates` — сводка по всем платформам за период  
+
+**Note:** У xAI и Manus может не быть публичного RSS; в этом случае инструменты возвращают ссылку на блог для ручной проверки.
+
+---
+
 ### Supported Integrations
 
 | Integration | MCP Server | Status |
@@ -272,11 +423,29 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 | Onboarding | `onboarding_server.py` | Built-in |
 | Update Checker | `update_checker.py` | Built-in |
 | Dex Improvements | `dex_improvements_server.py` | Built-in |
+| Google Drive | `google_drive_server.py` | Built-in |
+| LinkedIn | `linkedin_server.py` | Built-in (⚠️ browser automation, use at risk) |
 | Pendo | Hosted (OAuth) | External (optional) |
 
 ### Setting Up Integrations
 
 Run `/daily-plan --setup` to configure integrations interactively, or add MCP servers manually to Claude Desktop config at `~/Library/Application Support/Claude/claude_desktop_config.json`.
+
+#### Cursor IDE — почему MCP не подтягиваются и как исправить
+
+**Проблема:** Cursor **не загружает** проектный `.cursor/mcp.json` в чаты (известный баг, [forum](https://forum.cursor.com/t/project-level-mcp-json-configuration-not-working-in-windows11/62182)). Поэтому календарь, почта, Work MCP и остальные инструменты в чате не появляются.
+
+**Решение:** скопировать конфиг в **глобальный** файл Cursor — тогда MCP будут доступны во всех чатах.
+
+1. **Один раз выполнить из корня репозитория Dex:**
+   ```bash
+   python3 .scripts/cursor-sync-mcp.py
+   ```
+   Скрипт подставит абсолютные пути и запишет конфиг в `~/.cursor/mcp.json`.
+
+2. **Полностью перезапустить Cursor** (Quit Cursor и открыть снова), не только Reload Window — конфиг MCP читается при старте.
+
+3. После перезапуска в новом чате должны быть видны все MCP (Work, Calendar, Gmail, Google Calendar, Job Digest и т.д.). Если добавляешь новые MCP в `.cursor/mcp.json`, снова запусти скрипт и перезапусти Cursor.
 
 See `System/.mcp.json.example` for a complete config with all built-in servers:
 - `work_server.py` - Task management (always enabled)

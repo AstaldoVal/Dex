@@ -33,8 +33,13 @@ from mcp.server.models import InitializationOptions
 import mcp.server.stdio
 import mcp.types as types
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add repo root to path so "from core.xxx" works when Cursor runs this script directly
+_repo_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(_repo_root))
+
+# Set up logging before any code that may log
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Import reference formatter for Obsidian wiki link support
 try:
@@ -50,10 +55,6 @@ try:
 except ImportError:
     logger.warning("Reference formatter not available - wiki links disabled")
     HAS_REFERENCE_FORMATTER = False
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # Custom JSON encoder for handling date/datetime objects
 class DateTimeEncoder(json.JSONEncoder):
@@ -73,6 +74,9 @@ PILLARS_FILE = BASE_DIR / 'System' / 'pillars.yaml'
 COMPANIES_DIR = BASE_DIR / 'Active' / 'Relationships' / 'Companies'
 PEOPLE_DIR = BASE_DIR / 'People'
 MEETINGS_DIR = BASE_DIR / 'Inbox' / 'Meetings'
+# Job search tracking (applications and feedback)
+JOB_APPLICATIONS_TRACKER_FILE = BASE_DIR / '00-Inbox' / 'Job_Search' / 'data' / 'applications-tracker.json'
+JOB_COVER_LETTERS_DIR = BASE_DIR / '00-Inbox' / 'Job_Search' / 'cover_letters'
 
 # Demo Mode Configuration
 USER_PROFILE_FILE = BASE_DIR / 'System' / 'user-profile.yaml'
@@ -1401,6 +1405,59 @@ def generate_priority_id(week_date: date, existing_priorities: List[Dict]) -> st
     
     return f"{prefix}{max_num + 1}"
 
+def get_job_applications_week_stats(week_start: date, week_end: date) -> Dict[str, Any]:
+    """
+    Get job application stats for a given week from applications-tracker.json
+    and optionally from cover_letters folder (new files in week).
+    Used to auto-update week progress for "Отклики на iGaming" and "Трекер откликов".
+    """
+    week_start_str = week_start.isoformat()
+    week_end_str = week_end.isoformat()
+    applications_this_week = 0
+    responses_this_week = 0
+    tracker_updated_this_week = False
+
+    if JOB_APPLICATIONS_TRACKER_FILE.exists():
+        try:
+            data = json.loads(JOB_APPLICATIONS_TRACKER_FILE.read_text())
+            apps = data.get('applications') or []
+            for app in apps:
+                date_applied = app.get('date_applied')
+                if date_applied and week_start_str <= date_applied <= week_end_str:
+                    applications_this_week += 1
+                response_date = app.get('response_date')
+                if response_date and week_start_str <= response_date <= week_end_str:
+                    responses_this_week += 1
+            meta = data.get('meta') or {}
+            last_updated = meta.get('last_updated')
+            if last_updated and week_start_str <= last_updated <= week_end_str:
+                tracker_updated_this_week = True
+        except (json.JSONDecodeError, OSError) as e:
+            logger.debug(f"Job tracker read failed: {e}")
+            pass
+
+    cover_letters_this_week = 0
+    if JOB_COVER_LETTERS_DIR.exists():
+        for f in JOB_COVER_LETTERS_DIR.iterdir():
+            if f.suffix.lower() in ('.docx', '.pdf', '.doc') and not f.name.startswith('~$'):
+                try:
+                    mtime = datetime.fromtimestamp(f.stat().st_mtime).date()
+                    if week_start <= mtime <= week_end:
+                        cover_letters_this_week += 1
+                except OSError:
+                    pass
+
+    # Use cover_letters count as fallback when tracker has no applications this week (e.g. manual CLs)
+    if applications_this_week == 0 and cover_letters_this_week > 0:
+        applications_this_week = cover_letters_this_week
+    return {
+        'applications_this_week': applications_this_week,
+        'responses_this_week': responses_this_week,
+        'tracker_updated_this_week': tracker_updated_this_week,
+        'cover_letters_this_week': cover_letters_this_week,
+    }
+
+
 def parse_weekly_priorities(filepath: Path) -> List[Dict[str, Any]]:
     """Parse weekly priorities from Week Priorities.md"""
     if not filepath.exists():
@@ -1766,7 +1823,10 @@ def get_week_progress_data() -> Dict[str, Any]:
     priorities_file = get_week_priorities_file()
     priorities = parse_weekly_priorities(priorities_file) if priorities_file.exists() else []
     
-    # Enrich priorities with task data
+    # Job-search: auto stats from applications tracker and cover_letters folder
+    job_week = get_job_applications_week_stats(week_start, week_end)
+    
+    # Enrich priorities with task data (and job-tracker for job-search priorities)
     priorities_detail = []
     for priority in priorities:
         priority_data = {
@@ -1779,17 +1839,43 @@ def get_week_progress_data() -> Dict[str, Any]:
             'warning': None
         }
         
-        # Find linked tasks
-        if priority.get('priority_id'):
-            linked_tasks = find_linked_tasks(priority['priority_id'])
-            priority_data['tasks_total'] = len(linked_tasks)
-            priority_data['tasks_done'] = sum(1 for t in linked_tasks if t.get('completed'))
-            
-            if priority_data['tasks_total'] > 0:
-                if priority_data['tasks_done'] == priority_data['tasks_total']:
+        title_lower = (priority.get('title') or '').lower()
+        is_otkliki = 'отклики' in title_lower and ('igaming' in title_lower or 'вакансии' in title_lower)
+        is_tracker = 'трекер откликов' in title_lower
+        
+        if is_otkliki or is_tracker:
+            # Derive progress from job applications tracker and cover_letters
+            if is_otkliki:
+                apps = job_week['applications_this_week']
+                target = 3  # 2-3 отклика per week success criteria
+                priority_data['tasks_total'] = target
+                priority_data['tasks_done'] = min(apps, target)
+                if priority_data['tasks_done'] >= target:
                     priority_data['status'] = 'complete'
                 elif priority_data['tasks_done'] > 0:
                     priority_data['status'] = 'in_progress'
+            else:
+                # Трекер откликов: activity = new applications or tracker updated or new responses
+                has_activity = (
+                    job_week['applications_this_week'] > 0
+                    or job_week['tracker_updated_this_week']
+                    or job_week['responses_this_week'] > 0
+                )
+                priority_data['tasks_total'] = 1
+                priority_data['tasks_done'] = 1 if has_activity else 0
+                priority_data['status'] = 'complete' if has_activity else 'not_started'
+        else:
+            # Find linked tasks for non-job priorities
+            if priority.get('priority_id'):
+                linked_tasks = find_linked_tasks(priority['priority_id'])
+                priority_data['tasks_total'] = len(linked_tasks)
+                priority_data['tasks_done'] = sum(1 for t in linked_tasks if t.get('completed'))
+                
+                if priority_data['tasks_total'] > 0:
+                    if priority_data['tasks_done'] == priority_data['tasks_total']:
+                        priority_data['status'] = 'complete'
+                    elif priority_data['tasks_done'] > 0:
+                        priority_data['status'] = 'in_progress'
         
         # Add warnings for priorities with no activity
         if priority_data['status'] == 'not_started' and days_elapsed >= 2:

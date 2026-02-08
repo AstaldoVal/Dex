@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Dex LinkedIn Job Capture",
+  "version": "1.0.0",
+  "description": "Capture job details from LinkedIn in your browser for Dex digest. Auto-advance through job links in one tab.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://*.linkedin.com/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/view/*",
+        "https://www.linkedin.com/comm/jobs/view/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["http://localhost/*", "http://127.0.0.1/*"],
+      "js": ["digest-page.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": { "default_title": "Dex Job Capture" }
+}
