@@ -7,6 +7,27 @@ All notable changes to Dex will be documented in this file.
 ---
 
 ## [Unreleased]
+
+### Dex now tells you when something is wrong (MCP health)
+
+**Before:** When something failed, your calendar could not connect, a task could not be created, or meeting processing hit an error, you would get a vague message in the conversation and then nothing. The error disappeared when the chat ended. If something was quietly broken for days, you would not know until you needed it.
+
+**Now:** Dex watches its own health. Every tool across all 12 background services captures failures the moment they happen, in plain language. The next time you start a conversation, you will see anything that went wrong:
+
+```
+--- ⚠️ Recent Errors (2) ---
+  [Task Manager] Feb 17 09:30 — Task creation failed (×3)
+  [Calendar] Feb 16 14:00 — Calendar couldn't connect
+Say: 'health check' to investigate
+---
+```
+
+If everything is fine, you get silence. No "all systems go" noise.
+
+**Say `/health-check` anytime** for a full diagnostic: which services are running, what failed recently, and for most issues a suggested fix.
+
+**Platform note:** Automatic startup checks work in Claude Code. In Cursor, error capture still works behind the scenes; run `/health-check` manually to see the same diagnostic.
+
 ### Full Flow step 6: не пишем "—" вместо title в Teal
 
 **What changed:** `.scripts/job-search/add-digest-jobs-to-teal-playwright.cjs` в `getJobsWithData` теперь всегда забирает `job_title` и `company` из `jobs/<id>.json` (если они есть), даже когда `job_description` в файле короткое.
