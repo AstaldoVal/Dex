@@ -159,7 +159,7 @@ Copy and paste this command and press Enter:
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 Then restart Cursor.
@@ -226,14 +226,14 @@ The installer tries two methods automatically. If both fail, your pip version mi
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 **Windows:**
 
 ```bash
 python -m pip install --upgrade pip
-pip install --user mcp pyyaml
+pip install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 ---
@@ -248,7 +248,7 @@ This means the Python MCP servers can't start. Most common fix (upgrade pip firs
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 Then **restart Cursor completely** (Cmd+Q and reopen, or File → Quit).
