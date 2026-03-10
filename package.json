@@ -129,7 +129,8 @@
     "mcp:health-check": "node .claude/skills/mcp-health-check-custom/scripts/mcp-health-check.cjs",
     "nanobanana:generate": "python3 .scripts/nanobanana-generate.py",
     "only-stories:feature-matrix-sheet": "python3 .scripts/only_stories/create_feature_matrix_google_sheet.py",
-    "only-stories:decomposition-sheet": "python3 .scripts/only_stories/create_decomposition_google_sheet.py"
+    "only-stories:decomposition-sheet": "python3 .scripts/only_stories/create_decomposition_google_sheet.py",
+    "test:hooks": "node --test .claude/hooks/tests/*.test.cjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
