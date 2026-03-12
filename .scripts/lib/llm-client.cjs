@@ -32,7 +32,7 @@ async function generateWithAnthropic(prompt, options = {}) {
   const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
   
   const message = await anthropic.messages.create({
-    model: options.model || 'claude-3-5-sonnet-20241022',
+    model: options.model || 'claude-sonnet-4-6',
     max_tokens: options.maxOutputTokens || 4096,
     messages: [
       {
