@@ -177,11 +177,12 @@ function readGranolaCache() {
   const rawData = fs.readFileSync(existingPath, 'utf-8');
   const cacheWrapper = JSON.parse(rawData);
 
-  // Granola cache formats:
-  // - Old: { cache: "<JSON_STRING>" }
-  // - New: { cache: { state: {...} } } or { state: {...} }
-  const innerCache = cacheWrapper.cache != null ? cacheWrapper.cache : cacheWrapper;
-  const cacheData = typeof innerCache === 'string' ? JSON.parse(innerCache) : innerCache;
+  // The cache has a nested structure: { cache: JSON_STRING } or { cache: OBJECT }
+  // Newer Granola versions store cache as a pre-parsed object, not a JSON string.
+  const cacheData =
+    typeof cacheWrapper.cache === 'string'
+      ? JSON.parse(cacheWrapper.cache)
+      : cacheWrapper.cache;
   
   return {
     documents: cacheData.state?.documents || {},
