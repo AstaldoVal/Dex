@@ -8,6 +8,26 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased]
 
+### Python venv for MCP dependencies and Atlassian MCP remote (upstream 2026-03-21)
+
+**Python and pip:** `install.sh` and `/dex-update` used `pip3` for Python helpers, which fails on many modern Macs with Homebrew Python and recent Linux because of PEP 668 (direct pip installs to the system environment are blocked). The `--user` fallback also fails in many setups.
+
+Dex now creates a private Python environment (`.venv/`) inside your vault and installs dependencies there. This works across platforms and does not modify system Python.
+
+**What changed:**
+- `install.sh` creates `.venv/` and installs via the venv pip
+- `.mcp.json.example` points MCP servers to the venv Python
+- `/dex-update` uses the venv pip when updating dependencies, creating the venv first if you upgrade from an older install
+- Windows paths use `.venv/Scripts/python.exe` automatically
+
+**Atlassian MCP:** `/atlassian-setup` and `.mcp.json.example` previously referenced `@anthropic/atlassian-mcp`, which is not a valid npm package. Atlassian's official MCP is a remote SSE server.
+
+**What changed:**
+- Atlassian MCP config uses `mcp-remote@latest` with `https://mcp.atlassian.com/v1/sse`
+- Authentication runs through the browser OAuth flow
+
+**What to do:** Run `/dex-update` to pick up these fixes. If install failed on the Python step before, run `./install.sh` again.
+
 ### Dex now tells you when something is wrong (MCP health)
 
 **Before:** When something failed, your calendar could not connect, a task could not be created, or meeting processing hit an error, you would get a vague message in the conversation and then nothing. The error disappeared when the chat ended. If something was quietly broken for days, you would not know until you needed it.
@@ -65,6 +85,10 @@ If everything is fine, you get silence. No "all systems go" noise.
 ### Standalone bundle: `linkedin-profile-audit` for separate repo
 
 **What changed:** Added `standalone/linkedin-profile-audit/` — copy-paste skill (README, `SKILL.md` with Dex paths generalized, `references/` with SOURCE + both extracted texts). Install elsewhere as `.claude/skills/linkedin-profile-audit/`. Dex copy under `.claude/skills/` unchanged.
+
+### Semantic search setup (upstream note)
+
+**Setup required.** Semantic search is available but requires running `/enable-semantic-search` to set it up (about 5 minutes, large model download). New users may be offered this during onboarding. Once enabled, vault searches can use semantic matching instead of keyword-only where the routing layer supports it.
 
 ### Transcript skill: подсказка, когда не Rich (0.4.25)
 

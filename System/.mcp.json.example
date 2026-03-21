@@ -2,7 +2,7 @@
   "mcpServers": {
     "work-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/work_server.py"
       ],
@@ -12,7 +12,7 @@
     },
     "calendar-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/calendar_server.py"
       ],
@@ -22,7 +22,7 @@
     },
     "granola-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/granola_server.py"
       ],
@@ -32,7 +32,7 @@
     },
     "career-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/career_server.py"
       ],
@@ -42,7 +42,7 @@
     },
     "dex-improvements-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/dex_improvements_server.py"
       ],
@@ -52,7 +52,7 @@
     },
     "resume-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/resume_server.py"
       ],
@@ -62,7 +62,7 @@
     },
     "update-checker": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/update_checker.py"
       ],
@@ -72,7 +72,7 @@
     },
     "onboarding-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/onboarding_server.py"
       ],
@@ -82,7 +82,7 @@
     },
     "nanobanana-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/nanobanana_server.py"
       ],
@@ -92,13 +92,17 @@
     },
     "reminders-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "{{VAULT_PATH}}/.venv/bin/python",
       "args": [
         "{{VAULT_PATH}}/core/mcp/reminders_server.py"
       ],
       "env": {
         "VAULT_PATH": "{{VAULT_PATH}}"
       }
+    },
+    "atlassian-mcp": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/sse"]
     }
   }
 }
