@@ -100,6 +100,10 @@
         "VAULT_PATH": "{{VAULT_PATH}}"
       }
     },
+    "qmd": {
+      "command": "qmd",
+      "args": ["mcp"]
+    },
     "atlassian-mcp": {
       "command": "npx",
       "args": ["-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/sse"]

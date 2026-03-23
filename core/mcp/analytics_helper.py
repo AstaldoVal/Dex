@@ -38,7 +38,7 @@ PENDO_TRACK_SECRET = "9b69df0b-ed13-4fed-925d-265243eef113"
 
 def get_vault_path() -> Path:
     """Get vault path from environment or default."""
-    vault = os.environ.get('VAULT_PATH', os.path.expanduser('~/Claudesidian'))
+    vault = os.environ.get('VAULT_PATH', os.path.expanduser('~/Dex'))
     return Path(vault)
 
 

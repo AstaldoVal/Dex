@@ -164,6 +164,10 @@ To speak a specific file: `npm run speak-report -- path/to/file.md`. Options: `-
 ### Person Lookup (Important)
 Always check `05-Areas/People/` folder FIRST before broader searches. Person pages aggregate meeting history, context, and action items - they're often the fastest path to relevant information.
 
+**Rebuild the index** with `build_people_index` if person pages have been added or changed significantly.
+
+**Semantic Enhancement (QMD):** Use the `query` tool (QMD MCP) to search for the person's name and role. This finds contextual references like "the VP of Sales mentioned..." or "the PM on the checkout project asked..." that don't mention the person by name. Merge semantic results with the person page content for richer context. If the `query` tool is unavailable (QMD not installed), fall back to filename/grep lookup.
+
 ### Double Plan (planning stress-test)
 When running any planning skill (`/daily-plan`, `/week-plan`, `/quarter-plan`, `/project-health`, `/roadmap`), after delivering the first plan automatically run a **stress-test** pass: assume the plan is 6/10, find weak spots (value, assumptions, risks), fix them, and present a 10/10 upgrade. Focus on value, not implementation complexity. Add a short "Double Plan: stress-test" summary (what was weak, what was strengthened). Skip only if the user says "no stress-test" or "skip double plan." See `.claude/skills/double-plan/SKILL.md`.
 
@@ -204,8 +208,8 @@ Apply consistently across all interactions (planning, reviews, meetings, project
 When the user shares meeting notes or says they had a meeting:
 1. Extract key points, decisions, and action items
 2. Identify people mentioned → update/create person pages
-3. Link to relevant projects
-4. Suggest follow-ups
+3. Link to relevant projects. Use the `query` tool (QMD MCP) with the meeting topic to find thematically related projects and past discussions that keyword matching would miss (e.g., a meeting about "reducing churn" linking to a project about "customer health scoring"). Fall back to grep if QMD unavailable.
+4. Suggest follow-ups. Use the `query` tool to search for implicit commitments: soft language like "we should revisit" or "let me think about" that regex might not catch as action items. Fall back to grep if QMD unavailable.
 5. If meeting with manager and Career folder exists, extract career development context
 
 ### Job digest: remote-only filter
@@ -266,7 +270,7 @@ When the user says they completed a task (any phrasing):
 - "Done with the meeting prep"
 
 **Your workflow:**
-1. Search `03-Tasks/Tasks.md` for tasks matching the description (use keywords/context)
+1. Search `03-Tasks/Tasks.md` for tasks matching the description. Use the `query` tool (QMD MCP) to catch semantic matches like "I finished the pricing thing" matching task "Finalize Q1 pricing proposal." Fall back to keyword and context matching if QMD is unavailable.
 2. Find the task and extract its task ID (format: `^task-YYYYMMDD-XXX`)
 3. Call Work MCP: `update_task_status(task_id="task-20260128-001", status="d")`
 4. The MCP automatically updates the task everywhere:
@@ -342,10 +346,11 @@ Help the user capture:
 
 ### Search & Recall
 When asked about something:
-1. Search across the vault
-2. Check person pages for context
-3. Look at recent meetings
-4. Surface relevant projects
+1. **Semantic search (default):** Use the `query` tool (QMD MCP) first. It finds content by meaning, not just keywords: "customer retention" can surface notes about "churn", "cancellation", "NPS scores". Use `status` to confirm QMD is healthy if results seem off.
+2. **Keyword search (fallback):** If the `query` tool is unavailable (QMD not installed), use grep/glob. This still works for exact matches and known terms.
+3. Check person pages for context
+4. Look at recent meetings
+5. Surface relevant projects
 
 ### Documentation Sync
 When making significant system changes:

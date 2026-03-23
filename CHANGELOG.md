@@ -18,6 +18,10 @@ All notable changes to Dex will be documented in this file.
 
 **To index new collections:** Run `/enable-semantic-search`.
 
+### QMD in MCP example and CLAUDE routing (upstream 2026-03-22)
+
+**What changed:** `System/.mcp.json.example` includes a `qmd` entry for the QMD MCP server when the `qmd` CLI is installed. `CLAUDE.md` describes using the `query` and `status` tools for semantic search (with grep as fallback). `core/utils/qmd_query.py` is restored with path fixes; `core/mcp/analytics_helper.py` uses the same path style. `.gitignore` adds `core/paths.json`, vault `.venv/`, test fixture exceptions, and `.ant-colony/`. Skills catalog lists `/industry-truths`.
+
 ### Python venv for MCP dependencies and Atlassian MCP remote (upstream 2026-03-21)
 
 **Python and pip:** `install.sh` and `/dex-update` used `pip3` for Python helpers, which fails on many modern Macs with Homebrew Python and recent Linux because of PEP 668 (direct pip installs to the system environment are blocked). The `--user` fallback also fails in many setups.

@@ -242,6 +242,7 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/mcp-profiles` - Recommend which MCP servers to enable for a scenario (PM, job search, meetings)
 - `/mcp-health-check-custom` - Verify stdio MCP servers, apply known fixes (mac-messages FastMCP, google-slides jwa). Runs at chat start; invoke manually if MCPs fail
 - `/triage` - Organize inbox and extract tasks
+- `/industry-truths` - Define time-horizoned assumptions that ground strategic thinking
 
 **Research:**
 - `/web-research` - Full internet research flow (Exa -> Brave/Tavily -> browser MCP -> claude_code enrichment)
