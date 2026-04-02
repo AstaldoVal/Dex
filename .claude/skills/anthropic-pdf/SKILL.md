@@ -25,6 +25,20 @@ for page in reader.pages:
     text += page.extract_text()
 ```
 
+## Output Artifacts Index (required)
+When you create any output files (for example: `.md`, `.pdf`, `.png`, `.json`, or extracted artifacts), you MUST start your response with a clickable index so the user can open the files immediately in Cursor.
+
+Use this exact structure at the top of the response:
+
+Generated files (click to open):
+1. [Description](file:///ABSOLUTE/PATH/TO/FILE.ext)
+2. [Description](file:///ABSOLUTE/PATH/TO/FILE.ext)
+
+Rules:
+- Always use `file:///` links with absolute paths.
+- Include every newly created file that is relevant to the user (main outputs plus important raw artifacts).
+- Do not instruct the user to browse folders or “search for the file”.
+
 ## Python Libraries
 
 ### pypdf - Basic Operations

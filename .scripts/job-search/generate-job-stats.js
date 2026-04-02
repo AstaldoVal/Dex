@@ -13,9 +13,58 @@
 const fs = require('fs');
 const path = require('path');
 const { getStats, loadTracker, STATUSES, SOURCES, FEEDBACK_TYPES } = require('./track-application.js');
-const { DATA_DIR } = require('./job-search-paths.cjs');
+const { DATA_DIR, DIGESTS_DIR } = require('./job-search-paths.cjs');
 
 const OUTPUT_FILE = path.join(DATA_DIR, 'job-stats.md');
+
+/**
+ * Парсит дайджесты BettingJobs и считает отклики по [x]
+ * Возвращает количество откликов за указанную дату или за последние 30 дней
+ */
+function countBettingJobsApplicationsFromDigests(targetDate = null) {
+  const digestFiles = fs.readdirSync(DIGESTS_DIR)
+    .filter(f => f.startsWith('bettingjobs-') && f.endsWith('.md'))
+    .map(f => path.join(DIGESTS_DIR, f))
+    .sort()
+    .reverse(); // Новые сначала
+  
+  let totalCount = 0;
+  const dateCounts = {};
+  
+  digestFiles.forEach(filePath => {
+    const fileName = path.basename(filePath);
+    // Извлекаем дату из имени файла: bettingjobs-2026-02-08.md
+    const dateMatch = fileName.match(/bettingjobs-(\d{4}-\d{2}-\d{2})\.md/);
+    if (!dateMatch) return;
+    
+    const digestDate = dateMatch[1];
+    
+    // Если указана целевая дата, пропускаем другие
+    if (targetDate && digestDate !== targetDate) {
+      // Проверяем последние 30 дней
+      const digestDateObj = new Date(digestDate);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      if (targetDate === 'last30' && digestDateObj >= thirtyDaysAgo) {
+        // Продолжаем
+      } else if (targetDate !== 'last30') {
+        return;
+      }
+    }
+    
+    const content = fs.readFileSync(filePath, 'utf8');
+    // Считаем строки с [x] (отклики)
+    const appliedMatches = content.match(/^-\s+\[x\]/gm);
+    const count = appliedMatches ? appliedMatches.length : 0;
+    
+    if (count > 0) {
+      totalCount += count;
+      dateCounts[digestDate] = (dateCounts[digestDate] || 0) + count;
+    }
+  });
+  
+  return { total: totalCount, byDate: dateCounts };
+}
 
 function generateReport() {
   const tracker = loadTracker();
@@ -44,21 +93,65 @@ node .scripts/job-search/track-application.js add "Senior PM" "Company Name" "ht
   const apps = tracker.applications;
   const now = new Date();
   
+  // Получаем отклики BettingJobs из дайджестов (более точный подсчет)
+  const bettingJobsFromDigests = countBettingJobsApplicationsFromDigests('last30');
+  
   // Детальная статистика по источникам
+  // Переклассифицируем BettingJobs как отдельный источник (job board, не company_site)
+  const normalizeSource = (app) => {
+    if (app.company && app.company.toLowerCase().includes('bettingjobs')) {
+      return 'bettingjobs';
+    }
+    // Проверяем URL на bettingjobs.com
+    if (app.url && app.url.includes('bettingjobs.com')) {
+      return 'bettingjobs';
+    }
+    return app.source || 'other';
+  };
+  
   const sourceStats = {};
-  Object.keys(stats.by_source).forEach(source => {
-    const sourceApps = apps.filter(a => a.source === source);
+  // Сначала группируем по нормализованному source
+  const appsBySource = {};
+  apps.forEach(app => {
+    const normalizedSource = normalizeSource(app);
+    if (!appsBySource[normalizedSource]) {
+      appsBySource[normalizedSource] = [];
+    }
+    appsBySource[normalizedSource].push(app);
+  });
+  
+  // Для BettingJobs используем данные из дайджестов, если они больше чем в tracker
+  Object.keys(appsBySource).forEach(source => {
+    const sourceApps = appsBySource[source];
     const sourceResponded = sourceApps.filter(a => a.response_date);
     const sourceInterviews = sourceApps.filter(a => a.status === STATUSES.INTERVIEW || a.interview_dates.length > 0);
     
+    let totalCount = sourceApps.length;
+    
+    // Для BettingJobs: если в дайджестах больше откликов, используем это число
+    if (source === 'bettingjobs' && bettingJobsFromDigests.total > totalCount) {
+      totalCount = bettingJobsFromDigests.total;
+    }
+    
     sourceStats[source] = {
-      total: sourceApps.length,
+      total: totalCount,
       responded: sourceResponded.length,
-      response_rate: sourceApps.length > 0 ? (sourceResponded.length / sourceApps.length * 100).toFixed(1) : 0,
+      response_rate: totalCount > 0 ? (sourceResponded.length / totalCount * 100).toFixed(1) : 0,
       interviews: sourceInterviews.length,
       interview_rate: sourceResponded.length > 0 ? (sourceInterviews.length / sourceResponded.length * 100).toFixed(1) : 0
     };
   });
+  
+  // Если BettingJobs нет в tracker, но есть в дайджестах, добавляем отдельно
+  if (!sourceStats['bettingjobs'] && bettingJobsFromDigests.total > 0) {
+    sourceStats['bettingjobs'] = {
+      total: bettingJobsFromDigests.total,
+      responded: 0,
+      response_rate: '0.0',
+      interviews: 0,
+      interview_rate: '0.0'
+    };
+  }
   
   // Статистика по ролям
   const roleStats = {};
@@ -97,8 +190,15 @@ node .scripts/job-search/track-application.js add "Senior PM" "Company Name" "ht
     : 0;
   
   // Воронка конверсии
+  // Корректируем общее количество: если BettingJobs в дайджестах больше чем в tracker
+  let totalApplications = stats.total_applications;
+  const bettingJobsInTracker = apps.filter(a => normalizeSource(a) === 'bettingjobs').length;
+  if (bettingJobsFromDigests.total > bettingJobsInTracker) {
+    totalApplications = totalApplications - bettingJobsInTracker + bettingJobsFromDigests.total;
+  }
+  
   const funnel = {
-    applied: apps.length,
+    applied: totalApplications,
     responded: stats.responded,
     interviews: stats.interviews,
     offers: stats.offers
@@ -107,24 +207,25 @@ node .scripts/job-search/track-application.js add "Senior PM" "Company Name" "ht
   const report = `# Статистика откликов
 
 **Дата:** ${new Date().toISOString().split('T')[0]}  
-**Всего откликов:** ${stats.total_applications}
+**Всего откликов:** ${totalApplications}
 
 ---
 
 ## 🎯 Ключевые метрики
 
 ### 1️⃣ Response Rate
-- **Общий:** ${stats.response_rate} (${stats.responded} из ${stats.total_applications})
+- **Общий:** ${totalApplications > 0 ? ((stats.responded / totalApplications) * 100).toFixed(1) : '0.0'}% (${stats.responded} из ${totalApplications})
 - **Среднее время ответа:** ${stats.avg_response_days ? stats.avg_response_days + ' дней' : 'N/A'}
 - **За последние 30 дней:** ${recentResponseRate}% (${recentResponded.length} из ${recentApps.length})
+- **BettingJobs (из дайджестов):** ${bettingJobsFromDigests.total} откликов за последние 30 дней
 
 ### 2️⃣ Конверсия в интервью
 - **Из ответов:** ${stats.interview_conversion_rate}% (${stats.interviews} из ${stats.responded})
-- **Из всех откликов:** ${((stats.interviews / stats.total_applications) * 100).toFixed(1)}% (${stats.interviews} из ${stats.total_applications})
+- **Из всех откликов:** ${((stats.interviews / totalApplications) * 100).toFixed(1)}% (${stats.interviews} из ${totalApplications})
 
 ### 3️⃣ Конверсия в оффер
 - **Из интервью:** ${stats.offer_conversion_rate}% (${stats.offers} из ${stats.interviews})
-- **Общая конверсия:** ${((stats.offers / stats.total_applications) * 100).toFixed(1)}% (${stats.offers} из ${stats.total_applications})
+- **Общая конверсия:** ${((stats.offers / totalApplications) * 100).toFixed(1)}% (${stats.offers} из ${totalApplications})
 
 ### 4️⃣ Качество фидбека
 ${Object.keys(stats.by_feedback).length > 0 ? Object.entries(stats.by_feedback).map(([type, count]) => {
@@ -148,7 +249,7 @@ ${funnel.applied} → ${funnel.responded} → ${funnel.interviews} → ${funnel.
 \`\`\`
 
 **Конверсия на каждом этапе:**
-- Отклик → Ответ: ${stats.response_rate}
+- Отклик → Ответ: ${totalApplications > 0 ? ((stats.responded / totalApplications) * 100).toFixed(1) : '0.0'}%
 - Ответ → Интервью: ${stats.interview_conversion_rate}
 - Интервью → Оффер: ${stats.offer_conversion_rate}
 
@@ -163,6 +264,7 @@ ${Object.entries(sourceStats).map(([source, data]) => {
     'linkedin_email': 'LinkedIn Email',
     'linkedin_rss': 'LinkedIn RSS',
     'jobscollider': 'JobsCollider',
+    'bettingjobs': 'BettingJobs',
     'referral': 'Реферал',
     'company_site': 'Сайт компании',
     'other': 'Другое'
@@ -249,6 +351,7 @@ function generateRecommendations(stats, sourceStats, roleStats) {
       'linkedin_email': 'LinkedIn Email',
       'linkedin_rss': 'LinkedIn RSS',
       'jobscollider': 'JobsCollider',
+      'bettingjobs': 'BettingJobs',
       'referral': 'Рефералы',
       'company_site': 'Сайты компаний',
       'other': 'Другие источники'

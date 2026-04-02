@@ -151,6 +151,10 @@ Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing,
 
 **Implementation:** Skills in `_available/` aren't loaded into Cursor's context until you explicitly install them (by moving to `.claude/skills/`).
 
+### Publishing skills to separate repos
+
+Some skills are prepared for publication in **standalone repositories** (e.g. for AgentSkills marketplaces or community use). The publishable bundle lives in `06-Resources/Dex_System/Skills_Publish/`. Each subfolder (e.g. `scan-skill-injection/`) is self-contained: it includes the skill definition (SKILL.md), the script or assets, docs, test fixtures, and a package.json so the skill can be cloned or copied into a separate repo without Dex. The in-repo version of the skill (e.g. `.claude/skills/scan-skill-injection/`) points at Dex paths (`.scripts/skills/...`); the Skills_Publish copy uses paths suitable for the standalone package (`scripts/`, `docs/`, `fixtures/`).
+
 ---
 
 ## MCP Servers Deep Dive

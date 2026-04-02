@@ -1,0 +1,58 @@
+SOURCE: https://www.aha.io/roadmapping/guide/templates/create/prd
+TYPE: Release Requirements (release = new customer experience, not just code)
+COLLECTION: Third of three Aha PRD templates
+ORIGINAL_FORMATS: .xlsx, .pptx (also in this folder)
+USE_CASE: Cross-functional release planning — dev, design, QA, product marketing; update as progress happens
+Added: 2025-03-04
+
+---
+Release Requirements template
+
+Context
+A release is more than the bits of code that the team writes and ships. It is the opportunity to deliver a new customer experience — from the new functionality to the way that cross-functional teams support the go-to-market launch and beyond. With so many folks contributing to product success, it is critical to consider all of the elements that will impact your release (updating as progress happens to reflect the latest).
+
+---
+Structure
+
+1. Name
+   - Release name
+
+2. Target release date
+   - When you plan to ship the new customer experience
+
+3. Status
+   - Not started
+   - On track
+   - At risk
+
+4. Overview
+   - Description of what you hope to achieve in this epic
+   - Background information that will help inform the team
+
+5. Team
+   - Names and responsibilities (designers, developers, QA, product marketers)
+   - Meeting cadence for the team
+
+6. Strategic alignment
+   - How this new customer experience supports business and product goals
+
+7. Personas
+   - Link to user personas
+
+8. Features
+   - List of features that will ship with this release
+
+9. Milestones
+   - Important dates that reflect the team's progress
+
+10. Dependencies
+    - Constraints or related work that could impact the release timing
+
+11. Notes
+    - Open questions, additional background information
+    - Anything the team may need quick access to
+
+---
+Files in this folder
+- 02_Aha_Release_Requirements_Template.xlsx — Excel format
+- 02_Aha_Release_Requirements_Template.pptx — PowerPoint format

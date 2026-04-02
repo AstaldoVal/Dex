@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /**
- * Список компаний DOU (домен Gambling).
- * Только HTTP: запрашивает страницу(и) и парсит HTML. Без Playwright.
+ * Список компаний DOU (домен Gambling) — только первая страница (HTTP).
  * Вывод: JSON в stdout или в файл (--out path).
  *
- * DOU отдаёт по URL только первую порцию; остальные — по клику «Більше компаній» в браузере.
- * Для полного списка: открой https://jobs.dou.ua/companies/?domain=Gambling в браузере,
- * нажимай «Більше компаній» до конца и добавь недостающие компании в 06-Resources/iGaming_Ukraine_Product_Employers.md вручную.
+ * Для полного списка со всех страниц используй:
+ *   node .scripts/job-search/fetch-dou-gambling-all-pages.cjs --out /path/to/file.json
+ * (использует браузер, кликает «Більше компаній» до конца автоматически)
  */
 
 const path = require('path');

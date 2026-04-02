@@ -66,6 +66,7 @@ class DateTimeEncoder(json.JSONEncoder):
 # Configuration - Vault paths
 BASE_DIR = Path(os.environ.get('VAULT_PATH', Path.cwd()))
 TASKS_FILE = BASE_DIR / '03-Tasks/Tasks.md'
+LINEAR_SYNC_FILE = BASE_DIR / '03-Tasks' / 'linear_sync.json'
 WEEK_PRIORITIES_FILE = BASE_DIR / 'Inbox' / 'Week Priorities.md'
 QUARTER_GOALS_FILE = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
 GOALS_FILE = BASE_DIR / 'GOALS.md'  # Legacy, kept for compatibility
@@ -404,6 +405,108 @@ def update_task_status_everywhere(task_id: str, completed: bool) -> Dict[str, An
         'updated_files': updated_files,
         'instances_found': len(instances)
     }
+
+
+def get_task_linear_link(task_id: str) -> Dict[str, Any]:
+    """Get Linear issue id/identifier for a Dex task if linked (03-Tasks/linear_sync.json)."""
+    sync_path = Path(LINEAR_SYNC_FILE)
+    if not sync_path.exists():
+        return {"task_id": task_id, "linear_identifier": None, "linear_id": None, "linked": False}
+    try:
+        data = json.loads(sync_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        logger.warning(f"Failed to read linear_sync.json: {e}")
+        return {"task_id": task_id, "linear_identifier": None, "linear_id": None, "linked": False, "error": str(e)}
+    task_to_linear = data.get("task_to_linear") or {}
+    task_to_linear_id = data.get("task_to_linear_id") or {}
+    linear_identifier = task_to_linear.get(task_id)
+    linear_id = task_to_linear_id.get(task_id)
+    return {
+        "task_id": task_id,
+        "linear_identifier": linear_identifier,
+        "linear_id": linear_id,
+        "linked": bool(linear_identifier or linear_id),
+    }
+
+
+def add_linear_sync_link(task_id: str, linear_identifier: str, linear_id: str) -> Dict[str, Any]:
+    """Store link between Dex task and Linear issue (03-Tasks/linear_sync.json)."""
+    sync_path = Path(LINEAR_SYNC_FILE)
+    sync_path.parent.mkdir(parents=True, exist_ok=True)
+    data = {}
+    if sync_path.exists():
+        try:
+            data = json.loads(sync_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    task_to_linear = data.get("task_to_linear") or {}
+    task_to_linear_id = data.get("task_to_linear_id") or {}
+    linear_id_to_task = data.get("linear_id_to_task") or {}
+    task_to_linear[task_id] = linear_identifier
+    task_to_linear_id[task_id] = linear_id
+    linear_id_to_task[linear_id] = task_id
+    data["task_to_linear"] = task_to_linear
+    data["task_to_linear_id"] = task_to_linear_id
+    data["linear_id_to_task"] = linear_id_to_task
+    sync_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return {"success": True, "task_id": task_id, "linear_identifier": linear_identifier, "linear_id": linear_id}
+
+
+def add_task_from_linear(issue_id: str, identifier: str, title: str, description: str = "") -> Dict[str, Any]:
+    """Create a Dex task from a Linear issue and add sync link. Used by sync_linear_issues_to_dex and webhook."""
+    task_id = generate_task_id()
+    task_line = f"- [ ] **{title}** ^{task_id}"
+    task_line += "\n\t- From Linear"
+    if identifier:
+        task_line += f" ({identifier})"
+    if description:
+        desc_short = (description[:500] + "...") if len(description) > 500 else description
+        task_line += f"\n\t- {desc_short}"
+    task_line += "\n\t- Priority: P2"
+
+    tasks_file = get_tasks_file()
+    section_header = "## Next Week"
+    if tasks_file.exists():
+        content = tasks_file.read_text()
+        if section_header in content:
+            parts = content.split(section_header, 1)
+            new_content = parts[0] + section_header + "\n" + task_line + "\n" + parts[1]
+        else:
+            new_content = content.rstrip() + "\n\n" + task_line + "\n"
+        tasks_file.write_text(new_content)
+    else:
+        tasks_file.parent.mkdir(parents=True, exist_ok=True)
+        tasks_file.write_text("# Tasks\n\n" + section_header + "\n" + task_line + "\n")
+
+    add_linear_sync_link(task_id, identifier or issue_id, issue_id)
+    return {"success": True, "task_id": task_id, "linear_identifier": identifier, "linear_id": issue_id}
+
+
+def sync_linear_issues_to_dex(issues: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Create Dex tasks for Linear issues that are not yet linked.
+    issues: list of {id, identifier, title, description (optional)} from Linear.
+    """
+    linked_ids = set()
+    if LINEAR_SYNC_FILE.exists():
+        try:
+            data = json.loads(LINEAR_SYNC_FILE.read_text(encoding="utf-8"))
+            linked_ids = set((data.get("linear_id_to_task") or {}).keys())
+        except Exception:
+            pass
+    created = []
+    for issue in issues:
+        issue_id = (issue.get("id") or "").strip()
+        if not issue_id or issue_id in linked_ids:
+            continue
+        identifier = (issue.get("identifier") or "").strip()
+        title = (issue.get("title") or "").strip() or "Untitled"
+        description = (issue.get("description") or "").strip()
+        result = add_task_from_linear(issue_id, identifier, title, description)
+        created.append({"task_id": result["task_id"], "linear_identifier": result["linear_identifier"]})
+        linked_ids.add(issue_id)
+    return {"success": True, "created": created, "count": len(created)}
+
 
 def get_pillar_ids() -> List[str]:
     """Get list of valid pillar IDs"""
@@ -2461,6 +2564,54 @@ async def handle_list_tools() -> list[types.Tool]:
             }
         ),
         types.Tool(
+            name="get_task_linear_link",
+            description="Get Linear issue link for a Dex task (03-Tasks/linear_sync.json). Returns linear_identifier (e.g. INA-5) and linear_id if linked. Use before calling linear_set_issue_completed when user marks task done.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "task_id": {"type": "string", "description": "Dex task ID (e.g. task-20260210-357)"}
+                },
+                "required": ["task_id"]
+            }
+        ),
+        types.Tool(
+            name="add_linear_sync_link",
+            description="Store link between a Dex task and a Linear issue so status syncs both ways. Call after creating a Linear issue for a task.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "task_id": {"type": "string", "description": "Dex task ID"},
+                    "linear_identifier": {"type": "string", "description": "Linear issue identifier (e.g. INA-5)"},
+                    "linear_id": {"type": "string", "description": "Linear issue UUID (from issueCreate response)"}
+                },
+                "required": ["task_id", "linear_identifier", "linear_id"]
+            }
+        ),
+        types.Tool(
+            name="sync_linear_issues_to_dex",
+            description="Create Dex tasks for Linear issues that are not yet linked. Call after getting issues from Linear MCP (e.g. linear_my_issues or linear_list_issues). Pass the list of issues; only unlinked ones will get a task in 03-Tasks/Tasks.md and a link in linear_sync.json.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "issues": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string", "description": "Linear issue UUID"},
+                                "identifier": {"type": "string", "description": "e.g. INA-5"},
+                                "title": {"type": "string"},
+                                "description": {"type": "string"}
+                            },
+                            "required": ["id", "title"]
+                        },
+                        "description": "List of issues from Linear (id, identifier, title, description)"
+                    }
+                },
+                "required": ["issues"]
+            }
+        ),
+        types.Tool(
             name="get_system_status",
             description="Get comprehensive system status: task counts, priority distribution, pillar balance, blocked items",
             inputSchema={"type": "object", "properties": {}}
@@ -3002,6 +3153,29 @@ async def handle_call_tool(
                 "success": False,
                 "error": "Must provide either task_id or task_title"
             }, indent=2))]
+    
+    elif name == "get_task_linear_link":
+        task_id = (arguments or {}).get("task_id")
+        if not task_id:
+            return [types.TextContent(type="text", text=json.dumps({"error": "task_id required"}, indent=2))]
+        result = get_task_linear_link(task_id)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+    
+    elif name == "add_linear_sync_link":
+        task_id = (arguments or {}).get("task_id")
+        linear_identifier = (arguments or {}).get("linear_identifier")
+        linear_id = (arguments or {}).get("linear_id")
+        if not task_id or not linear_identifier or not linear_id:
+            return [types.TextContent(type="text", text=json.dumps({"error": "task_id, linear_identifier, linear_id required"}, indent=2))]
+        result = add_linear_sync_link(task_id, linear_identifier, linear_id)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+
+    elif name == "sync_linear_issues_to_dex":
+        issues = (arguments or {}).get("issues") or []
+        if not isinstance(issues, list):
+            return [types.TextContent(type="text", text=json.dumps({"success": False, "error": "issues must be a list"}, indent=2))]
+        result = sync_linear_issues_to_dex(issues)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
     
     elif name == "get_system_status":
         all_tasks = get_all_tasks()

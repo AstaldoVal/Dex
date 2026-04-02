@@ -87,6 +87,38 @@ function scanAppliedFolder() {
   }
   
   const entries = fs.readdirSync(APPLIED_FOLDER, { withFileTypes: true });
+
+  function parseRoleFromVacancyFolderName(folderName) {
+    if (!folderName || typeof folderName !== 'string') return 'Unknown Role';
+    // Our new structure: <SanitizedVacancyTitle>
+    const head = folderName.split('__')[0] || '';
+    const role = head.replace(/_/g, ' ').trim();
+    return role || 'Unknown Role';
+  }
+
+  function findCvFile(files) {
+    return files.find(
+      (f) =>
+        f.toLowerCase().includes('cv') &&
+        (f.toLowerCase().endsWith('.pdf') || f.toLowerCase().endsWith('.docx'))
+    );
+  }
+
+  function hasCoverLetter(files) {
+    return files.some(
+      (f) =>
+        f.toLowerCase().includes('cover') &&
+        (f.toLowerCase().endsWith('.docx') || f.toLowerCase().endsWith('.pdf'))
+    );
+  }
+
+  function extractRoleFromCvFileName(cvFile) {
+    // For legacy files only: "Roman ... - CV - Senior PM.pdf" style
+    let role = 'Unknown Role';
+    const roleMatch = cvFile.match(/[-_]([A-Z][^.-]+(?:Manager|Director|Lead|Engineer|Developer|Designer|Analyst|PM|Product)[^.-]*)/i);
+    if (roleMatch) role = roleMatch[1].trim();
+    return role;
+  }
   
   for (const entry of entries) {
     // Пропускаем скрытые файлы и системные папки
@@ -101,44 +133,50 @@ function scanAppliedFolder() {
     
     const companyFolder = path.join(APPLIED_FOLDER, entry.name);
     const companyName = entry.name;
-    
-    // Ищем CV.pdf в папке компании
-    const files = fs.readdirSync(companyFolder);
-    const cvFile = files.find(f => 
-      f.toLowerCase().includes('cv') && 
-      (f.toLowerCase().endsWith('.pdf') || f.toLowerCase().endsWith('.docx'))
-    );
-    
-    if (!cvFile) {
-      continue; // Нет резюме, пропускаем
+
+    const companyEntries = fs.readdirSync(companyFolder, { withFileTypes: true });
+    const rootFiles = companyEntries.filter((e) => e.isFile()).map((e) => e.name);
+
+    // Legacy layout: CV directly inside company folder
+    const rootCvFile = findCvFile(rootFiles);
+    if (rootCvFile) {
+      const cvPath = path.join(companyFolder, rootCvFile);
+      const cvStats = fs.statSync(cvPath);
+      const dateApplied = cvStats.mtime.toISOString().split('T')[0];
+      const role = extractRoleFromCvFileName(rootCvFile);
+      applications.push({
+        company: companyName,
+        role,
+        date_applied: dateApplied,
+        has_cover_letter: hasCoverLetter(rootFiles),
+        cv_path: cvPath,
+        company_folder: companyFolder
+      });
+      continue;
     }
-    
-    const cvPath = path.join(companyFolder, cvFile);
-    const cvStats = fs.statSync(cvPath);
-    const dateApplied = cvStats.mtime.toISOString().split('T')[0];
-    
-    // Проверяем наличие кавер-письма
-    const hasCoverLetter = files.some(f => 
-      f.toLowerCase().includes('cover') && 
-      (f.toLowerCase().endsWith('.docx') || f.toLowerCase().endsWith('.pdf'))
-    );
-    
-    // Пытаемся определить роль из названия файла или папки
-    // Например, если есть файл "Roman Matsukatov - CV - Senior PM.pdf"
-    let role = 'Unknown Role';
-    const roleMatch = cvFile.match(/[-_]([A-Z][^.-]+(?:Manager|Director|Lead|Engineer|Developer|Designer|Analyst|PM|Product)[^.-]*)/i);
-    if (roleMatch) {
-      role = roleMatch[1].trim();
+
+    // New layout: CV inside Applied/<Company>/<Vacancy>/
+    const vacancyDirs = companyEntries.filter((e) => e.isDirectory()).map((e) => e.name);
+    for (const vacancyName of vacancyDirs) {
+      const vacancyFolder = path.join(companyFolder, vacancyName);
+      const vacancyEntries = fs.readdirSync(vacancyFolder, { withFileTypes: true });
+      const vacancyFiles = vacancyEntries.filter((e) => e.isFile()).map((e) => e.name);
+
+      const cvFile = findCvFile(vacancyFiles);
+      if (!cvFile) continue;
+
+      const cvPath = path.join(vacancyFolder, cvFile);
+      const cvStats = fs.statSync(cvPath);
+      const dateApplied = cvStats.mtime.toISOString().split('T')[0];
+      applications.push({
+        company: companyName,
+        role: parseRoleFromVacancyFolderName(vacancyName),
+        date_applied: dateApplied,
+        has_cover_letter: hasCoverLetter(vacancyFiles),
+        cv_path: cvPath,
+        company_folder: vacancyFolder
+      });
     }
-    
-    applications.push({
-      company: companyName,
-      role: role,
-      date_applied: dateApplied,
-      has_cover_letter: hasCoverLetter,
-      cv_path: cvPath,
-      company_folder: companyFolder
-    });
   }
   
   return applications;
@@ -177,6 +215,16 @@ function syncAppliedFolder() {
                           app.company.toLowerCase().includes(a.company.toLowerCase());
       
       if (!companyMatch) return false;
+
+      // If we can compare roles, use it to avoid merging different vacancies of the same company.
+      const roleA = (a.role || '').toLowerCase().trim();
+      const roleB = (app.role || '').toLowerCase().trim();
+      const roleMatch =
+        !roleA || !roleB ||
+        roleA === roleB ||
+        roleA.includes(roleB) ||
+        roleB.includes(roleA);
+      if (!roleMatch) return false;
       
       // Проверяем дату (может быть небольшая разница)
       const appDate = new Date(app.date_applied);

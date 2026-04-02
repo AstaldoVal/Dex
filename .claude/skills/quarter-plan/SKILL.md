@@ -351,6 +351,18 @@ created: [timestamp]
 
 ---
 
+## Step 5.5: Double Plan (stress-test)
+
+After generating and saving quarter goals, run the Double Plan phase per `.claude/skills/double-plan/SKILL.md`:
+
+- Stress-test the goals (clarity, measurability, pillar balance, dependencies, ambition vs realism). Assume 6/10 → 10/10; focus on value.
+- Add a short **"Double Plan: stress-test"** block to your reply: 2–4 bullets on what was weak and what was strengthened; any concrete edits to goals or file.
+- If changes are non-trivial, update `01-Quarter_Goals/Quarter_Goals.md` and note the edits.
+
+Skip only if the user explicitly says "no stress-test" or "skip double plan."
+
+---
+
 ## Step 6: Summary & Next Steps
 
 Display summary:

@@ -55,9 +55,8 @@ function getGranolaCachePath() {
   }
 }
 
-const GRANOLA_CACHE = getGranolaCachePath();
 const STATE_FILE = path.join(__dirname, 'processed-meetings.json');
-const MEETINGS_DIR = path.join(VAULT_ROOT, 'Inbox', 'Meetings');
+const MEETINGS_DIR = path.join(VAULT_ROOT, '00-Inbox', 'Meetings');
 const QUEUE_FILE = path.join(MEETINGS_DIR, 'queue.md');
 const LOG_DIR = path.join(VAULT_ROOT, '.scripts', 'logs');
 const PILLARS_FILE = path.join(VAULT_ROOT, 'System', 'pillars.yaml');
@@ -156,15 +155,29 @@ function saveState(state) {
 // ============================================================================
 
 function readGranolaCache() {
-  if (!fs.existsSync(GRANOLA_CACHE)) {
-    throw new Error(`Granola cache not found at ${GRANOLA_CACHE}`);
+  // Granola has evolved cache formats over time (v3, v4, v6, ...).
+  // Prefer the newest known cache file that actually exists on disk.
+  const defaultPath = getGranolaCachePath();
+  const homedir = os.homedir();
+  const candidates = [
+    defaultPath,
+    path.join(homedir, 'Library/Application Support/Granola/cache-v6.json'),
+    path.join(homedir, 'Library/Application Support/Granola/cache-v4.json'),
+  ];
+
+  const existingPath = candidates.find(p => fs.existsSync(p));
+  if (!existingPath) {
+    throw new Error(`Granola cache not found. Tried: ${candidates.join(', ')}`);
   }
-  
-  const rawData = fs.readFileSync(GRANOLA_CACHE, 'utf-8');
+
+  const rawData = fs.readFileSync(existingPath, 'utf-8');
   const cacheWrapper = JSON.parse(rawData);
-  
-  // The cache has a nested structure: { cache: JSON_STRING }
-  const cacheData = JSON.parse(cacheWrapper.cache);
+
+  // Granola cache formats:
+  // - Old: { cache: "<JSON_STRING>" }
+  // - New: { cache: { state: {...} } } or { state: {...} }
+  const innerCache = cacheWrapper.cache != null ? cacheWrapper.cache : cacheWrapper;
+  const cacheData = typeof innerCache === 'string' ? JSON.parse(innerCache) : innerCache;
   
   return {
     documents: cacheData.state?.documents || {},

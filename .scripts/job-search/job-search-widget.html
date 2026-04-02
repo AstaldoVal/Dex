@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Search Status</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: transparent; }
+    #widget {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 320px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      font-size: 12px;
+      user-select: none;
+      z-index: 999999;
+    }
+    #widget.collapsed { max-height: none; }
+    #widget.collapsed #body { display: none; }
+    #widget:not(.collapsed) #body { overflow: auto; flex: 1; min-height: 0; }
+    #widget.dragging { cursor: grabbing; }
+    #header {
+      padding: 8px 12px;
+      background: #334155;
+      border-radius: 12px 12px 0 0;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #widget.collapsed #header { border-radius: 12px; }
+    #header:active { cursor: grabbing; }
+    #header h1 { margin: 0; font-size: 13px; font-weight: 600; }
+    #header-summary { font-size: 10px; color: #94a3b8; margin-left: 8px; }
+    #toggle { cursor: pointer; color: #94a3b8; font-size: 14px; padding: 2px 4px; user-select: none; }
+    #refresh { font-size: 10px; color: #94a3b8; }
+    .block {
+      padding: 10px 12px;
+      border-bottom: 1px solid #334155;
+    }
+    .block:last-child { border-bottom: none; }
+    .block-title { font-weight: 600; color: #94a3b8; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
+    .stat { display: flex; justify-content: space-between; margin: 2px 0; }
+    .stat-key { color: #94a3b8; }
+    .stat-val { font-variant-numeric: tabular-nums; }
+    .status-done { color: #86efac; }
+    .status-failed { color: #fca5a5; }
+    .status-running { color: #fde047; }
+    .status-zero { color: #94a3b8; }
+    #full-flow .stat-val { font-size: 11px; }
+    .log-toggle { font-size: 10px; color: #64748b; cursor: pointer; margin-top: 6px; }
+    .log-toggle:hover { color: #94a3b8; }
+    .last-log {
+      margin-top: 8px;
+      padding: 8px;
+      background: #0f172a;
+      border-radius: 6px;
+      font-family: ui-monospace, monospace;
+      font-size: 10px;
+      line-height: 1.35;
+      max-height: 180px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div id="widget" class="collapsed">
+    <div id="header">
+      <div>
+        <h1>Job Search</h1>
+        <span id="header-summary">—</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span id="refresh">—</span>
+        <span id="toggle" title="Развернуть / Свернуть">▼</span>
+      </div>
+    </div>
+    <div id="body">
+      <div id="incremental" class="block">
+        <div class="block-title">Senior PM (incremental)</div>
+        <div id="incremental-body">Loading…</div>
+        <div class="log-toggle" id="inc-log-toggle" style="display:none;">▼ Последний лог прогона</div>
+        <div class="last-log" id="inc-log" style="display:none;"></div>
+      </div>
+      <div id="incremental-igaming" class="block">
+        <div class="block-title">iGaming PM (incremental)</div>
+        <div id="incremental-igaming-body">Loading…</div>
+        <div class="log-toggle" id="igaming-log-toggle" style="display:none;">▼ Последний лог прогона</div>
+        <div class="last-log" id="igaming-log" style="display:none;"></div>
+      </div>
+      <div id="full-flow" class="block">
+        <div class="block-title">Full flow</div>
+        <div id="full-flow-body">Loading…</div>
+        <div class="log-toggle" id="full-log-toggle" style="display:none;">▼ Последний лог прогона</div>
+        <div class="last-log" id="full-log" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const widget = document.getElementById('widget');
+    const header = document.getElementById('header');
+    const refreshEl = document.getElementById('refresh');
+    const toggleEl = document.getElementById('toggle');
+    const headerSummary = document.getElementById('header-summary');
+
+    let drag = { x: 0, y: 0, left: 0, top: 0 };
+    let lastData = null;
+    let didDrag = false;
+
+    function setCollapsed(collapsed) {
+      widget.classList.toggle('collapsed', collapsed);
+      toggleEl.textContent = collapsed ? '▼' : '▲';
+      if (lastData) updateHeaderSummary(lastData);
+    }
+    function toggleCollapse() {
+      setCollapsed(!widget.classList.contains('collapsed'));
+    }
+    toggleEl.addEventListener('click', (e) => { e.stopPropagation(); toggleCollapse(); });
+    header.addEventListener('click', (e) => {
+      if (e.target === toggleEl || e.target.closest('#toggle')) return;
+      if (didDrag) { didDrag = false; return; }
+      toggleCollapse();
+    });
+
+    header.addEventListener('mousedown', (e) => {
+      if (e.target.tagName === 'A' || e.target.closest('#toggle')) return;
+      didDrag = false;
+      widget.classList.add('dragging');
+      const rect = widget.getBoundingClientRect();
+      drag.left = rect.left;
+      drag.top = rect.top;
+      drag.x = e.clientX;
+      drag.y = e.clientY;
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!widget.classList.contains('dragging')) return;
+      didDrag = true;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      let left = drag.left + dx;
+      let top = drag.top + dy;
+      drag.x = e.clientX;
+      drag.y = e.clientY;
+      const rect = widget.getBoundingClientRect();
+      if (left < 0) left = 0;
+      if (top < 0) top = 0;
+      if (left + rect.width > window.innerWidth) left = window.innerWidth - rect.width;
+      if (top + rect.height > window.innerHeight) top = window.innerHeight - rect.height;
+      drag.left = left;
+      drag.top = top;
+      widget.style.right = 'auto';
+      widget.style.bottom = 'auto';
+      widget.style.left = left + 'px';
+      widget.style.top = top + 'px';
+    });
+    document.addEventListener('mouseup', () => widget.classList.remove('dragging'));
+
+    function fmtTime(s) {
+      if (!s) return '—';
+      try {
+        const d = new Date(s.replace('+0000', 'Z'));
+        return d.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' });
+      } catch (_) { return s; }
+    }
+    function fmtTimeShort(s) {
+      if (!s) return '—';
+      try {
+        const d = new Date(s.replace('+0000', 'Z'));
+        return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      } catch (_) { return s; }
+    }
+
+    function updateHeaderSummary(data) {
+      const parts = [];
+      if (data.incremental && data.incremental.status !== 'no runs yet') {
+        parts.push('Incr. ' + fmtTimeShort(data.incremental.startedAt) + ' ' + (data.incremental.status || '—'));
+      } else parts.push('Incr. —');
+      if (data.incrementalIgaming && data.incrementalIgaming.status !== 'no runs yet') {
+        parts.push('iGaming ' + fmtTimeShort(data.incrementalIgaming.startedAt) + ' ' + (data.incrementalIgaming.status || '—'));
+      }
+      if (data.fullFlow && data.fullFlow.lastUpdated) {
+        parts.push('Full ' + fmtTimeShort(data.fullFlow.lastUpdated) + ' ' + (data.fullFlow.status || '—'));
+      } else parts.push('Full —');
+      headerSummary.textContent = parts.join(' · ');
+    }
+
+    function renderIncremental(data, bodyId, logToggleId, logElId) {
+      const el = document.getElementById(bodyId);
+      const logToggle = document.getElementById(logToggleId);
+      const logEl = document.getElementById(logElId);
+      if (!data || data.status === 'no runs yet') {
+        el.innerHTML = '<div class="stat"><span class="stat-key">Status</span><span class="stat-val status-zero">No runs yet</span></div>';
+        logToggle.style.display = 'none';
+        logEl.style.display = 'none';
+        return;
+      }
+      const statusClass = data.status === 'done' ? 'status-done' : data.status === 'digest_filtered_to_zero' ? 'status-zero' : 'status-running';
+      el.innerHTML = [
+        '<div class="stat"><span class="stat-key">Last run</span><span class="stat-val">' + fmtTime(data.startedAt) + '</span></div>',
+        '<div class="stat"><span class="stat-key">Export</span><span class="stat-val">' + (data.export_total ?? '—') + '</span></div>',
+        '<div class="stat"><span class="stat-key">New jobs</span><span class="stat-val">' + (data.new_jobs ?? '—') + '</span></div>',
+        '<div class="stat"><span class="stat-key">Digest</span><span class="stat-val">' + (data.digest_count ?? '—') + '</span></div>',
+        '<div class="stat"><span class="stat-key">Add Teal</span><span class="stat-val">' + (data.add_teal ?? '—') + '</span></div>',
+        '<div class="stat"><span class="stat-key">Status</span><span class="stat-val ' + statusClass + '">' + (data.status || '—') + '</span></div>'
+      ].join('');
+      if (data.lastLogLines && data.lastLogLines.length > 0) {
+        logToggle.style.display = 'block';
+        logEl.textContent = data.lastLogLines.join('\n');
+        logToggle.onclick = () => {
+          const show = logEl.style.display !== 'block';
+          logEl.style.display = show ? 'block' : 'none';
+          logToggle.textContent = show ? '▲ Скрыть лог' : '▼ Последний лог прогона';
+        };
+      } else {
+        logToggle.style.display = 'none';
+        logEl.style.display = 'none';
+      }
+    }
+
+    function renderFullFlow(data) {
+      const el = document.getElementById('full-flow-body');
+      const logToggle = document.getElementById('full-log-toggle');
+      const logEl = document.getElementById('full-log');
+      if (!data) { el.innerHTML = '—'; logToggle.style.display = 'none'; logEl.style.display = 'none'; return; }
+      const statusClass = data.status === 'completed' ? 'status-done' : data.status === 'failed' ? 'status-failed' : 'status-zero';
+      el.innerHTML = [
+        '<div class="stat"><span class="stat-key">Status</span><span class="stat-val ' + statusClass + '">' + (data.status || '—') + '</span></div>',
+        '<div class="stat"><span class="stat-key">Last updated</span><span class="stat-val">' + fmtTime(data.lastUpdated) + '</span></div>',
+        data.failedAtStep ? '<div class="stat"><span class="stat-key">Failed at step</span><span class="stat-val status-failed">' + data.failedAtStep + '</span></div>' : '',
+        data.completedSteps ? '<div class="stat"><span class="stat-key">Completed</span><span class="stat-val">' + (data.completedSteps || '').trim() + '</span></div>' : ''
+      ].filter(Boolean).join('');
+      if (data.lastLogLines && data.lastLogLines.length > 0) {
+        logToggle.style.display = 'block';
+        logEl.textContent = data.lastLogLines.join('\n');
+        logToggle.onclick = () => {
+          const show = logEl.style.display !== 'block';
+          logEl.style.display = show ? 'block' : 'none';
+          logToggle.textContent = show ? '▲ Скрыть лог' : '▼ Последний лог прогона';
+        };
+      } else {
+        logToggle.style.display = 'none';
+        logEl.style.display = 'none';
+      }
+    }
+
+    function fetchStatus() {
+      fetch('/api/status').then(r => r.json()).then((data) => {
+        lastData = data;
+        renderIncremental(data.incremental, 'incremental-body', 'inc-log-toggle', 'inc-log');
+        renderIncremental(data.incrementalIgaming, 'incremental-igaming-body', 'igaming-log-toggle', 'igaming-log');
+        renderFullFlow(data.fullFlow);
+        updateHeaderSummary(data);
+        refreshEl.textContent = new Date().toLocaleTimeString();
+      }).catch(() => {
+        document.getElementById('incremental-body').textContent = 'Server unreachable';
+        document.getElementById('incremental-igaming-body').textContent = '—';
+        document.getElementById('full-flow-body').textContent = '—';
+        refreshEl.textContent = 'Error';
+      });
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 15000);
+  </script>
+</body>
+</html>

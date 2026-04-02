@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>DexAssistant</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.dex.assistant</string>
+    <key>CFBundleName</key>
+    <string>Dex Assistant</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <!-- LSUIElement false = иконка в Dock, чтобы было видно, что приложение запущено -->
+    <key>LSUIElement</key>
+    <false/>
+    <!-- Разрешить HTTP для API Job Search (127.0.0.1:8766/api/status) -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
+</dict>
+</plist>

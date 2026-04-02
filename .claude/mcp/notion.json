@@ -1,0 +1,9 @@
+{
+  "name": "notion",
+  "description": "Notion MCP: read and write to Notion workspace (Spaces, pages, databases). Remote server, OAuth.",
+  "server": {
+    "url": "https://mcp.notion.com/mcp",
+    "type": "http"
+  },
+  "notes": "Add to .cursor/mcp.json.source: \"notion\": { \"url\": \"https://mcp.notion.com/mcp\" }. Run python3 .scripts/cursor-sync-mcp.py and restart Cursor. First use: OAuth in browser to connect workspace. Use for: read info in Spaces, create new pages. Not yet wired into PRD-push flow."
+}

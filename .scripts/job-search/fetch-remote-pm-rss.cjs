@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Fetch remote Product/PM jobs from Remotive, We Work Remotely, RemoteOK, JobsCollider.
+ * Fetch remote Product/PM jobs from Remotive, We Work Remotely, RemoteOK.
  * Merges into the daily digest (linkedin-jobs-YYYY-MM-DD.md) under "## Remote job boards (RSS)".
  * Run from job-digest pipeline after Step 1 (email parser).
  *
@@ -13,9 +13,8 @@
  *   --remotive     Remotive (Product + PM feeds)
  *   --wwr          We Work Remotely
  *   --remoteok     RemoteOK
- *   --jobscollider JobsCollider (Product + PM feeds)
  *   --foorilla     Foorilla (scrape)
- *   --rss          Shorthand: remotive + wwr + remoteok + jobscollider (no Foorilla)
+ *   --rss          Shorthand: remotive + wwr + remoteok (no Foorilla)
  */
 
 const fs = require('fs');
@@ -31,8 +30,6 @@ const FEED_TO_SOURCE = {
   'Remotive PM': 'remotive',
   'WWR': 'wwr',
   'RemoteOK': 'remoteok',
-  'JobsCollider Product': 'jobscollider',
-  'JobsCollider PM': 'jobscollider',
   'Foorilla': 'foorilla'
 };
 
@@ -40,9 +37,7 @@ const RSS_SOURCES = [
   { feedId: 'Remotive Product', url: 'https://remotive.com/remote-jobs/feed/product', type: 'rss' },
   { feedId: 'Remotive PM', url: 'https://remotive.com/remote-jobs/feed/project-management', type: 'rss' },
   { feedId: 'WWR', url: 'https://weworkremotely.com/categories/remote-product-jobs.rss', type: 'rss' },
-  { feedId: 'RemoteOK', url: 'https://remoteok.com/remote-jobs.rss', type: 'rss' },
-  { feedId: 'JobsCollider Product', url: 'https://jobscollider.com/remote-product-jobs.rss', type: 'rss', apiFallback: 'https://jobscollider.com/api/search-jobs?category=product' },
-  { feedId: 'JobsCollider PM', url: 'https://jobscollider.com/remote-project-management-jobs.rss', type: 'rss', apiFallback: 'https://jobscollider.com/api/search-jobs?category=project_management' }
+  { feedId: 'RemoteOK', url: 'https://remoteok.com/remote-jobs.rss', type: 'rss' }
 ];
 
 const FETCH_TIMEOUT_MS = 15000;
@@ -212,17 +207,6 @@ async function fetchFoorillaJobs() {
   }
 }
 
-/** Fetch JobsCollider API (GET search-jobs). Returns [] if API returns non-JSON or 404. */
-async function fetchJobsColliderApi(apiUrl) {
-  try {
-    const data = await fetchUrl(apiUrl);
-    const json = JSON.parse(data);
-    if (!Array.isArray(json.jobs)) return [];
-    return json.jobs.map((j) => ({ title: j.title || '', link: j.url || j.link || '' })).filter((j) => j.title && j.link);
-  } catch (e) {
-    return [];
-  }
-}
 
 function parseRssItems(xml) {
   const items = [];
@@ -282,7 +266,8 @@ const PM_TITLE_EXCLUDE = [
   'support engineer', 'customer support', 'client support', 'tier 1 support', 'tier 2 support',
   'wordpress developer', 'software engineer', 'developer', 'devsecops', 'devops',
   'qa analyst', 'quality assurance', 'werkstudent', 'intern ', ' intern',
-  'product engineer', 'product developer'  // engineering roles, not PM
+  'product engineer', 'product developer',  // engineering roles, not PM
+  'adoption & experience manager', 'product adoption & experience manager', 'product adoption manager'  // customer success, not product
 ];
 
 function isProductRole(title) {
@@ -325,12 +310,10 @@ function parseSourceFlags() {
     set.add('remotive');
     set.add('wwr');
     set.add('remoteok');
-    set.add('jobscollider');
   }
   if (argv.includes('--remotive')) set.add('remotive');
   if (argv.includes('--wwr')) set.add('wwr');
   if (argv.includes('--remoteok')) set.add('remoteok');
-  if (argv.includes('--jobscollider')) set.add('jobscollider');
   if (argv.includes('--foorilla')) set.add('foorilla');
   return set;
 }
@@ -361,10 +344,7 @@ async function main() {
       let xml = await fetchUrl(source.url);
       const isHtml = typeof xml === 'string' && (xml.trimStart().toLowerCase().startsWith('<!') || xml.includes('<!doctype'));
       let items = [];
-      if (isHtml && source.apiFallback) {
-        console.error(`[fetch-remote-pm-rss] ${feedId}: RSS returns 404/HTML (jobscollider.com redirects to remotefirstjobs.com, feed not migrated). Trying API fallback.`);
-        items = await fetchJobsColliderApi(source.apiFallback);
-      } else if (!isHtml) {
+      if (!isHtml) {
         items = xml.includes('<entry>') ? parseAtomEntries(xml) : parseRssItems(xml);
       }
       for (const item of items) {
@@ -422,7 +402,7 @@ async function main() {
   }
 
   const sectionHeader = '\n\n## Remote job boards (RSS)\n\n';
-  const sectionIntro = '*По фидам: Remotive, WWR, RemoteOK, JobsCollider (Product/PM), Foorilla (scrape). BettingJobs — отдельный файл digests/bettingjobs-YYYY-MM-DD.md.*  \n';
+  const sectionIntro = '*По фидам: Remotive, WWR, RemoteOK, Foorilla (scrape). BettingJobs — отдельный файл digests/bettingjobs-YYYY-MM-DD.md.*  \n';
   const statsLine = `**По фидам:** ${feedStats.join(' | ')}\n\n`;
   const block = sectionHeader + sectionIntro + statsLine + jobLines.join('\n\n') + (jobLines.length ? '\n' : '');
 
@@ -433,28 +413,10 @@ async function main() {
   }
 
   ensureDirs();
-  const rssOnlyContent = (onlyFoorilla ? `# Foorilla PM jobs — ${today}\n\n*Источник: [Foorilla](https://foorilla.com/hiring/) (Product/PM).*\n\n` : sectionIntro) + statsLine + jobLines.join('\n\n').trim() + '\n';
+  const rssOnlyContent = (onlyFoorilla ? `# Foorilla PM jobs — ${today}\n\n*Источник: [Foorilla](https://foorilla.com/hiring/) (Product/PM).*\n\n` : `# Remote PM jobs (RSS) — ${today}\n\n${sectionIntro}\n\n${statsLine}`) + jobLines.join('\n\n').trim() + '\n';
   fs.writeFileSync(rssOnlyPath, rssOnlyContent, 'utf8');
 
-  if (noMerge || onlyFoorilla) {
-    console.log(`[fetch-remote-pm-rss] Wrote ${totalJobs} jobs to ${path.relative(VAULT, rssOnlyPath)}. By feed: ${feedStats.join(', ')}.`);
-    return;
-  }
-
-  let mainContent = '';
-  if (fs.existsSync(mainDigestPath)) {
-    mainContent = fs.readFileSync(mainDigestPath, 'utf8');
-  } else {
-    mainContent = `# Job digest — ${today}\n\n*Sources: LinkedIn (email) + Remotive, We Work Remotely, RemoteOK, JobsCollider (RSS).*\n*[ ] to process · [x] applied · [-] rejected.*\n`;
-  }
-
-  if (mainContent.includes('## Remote job boards (RSS)')) {
-    console.log('[fetch-remote-pm-rss] RSS section already in digest; skipping merge.');
-    return;
-  }
-
-  fs.writeFileSync(mainDigestPath, mainContent.trimEnd() + block, 'utf8');
-  console.log(`[fetch-remote-pm-rss] Merged ${totalJobs} RSS jobs into ${path.relative(VAULT, mainDigestPath)}. By feed: ${feedStats.join(', ')}.`);
+  console.log(`[fetch-remote-pm-rss] Wrote ${totalJobs} jobs to ${path.relative(VAULT, rssOnlyPath)}. By feed: ${feedStats.join(', ')}.`);
 }
 
 main().catch((err) => {

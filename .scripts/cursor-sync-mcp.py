@@ -25,12 +25,85 @@ def main():
     with open(project_mcp, encoding="utf-8") as f:
         config = json.load(f)
 
-    # Replace ${workspaceFolder} with absolute repo path
+    # Replace ${workspaceFolder} and {{VAULT_PATH}} with absolute repo path
     workspace = str(repo_root)
     config_str = json.dumps(config, indent=2)
     config_str = config_str.replace("${workspaceFolder}", workspace)
+    config_str = config_str.replace("{{VAULT_PATH}}", workspace)
 
     global_config = json.loads(config_str)
+    servers = global_config.get("mcpServers", {})
+
+    # Ensure all servers are enabled (Cursor may show them as disabled otherwise)
+    for name, s in servers.items():
+        if isinstance(s, dict):
+            s["disabled"] = False
+
+    # Inject secrets from .env into MCP servers
+    env_file = repo_root / ".env"
+    env_vars = {}
+    if env_file.exists():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key, value = key.strip(), value.strip().strip('"').strip("'")
+            if value:
+                env_vars[key] = value
+
+        # Telegram
+        if "user-telegram" in servers and isinstance(servers["user-telegram"], dict):
+            env = servers["user-telegram"].setdefault("env", {})
+            for k in ("TELEGRAM_API_ID", "TELEGRAM_API_HASH"):
+                if k in env_vars:
+                    env[k] = env_vars[k]
+
+        # Google Slides (matteoantoci MCP expects GOOGLE_CLIENT_ID, etc.)
+        if "google-slides-mcp" in servers and isinstance(servers["google-slides-mcp"], dict):
+            env = servers["google-slides-mcp"].setdefault("env", {})
+            mapping = {
+                "GOOGLE_SLIDES_CLIENT_ID": "GOOGLE_CLIENT_ID",
+                "GOOGLE_SLIDES_CLIENT_SECRET": "GOOGLE_CLIENT_SECRET",
+                "GOOGLE_SLIDES_REFRESH_TOKEN": "GOOGLE_REFRESH_TOKEN",
+            }
+            for env_key, mcp_key in mapping.items():
+                if env_key in env_vars:
+                    env[mcp_key] = env_vars[env_key]
+
+        # Tavily (free tier API key from app.tavily.com)
+        if "tavily-mcp" in servers and isinstance(servers["tavily-mcp"], dict):
+            env = servers["tavily-mcp"].setdefault("env", {})
+            if "TAVILY_API_KEY" in env_vars:
+                env["TAVILY_API_KEY"] = env_vars["TAVILY_API_KEY"]
+
+        # Brave Search API (https://brave.com/search/api/)
+        if "brave-search-mcp" in servers and isinstance(servers["brave-search-mcp"], dict):
+            env = servers["brave-search-mcp"].setdefault("env", {})
+            if "BRAVE_API_KEY" in env_vars:
+                env["BRAVE_API_KEY"] = env_vars["BRAVE_API_KEY"]
+
+        # Exa (academic / semantic web search MCP — https://exa.ai/docs/reference/exa-mcp)
+        if "exa-mcp" in servers and isinstance(servers["exa-mcp"], dict):
+            env = servers["exa-mcp"].setdefault("env", {})
+            if "EXA_API_KEY" in env_vars:
+                env["EXA_API_KEY"] = env_vars["EXA_API_KEY"]
+
+    if "tavily-mcp" in servers and isinstance(servers["tavily-mcp"], dict):
+        tav_env = servers["tavily-mcp"].get("env") or {}
+        if not (tav_env.get("TAVILY_API_KEY") or "").strip():
+            servers["tavily-mcp"]["disabled"] = True
+
+    if "brave-search-mcp" in servers and isinstance(servers["brave-search-mcp"], dict):
+        br_env = servers["brave-search-mcp"].get("env") or {}
+        if not (br_env.get("BRAVE_API_KEY") or "").strip():
+            servers["brave-search-mcp"]["disabled"] = True
+
+    if "exa-mcp" in servers and isinstance(servers["exa-mcp"], dict):
+        ex_env = servers["exa-mcp"].get("env") or {}
+        if not (ex_env.get("EXA_API_KEY") or "").strip():
+            servers["exa-mcp"]["disabled"] = True
+
     cursor_home = Path.home() / ".cursor"
     cursor_home.mkdir(parents=True, exist_ok=True)
     global_path = cursor_home / "mcp.json"
@@ -38,7 +111,7 @@ def main():
     with open(global_path, "w", encoding="utf-8") as f:
         json.dump(global_config, f, indent=2, ensure_ascii=False)
 
-    print(f"Wrote {len(global_config.get('mcpServers', {}))} MCP servers to {global_path}")
+    print(f"Wrote {len(servers)} MCP servers to {global_path}")
     print("Restart Cursor (full quit and reopen) so it picks up the config.")
     return 0
 

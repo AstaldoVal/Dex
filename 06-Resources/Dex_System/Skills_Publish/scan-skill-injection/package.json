@@ -1,0 +1,18 @@
+{
+  "name": "scan-skill-injection",
+  "version": "1.0.0",
+  "description": "Scan Agent Skills (SKILL.md) for prompt-injection and supply-chain patterns",
+  "scripts": {
+    "scan": "node scripts/scan-skill-injection.cjs --dir skills",
+    "scan:fixtures": "node scripts/scan-skill-injection.cjs --dir fixtures",
+    "watch": "node scripts/watch-and-scan.cjs"
+  },
+  "keywords": [
+    "skills",
+    "security",
+    "prompt-injection",
+    "clawhavoc",
+    "agent-skills"
+  ],
+  "license": "MIT"
+}

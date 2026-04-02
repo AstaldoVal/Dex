@@ -79,6 +79,26 @@
       "env": {
         "VAULT_PATH": "{{VAULT_PATH}}"
       }
+    },
+    "nanobanana-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "{{VAULT_PATH}}/core/mcp/nanobanana_server.py"
+      ],
+      "env": {
+        "VAULT_PATH": "{{VAULT_PATH}}"
+      }
+    },
+    "reminders-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "{{VAULT_PATH}}/core/mcp/reminders_server.py"
+      ],
+      "env": {
+        "VAULT_PATH": "{{VAULT_PATH}}"
+      }
     }
   }
 }

@@ -52,10 +52,12 @@ async function generateWithAnthropic(prompt, options = {}) {
 async function generateWithOpenAI(prompt, options = {}) {
   const OpenAI = require('openai');
   const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
-  
+  const model = options.model || 'gpt-4o';
+  const maxTokens = options.maxOutputTokens || 4096;
+
   const completion = await openai.chat.completions.create({
-    model: options.model || 'gpt-4o',
-    max_tokens: options.maxOutputTokens || 4096,
+    model,
+    max_tokens: maxTokens,
     messages: [
       {
         role: 'user',
@@ -63,7 +65,24 @@ async function generateWithOpenAI(prompt, options = {}) {
       }
     ]
   });
-  
+
+  const usage = completion.usage;
+  if (usage) {
+    try {
+      const { logOpenAICall } = require('./openai-usage-logger.cjs');
+      logOpenAICall({
+        operation: options.operation || 'meeting_intel',
+        model,
+        prompt_tokens: usage.prompt_tokens,
+        completion_tokens: usage.completion_tokens,
+        total_tokens: usage.total_tokens,
+        max_tokens_limit: maxTokens,
+        request_id: options.request_id,
+        iteration: options.iteration
+      });
+    } catch (_) {}
+  }
+
   return completion.choices[0].message.content;
 }
 

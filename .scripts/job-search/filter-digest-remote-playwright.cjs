@@ -308,7 +308,9 @@ async function runFilter(filePath, batchSize) {
   });
 
   const page = context.pages()[0] || await context.newPage();
-  await page.goto('https://www.linkedin.com/feed/', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  const firstJobViewUrl = jobLineIndices.length > 0 ? getJobViewUrl((lines[jobLineIndices[0]] || '').match(JOB_LINE_RE)?.[4] || '') : null;
+  const loginCheckUrl = firstJobViewUrl || 'https://www.linkedin.com/feed/';
+  await page.goto(loginCheckUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
   const afterFeed = page.url();
   if (afterFeed.includes('/login') || afterFeed.includes('/authwall') || afterFeed.includes('/checkpoint')) {
     await context.close();
@@ -354,7 +356,7 @@ async function runFilter(filePath, batchSize) {
         stateResults[jobId] = { remove: true };
         toRemove.add(lineIdx);
         if (lines[lineIdx + 1] === '') skipBlankAfter.add(lineIdx + 1);
-        console.log('closed (remove)');
+        console.log('closed (remove - no longer accepting applications)');
       } else {
         const workType = getWorkTypeFromPage(html);
         if (workType === 'hybrid' || workType === 'on-site') {

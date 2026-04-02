@@ -11,11 +11,17 @@ Tools (gdrive_* prefix):
 - gdrive_get_metadata: Get metadata for a file or folder
 - gdrive_read_file: Read/export file content (Docs → text, Sheets → CSV, binaries → base64 or skip)
 - gdrive_get_folder_info: Get folder metadata and list direct children
+- gdrive_create_doc: Create a new Google Doc with optional title, content, and parent folder (saved to Drive)
 
 Setup:
-  1. Google Cloud Console: enable Drive API, create OAuth 2.0 Desktop client.
+  1. Google Cloud Console: enable Drive API and Docs API, create OAuth 2.0 Desktop client.
   2. Save credentials JSON; set GOOGLE_DRIVE_CREDENTIALS_PATH (or use credentials.json in project root).
   3. First run: browser opens for consent; token is stored for reuse.
+  4. After adding gdrive_create_doc: if you get 403 on create, delete the token file and run again to
+     re-consent with new scopes. Token locations (see mcp.json and _token_path()):
+     - google-drive-mcp (no env): token = same directory as credentials.json, file "google_drive_token.json"
+       (e.g. Dex/google_drive_token.json if credentials are in Dex).
+     - google-drive-work-mcp: token = GOOGLE_DRIVE_TOKEN_PATH, e.g. Dex/.claude/google-work/google_drive_token.json.
 """
 
 import os
@@ -41,8 +47,12 @@ try:
 except ImportError:
     HAS_GOOGLE_DEPS = False
 
-# Drive API v3
-SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
+# Drive API v3 + Docs API (create and edit documents)
+SCOPES = [
+    "https://www.googleapis.com/auth/drive.readonly",
+    "https://www.googleapis.com/auth/drive.file",  # create/manage files created by app
+    "https://www.googleapis.com/auth/documents",   # create and edit Google Docs
+]
 
 # Export MIME for native Google types
 EXPORT_MIMES = {
@@ -112,11 +122,23 @@ def get_credentials():
     return creds, None
 
 
-def _service():
+def _drive_service():
     creds, err = get_credentials()
     if err:
         raise RuntimeError(err)
     return build("drive", "v3", credentials=creds)
+
+
+def _docs_service():
+    creds, err = get_credentials()
+    if err:
+        raise RuntimeError(err)
+    return build("docs", "v1", credentials=creds)
+
+
+def _service():
+    """Alias for backward compatibility."""
+    return _drive_service()
 
 
 def _file_fields_list():
@@ -192,6 +214,19 @@ async def handle_list_tools() -> list[types.Tool]:
                     "folder_id": {"type": "string", "description": "Folder ID or 'root'", "default": "root"},
                     "page_size": {"type": "integer", "description": "Max children to return", "default": 50},
                 },
+            },
+        ),
+        types.Tool(
+            name="gdrive_create_doc",
+            description="Create a new Google Doc in Drive with the given title and optional body text. Optionally place it in a folder. Returns file id and webViewLink.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string", "description": "Document title (required)"},
+                    "content": {"type": "string", "description": "Plain text or HTML-like content to insert into the document body. Newlines and basic formatting preserved."},
+                    "folder_id": {"type": "string", "description": "Optional. Google Drive folder ID where to create the doc. If omitted, doc is created in My Drive root."},
+                },
+                "required": ["title"],
             },
         ),
     ]
@@ -435,6 +470,71 @@ async def handle_call_tool(
                 "children_count": len(children),
                 "nextPageToken": result.get("nextPageToken"),
             }, indent=2))]
+
+        if name == "gdrive_create_doc":
+            title = (arguments.get("title") or "").strip()
+            if not title:
+                return [types.TextContent(type="text", text=json.dumps({
+                    "success": False,
+                    "error": "title is required",
+                }, indent=2))]
+            content = (arguments.get("content") or "").strip()
+            folder_id = (arguments.get("folder_id") or "").strip() or None
+            drive_svc = _drive_service()
+            docs_svc = _docs_service()
+            # Create blank Doc via Docs API (file appears in Drive)
+            create_body = {"title": title}
+            new_doc = docs_svc.documents().create(body=create_body).execute()
+            doc_id = new_doc.get("documentId")
+            if not doc_id:
+                return [types.TextContent(type="text", text=json.dumps({
+                    "success": False,
+                    "error": "Docs API did not return documentId",
+                }, indent=2))]
+            # Insert content at index 1 (start of body in a new doc)
+            if content:
+                # Chunk to avoid API limits; insertText has practical limit ~50k chars per request
+                chunk_size = 40000
+                insert_index = 1
+                for i in range(0, len(content), chunk_size):
+                    chunk = content[i : i + chunk_size]
+                    docs_svc.documents().batchUpdate(
+                        documentId=doc_id,
+                        body={
+                            "requests": [
+                                {
+                                    "insertText": {
+                                        "location": {"index": insert_index},
+                                        "text": chunk,
+                                    }
+                                }
+                            ]
+                        },
+                    ).execute()
+                    insert_index += len(chunk)
+            # Optionally move to folder (Drive API)
+            if folder_id and folder_id != "root":
+                try:
+                    drive_svc.files().update(
+                        fileId=doc_id,
+                        addParents=folder_id,
+                        supportsAllDrives=False,
+                    ).execute()
+                except HttpError as e:
+                    logger.warning("Could not set parent folder: %s", e)
+            # Get web link
+            meta = drive_svc.files().get(
+                fileId=doc_id,
+                fields="id, name, webViewLink, mimeType",
+            ).execute()
+            return [types.TextContent(type="text", text=json.dumps({
+                "success": True,
+                "file_id": doc_id,
+                "name": meta.get("name"),
+                "webViewLink": meta.get("webViewLink"),
+                "mimeType": meta.get("mimeType"),
+                "message": "Google Doc created. Open webViewLink to edit.",
+            }, indent=2, ensure_ascii=False))]
 
         return [types.TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}, indent=2))]
 

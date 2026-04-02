@@ -11,7 +11,7 @@
 
 - **`00-Inbox/Job_Search/data/job-descriptions-YYYY-MM-DD.json`** — массив вакансий за дату дайджеста.
   - Те же поля на элемент; используется для быстрого чтения «все вакансии за день» и для Teal.
-  - Заполняется скриптом `fetch-job-descriptions-playwright.cjs`; при успешном фетче каждая вакансия **дополнительно** пишется в `data/jobs/<id>.json`.
+  - Заполняется скриптом `fetch-job-descriptions.cjs`; при успешном фетче каждая вакансия **дополнительно** пишется в `data/jobs/<id>.json`.
 
 - **`00-Inbox/Job_Search/digests/linkedin-jobs-YYYY-MM-DD.md`** — дайджест: ссылки + вставленные resume summary (3 абзаца + suggested questions).
   - Summary генерируются из `data/jobs/<id>.json` (скрипт `inject-summaries-into-digest.cjs`): читает `job_description` из файла вакансии, вызывает `generate_job_summary`, вставляет блок в markdown.
@@ -19,7 +19,7 @@
 ## Поток данных
 
 1. **Парсинг дайджеста / писем** → список URL вакансий.
-2. **Фетч описаний** (`fetch-job-descriptions-playwright.cjs` по дайджесту):
+2. **Фетч описаний** (`fetch-job-descriptions.cjs` по дайджесту):
    - для каждого URL открывает LinkedIn, забирает описание;
    - пишет в `job-descriptions-YYYY-MM-DD.json` (массив);
    - при успехе пишет ту же вакансию в `jobs/<id>.json`.

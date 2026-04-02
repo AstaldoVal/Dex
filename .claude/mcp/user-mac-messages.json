@@ -1,0 +1,9 @@
+{
+  "name": "mac-messages",
+  "description": "Read and send messages from macOS Messages app (iMessage/SMS). Use to get latest SMS codes (e.g. bank 2FA), search conversations, send messages. Requires Full Disk Access for Terminal/Cursor.",
+  "server": {
+    "command": "uvx",
+    "args": ["mac-messages-mcp"]
+  },
+  "notes": "Install: brew install uv. MCP config uses git commit dc0452a (FastMCP description fix; PyPI v0.7.3 broken). Use for: Millennium BCP SMS code — when script waits at SMS step, ask agent to read latest Messages. Repo: https://github.com/carterlasalle/mac_messages_mcp"
+}

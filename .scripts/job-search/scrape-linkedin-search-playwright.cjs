@@ -41,6 +41,10 @@ function isNonPmRole(title) {
   if (!title || typeof title !== 'string') return false;
   const t = title.toLowerCase();
   if (/product manager|product owner|head of product|cpo\b|chief product|compliance manager/.test(t)) return false;
+  if (/\bproduct\s+category\s+manager\b/i.test(t)) return true;  // Category/retail, not software PM
+  if (/\bproduct\s+line\s+manager\b/i.test(t)) return true;  // Product line (P&L/hardware), not software PM
+  if (/\b(?:technical\s+)?sales\s*(?:&|and|\s*[-–—])\s*product\s+manager\b/i.test(t)) return true;  // Sales-heavy hybrid
+  if (/\bproduct\s+designer\b/i.test(t)) return true;  // Design role, not PM (e.g. Principal Product Designer)
   if (/\b(software engineer|c# engineer|\.net engineer|java engineer|r&d engineer|backend engineer|frontend engineer|fullstack?\s+engineer|devops engineer|qa engineer|data engineer|ml engineer|game engineer)\b/i.test(t)) return true;
   if (/\b(backend developer|frontend developer|fullstack?\s+developer|\.net developer|java developer|c# developer)\b/i.test(t)) return true;
   if (/\bdeveloper\b/i.test(t) && !/product/i.test(t)) return true;
@@ -131,7 +135,7 @@ async function runScrape(searchUrl, digestPath) {
   });
 
   const page = context.pages()[0] || await context.newPage();
-  await page.goto('https://www.linkedin.com/feed/', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
   const afterFeed = page.url();
   if (afterFeed.includes('/login') || afterFeed.includes('/authwall') || afterFeed.includes('/checkpoint')) {
     await context.close();
@@ -139,8 +143,6 @@ async function runScrape(searchUrl, digestPath) {
     process.exit(1);
   }
   await sleep(10000);
-
-  await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
   
   // Store the expected URL pattern to detect if we've navigated away
   const expectedUrlPattern = /linkedin\.com\/jobs\/search/;

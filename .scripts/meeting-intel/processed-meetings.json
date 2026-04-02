@@ -1,4 +1,120 @@
 {
-  "processedMeetings": {},
-  "lastSync": "2026-02-08T22:33:35.504Z"
+  "processedMeetings": {
+    "370ef636-9930-4faf-bc7e-8af540a37c18": {
+      "title": "Connells Product Virtual Coffee",
+      "processedAt": "2026-02-09T12:23:47.027Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-06/connells-product-virtual-coffee.md"
+    },
+    "a89745b2-2bee-494e-88da-19afe8b5d0b1": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-10T14:33:42.498Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-10/untitled-meeting.md"
+    },
+    "97e230d1-34da-4b24-87e2-3d3de48b181c": {
+      "title": "AI Open Hours",
+      "processedAt": "2026-02-11T11:17:23.104Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-11/ai-open-hours.md"
+    },
+    "58f5dd6b-19ba-4f1a-8c19-591f954e764b": {
+      "title": "Product manager interview with Karina from recruiting agency",
+      "processedAt": "2026-02-12T11:47:58.447Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-12/product-manager-interview-with-karina-from-recruiting-agency.md"
+    },
+    "bb89d39d-0e9d-4420-b891-b07d44f8c10e": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-12T15:18:14.628Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-12/untitled-meeting.md"
+    },
+    "26e8bb8c-1c77-4dc9-a8b1-cc7b465da026": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-16T13:22:44.261Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-16/untitled-meeting.md"
+    },
+    "f10c81fb-0b94-4157-bc33-59906c6d151a": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-16T14:22:54.749Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-16/untitled-meeting.md"
+    },
+    "e8cbc4da-7e81-468d-a646-71855d2861be": {
+      "title": "Собеседование о позиции бизнес-аналитика с Миндерой",
+      "processedAt": "2026-02-16T16:23:12.020Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-16/.md"
+    },
+    "05874d60-d06a-42b4-8e2c-0217ce8ee494": {
+      "title": "Training | Let’s Dig Into Our Culture 🌱 (How We Work, Decide, and Grow Together) ",
+      "processedAt": "2026-02-19T14:13:00.453Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-19/training-let-s-dig-into-our-culture-how-we-work-decide-and-g.md"
+    },
+    "a0db2406-fd77-477b-818e-118a9c09c1d6": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-20T17:02:44.117Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/Inbox/Meetings/2026-02-20/untitled-meeting.md"
+    },
+    "c5cdee17-6c57-45fe-9cdc-6bba40e946a1": {
+      "title": "Job Interview with Upreneurity Outsource for SoundHound Product Manager Role",
+      "processedAt": "2026-03-17T11:17:41.886Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-16/job-interview-with-upreneurity-outsource-for-soundhound-prod.md"
+    },
+    "a57640a5-144f-4437-8f4c-cdc59c1319cc": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-17T11:17:48.295Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-16/untitled-meeting.md"
+    },
+    "0a50f523-e762-493c-9049-e886005099e0": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-17T13:58:14.061Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-17/untitled-meeting.md"
+    },
+    "42af0992-7806-4aea-8bc1-5ea3d0085fcb": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-19T12:17:55.107Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-19/untitled-meeting.md"
+    },
+    "7246c6bb-4f57-4379-97f1-5ca55829b1f0": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-20T13:55:10.638Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-20/untitled-meeting.md"
+    },
+    "8a749408-e070-4b45-9469-d2dec204ca14": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T12:20:55.708Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "1ce11e56-1ce0-4f29-81b8-66f516f6d10e": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T15:21:08.938Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "8d110259-191c-4e59-bc98-0e6488c390d1": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T20:10:26.545Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "6710269a-55c0-47bc-a24f-215e19cad3ea": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-25T13:10:10.587Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-25/untitled-meeting.md"
+    },
+    "ce594bc4-e2fb-426f-9f01-91ab668ff858": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-27T12:46:56.220Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-27/untitled-meeting.md"
+    },
+    "e330d625-0fc9-42c8-946a-b0604ab23a88": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T11:15:14.341Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    },
+    "3fcdca87-6249-425e-a4eb-176ecea4bdfa": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T13:45:25.872Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    },
+    "2710bf86-d322-4782-9ee0-43fbf5f1a541": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T13:45:33.607Z",
+      "filepath": "/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    }
+  },
+  "lastSync": "2026-03-31T16:46:15.336Z"
 }

@@ -1,0 +1,12 @@
+{
+  "name": "user-telegram",
+  "description": "Telegram: list chats, get messages, search in chats (user account)",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/telegram_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "Requires one-time login: TELEGRAM_API_ID and TELEGRAM_API_HASH from my.telegram.org, then run python core/mcp/telegram_login.py"
+}

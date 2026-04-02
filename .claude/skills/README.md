@@ -194,17 +194,19 @@ Built specifically for personal knowledge management and productivity workflows 
 **Getting Started:**
 - `/getting-started` - Interactive post-onboarding tour (adaptive to your setup)
 
+**Planning (Double Plan):** All planning skills automatically run a stress-test after the first plan: assume 6/10, find weak spots, upgrade to 10/10 (value-focused). See `.claude/skills/double-plan/SKILL.md`.
+
 **Daily Workflow:**
-- `/daily-plan` - Context-aware daily planning
+- `/daily-plan` - Context-aware daily planning (includes Double Plan)
 - `/daily-review` - End of day review with learning capture
 - `/journal` - Start or manage journaling
 
 **Weekly Workflow:**
-- `/week-plan` - Set weekly priorities
+- `/week-plan` - Set weekly priorities (includes Double Plan)
 - `/week-review` - Weekly synthesis
 
 **Quarterly Workflow:**
-- `/quarter-plan` - Set quarterly goals
+- `/quarter-plan` - Set quarterly goals (includes Double Plan)
 - `/quarter-review` - Review and capture learnings
 
 **Meetings:**
@@ -213,16 +215,43 @@ Built specifically for personal knowledge management and productivity workflows 
 
 **Email Management:**
 - `/email-process` - Automatically process emails: classify, extract tasks, mark as read, archive, unsubscribe
+- `/get-invoices` - Get invoice PDFs for Simas and Lisboagas: from Gmail (search, download attachments) or from portal (run npm script); save to 00-Inbox/Invoices/<Provider>/invoices/ as "Provider Month invoice.pdf"
+
+**Personal / Family:**
+- `/mia-events` - Детские мероприятия 4+ на дату (Лиссабон, Оэйраш, Кашкайш): веб-афиши + Telegram-каналы
+- `/physical-daily-checkin` - Ежедневный опросник физсостояния (merge с Apple Health логом), readiness; см. `.claude/skills/physical-daily-checkin/SKILL.md`
+- `/physical-check-custom` - Готовность и рекомендации по уже сохранённому дневному логу (`05-Areas/Physical/logs/`)
 
 **Career Development:**
 - `/career-setup` - Initialize career system
 - `/career-coach` - Career reflections and assessments
+- `/leila-capital-principles-custom` - Принципы Лейлы Хормози по росту капитала; справочник и верификатор мышления (привычки, окружение, деньги как игра и инструмент)
 - `/resume-builder` - Build resume through guided interview
+- `/linkedin-profile-audit` - LinkedIn profile audit (photo, banner, headline, About, Featured): /50 scoring, rewrites aligned to goal; see `.claude/skills/linkedin-profile-audit/SKILL.md`
+- `/linkedin-hiring-managers-digest` - Собрать дайджест remote-вакансий из LinkedIn My Network > Grow (хайринг-менеджеры; ручной сбор + скрипт)
+- `/teal-cleanup-copies` - Delete duplicate resume copies in Teal, keep original/эталон
 
 **Projects:**
 - `/project-health` - Review project status
 - `/product-brief` - Generate PRD from ideas
+- `/prd-advisor` - Context-aware PRD structure advisor (choose template and sections by use case, audience, domain)
+- `/prd-to-presentation` - Turn a PRD into a presentation deck (.pptx)
+- `/prd-to-linear` - Break a PRD into tickets and create them in Linear; optional sync to Dex tasks
+- `/pm-diagrams` - User journey and PM diagrams; optional diagram image via Gemini (Nano Banana)
+- `/hooks-recommend` - When and for which flows to configure hooks (SessionStart, PostToolUse, etc.) in Claude Code
+- `/mcp-profiles` - Recommend which MCP servers to enable for a scenario (PM, job search, meetings)
+- `/mcp-health-check-custom` - Verify stdio MCP servers, apply known fixes (mac-messages FastMCP, google-slides jwa). Runs at chat start; invoke manually if MCPs fail
 - `/triage` - Organize inbox and extract tasks
+
+**Research:**
+- `/web-research` - Full internet research flow (Exa -> Brave/Tavily -> browser MCP -> claude_code enrichment)
+
+**Product Management (PM):**  
+Все PM-скиллы собраны в **`.claude/skills/pm/`** (по источникам: dex, deanpeters, pop, pmprompt, alirezarezvani, ralph). Полный индекс: **`.claude/reference/pm-skills-index.md`**. **Команда `/pm-skills`** выводит категории и подсказку по индексу.
+
+**BMAD (B-MAD) Method** — отдельный модуль, в общем списке скиллов отображается как несколько скиллов (BMad Master, architect, pm, scrum-master, developer, builder, ux-designer, analyst, creative-intelligence). Удобнее вызывать по **командам:** `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. Папки: `.claude/skills/bmad/`, `.claude/commands/bmad/`, `.claude/config/bmad/`. Подробнее: **`.claude/skills/PM_SKILLS_BMAD_README.md`**.
+
+Источники и атрибуция PM: **`.claude/skills/pm/SOURCES.md`**. Обновление из репозиториев: **`./.claude/skills/pm/update.sh`** (из корня vault).
 
 **System Management:**
 - `/prompt-improver` - Transform vague prompts via Anthropic Messages API
@@ -235,7 +264,9 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/dex-obsidian-setup` - Enable Obsidian integration and migrate vault to wiki links
 - `/integrate-mcp` - Integrate existing MCP servers from Smithery.ai marketplace
 - `/create-mcp` - Create new MCP integrations
-- `/ai-digest` - Ежедневный дайджест новостей AI за последние сутки (OpenAI, Cloud, Gemini и др.)
+- `/ai-digest` - Дайджест новостей AI за последние N часов; опционально один вендор: anthropic, openai, google_cloud, gemini (например `/ai-digest anthropic 48`)
+- `/ai-stats` - Ежедневная статистика использования OpenAI API (запросы, токены, стоимость, eval, truncation risk)
+- `/substack-audio` - Озвучка текстов Substack в MP3 (голос Verse, vibe art-instructor, speed 1); скрипт `.scripts/tts-export-mp3.cjs`
 
 ### Anthropic Skills (General-Purpose)
 

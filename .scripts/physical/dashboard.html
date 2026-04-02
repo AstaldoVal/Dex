@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physical State Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="physical-readiness-browser.js"></script>
+  <script src="dashboard-payload.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2d3148;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --orange: #f97316;
+      --red: #ef4444;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+      --accent: #6366f1;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .header .date {
+      color: var(--text-muted);
+      font-size: 14px;
+      text-align: right;
+    }
+
+    .header-main {
+      min-width: 0;
+    }
+
+    .header-range {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-top: 14px;
+    }
+
+    .header-range-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-range-field {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-range-field input[type="date"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font: inherit;
+      padding: 6px 10px;
+      color-scheme: dark;
+    }
+
+    .header-range-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .header-range-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .header-range-btn--ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .header-range-btn--ghost:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .header-range-error {
+      font-size: 12px;
+      color: var(--red);
+      width: 100%;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: start;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .stat-label--today-readiness {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 10px;
+    }
+    .readiness-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .chart-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 10px;
+    }
+
+    .param-source {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      vertical-align: middle;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+    .param-source--manual {
+      background: rgba(99, 102, 241, 0.22);
+      color: #c4b5fd;
+      border: 1px solid rgba(129, 140, 248, 0.45);
+    }
+    .param-source--health {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .param-source--computed {
+      background: rgba(234, 179, 8, 0.12);
+      color: #fde047;
+      border: 1px solid rgba(234, 179, 8, 0.35);
+    }
+    .param-source--mixed {
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 200px;
+    }
+
+    .chart-wrapper-tall {
+      position: relative;
+      height: 260px;
+    }
+
+    .pattern-list {
+      list-style: none;
+    }
+
+    .pattern-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .pattern-list li:last-child {
+      border-bottom: none;
+    }
+
+    .pattern-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar {
+      background: var(--accent);
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    .bar-count {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .empty-state {
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 12px 0;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .sample-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      color: #eab308;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .grid-2, .grid-4 { grid-template-columns: 1fr; }
+      body { padding: 16px; }
+    }
+
+    .card--today-readiness {
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: inherit;
+    }
+    .card--today-readiness:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+    }
+    .card--today-readiness:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .readiness-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12px;
+      overflow-y: auto;
+    }
+    .readiness-modal.is-open {
+      display: flex;
+    }
+    .readiness-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+    }
+    .readiness-modal__panel {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: min(1400px, 98vw);
+      width: min(1400px, 98vw);
+      max-height: 96vh;
+      overflow: auto;
+      padding: 24px 28px 32px;
+      margin: 8px auto 24px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+    }
+    .readiness-modal.readiness-modal--fullscreen {
+      padding: 0;
+      align-items: stretch;
+    }
+    .readiness-modal.readiness-modal--fullscreen .readiness-modal__panel {
+      max-width: none;
+      width: 100%;
+      min-height: 100vh;
+      max-height: none;
+      border-radius: 0;
+      margin: 0;
+    }
+    .readiness-modal__toolbar {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      display: flex;
+      gap: 6px;
+    }
+    .readiness-modal__expand,
+    .readiness-modal__close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .readiness-modal__close {
+      font-size: 22px;
+    }
+    .readiness-modal__expand:hover,
+    .readiness-modal__close:hover {
+      background: var(--border);
+    }
+    .readiness-modal__title {
+      font-size: 20px;
+      font-weight: 700;
+      padding-right: 88px;
+      margin-bottom: 6px;
+    }
+    .readiness-modal__meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .readiness-modal__formula {
+      margin: 0 0 16px;
+      padding: 10px 14px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+    .readiness-modal__formula-caption {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .readiness-modal__formula-math {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .readiness-modal__formula-math .formula-block-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin: 16px 0 8px;
+    }
+    .readiness-modal__formula-math .formula-block-label:first-child {
+      margin-top: 0;
+    }
+    .readiness-modal__formula-math .formula-eq {
+      margin: 0 0 10px;
+      padding: 8px 0 12px;
+      border-bottom: 1px solid var(--border);
+      font-family: "Times New Roman", Times, "Noto Serif", Georgia, serif;
+      font-size: 1.08em;
+      font-style: italic;
+      letter-spacing: 0.01em;
+    }
+    .readiness-modal__formula-math .formula-eq:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .readiness-modal__formula-math--lead .formula-block-label {
+      margin-top: 0;
+    }
+    .readiness-modal__formula-math--lead .formula-eq {
+      border-bottom: none;
+      padding: 4px 0 6px;
+      margin-bottom: 0;
+    }
+    .readiness-modal__formula-math--lead .formula-total {
+      padding-top: 0;
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+    .readiness-modal__formula-details {
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+    .readiness-modal__formula-summary {
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      padding: 12px 0 10px;
+      list-style: none;
+      user-select: none;
+    }
+    .readiness-modal__formula-summary::-webkit-details-marker {
+      display: none;
+    }
+    .readiness-modal__formula-summary::before {
+      content: '▸ ';
+      display: inline-block;
+      color: var(--text-muted);
+      transition: transform 0.15s ease;
+    }
+    .readiness-modal__formula-details[open] .readiness-modal__formula-summary::before {
+      transform: rotate(90deg);
+    }
+    .readiness-modal__formula-details .readiness-modal__formula-math {
+      padding-bottom: 4px;
+    }
+    .readiness-modal__formula-details .formula-block-label:first-of-type {
+      margin-top: 0;
+    }
+    .readiness-modal__formula-math .formula-defs {
+      margin: 0 0 4px 0;
+      padding-left: 1.25rem;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      list-style: disc;
+    }
+    .readiness-modal__formula-math .formula-total {
+      font-family: inherit;
+      font-size: 12px;
+      font-style: normal;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin: 0;
+      padding-top: 4px;
+    }
+    .readiness-modal__hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: -6px 0 14px;
+      max-width: 52rem;
+    }
+    .param-latest {
+      color: #a5b4fc;
+      font-weight: 700;
+    }
+    .breakdown-dl {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 16px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      padding: 14px;
+      background: var(--surface2);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .breakdown-dl dt {
+      color: var(--text-muted);
+    }
+    .breakdown-dl dd {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .breakdown-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin: 16px 0 8px;
+    }
+    .modal-chart-block {
+      margin-bottom: 20px;
+    }
+    h4.modal-spark-heading {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 8px;
+      line-height: 1.35;
+    }
+    .modal-spark-heading__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .modal-spark-heading__meta {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .modal-bar-wrap {
+      position: relative;
+      height: 180px;
+      margin-bottom: 8px;
+    }
+    .modal-spark-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 24px;
+    }
+    @media (min-width: 1100px) {
+      .modal-spark-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .modal-mini-wrap {
+      position: relative;
+      height: 168px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-main">
+    <h1>💪 Physical State</h1>
+    <div class="subtitle" id="dashboard-subtitle">35 days in view · 2026-02-22 → 2026-03-29 · full vault embedded (35 days)</div>
+    <div class="header-range" id="dashboard-range-controls" aria-label="Dashboard date range">
+      <span class="header-range-label">Period</span>
+      <label class="header-range-field">From <input type="date" id="range-from" min="2026-02-22" max="2026-03-29" value="2026-02-22" aria-label="Period start"></label>
+      <label class="header-range-field">To <input type="date" id="range-to" min="2026-02-22" max="2026-03-29" value="2026-03-29" aria-label="Period end"></label>
+      <button type="button" class="header-range-btn" id="range-apply">Apply</button>
+      <button type="button" class="header-range-btn header-range-btn--ghost" id="range-reset" title="Restore default window (last 90 days)">Reset (90d)</button>
+      <span class="header-range-error" id="range-error" role="status" hidden></span>
+    </div>
+  </div>
+  <div class="date">
+    Generated: 29 Mar 2026
+  </div>
+</div>
+
+
+
+<div class="grid-4">
+  <button type="button" class="card card--today-readiness" id="today-readiness-card" aria-haspopup="dialog" aria-controls="readiness-modal" title="Breakdown and parameter trends (up to 90 days)">
+    <div class="card-title">Today's Readiness <span class="param-source param-source--computed" title="Calculated from your check-in inputs and defaults (readiness formula)">Computed</span></div>
+    <div class="stat-value" id="stat-today-readiness-value" style="color: #f97316">59</div>
+    <div class="stat-label stat-label--today-readiness">
+      <span>out of 100 · last log <strong id="stat-today-readiness-date">2026-03-29</strong></span>
+      <span class="readiness-pill" id="stat-today-readiness-pill" style="background: #f9731622; color: #f97316">🟠 Low</span>
+    </div>
+  </button>
+
+  <div class="card">
+    <div class="card-title" id="stat-avg-readiness-title"><span id="stat-avg-readiness-label">Avg Readiness (35d)</span> <span class="param-source param-source--computed" title="Calculated from your check-in inputs and defaults (readiness formula)">Computed</span></div>
+    <div class="stat-value" id="stat-avg-readiness-value" style="color: #f97316">58</div>
+    <div class="stat-label">average score</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Avg Energy <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></div>
+    <div class="stat-value" id="stat-avg-energy-value" style="color: var(--blue)">2.0</div>
+    <div class="stat-label">out of 10 · days with check-in only</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Avg Sleep <span class="param-source param-source--mixed" title="Sleep hours often from Health; sleep quality from check-in">Mixed</span></div>
+    <div class="stat-value" id="stat-avg-sleep-value" style="color: var(--purple)">6.7h</div>
+    <div class="stat-label" id="stat-avg-sleep-label">per night · quality 8.0/10</div>
+  </div>
+</div>
+
+<div id="readiness-modal" class="readiness-modal" aria-hidden="true" role="presentation">
+  <div class="readiness-modal__backdrop" id="readiness-modal-backdrop" tabindex="-1"></div>
+  <div class="readiness-modal__panel" role="dialog" aria-modal="true" aria-labelledby="readiness-modal-title" id="readiness-modal-panel">
+    <div class="readiness-modal__toolbar">
+      <button type="button" class="readiness-modal__expand" id="readiness-modal-expand" aria-pressed="false" title="Full screen">⛶</button>
+      <button type="button" class="readiness-modal__close" id="readiness-modal-close" aria-label="Close">×</button>
+    </div>
+    <h2 class="readiness-modal__title" id="readiness-modal-title">Readiness breakdown</h2>
+    <p class="readiness-modal__meta" id="readiness-modal-meta">
+      Latest log: <strong id="readiness-modal-latest">2026-03-29</strong>
+      <span id="readiness-modal-today-note"></span>
+    </p>
+    <div class="readiness-modal__formula" id="readiness-formula-block" aria-label="Readiness calculation formula">
+      <div class="readiness-modal__formula-caption">Readiness score R (0–100)</div>
+      <div class="readiness-modal__formula-math readiness-modal__formula-math--lead">
+        <p class="formula-eq"><em>x</em> = <em>B</em> + <em>A</em> + P<sub>ill</sub> + P<sub>alc</sub></p>
+        <p class="formula-total"><em>R</em> is the integer from 0 to 100 obtained by rounding <em>x</em> to the nearest integer; if that value is below 0, use 0; if above 100, use 100.</p>
+      </div>
+      <details class="readiness-modal__formula-details">
+        <summary class="readiness-modal__formula-summary">Definitions and step-by-step formulas</summary>
+        <div class="readiness-modal__formula-math">
+          <p class="formula-block-label">Quantities</p>
+          <ul class="formula-defs">
+            <li><em>Q</em>, <em>E</em>, <em>N</em>: sleep quality, energy, nutrition (questionnaire; typically 0–10, default 5 if missing).</li>
+            <li><em>s̄</em>: mean muscle-soreness intensity over logged zones (default 1 if none).</li>
+            <li><em>τ</em> ∈ {2, 5}: tension score (2 if no posture tension logged, 5 otherwise).</li>
+            <li><em>σ</em>, <em>μ</em>, <em>φ</em>: stress, mood, mental fatigue (typically 1–10; default 5 if missing).</li>
+          </ul>
+          <p class="formula-block-label">Weighted inner sum</p>
+          <p class="formula-eq">inner = 0.30·<em>Q</em> + 0.25·<em>E</em> + 0.20·(10 − 3<em>s̄</em>) + 0.15·(10 − <em>τ</em>) + 0.10·<em>N</em></p>
+          <p class="formula-block-label">Base on the 0–100 scale</p>
+          <p class="formula-eq"><em>B</em> = 10 · inner</p>
+          <p class="formula-block-label">Psych adjustment</p>
+          <p class="formula-eq"><em>A</em> = ((5 − <em>σ</em>) + (5 − <em>μ</em>) + (5 − <em>φ</em>)) / 3 · 2.2</p>
+          <p class="formula-block-label">Penalties</p>
+          <p class="formula-eq">P<sub>ill</sub> ∈ {0, −18} (illness active or not).&nbsp;&nbsp;P<sub>alc</sub> ∈ {0, −2, −5, −10} by alcohol units.</p>
+        </div>
+      </details>
+    </div>
+    <p class="breakdown-section-title" style="margin-top:0">Parameters over time</p>
+    <p class="readiness-modal__hint" id="readiness-modal-spark-hint">Badges: <strong>Manual</strong> = check-in · <strong>Computed</strong> = readiness score · <strong>Apple Health</strong> on other charts = export sync. Each chart: up to <strong id="spark-modal-day-count">35</strong> day(s). Missing fields use the same defaults as the formula (sleep, energy, nutrition, stress, mood, mental fatigue: <strong>5</strong>; soreness avg when empty: <strong>1</strong>; tension <strong>2</strong> or <strong>5</strong>). A flat line at the default means you are not yet tracking that signal; movement means real variation. Axis labels are <code>MM-DD</code>; hover for full date. Use the corner button to expand.</p>
+    <div class="modal-spark-grid">
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Sleep quality</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="Sleep quality Q (1–10): check-in, or explicit score in Health export, or a heuristic from Watch sleep stages (deep/REM/duration/awake) when the export has no score field. time_in_daylight is not sleep. See sleep_quality_source in logs.">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkSleep"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Energy</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkEnergy"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Nutrition</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkNutrition"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Soreness avg</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">1.00</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkSoreness"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Tension</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">2</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkTension"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Readiness</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">59</span> <span class="param-source param-source--computed" title="Calculated from your check-in inputs and defaults (readiness formula)">Computed</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkReadiness"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Stress</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkStress"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Mood</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkMood"></canvas></div>
+      </div>
+      <div class="modal-chart-block">
+        <h4 class="modal-spark-heading"><span class="modal-spark-heading__title">Mental fatigue</span><span class="modal-spark-heading__meta"> · last log: <span class="param-latest">5</span> <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></span></h4>
+        <div class="modal-mini-wrap"><canvas id="modalSparkMentalFatigue"></canvas></div>
+      </div>
+    </div>
+    <p class="breakdown-section-title">Weighted base · bar (latest log) <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></p>
+    <p class="readiness-modal__hint" style="margin-top:-4px;margin-bottom:10px">This bar is a <strong>single-day snapshot</strong>: how the five inputs split into the weighted base sum for your <strong>latest log only</strong> (same weights as the formula: sleep Q 30%, energy 25%, soreness term 20%, tension 15%, nutrition 10%). Each slice is in “points before ×10” scale. <strong>Trends over time</strong> are the line charts above, not this bar.</p>
+    <div class="modal-chart-block">
+      <div class="modal-bar-wrap">
+        <canvas id="modalWeightedBar" aria-label="Weighted base components for latest log only"></canvas>
+      </div>
+    </div>
+    <div id="readiness-dynamic-breakdown"><p class="breakdown-section-title" style="margin-top:0">Formula detail · log date <span class="param-latest">2026-03-29</span></p><p class="readiness-modal__hint" style="margin-bottom:10px">Calendar <strong>2026-03-29</strong>: this breakdown matches the <strong>newest</strong> log in the chart window (same day as today).</p><p class="readiness-modal__hint">The five numbers below are <strong>weighted terms</strong> (each row is “scaled input × weight”). Sleep, energy, nutrition use your 0–10 answers; soreness and tension use the formulas on the left. They <strong>sum to inner 5.85</strong>; multiply by <strong>10</strong> → base <strong>58.5</strong> on the 0–100 scale. Then stress adjustment and penalties are added; the line below is the <strong>rounded</strong> total.</p><p class="readiness-modal__hint" style="margin-top:6px"><strong>Weighted base</strong> (inner 5.85 → ×10 = 58.5)</p><dl class="breakdown-dl"><dt>Sleep Q × 30%</dt><dd>1.50</dd><dt>Energy × 25%</dt><dd>1.25</dd><dt>(10 − 3·sore) × 20%</dt><dd>1.40</dd><dt>(10 − tension) × 15%</dt><dd>1.20</dd><dt>Nutrition × 10%</dt><dd>0.50</dd></dl><p class="breakdown-section-title">Psych + penalties → total</p><p class="readiness-modal__hint" style="margin-top:-4px;margin-bottom:8px">Same log (<strong>2026-03-29</strong>): stress/mood/fatigue are 1–10 from check-in; adjustment and penalties apply to the base above.</p><dl class="breakdown-dl"><dt>Stress / mood / mental fatigue</dt><dd>5 / 5 / 5</dd><dt>Stress adjustment</dt><dd>+0.00</dd><dt>Illness penalty</dt><dd>0</dd><dt>Alcohol penalty</dt><dd>0</dd><dt><strong>Total readiness</strong></dt><dd><strong>59</strong></dd></dl></div>
+  </div>
+</div>
+
+<div class="grid-3" id="vitals-summary-row" style="margin-bottom: 24px;"><div class="card"><div class="card-title">Avg HRV (35d) <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></div><div class="stat-value" style="color: var(--green); font-size: 28px;">35.8</div><div class="stat-label">ms</div></div><div class="card"><div class="card-title">Avg Resting HR <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></div><div class="stat-value" style="color: #f472b6; font-size: 28px;">76</div><div class="stat-label">bpm</div></div><div class="card"><div class="card-title">Latest weight <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></div><div class="stat-value" style="color: var(--text); font-size: 28px;">104.3</div><div class="stat-label">kg · last export day · scales (e.g. Xiaomi) usually sync via Apple Health</div></div></div>
+
+<div class="chart-card" style="margin-bottom: 24px;">
+  <h3>📈 Readiness (total) <span class="param-source param-source--computed" title="Calculated from your check-in inputs and defaults (readiness formula)">Computed</span></h3>
+  <p style="color: var(--text-muted); font-size: 12px; margin: -8px 0 12px 0; line-height: 1.45;">
+    Charts below show the <strong>inputs</strong> that drive this curve. Days with no check-in appear as gaps.
+  </p>
+  <div class="chart-wrapper-tall">
+    <canvas id="readinessChart"></canvas>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="chart-card">
+    <h3>📊 Readiness base (0–10) <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Weights in formula: sleep quality 30%, energy 25%, soreness term 20%, tension 15%, nutrition 10%. All subjective inputs from check-in.</p>
+    <div class="chart-wrapper">
+      <canvas id="readinessBaseChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h3>🧍 Soreness avg &amp; tension score <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Soreness: mean zone intensity (higher = worse). Tension: 2 = none reported, 5 = zones listed (matches formula).</p>
+    <div class="chart-wrapper">
+      <canvas id="bodyLoadChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="grid-3" style="margin-bottom: 24px;">
+  <div class="chart-card">
+    <h3>🧠 Stress (0–10) <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Psych layer in readiness (default 5 if not logged). Check-in only.</p>
+    <div class="chart-wrapper">
+      <canvas id="psychChartStress"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>🙂 Mood (0–10) <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Same scale and defaults as stress. Feeds stress adjustment <em>A</em> in the formula.</p>
+    <div class="chart-wrapper">
+      <canvas id="psychChartMood"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>🧩 Mental fatigue (0–10) <span class="param-source param-source--manual" title="From daily check-in (questionnaire)">Manual</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Together with stress and mood; not merged on one axis anymore so trends stay readable.</p>
+    <div class="chart-wrapper">
+      <canvas id="psychChartMentalFatigue"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="chart-card">
+    <h3>🛌 Sleep duration &amp; quality <span class="param-source param-source--mixed" title="Sleep hours often from Health; sleep quality from check-in">Mixed</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 10px 0;">Hours and deep/REM often from <strong>Apple Health</strong> export; <strong>sleep quality</strong> is <strong>Manual</strong> (check-in). <strong>Readiness uses only quality</strong>, not hours.</p>
+    <div class="chart-wrapper">
+      <canvas id="sleepChart"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>Daily steps <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></h3>
+    <p style="color: var(--text-muted); font-size: 11px; margin: -6px 0 6px 0; line-height: 1.45;">Not in readiness formula. Context only. Synced from Apple Health export (Watch, iPhone, or other apps that write step counts to Health).</p>
+    <div id="steps-summary-wrap"><p style="font-size: 11px; margin: 0 0 10px 0; line-height: 1.45; color: var(--text-muted);"><strong style="color: #86efac;">Average 6,651 steps/day</strong> · <strong>35</strong> day(s) with step data in this window. Yellow dashed line = period average.</p></div>
+    <div class="chart-wrapper">
+      <canvas id="stepsChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="chart-card" style="margin-bottom: 24px;">
+  <h3>❤️ HRV &amp; resting HR <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></h3>
+  <p style="color: var(--text-muted); font-size: 11px; margin: -10px 0 12px 0;">Apple Health export.</p>
+  <div class="chart-wrapper">
+    <canvas id="vitalsChart"></canvas>
+  </div>
+</div>
+
+
+<div class="chart-card" id="weight-chart-card" style="margin-bottom: 24px;">
+  <h3>⚖️ Weight (kg) <span class="param-source param-source--health" title="Synced from Apple Health JSON export (Watch, iPhone, or devices that write to Health, e.g. Xiaomi scale via Xiaomi Home)">Apple Health</span></h3>
+  <p style="color: var(--text-muted); font-size: 11px; margin: -10px 0 12px 0;">From Apple Health export. Body composition scales (e.g. Xiaomi) typically sync into Health first.</p>
+  <div class="chart-wrapper">
+    <canvas id="weightChart"></canvas>
+  </div>
+</div>
+
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Recurring Soreness (14d)</div>
+    <div id="recurring-soreness-body"><ul class="pattern-list"><li><span>neck</span><div class="pattern-bar"><div class="bar" style="width: 6px"></div><span class="bar-count">1d</span></div></li><li><span>back</span><div class="pattern-bar"><div class="bar" style="width: 6px"></div><span class="bar-count">1d</span></div></li><li><span>legs</span><div class="pattern-bar"><div class="bar" style="width: 6px"></div><span class="bar-count">1d</span></div></li><li><span>shoulders</span><div class="pattern-bar"><div class="bar" style="width: 6px"></div><span class="bar-count">1d</span></div></li><li><span>lower_back</span><div class="pattern-bar"><div class="bar" style="width: 6px"></div><span class="bar-count">1d</span></div></li></ul></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recurring Tension (14d)</div>
+    <div id="recurring-tension-body"><ul class="pattern-list"><li><span>neck</span><div class="pattern-bar"><div class="bar" style="width: 6px; background: var(--orange)"></div><span class="bar-count">1d</span></div></li><li><span>lower_back</span><div class="pattern-bar"><div class="bar" style="width: 6px; background: var(--orange)"></div><span class="bar-count">1d</span></div></li></ul></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const ALL_LOGS = [{"date":"2026-02-22","steps":11311,"active_minutes":51,"hrv":36.1,"resting_hr":68,"stand_minutes":227,"blood_oxygen":96.8,"sleep_hours":7.1,"sleep_deep":0.4,"sleep_rem":0.7,"sleep_core":6,"sleep_awake":0.9,"sleep_start":"2026-02-21 22:49:33","sleep_end":"2026-02-22 06:46:03","_health_synced":"2026-03-25T20:10:47.333Z","readiness_score":59,"active_energy_kcal":3590.9,"basal_energy_kcal":10302.3,"walking_distance_km":8.92,"flights_climbed":1,"respiratory_rate":15.1,"time_in_daylight_min":138,"physical_effort":3.52,"heart_rate_avg":81.2,"heart_rate_min":49,"heart_rate_max":122},{"date":"2026-02-23","steps":8330,"active_minutes":33,"hrv":23.4,"resting_hr":75,"stand_minutes":158,"blood_oxygen":96.4,"wrist_temp_c":35.7,"sleep_hours":6.5,"sleep_deep":0.7,"sleep_rem":1.1,"sleep_core":4.7,"sleep_awake":0.2,"sleep_start":"2026-02-22 23:17:49","sleep_end":"2026-02-23 06:02:49","_health_synced":"2026-03-25T22:10:55.705Z","readiness_score":59,"active_energy_kcal":2578.3,"basal_energy_kcal":9664.5,"walking_distance_km":6.57,"flights_climbed":2,"respiratory_rate":15.5,"time_in_daylight_min":49,"physical_effort":3.55,"heart_rate_avg":82,"heart_rate_min":56,"heart_rate_max":130},{"date":"2026-02-24","steps":7696,"active_minutes":33,"hrv":34.4,"resting_hr":73,"stand_minutes":133,"blood_oxygen":96.2,"wrist_temp_c":35.7,"sleep_hours":6.4,"sleep_deep":0.7,"sleep_rem":1.4,"sleep_core":4.3,"sleep_awake":1.5,"sleep_start":"2026-02-23 23:42:15","sleep_end":"2026-02-24 07:31:45","_health_synced":"2026-03-25T22:10:55.722Z","readiness_score":59,"active_energy_kcal":2463.7,"basal_energy_kcal":9721.8,"walking_distance_km":6.02,"flights_climbed":1,"respiratory_rate":15.3,"time_in_daylight_min":23,"physical_effort":3.56,"heart_rate_avg":80.5,"heart_rate_min":58,"heart_rate_max":124},{"date":"2026-02-25","steps":7740,"active_minutes":29,"hrv":27,"resting_hr":75,"stand_minutes":133,"blood_oxygen":95.7,"wrist_temp_c":36.1,"sleep_hours":6.1,"sleep_deep":0.8,"sleep_rem":1.2,"sleep_core":4.1,"sleep_awake":0.3,"sleep_start":"2026-02-25 00:21:28","sleep_end":"2026-02-25 06:42:28","_health_synced":"2026-03-25T22:10:55.727Z","readiness_score":59,"active_energy_kcal":2980.7,"basal_energy_kcal":10297.5,"walking_distance_km":6.05,"respiratory_rate":16.2,"physical_effort":3.49,"heart_rate_avg":89.3,"heart_rate_min":54,"heart_rate_max":142},{"date":"2026-02-26","steps":6073,"active_minutes":15,"hrv":43.9,"resting_hr":83,"stand_minutes":84,"blood_oxygen":96,"wrist_temp_c":35.9,"sleep_hours":7,"sleep_deep":1,"sleep_rem":1.2,"sleep_core":4.8,"sleep_awake":1.2,"sleep_start":"2026-02-26 00:09:01","sleep_end":"2026-02-26 08:18:31","_health_synced":"2026-03-25T22:10:55.735Z","readiness_score":59,"active_energy_kcal":1907.1,"basal_energy_kcal":9534.3,"walking_distance_km":4.55,"flights_climbed":2,"respiratory_rate":15.4,"time_in_daylight_min":116,"physical_effort":3.42,"heart_rate_avg":84.2,"heart_rate_min":55,"heart_rate_max":121},{"date":"2026-02-27","steps":4436,"active_minutes":5,"hrv":24.3,"resting_hr":82,"stand_minutes":54,"blood_oxygen":95.8,"_health_synced":"2026-03-25T22:10:55.741Z","readiness_score":59,"active_energy_kcal":992.7,"basal_energy_kcal":9072,"walking_distance_km":3.31,"time_in_daylight_min":77,"physical_effort":3.27,"heart_rate_avg":96.3,"heart_rate_min":79,"heart_rate_max":128},{"date":"2026-02-28","steps":5025,"active_minutes":16,"hrv":25.9,"resting_hr":84,"stand_minutes":130,"blood_oxygen":95.1,"_health_synced":"2026-03-25T22:10:55.745Z","readiness_score":59,"active_energy_kcal":2091.8,"basal_energy_kcal":9715.8,"walking_distance_km":3.91,"flights_climbed":3,"respiratory_rate":19.7,"time_in_daylight_min":101,"physical_effort":3.37,"heart_rate_avg":100.1,"heart_rate_min":66,"heart_rate_max":146},{"date":"2026-03-01","steps":9788,"active_minutes":51,"hrv":37,"resting_hr":67,"stand_minutes":174,"blood_oxygen":94.7,"sleep_hours":6.6,"sleep_deep":0.8,"sleep_rem":1.3,"sleep_core":4.4,"sleep_awake":0.2,"sleep_start":"2026-02-28 23:05:54","sleep_end":"2026-03-01 05:51:54","_health_synced":"2026-03-25T22:10:55.751Z","readiness_score":59,"active_energy_kcal":2834.2,"basal_energy_kcal":9741.9,"walking_distance_km":7.74,"respiratory_rate":15.6,"time_in_daylight_min":109,"physical_effort":3.45,"heart_rate_avg":86.5,"heart_rate_min":56,"heart_rate_max":136},{"date":"2026-03-02","steps":5864,"active_minutes":26,"hrv":33.7,"resting_hr":80,"stand_minutes":107,"blood_oxygen":95.5,"wrist_temp_c":35.8,"sleep_hours":6.5,"sleep_deep":1,"sleep_rem":1.9,"sleep_core":3.7,"sleep_awake":0.4,"sleep_start":"2026-03-01 23:31:46","sleep_end":"2026-03-02 06:24:16","_health_synced":"2026-03-25T22:10:55.755Z","readiness_score":59,"active_energy_kcal":2923.1,"basal_energy_kcal":10439.7,"walking_distance_km":4.66,"flights_climbed":1,"respiratory_rate":15.4,"physical_effort":3.77,"heart_rate_avg":85,"heart_rate_min":47,"heart_rate_max":132},{"date":"2026-03-03","steps":4717,"active_minutes":23,"hrv":37.2,"resting_hr":84,"stand_minutes":62,"blood_oxygen":95.6,"wrist_temp_c":35.8,"sleep_hours":5.4,"sleep_deep":0.7,"sleep_rem":0.8,"sleep_core":3.9,"sleep_awake":0.4,"sleep_start":"2026-03-03 01:12:17","sleep_end":"2026-03-03 07:02:47","_health_synced":"2026-03-25T22:10:55.759Z","readiness_score":59,"active_energy_kcal":1411.4,"basal_energy_kcal":5192,"walking_distance_km":3.55,"respiratory_rate":15,"time_in_daylight_min":134,"physical_effort":3.98,"heart_rate_avg":82,"heart_rate_min":60,"heart_rate_max":130},{"date":"2026-03-04","steps":3063,"_health_synced":"2026-03-25T22:10:55.764Z","readiness_score":59,"walking_distance_km":2.01},{"date":"2026-03-05","steps":3241,"active_minutes":6,"hrv":42.8,"resting_hr":75,"stand_minutes":50,"blood_oxygen":94,"_health_synced":"2026-03-25T22:10:55.780Z","readiness_score":59,"active_energy_kcal":1477.6,"basal_energy_kcal":6422.9,"walking_distance_km":2.5,"flights_climbed":1,"time_in_daylight_min":103,"physical_effort":3.36,"heart_rate_avg":91.6,"heart_rate_min":66,"heart_rate_max":128},{"date":"2026-03-06","steps":4179,"active_minutes":3,"hrv":22.9,"resting_hr":71,"stand_minutes":58,"blood_oxygen":93.5,"_health_synced":"2026-03-25T22:10:55.799Z","readiness_score":59,"active_energy_kcal":1392.6,"basal_energy_kcal":9505.9,"walking_distance_km":3.18,"flights_climbed":3,"respiratory_rate":15.2,"time_in_daylight_min":41,"physical_effort":3.33,"heart_rate_avg":90.7,"heart_rate_min":56,"heart_rate_max":123},{"date":"2026-03-07","steps":6877,"active_minutes":31,"hrv":33.5,"resting_hr":80,"stand_minutes":133,"blood_oxygen":94.7,"sleep_hours":7.8,"sleep_deep":0.9,"sleep_rem":1.6,"sleep_core":5.3,"sleep_awake":0.5,"sleep_start":"2026-03-06 22:26:14","sleep_end":"2026-03-07 06:43:44","_health_synced":"2026-03-25T22:10:55.813Z","readiness_score":59,"active_energy_kcal":2419.5,"basal_energy_kcal":9816.2,"walking_distance_km":5.27,"flights_climbed":5,"respiratory_rate":15.3,"time_in_daylight_min":144,"physical_effort":3.73,"heart_rate_avg":86.1,"heart_rate_min":48,"heart_rate_max":128},{"date":"2026-03-08","steps":9560,"active_minutes":51,"hrv":26.6,"resting_hr":89,"stand_minutes":219,"blood_oxygen":92,"_health_synced":"2026-03-25T22:10:55.828Z","readiness_score":59,"active_energy_kcal":3247.4,"basal_energy_kcal":10173.8,"walking_distance_km":7.37,"respiratory_rate":17.2,"time_in_daylight_min":44,"physical_effort":3.77,"heart_rate_avg":102.7,"heart_rate_min":55,"heart_rate_max":133},{"date":"2026-03-09","steps":7786,"active_minutes":32,"hrv":28.4,"resting_hr":78,"stand_minutes":141,"blood_oxygen":94.7,"wrist_temp_c":35.9,"sleep_hours":6.6,"sleep_deep":1,"sleep_rem":1.2,"sleep_core":4.4,"sleep_awake":0.3,"sleep_start":"2026-03-08 23:22:43","sleep_end":"2026-03-09 06:15:13","_health_synced":"2026-03-25T22:10:55.832Z","readiness_score":59,"active_energy_kcal":3314.9,"basal_energy_kcal":10582.5,"walking_distance_km":6.13,"flights_climbed":11,"respiratory_rate":14.9,"time_in_daylight_min":176,"physical_effort":3.75,"heart_rate_avg":86.8,"heart_rate_min":51,"heart_rate_max":132},{"date":"2026-03-10","steps":4382,"active_minutes":9,"hrv":46.9,"resting_hr":84,"stand_minutes":57,"blood_oxygen":95.4,"wrist_temp_c":35.5,"sleep_hours":6.5,"sleep_deep":0.1,"sleep_rem":1.3,"sleep_core":5.2,"sleep_awake":0.3,"sleep_start":"2026-03-09 23:24:26","sleep_end":"2026-03-10 06:09:56","_health_synced":"2026-03-25T22:10:55.836Z","readiness_score":59,"active_energy_kcal":1256.3,"basal_energy_kcal":5497.6,"walking_distance_km":3.34,"flights_climbed":1,"respiratory_rate":14.4,"time_in_daylight_min":102,"physical_effort":3.76,"heart_rate_avg":81.4,"heart_rate_min":51,"heart_rate_max":135},{"date":"2026-03-11","steps":4286,"_health_synced":"2026-03-25T22:10:55.840Z","readiness_score":59,"walking_distance_km":2.73},{"date":"2026-03-12","steps":6346,"active_minutes":7,"hrv":31.5,"resting_hr":73,"stand_minutes":58,"blood_oxygen":94.5,"_health_synced":"2026-03-25T22:10:55.844Z","readiness_score":59,"active_energy_kcal":1265.7,"basal_energy_kcal":3759.5,"walking_distance_km":4.63,"flights_climbed":2,"time_in_daylight_min":45,"physical_effort":3.35,"heart_rate_avg":93.8,"heart_rate_min":47,"heart_rate_max":128},{"date":"2026-03-13","steps":6746,"_health_synced":"2026-03-25T22:10:55.850Z","readiness_score":59,"walking_distance_km":4.55},{"date":"2026-03-14","steps":5583,"active_minutes":20,"hrv":31.9,"resting_hr":69,"stand_minutes":116,"blood_oxygen":94.8,"_health_synced":"2026-03-25T22:10:55.856Z","readiness_score":59,"active_energy_kcal":2151.2,"basal_energy_kcal":6155.1,"walking_distance_km":4.33,"flights_climbed":4,"respiratory_rate":15.1,"time_in_daylight_min":30,"physical_effort":3.48,"heart_rate_avg":88.5,"heart_rate_min":64,"heart_rate_max":133},{"date":"2026-03-15","steps":10900,"active_minutes":56,"hrv":44.3,"resting_hr":70,"stand_minutes":152,"blood_oxygen":95.8,"sleep_hours":6.6,"sleep_deep":0.7,"sleep_rem":1.4,"sleep_core":4.5,"sleep_awake":0.5,"sleep_start":"2026-03-14 23:26:29","sleep_end":"2026-03-15 06:28:59","_health_synced":"2026-03-25T22:10:55.859Z","readiness_score":59,"active_energy_kcal":2549.3,"basal_energy_kcal":9534.6,"walking_distance_km":8.36,"flights_climbed":2,"respiratory_rate":14,"time_in_daylight_min":140,"physical_effort":3.68,"heart_rate_avg":82.1,"heart_rate_min":58,"heart_rate_max":143},{"date":"2026-03-16","steps":8262,"active_minutes":26,"hrv":29,"stand_minutes":84,"blood_oxygen":94.1,"wrist_temp_c":35.5,"_health_synced":"2026-03-25T22:10:55.862Z","readiness_score":59,"active_energy_kcal":2460.7,"basal_energy_kcal":10076.5,"walking_distance_km":6.39,"flights_climbed":3,"respiratory_rate":16.5,"physical_effort":3.55,"heart_rate_avg":91.1,"heart_rate_min":44,"heart_rate_max":136},{"date":"2026-03-17","steps":11554,"active_minutes":65,"hrv":49.6,"resting_hr":78,"stand_minutes":181,"blood_oxygen":93.7,"sleep_hours":7,"sleep_deep":0.4,"sleep_rem":1.6,"sleep_core":5,"sleep_awake":0.3,"sleep_start":"2026-03-16 23:24:39","sleep_end":"2026-03-17 06:43:09","_health_synced":"2026-03-25T22:10:55.867Z","readiness_score":59,"active_energy_kcal":4041.5,"basal_energy_kcal":10446,"walking_distance_km":9.01,"flights_climbed":3,"respiratory_rate":13.8,"time_in_daylight_min":87,"physical_effort":3.75,"heart_rate_avg":86.4,"heart_rate_min":45,"heart_rate_max":153},{"date":"2026-03-18","steps":5387,"active_minutes":15,"hrv":49.5,"resting_hr":80,"stand_minutes":55,"blood_oxygen":94.8,"wrist_temp_c":35.6,"sleep_hours":7.1,"sleep_deep":0.8,"sleep_rem":1,"sleep_core":5.2,"sleep_awake":1.1,"sleep_start":"2026-03-17 23:53:57","sleep_end":"2026-03-18 08:04:57","_health_synced":"2026-03-25T22:10:55.869Z","readiness_score":59,"active_energy_kcal":1496.8,"basal_energy_kcal":9370.5,"walking_distance_km":3.99,"respiratory_rate":14.1,"time_in_daylight_min":122,"physical_effort":3.84,"heart_rate_avg":79,"heart_rate_min":48,"heart_rate_max":116},{"date":"2026-03-19","steps":5866,"active_minutes":35,"hrv":26.4,"resting_hr":72,"stand_minutes":87,"blood_oxygen":95,"_health_synced":"2026-03-25T22:10:55.872Z","readiness_score":59,"active_energy_kcal":2423.8,"basal_energy_kcal":9782.7,"walking_distance_km":4.41,"respiratory_rate":14.5,"physical_effort":4.42,"heart_rate_avg":91.5,"heart_rate_min":48,"heart_rate_max":118},{"date":"2026-03-20","steps":8994,"active_minutes":38,"hrv":29.9,"resting_hr":74,"stand_minutes":169,"blood_oxygen":93.7,"wrist_temp_c":35.9,"sleep_hours":6,"sleep_deep":0.5,"sleep_rem":1.2,"sleep_core":4.3,"sleep_awake":1.4,"sleep_start":"2026-03-19 23:56:48","sleep_end":"2026-03-20 07:21:48","_health_synced":"2026-03-25T22:10:55.876Z","readiness_score":59,"active_energy_kcal":3269.7,"basal_energy_kcal":10287.7,"walking_distance_km":7.1,"respiratory_rate":15.4,"time_in_daylight_min":18,"physical_effort":3.68,"heart_rate_avg":84.2,"heart_rate_min":56,"heart_rate_max":126},{"date":"2026-03-21","steps":9958,"active_minutes":16,"hrv":31.7,"resting_hr":68,"stand_minutes":42,"blood_oxygen":95.3,"sleep_hours":7,"sleep_deep":0.6,"sleep_rem":1.1,"sleep_core":5.3,"sleep_awake":0.5,"sleep_start":"2026-03-20 23:45:48","sleep_end":"2026-03-21 07:16:48","_health_synced":"2026-03-25T22:10:55.879Z","readiness_score":59,"active_energy_kcal":1056.1,"basal_energy_kcal":8988.1,"walking_distance_km":7.16,"flights_climbed":1,"respiratory_rate":14.1,"time_in_daylight_min":19,"physical_effort":3.85,"heart_rate_avg":76.7,"heart_rate_min":56,"heart_rate_max":122},{"date":"2026-03-22","steps":5228,"active_minutes":8,"stand_minutes":11,"_health_synced":"2026-03-25T22:10:55.883Z","readiness_score":59,"active_energy_kcal":265.1,"basal_energy_kcal":8434.7,"walking_distance_km":3.31,"time_in_daylight_min":13,"physical_effort":4.39,"heart_rate_avg":113.1,"heart_rate_min":89,"heart_rate_max":132},{"date":"2026-03-23","steps":4399,"active_minutes":10,"hrv":36.6,"resting_hr":75,"stand_minutes":88,"blood_oxygen":96.8,"_health_synced":"2026-03-25T22:10:55.885Z","readiness_score":59,"active_energy_kcal":2196,"basal_energy_kcal":10139.2,"walking_distance_km":3.47,"flights_climbed":1,"respiratory_rate":16.3,"time_in_daylight_min":25,"physical_effort":3.32,"heart_rate_avg":91.9,"heart_rate_min":59,"heart_rate_max":139},{"date":"2026-03-24","steps":8672,"active_minutes":6,"hrv":57.6,"resting_hr":83,"stand_minutes":35,"blood_oxygen":96.6,"wrist_temp_c":35.7,"sleep_hours":6.5,"sleep_deep":0.6,"sleep_rem":1.6,"sleep_core":4.2,"sleep_awake":0.3,"sleep_start":"2026-03-23 23:45:39","sleep_end":"2026-03-24 06:34:39","_health_synced":"2026-03-25T22:10:55.888Z","active_energy_kcal":643.3,"basal_energy_kcal":8727.4,"walking_distance_km":6.15,"flights_climbed":3,"respiratory_rate":14.2,"time_in_daylight_min":10,"heart_rate_avg":72.7,"heart_rate_min":53,"heart_rate_max":120,"physical_effort":3.77,"readiness_score":59,"recommendation":"Resting HR elevated to 83 bpm (up from 68 three days ago) with only 6 active minutes and 35 stand minutes today — body showing signs of sedentary fatigue accumulation. HRV at 57.6 is the highest this week, signaling recovery potential if given proper movement and sleep. Priority: 25-35 min evening walk at conversational pace, desk break every 90 min (neck rolls + shoulder circles), and early sleep before 22:30. Avoid intensity training today. The key intervention is fixing the late bedtime pattern — consistently sleeping after 23:45 is driving the resting HR increase.","_recommendation_at":"2026-03-25T00:00:00.000Z"},{"date":"2026-03-25","steps":8592,"active_minutes":26,"hrv":26.2,"resting_hr":77,"stand_minutes":125,"blood_oxygen":95.3,"active_energy_kcal":1916.6,"basal_energy_kcal":9314,"walking_distance_km":6.65,"flights_climbed":1,"time_in_daylight_min":39,"physical_effort":3.45,"heart_rate_avg":101.8,"heart_rate_min":64,"heart_rate_max":155,"_health_synced":"2026-03-26T21:40:49.891Z","readiness_score":59,"recommendation":"Resting HR dropped from 83 to 77, active minutes went from 6 to 26, stand time increased from 35 to 125 min, and daylight went from 10 to 39 min. The main signal is better movement and lighter exposure. HRV at 26.2 ms is low-normal after exertion (yesterday HRV was 57.6 ms), so the lever for tonight is recovery. Blood oxygen is 95.3% (yesterday 96.6%), slightly below optimal, which can come from fatigue or shallower breathing. Evening priority: sleep before 23:00 (aim 22:45), 5 cycles of 4-7-8 breathing, phone away by 22:20. Tomorrow morning: 15 min outside in sunlight first thing.","_recommendation_at":"2026-03-25T22:10:00.000Z","respiratory_rate":15.9},{"date":"2026-03-26","steps":11361,"active_minutes":84,"hrv":37.5,"resting_hr":74,"stand_minutes":173,"blood_oxygen":94,"wrist_temp_c":35.6,"sleep_hours":8,"sleep_deep":0.6,"sleep_rem":1.6,"sleep_core":5.8,"sleep_awake":0.3,"sleep_start":"2026-03-25 22:45:14","sleep_end":"2026-03-26 07:03:44","active_energy_kcal":3948.1,"basal_energy_kcal":9124.3,"walking_distance_km":8.96,"flights_climbed":5,"respiratory_rate":14.2,"time_in_daylight_min":146,"physical_effort":3.87,"heart_rate_avg":88.1,"heart_rate_min":56,"heart_rate_max":156,"_health_synced":"2026-03-26T23:15:17.983Z","readiness_score":36,"sleep_quality":8,"energy":2,"stress":1,"mood":5,"mental_fatigue":5,"muscle_soreness":[{"zone":"neck","intensity":2},{"zone":"back","intensity":1},{"zone":"legs","intensity":3},{"zone":"shoulders","intensity":2},{"zone":"lower_back","intensity":3}],"muscle_soreness_avg":2.2,"posture_tension":["neck","lower_back"],"posture_tension_score":2,"nutrition":8,"training_sessions":[{"type":"pilates","duration_min":20,"rpe_1_10":7,"felt":"ok"}],"alcohol":{"had":false},"caffeine":{"description":"3 abatanado","last_time":"12:30"},"last_meal_time":"20:00","screen_before_bed_min":120,"phone_away_time":"23:15","hydration_liters":1.25,"salt_heavy_or_dehydrated":"none","illness":{"active":true,"symptoms":"утром лёгкая боль в горле и жжение носа, потом прошло","meds":"Dymista nasal spray (утро)"},"pain_injury":[],"weight_kg":103.9,"notes":"","recommendation":"Readiness 36 (Very Low): no new hard training today. Illness flag from morning throat/nose — if symptoms return, favor rest over walks. Priority: easy recovery — 15–20 min flat walk if you want movement; otherwise mobility only (chin tucks, cat-cow, kneeling hip-flexor stretch for neck and lower back). Desk break protocol every 90 min at the computer. Tonight: cut screen in the last hour before sleep (log shows 120 min); try dim/red light after 22:30 and phone away by 23:15. Hydration toward 2 L if you can. Nap ≤20 min before 15:00 if sleep pressure is crushing you.","logged_at":"2026-03-26T23:15:07.569Z","_checkin_at":"2026-03-26T23:15:07.570Z"},{"date":"2026-03-27","steps":180,"hrv":49.8,"stand_minutes":3,"blood_oxygen":95.2,"wrist_temp_c":35.7,"sleep_hours":7.1,"sleep_deep":0.6,"sleep_rem":1.3,"sleep_core":5.2,"sleep_awake":0.2,"sleep_start":"2026-03-26 23:28:38","sleep_end":"2026-03-27 06:44:38","active_energy_kcal":155.3,"basal_energy_kcal":3013.3,"walking_distance_km":0.13,"respiratory_rate":14,"physical_effort":2.19,"body_fat_pct":32.5,"bmi":33.3,"lean_body_mass_kg":70.4,"heart_rate_avg":69.7,"heart_rate_min":55,"heart_rate_max":108,"_health_synced":"2026-03-27T08:25:16.544Z","readiness_score":59,"weight_kg":104.3},{"date":"2026-03-29","steps":409,"hrv":54.7,"resting_hr":71,"stand_minutes":6,"blood_oxygen":94.6,"active_energy_kcal":331.6,"basal_energy_kcal":3351.6,"walking_distance_km":0.31,"physical_effort":2.85,"heart_rate_avg":81.8,"heart_rate_min":53,"heart_rate_max":107,"_health_synced":"2026-03-29T16:50:03.777Z","readiness_score":59}];
+  const RANGE_META = {"defaultFrom":"2026-02-22","defaultTo":"2026-03-29","dataMin":"2026-02-22","dataMax":"2026-03-29","defaultDays":90,"calendarToday":"2026-03-29","hasSampleData":false,"sparkModalDays":90,"anyWeightInVault":true};
+  const chartRegistry = { main: [], modal: [] };
+
+  function destroyCharts(arr) {
+    while (arr.length) {
+      const c = arr.pop();
+      try {
+        c.destroy();
+      } catch (e) {}
+    }
+  }
+
+  const chartDefaults = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#8892a4', font: { size: 11 } } },
+      tooltip: {
+        backgroundColor: '#22263a',
+        borderColor: '#2d3148',
+        borderWidth: 1,
+        titleColor: '#e2e8f0',
+        bodyColor: '#8892a4',
+      },
+    },
+    scales: {
+      x: {
+        ticks: { color: '#8892a4', font: { size: 10 }, maxTicksLimit: 12 },
+        grid: { color: '#2d3148' },
+      },
+      y: {
+        ticks: { color: '#8892a4', font: { size: 11 } },
+        grid: { color: '#2d3148' },
+      },
+    },
+  };
+
+  function filterLogsByRange(logs, from, to) {
+    return logs.filter(function (l) {
+      return l.date >= from && l.date <= to;
+    });
+  }
+
+  function clampRange(from, to) {
+    const dm = RANGE_META.dataMin;
+    const dx = RANGE_META.dataMax;
+    let f = from < dm ? dm : from;
+    let t = to > dx ? dx : to;
+    if (f > t) f = t;
+    return { from: f, to: t };
+  }
+
+  function buildPayload(from, to) {
+    const logs = filterLogsByRange(ALL_LOGS, from, to);
+    return window.buildDashboardPayload(logs, {
+      sorenessAvg: window.PhysicalReadiness.sorenessAvg,
+      tensionValue: window.PhysicalReadiness.tensionValue,
+      calculateReadiness: window.PhysicalReadiness.calculateReadiness,
+      explainReadiness: window.PhysicalReadiness.explainReadiness,
+      SPARK_MODAL_DAYS: RANGE_META.sparkModalDays,
+      calendarToday: RANGE_META.calendarToday,
+      dateFrom: from,
+      dateTo: to,
+      readinessColor: window.PhysicalReadiness.readinessColor,
+    });
+  }
+
+  function readinessPill(score) {
+    if (score >= 80) return '🟢 High';
+    if (score >= 60) return '🟡 Moderate';
+    if (score >= 40) return '🟠 Low';
+    return '🔴 Very Low';
+  }
+
+  function updateDom(payload, from, to) {
+    const d = payload.data;
+    const n = d.dates.length;
+    const sub = document.getElementById('dashboard-subtitle');
+    if (sub) {
+      sub.textContent =
+        n +
+        ' day' +
+        (n !== 1 ? 's' : '') +
+        ' in view · ' +
+        from +
+        ' → ' +
+        to +
+        ' · full vault embedded (' +
+        ALL_LOGS.length +
+        ' day' +
+        (ALL_LOGS.length !== 1 ? 's' : '') +
+        ')';
+    }
+    const elV = document.getElementById('stat-today-readiness-value');
+    if (elV) {
+      elV.textContent = String(payload.lastReadiness);
+      elV.style.color = payload.lastReadinessColor;
+    }
+    const elD = document.getElementById('stat-today-readiness-date');
+    if (elD) elD.textContent = payload.latestDateStr || '—';
+    const elP = document.getElementById('stat-today-readiness-pill');
+    if (elP) {
+      elP.textContent = readinessPill(payload.lastReadiness);
+      elP.style.background = payload.lastReadinessColor + '22';
+      elP.style.color = payload.lastReadinessColor;
+    }
+    const elAvgL = document.getElementById('stat-avg-readiness-label');
+    if (elAvgL) elAvgL.textContent = 'Avg Readiness (' + n + 'd)';
+    const elAvgV = document.getElementById('stat-avg-readiness-value');
+    if (elAvgV) {
+      elAvgV.textContent = String(payload.avgReadiness);
+      elAvgV.style.color = window.PhysicalReadiness.readinessColor(payload.avgReadiness);
+    }
+    const elEn = document.getElementById('stat-avg-energy-value');
+    if (elEn) elEn.textContent = payload.avgEnergy != null ? payload.avgEnergy.toFixed(1) : '—';
+    const elSl = document.getElementById('stat-avg-sleep-value');
+    if (elSl) elSl.textContent = payload.avgSleep != null ? payload.avgSleep.toFixed(1) + 'h' : '—';
+    const elSq = document.getElementById('stat-avg-sleep-label');
+    if (elSq) elSq.textContent = 'per night · quality ' + payload.avgSleepQ + '/10';
+
+    const vitRow = document.getElementById('vitals-summary-row');
+    if (vitRow) {
+      const vit = window.buildVitalsSummaryInnerHtml({
+        avgHrv: payload.avgHrv,
+        avgRhr: payload.avgRhr,
+        lastWeight: payload.lastWeight,
+        displayCount: n,
+      });
+      vitRow.innerHTML = vit.html;
+      vitRow.style.display = vit.hasAny ? '' : 'none';
+    }
+
+    const stepsWrap = document.getElementById('steps-summary-wrap');
+    if (stepsWrap) {
+      stepsWrap.innerHTML = window.buildStepsSummaryParagraphHtml(d.stepsDaysWithData, d.avgStepsNum);
+    }
+
+    const rs = document.getElementById('recurring-soreness-body');
+    if (rs) rs.innerHTML = window.buildRecurringZonesHtml(payload.topSoreness, 'soreness');
+    const rt = document.getElementById('recurring-tension-body');
+    if (rt) rt.innerHTML = window.buildRecurringZonesHtml(payload.topTension, 'tension');
+
+    const bd = document.getElementById('readiness-dynamic-breakdown');
+    if (bd) {
+      bd.innerHTML = window.buildFormulaBreakdownHtml(payload.todayExplain, {
+        calendarToday: RANGE_META.calendarToday,
+        periodFrom: from,
+        periodTo: to,
+        windowCalendarDays: payload.windowCalendarDays,
+        isLatestCalendarToday: payload.isLatestCalendarToday,
+        latestDateStr: payload.latestDateStr,
+      });
+    }
+
+    const ml = document.getElementById('readiness-modal-latest');
+    if (ml) ml.textContent = payload.latestDateStr || '—';
+    const note = document.getElementById('readiness-modal-today-note');
+    if (note) {
+      note.innerHTML = payload.isLatestCalendarToday
+        ? ''
+        : ' · calendar today is <strong>' + RANGE_META.calendarToday + '</strong>';
+    }
+    const sparkN = document.getElementById('spark-modal-day-count');
+    if (sparkN) sparkN.textContent = String(d.sparkTrend.dates.length);
+
+    const wcard = document.getElementById('weight-chart-card');
+    if (wcard && RANGE_META.anyWeightInVault) {
+      wcard.style.display = d.hasWeightSeries ? '' : 'none';
+    }
+  }
+
+  function buildMainCharts(data) {
+    destroyCharts(chartRegistry.main);
+
+    chartRegistry.main.push(
+      new Chart(document.getElementById('readinessChart'), {
+        type: 'line',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'Readiness',
+              data: data.readiness,
+              borderColor: '#6366f1',
+              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 3,
+              pointBackgroundColor: data.readiness.map(function (v) {
+                return v >= 80 ? '#22c55e' : v >= 60 ? '#eab308' : v >= 40 ? '#f97316' : '#ef4444';
+              }),
+              pointBorderColor: 'transparent',
+            },
+          ],
+        },
+        options: {
+          ...chartDefaults,
+          scales: {
+            ...chartDefaults.scales,
+            y: {
+              ...chartDefaults.scales.y,
+              min: 0,
+              max: 100,
+              ticks: { ...chartDefaults.scales.y.ticks, stepSize: 20 },
+            },
+          },
+        },
+      }),
+    );
+
+    chartRegistry.main.push(
+      new Chart(document.getElementById('readinessBaseChart'), {
+        type: 'line',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'Sleep quality',
+              data: data.sleepQ,
+              borderColor: '#f9a8d4',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              spanGaps: false,
+            },
+            {
+              label: 'Energy',
+              data: data.energy,
+              borderColor: '#60a5fa',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              spanGaps: false,
+            },
+            {
+              label: 'Nutrition',
+              data: data.nutrition,
+              borderColor: '#34d399',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              spanGaps: false,
+            },
+          ],
+        },
+        options: {
+          ...chartDefaults,
+          scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 0, max: 10 } },
+        },
+      }),
+    );
+
+    chartRegistry.main.push(
+      new Chart(document.getElementById('bodyLoadChart'), {
+        type: 'line',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'Soreness avg (intensity)',
+              data: data.sorenessAvg,
+              borderColor: '#fb923c',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              spanGaps: false,
+              yAxisID: 'y',
+            },
+            {
+              label: 'Tension score',
+              data: data.tensionScore,
+              borderColor: '#a855f7',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              spanGaps: false,
+              yAxisID: 'y',
+            },
+          ],
+        },
+        options: {
+          ...chartDefaults,
+          scales: {
+            x: chartDefaults.scales.x,
+            y: {
+              ...chartDefaults.scales.y,
+              min: 0,
+              max: 6,
+              title: {
+                display: true,
+                text: 'Soreness ~1–3 · Tension 2 or 5',
+                color: '#8892a4',
+                font: { size: 10 },
+              },
+            },
+          },
+        },
+      }),
+    );
+
+    function psychLine(canvasId, label, series, borderColor) {
+      chartRegistry.main.push(
+        new Chart(document.getElementById(canvasId), {
+          type: 'line',
+          data: {
+            labels: data.dates,
+            datasets: [
+              {
+                label: label,
+                data: series,
+                borderColor: borderColor,
+                backgroundColor: 'transparent',
+                tension: 0.35,
+                pointRadius: 2,
+                spanGaps: false,
+              },
+            ],
+          },
+          options: {
+            ...chartDefaults,
+            scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 0, max: 10 } },
+          },
+        }),
+      );
+    }
+    psychLine('psychChartStress', 'Stress', data.stress, '#f87171');
+    psychLine('psychChartMood', 'Mood', data.mood, '#fbbf24');
+    psychLine('psychChartMentalFatigue', 'Mental fatigue', data.mentalFatigue, '#38bdf8');
+
+    chartRegistry.main.push(
+      new Chart(document.getElementById('sleepChart'), {
+        type: 'bar',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'Sleep Hours',
+              data: data.sleepH,
+              backgroundColor: 'rgba(167, 139, 250, 0.6)',
+              borderColor: '#a78bfa',
+              borderWidth: 1,
+              yAxisID: 'y',
+            },
+            {
+              label: 'Sleep Quality',
+              data: data.sleepQ,
+              type: 'line',
+              borderColor: '#f9a8d4',
+              backgroundColor: 'transparent',
+              tension: 0.4,
+              pointRadius: 2,
+              yAxisID: 'y2',
+            },
+          ],
+        },
+        options: {
+          ...chartDefaults,
+          scales: {
+            x: chartDefaults.scales.x,
+            y: {
+              ...chartDefaults.scales.y,
+              min: 0,
+              max: 12,
+              position: 'left',
+              title: { display: true, text: 'Hours', color: '#8892a4', font: { size: 10 } },
+            },
+            y2: {
+              ...chartDefaults.scales.y,
+              min: 0,
+              max: 10,
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Quality', color: '#8892a4', font: { size: 10 } },
+            },
+          },
+        },
+      }),
+    );
+
+    (function stepsChart() {
+      const ds = [
+        {
+          label: 'Steps',
+          data: data.steps,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34, 197, 94, 0.08)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 2,
+          spanGaps: false,
+        },
+      ];
+      if (data.avgStepsNum != null && data.dates && data.dates.length > 0) {
+        ds.push({
+          label: 'Period avg',
+          data: data.dates.map(function () {
+            return data.avgStepsNum;
+          }),
+          borderColor: 'rgba(250, 204, 21, 0.9)',
+          backgroundColor: 'transparent',
+          borderDash: [8, 5],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+          spanGaps: true,
+        });
+      }
+      chartRegistry.main.push(
+        new Chart(document.getElementById('stepsChart'), {
+          type: 'line',
+          data: { labels: data.dates, datasets: ds },
+          options: {
+            ...chartDefaults,
+            scales: {
+              ...chartDefaults.scales,
+              y: {
+                ...chartDefaults.scales.y,
+                min: 0,
+                title: { display: true, text: 'Steps', color: '#8892a4', font: { size: 10 } },
+              },
+            },
+          },
+        }),
+      );
+    })();
+
+    chartRegistry.main.push(
+      new Chart(document.getElementById('vitalsChart'), {
+        type: 'line',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'HRV (ms)',
+              data: data.hrv,
+              borderColor: '#34d399',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              yAxisID: 'y',
+              spanGaps: false,
+            },
+            {
+              label: 'Resting HR (bpm)',
+              data: data.restingHr,
+              borderColor: '#f472b6',
+              backgroundColor: 'transparent',
+              tension: 0.35,
+              pointRadius: 2,
+              yAxisID: 'y2',
+              spanGaps: false,
+            },
+          ],
+        },
+        options: {
+          ...chartDefaults,
+          scales: {
+            x: chartDefaults.scales.x,
+            y: {
+              ...chartDefaults.scales.y,
+              position: 'left',
+              title: { display: true, text: 'HRV (ms)', color: '#8892a4', font: { size: 10 } },
+            },
+            y2: {
+              ...chartDefaults.scales.y,
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Resting HR', color: '#8892a4', font: { size: 10 } },
+            },
+          },
+        },
+      }),
+    );
+
+    const wEl = document.getElementById('weightChart');
+    if (data.hasWeightSeries && wEl) {
+      chartRegistry.main.push(
+        new Chart(wEl, {
+          type: 'line',
+          data: {
+            labels: data.dates,
+            datasets: [
+              {
+                label: 'Weight (kg)',
+                data: data.weightKg,
+                borderColor: '#94a3b8',
+                backgroundColor: 'rgba(148, 163, 184, 0.12)',
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3,
+                spanGaps: false,
+              },
+            ],
+          },
+          options: {
+            ...chartDefaults,
+            scales: {
+              ...chartDefaults.scales,
+              y: {
+                ...chartDefaults.scales.y,
+                title: { display: true, text: 'kg', color: '#8892a4', font: { size: 10 } },
+              },
+            },
+          },
+        }),
+      );
+    }
+  }
+
+  function buildModalCharts(ex, spark) {
+    const xLabels =
+      spark.labelsShort && spark.labelsShort.length === spark.dates.length
+        ? spark.labelsShort
+        : spark.dates.map(function (d) {
+            return typeof d === 'string' && d.length >= 10 ? d.slice(5) : d;
+          });
+    const axisX = {
+      ticks: {
+        color: '#8892a4',
+        maxRotation: 0,
+        minRotation: 0,
+        autoSkip: true,
+        autoSkipPadding: 8,
+        maxTicksLimit: 12,
+        font: { size: 10 },
+      },
+      grid: { display: false },
+    };
+    const axisY = function (min, max) {
+      return {
+        ticks: { color: '#8892a4' },
+        min: min,
+        max: max,
+        grid: { color: 'rgba(45,49,72,0.5)' },
+      };
+    };
+
+    if (ex) {
+      chartRegistry.modal.push(
+        new Chart(document.getElementById('modalWeightedBar'), {
+          type: 'bar',
+          data: {
+            labels: ['Sleep Q×30%', 'Energy×25%', '(10−3·sore)×20%', '(10−tens)×15%', 'Nut×10%'],
+            datasets: [
+              {
+                data: [
+                  ex.weighted.sleepQ,
+                  ex.weighted.energy,
+                  ex.weighted.sorenessTerm,
+                  ex.weighted.tensionTerm,
+                  ex.weighted.nutrition,
+                ],
+                backgroundColor: ['#f9a8d4', '#60a5fa', '#fb923c', '#a855f7', '#34d399'],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: '#8892a4' }, grid: { display: false } },
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#8892a4' },
+                grid: { color: 'rgba(45,49,72,0.5)' },
+              },
+            },
+          },
+        }),
+      );
+    }
+
+    function miniLine(id, label, series, color, yMin, yMax) {
+      chartRegistry.modal.push(
+        new Chart(document.getElementById(id), {
+          type: 'line',
+          data: {
+            labels: xLabels,
+            datasets: [
+              {
+                label: label,
+                data: series,
+                borderColor: color,
+                backgroundColor: 'transparent',
+                tension: 0.35,
+                pointRadius: 0,
+                borderWidth: 2,
+                spanGaps: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: function (items) {
+                    const i = items[0] && items[0].dataIndex;
+                    return i != null && spark.dates[i] ? spark.dates[i] : '';
+                  },
+                },
+              },
+            },
+            scales: { x: axisX, y: axisY(yMin, yMax) },
+          },
+        }),
+      );
+    }
+
+    miniLine('modalSparkSleep', 'Sleep Q', spark.sleepQ, '#f9a8d4', 0, 10);
+    miniLine('modalSparkEnergy', 'Energy', spark.energy, '#60a5fa', 0, 10);
+    miniLine('modalSparkNutrition', 'Nutrition', spark.nutrition, '#34d399', 0, 10);
+    miniLine('modalSparkSoreness', 'Soreness', spark.sorenessAvg, '#fb923c', 0, 4);
+    miniLine('modalSparkTension', 'Tension', spark.tensionScore, '#a855f7', 0, 6);
+    miniLine('modalSparkReadiness', 'Readiness', spark.readiness, '#22c55e', 0, 100);
+    miniLine('modalSparkStress', 'Stress', spark.stress, '#f87171', 0, 10);
+    miniLine('modalSparkMood', 'Mood', spark.mood, '#fbbf24', 0, 10);
+    miniLine('modalSparkMentalFatigue', 'Mental fatigue', spark.mentalFatigue, '#38bdf8', 0, 10);
+  }
+
+  function destroyModalCharts() {
+    destroyCharts(chartRegistry.modal);
+  }
+
+  function refreshDashboard(from, to) {
+    const c = clampRange(from, to);
+    const fromIn = document.getElementById('range-from');
+    const toIn = document.getElementById('range-to');
+    if (fromIn) fromIn.value = c.from;
+    if (toIn) toIn.value = c.to;
+    const payload = buildPayload(c.from, c.to);
+    window.__physDashLatestPayload = payload;
+    destroyCharts(chartRegistry.main);
+    destroyModalCharts();
+    updateDom(payload, c.from, c.to);
+    buildMainCharts(payload.data);
+  }
+
+  const errEl = document.getElementById('range-error');
+  function showRangeErr(msg) {
+    if (!errEl) return;
+    errEl.hidden = !msg;
+    errEl.textContent = msg || '';
+  }
+
+  const applyBtn = document.getElementById('range-apply');
+  const resetBtn = document.getElementById('range-reset');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', function () {
+      const f = document.getElementById('range-from') && document.getElementById('range-from').value;
+      const t = document.getElementById('range-to') && document.getElementById('range-to').value;
+      if (!f || !t) {
+        showRangeErr('Choose both dates.');
+        return;
+      }
+      if (f > t) {
+        showRangeErr('From must be before or equal to To.');
+        return;
+      }
+      showRangeErr('');
+      refreshDashboard(f, t);
+    });
+  }
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      showRangeErr('');
+      refreshDashboard(RANGE_META.defaultFrom, RANGE_META.defaultTo);
+    });
+  }
+
+  (function readinessModal() {
+    const modal = document.getElementById('readiness-modal');
+    const openEl = document.getElementById('today-readiness-card');
+    const backdrop = document.getElementById('readiness-modal-backdrop');
+    const closeBtn = document.getElementById('readiness-modal-close');
+    const expandBtn = document.getElementById('readiness-modal-expand');
+    const panel = document.getElementById('readiness-modal-panel');
+    if (!modal || !openEl) return;
+
+    function openModal() {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+      const payload = window.__physDashLatestPayload;
+      const spark = payload && payload.data && payload.data.sparkTrend;
+      if (typeof Chart === 'undefined' || !spark || !spark.dates || !spark.dates.length) return;
+      destroyModalCharts();
+      buildModalCharts(payload.todayExplain, spark);
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.classList.remove('readiness-modal--fullscreen');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (expandBtn) {
+        expandBtn.setAttribute('aria-pressed', 'false');
+        expandBtn.setAttribute('title', 'Full screen');
+      }
+      destroyModalCharts();
+      openEl.focus();
+    }
+
+    openEl.addEventListener('click', openModal);
+    openEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal();
+      }
+    });
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (expandBtn) {
+      expandBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const fs = modal.classList.toggle('readiness-modal--fullscreen');
+        expandBtn.setAttribute('aria-pressed', fs ? 'true' : 'false');
+        expandBtn.setAttribute('title', fs ? 'Exit full screen' : 'Full screen');
+      });
+    }
+    if (panel) {
+      panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
+  })();
+
+  refreshDashboard(RANGE_META.defaultFrom, RANGE_META.defaultTo);
+})();
+</script>
+</body>
+</html>

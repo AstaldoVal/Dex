@@ -1,13 +1,27 @@
 {
   "manifest_version": 3,
   "name": "Dex LinkedIn Job Capture",
-  "version": "1.0.0",
-  "description": "Capture job details from LinkedIn in your browser for Dex digest. Auto-advance through job links in one tab.",
-  "permissions": ["storage"],
+  "version": "1.5.15",
+  "description": "Capture job details from LinkedIn in your browser for Dex digest. Supports job view pages and search results with auto-capture, plus Booking car price capture.",
+  "permissions": [
+    "storage",
+    "nativeMessaging",
+    "contextMenus"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "https://*.linkedin.com/*",
+    "https://www.booking.com/*",
+    "https://cars.booking.com/*",
     "http://localhost/*",
-    "http://127.0.0.1/*"
+    "http://127.0.0.1/*",
+    "http://localhost:8766/*",
+    "http://127.0.0.1:8766/*",
+    "https://*.myworkdayjobs.com/*",
+    "https://jobs.gem.com/*",
+    "https://*.recruitmentplatform.com/*"
   ],
   "content_scripts": [
     {
@@ -15,14 +29,124 @@
         "https://www.linkedin.com/jobs/view/*",
         "https://www.linkedin.com/comm/jobs/view/*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "dex-error-guard.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["http://localhost/*", "http://127.0.0.1/*"],
-      "js": ["digest-page.js"],
+      "matches": [
+        "https://www.linkedin.com/feed",
+        "https://www.linkedin.com/feed/",
+        "https://www.linkedin.com/feed/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "feed-capture.js"
+      ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.linkedin.com/search/results/content/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "trend-capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.linkedin.com/mynetwork/grow/",
+        "https://www.linkedin.com/in/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "hiring-managers-capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/search/*",
+        "https://www.linkedin.com/jobs/search-results/*",
+        "https://www.linkedin.com/jobs/collections/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "search-capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.booking.com/cars/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "booking-cars-capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://cars.booking.com/search-results*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "booking-cars-capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://127.0.0.1/*",
+        "http://localhost:8766/*",
+        "http://127.0.0.1:8766/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "digest-page.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://jobs.ashbyhq.com/*",
+        "https://*.careers.hibob.com/*",
+        "https://jobs.elastic.co/*",
+        "https://www.okta.com/*",
+        "https://careers.fyul.com/*",
+        "https://app.navero.me/*",
+        "https://*.fountain.com/*",
+        "https://*.pinpointhq.com/*",
+        "https://*.greenhouse.io/*",
+        "https://*.recruitee.com/*",
+        "https://jobs.gem.com/*",
+        "https://*.recruitmentplatform.com/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "ats-autofill.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.myworkdayjobs.com/*"
+      ],
+      "js": [
+        "dex-error-guard.js",
+        "workday-ats.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
-  "action": { "default_title": "Dex Job Capture" }
+  "action": {
+    "default_title": "Dex Job Capture"
+  }
 }

@@ -35,8 +35,10 @@ dotenv.config({ path: envPath });
 if (!process.env.TEAL_EMAIL || !process.env.TEAL_PASSWORD) {
   dotenv.config({ path: path.join(process.cwd(), '.env') });
 }
-const { DIGESTS_DIR, DATA_DIR, JOBS_DIR, TEAL_DIR, PROFILE_EXTENSION, PROFILE_APP, ensureDirs } = require('./job-search-paths.cjs');
-const { deriveTitleFromDescription } = require('./job-search-utils.cjs');
+const { DIGESTS_DIR, DATA_DIR, JOBS_DIR, TEAL_DIR, PROFILE_EXTENSION, PROFILE_APP, TEAL_CHROME_PROFILE_ALT, LAST_PROCESSED_JOB_IDS_FILE, ensureDirs } = require('./job-search-paths.cjs');
+const { deriveTitleFromDescription, locationRank, fetchJobPageTitleCompanyAndDescription, fetchJobPageTitleCompanyAndDescriptionCrawler, requiresNonEnglishLanguage } = require('./job-search-utils.cjs');
+const { getTealProfileCandidates, isProfileInUseError } = require('./teal-chrome-profile.cjs');
+const { updateFlowProgress } = require('./teal-flow-state.cjs');
 
 function getDefaultChromeProfileDir() {
   const home = os.homedir();
@@ -124,60 +126,332 @@ function getUrlsFromDigest(mdPath) {
   return urls;
 }
 
+/** Parse digest markdown: for each job line, collect the following blockquote (  > ...) until next job line. Returns Map<jobId, description>. */
+function getDescriptionsFromDigest(mdPath) {
+  const map = new Map();
+  if (!fs.existsSync(mdPath)) return map;
+  const text = fs.readFileSync(mdPath, 'utf8');
+  const lines = text.split('\n');
+  let currentId = null;
+  let block = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const m = line.match(JOB_LINE_RE);
+    if (m) {
+      if (currentId && block.length > 0) {
+        const desc = block.join('\n').replace(/^\s+|\s+$/g, '');
+        if (desc.length >= 100) map.set(currentId, desc);
+      }
+      const url = (m[1] || '').trim();
+      currentId = getJobIdFromUrl(url);
+      block = [];
+      continue;
+    }
+    if (currentId && (line.startsWith('  > ') || line.startsWith('> '))) {
+      block.push(line.replace(/^\s*> ?/, ''));
+    }
+  }
+  if (currentId && block.length > 0) {
+    const desc = block.join('\n').replace(/^\s+|\s+$/g, '');
+    if (desc.length >= 100) map.set(currentId, desc);
+  }
+  return map;
+}
+
 function getJobIdFromUrl(url) {
   const m = (url || '').match(/\/jobs\/view\/(\d+)/);
   return m ? m[1] : null;
+}
+
+/** Pasted (from-text) job IDs live in this range; each pasted job has a unique ID. Do not fill URL in Teal form and do not search in Teal list. */
+const PASTED_JOB_ID_MIN = 9999990001;
+const PASTED_JOB_ID_MAX = 9999999999;
+function isPastedJobId(jobId) {
+  if (!jobId || !/^\d+$/.test(jobId)) return false;
+  const n = parseInt(jobId, 10);
+  return n >= PASTED_JOB_ID_MIN && n <= PASTED_JOB_ID_MAX;
+}
+function isPastedJob(job) {
+  return job && isPastedJobId(getJobIdFromUrl(job.url));
+}
+
+function getJobViewUrl(url) {
+  const id = getJobIdFromUrl(url);
+  return id ? 'https://www.linkedin.com/comm/jobs/view/' + id : url;
+}
+
+/** In --app mode: ensure jobs/<id>.json exists with description >= 100 chars. If missing or short, log CRITICAL and fetch+write automatically. */
+async function ensureJobsDataAsync(digestPath, jsonPath, limit) {
+  let urls = getUrlsFromDigest(digestPath);
+  if (limit > 0) urls = urls.slice(0, limit);
+  if (urls.length === 0) return;
+  const incomplete = [];
+  for (const url of urls) {
+    const jobId = getJobIdFromUrl(url);
+    if (!jobId) continue;
+    const jobPath = path.join(JOBS_DIR, jobId + '.json');
+    let needFetch = !fs.existsSync(jobPath);
+    if (!needFetch) {
+      try {
+        const data = JSON.parse(fs.readFileSync(jobPath, 'utf8'));
+        needFetch = !(data.job_description && data.job_description.length >= 100);
+      } catch (_) {
+        needFetch = true;
+      }
+    }
+    if (needFetch) {
+      // Skip fetch for pasted jobs (fake IDs 9999990xxx) — LinkedIn returns 404; createPastedJobDigestAndExport creates jobs file.
+      if (/^999999\d{4}$/.test(jobId)) {
+        console.error('[CRITICAL] job ' + jobId + ': pasted job, jobs/' + jobId + '.json missing. Run full-flow --from-text to create digest+jobs.');
+        continue;
+      }
+      incomplete.push({ jobId, url: getJobViewUrl(url) });
+    }
+  }
+  if (incomplete.length === 0) return;
+  if (!fs.existsSync(JOBS_DIR)) fs.mkdirSync(JOBS_DIR, { recursive: true });
+  for (const { jobId, url } of incomplete) {
+    console.error('\n[CRITICAL] job ' + jobId + ': jobs/' + jobId + '.json missing or description < 100 chars. Auto-fixing: fetching from LinkedIn…');
+    let meta = await fetchJobPageTitleCompanyAndDescription(url);
+    if (!meta || !((meta.description || meta.job_description || '').length >= 100)) {
+      console.error('[CRITICAL] job ' + jobId + ': first fetch failed or short. Retrying with crawler UA…');
+      meta = await fetchJobPageTitleCompanyAndDescriptionCrawler(url);
+    }
+    const desc = (meta && (meta.description || meta.job_description)) ? (meta.description || meta.job_description) : '';
+    const payload = {
+      job_title: (meta && meta.title) ? meta.title.trim() : '—',
+      company: (meta && meta.company) ? meta.company.trim() : '—',
+      job_description: desc,
+      work_type: (meta && meta.work_type) ? meta.work_type : 'Remote',
+      url: url.split('#')[0]
+    };
+    const jobPath = path.join(JOBS_DIR, jobId + '.json');
+    fs.writeFileSync(jobPath, JSON.stringify(payload, null, 2), 'utf8');
+    if (payload.job_description.length >= 100) {
+      console.error('[CRITICAL] job ' + jobId + ': auto-fix OK. Written jobs/' + jobId + '.json');
+    } else {
+      console.error('[CRITICAL] job ' + jobId + ': auto-fix wrote jobs/' + jobId + '.json but description still short (' + payload.job_description.length + ' chars). Add to Teal may use export fallback.');
+    }
+  }
+}
+
+/** Canonical LinkedIn job URL for Teal and user: https://www.linkedin.com/jobs/view/<id>/
+ *  Teal dedup and "already saved" check use this format; do not use comm/jobs/view when adding to Teal. */
+function canonicalLinkedInJobUrl(url) {
+  const id = getJobIdFromUrl(url);
+  return id ? 'https://www.linkedin.com/jobs/view/' + id + '/' : (url || '');
+}
+
+/** Build Set of all LinkedIn job IDs ever processed (from last-processed-job-ids.json, all search URL keys). */
+function loadAllProcessedJobIds() {
+  if (!LAST_PROCESSED_JOB_IDS_FILE || !fs.existsSync(LAST_PROCESSED_JOB_IDS_FILE)) return new Set();
+  try {
+    const data = JSON.parse(fs.readFileSync(LAST_PROCESSED_JOB_IDS_FILE, 'utf8'));
+    const set = new Set();
+    for (const [key, val] of Object.entries(data)) {
+      if (key === 'updatedAt' || key === 'updated_at') continue;
+      if (Array.isArray(val)) val.forEach((id) => set.add(String(id)));
+    }
+    return set;
+  } catch (_) {
+    return new Set();
+  }
+}
+
+const TEAL_ADDED_KEYS_FILE = path.join(TEAL_DIR, 'added-company-titles.json');
+// Persistent evidence that we actually saw Teal accept or already contain a job.
+// Each entry: { company, title, linkedinUrl, status: 'created' | 'duplicate_detected', recordedAt }
+const TEAL_ADDED_HISTORY_FILE = path.join(TEAL_DIR, 'added-history.json');
+
+/** Load our local list of (company+title) already added to Teal. Primary duplicate check — no Teal scrape needed. */
+function loadTealAddedKeys() {
+  if (!fs.existsSync(TEAL_ADDED_KEYS_FILE)) return { keys: new Set(), keyToLocation: {} };
+  try {
+    const data = JSON.parse(fs.readFileSync(TEAL_ADDED_KEYS_FILE, 'utf8'));
+    const keys = new Set(Array.isArray(data.keys) ? data.keys : []);
+    const keyToLocation = data.keyToLocation && typeof data.keyToLocation === 'object' ? data.keyToLocation : {};
+    return { keys, keyToLocation };
+  } catch (_) {
+    return { keys: new Set(), keyToLocation: {} };
+  }
+}
+
+function saveTealAddedKeys(keys, keyToLocation) {
+  try {
+    if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+    fs.writeFileSync(
+      TEAL_ADDED_KEYS_FILE,
+      JSON.stringify({ keys: Array.from(keys), keyToLocation, updatedAt: new Date().toISOString() }, null, 2),
+      'utf8'
+    );
+  } catch (_) {}
+}
+
+function recordTealAddEvidence(entry) {
+  if (!entry || !entry.company || !entry.title || !entry.linkedinUrl) return;
+  try {
+    if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+    /** @type {Array<{ company: string, title: string, linkedinUrl: string, status: string, recordedAt: string }>} */
+    let history = [];
+    if (fs.existsSync(TEAL_ADDED_HISTORY_FILE)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(TEAL_ADDED_HISTORY_FILE, 'utf8'));
+        if (Array.isArray(parsed)) history = parsed;
+      } catch (_) {}
+    }
+    history.push({
+      company: entry.company,
+      title: entry.title,
+      linkedinUrl: entry.linkedinUrl,
+      status: entry.status || 'created',
+      recordedAt: new Date().toISOString()
+    });
+    fs.writeFileSync(TEAL_ADDED_HISTORY_FILE, JSON.stringify(history, null, 2), 'utf8');
+  } catch (_) {}
+}
+
+/**
+ * Normalize for company+title dedup so digest and Teal match despite spacing/punctuation differences.
+ * - Lowercase, trim, single spaces.
+ * - Strip " (remote)" / " — remote" from company.
+ * - Collapse spaces around % and / so "100 %" matches "100%", "Co-Founder / Head" matches "Co-Founder/Head".
+ */
+function normCompanyTitle(company, title) {
+  function norm(s) {
+    if (!s || typeof s !== 'string') return '';
+    let x = s.toLowerCase().trim().replace(/\s+/g, ' ');
+    x = x.replace(/\s*%\s*/g, '%').replace(/\s*\/\s*/g, '/').replace(/\s*\(\s*/g, '(').replace(/\s*\)\s*/g, ')');
+    return x.replace(/\s+/g, ' ').trim();
+  }
+  const c = norm((company || '').replace(/\s*[—\-]\s*remote\s*$/i, '').replace(/\s*\(remote\)\s*$/i, ''));
+  const t = norm(title || '');
+  return c + '|' + t;
 }
 
 function escapeRegex(s) {
   return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Get jobs with full data (url, job_title, company, job_description) for --app mode. Order by digest URLs. Falls back to jobs/<id>.json when description missing in aggregate. */
+/** Get jobs with full data (url, job_title, company, job_description, work_type) for --app mode. Order by digest URLs.
+ * Primary source: jobs/<id>.json (step 4 result — most complete). Export (step 1) only fills missing fields when jobs/ is absent or incomplete.
+ * Supports search export format (payload.jobs object). */
 function getJobsWithData(digestPath, jsonPath, limit) {
-  const urls = getUrlsFromJson(jsonPath).length ? getUrlsFromJson(jsonPath) : getUrlsFromDigest(digestPath);
-  if (urls.length === 0) return [];
-  let list = [];
   const byUrl = new Map();
+  let urls = [];
+
   if (jsonPath && fs.existsSync(jsonPath)) {
     const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-    (Array.isArray(data) ? data : []).forEach((j) => {
-      const u = normalizeUrl(j.url || j.rawUrl || '');
-      if (u) byUrl.set(u, j);
-    });
+    // Search export format: { jobs: { id: { job_title, company, job_description, work_type } }, filter: { results } }
+    if (data.jobs && typeof data.jobs === 'object' && !Array.isArray(data.jobs)) {
+      for (const [id, j] of Object.entries(data.jobs)) {
+        const url = normalizeUrl('https://www.linkedin.com/jobs/view/' + id) || ('https://www.linkedin.com/jobs/view/' + id);
+        byUrl.set(url, {
+          url,
+          job_title: j.job_title || j.title || '',
+          company: j.company || '',
+          job_description: j.job_description || '',
+          work_type: j.work_type || '',
+          location: j.location || ''
+        });
+      }
+      urls = getUrlsFromDigest(digestPath);
+    } else {
+      (Array.isArray(data) ? data : []).forEach((j) => {
+        const u = normalizeUrl(j.url || j.rawUrl || '');
+        if (u) byUrl.set(u, j);
+      });
+      urls = getUrlsFromJson(jsonPath).length ? getUrlsFromJson(jsonPath) : getUrlsFromDigest(digestPath);
+    }
+  } else {
+    urls = getUrlsFromDigest(digestPath);
   }
-  list = urls.map((url) => {
-    const j = byUrl.get(url) || {};
-    let job_description = j.job_description || '';
-    let job_title = j.job_title || j.title || '';
-    let company = (j.company && j.company.trim()) || '—';
-    let work_type = j.work_type || '';
-    if (!job_description || job_description.length < 100) {
-      const jobId = getJobIdFromUrl(url);
-      if (jobId) {
-        const jobPath = path.join(JOBS_DIR, jobId + '.json');
-        if (fs.existsSync(jobPath)) {
-          try {
-            const single = JSON.parse(fs.readFileSync(jobPath, 'utf8'));
-            if (single.job_description && single.job_description.length >= 100) {
-              job_description = single.job_description;
-              if (single.job_title) job_title = single.job_title;
-              if (single.company && single.company.trim()) company = single.company.trim();
-              if (single.work_type) work_type = single.work_type;
-            }
-          } catch (_) {}
+
+  if (urls.length === 0) return [];
+  const digestDescriptions = getDescriptionsFromDigest(digestPath);
+  // Prefer jobs/<id>.json (step 4) as primary; then digest (full text in markdown); then export (step 1) for missing fields.
+  let list = urls.map((url) => {
+    const lookupUrl = normalizeUrl(url) || url;
+    const fromExport = byUrl.get(lookupUrl) || byUrl.get(url) || {};
+    const jobId = getJobIdFromUrl(url);
+    let job_description = '';
+    let job_title = '';
+    let company = '—';
+    let work_type = '';
+    let location = '';
+    const jobPath = jobId ? path.join(JOBS_DIR, jobId + '.json') : null;
+    if (jobPath && fs.existsSync(jobPath)) {
+      try {
+        const single = JSON.parse(fs.readFileSync(jobPath, 'utf8'));
+        // Important: even when description is short (<100), keep the title/company if present.
+        // This prevents step 6 from writing placeholder "—" into Teal.
+        const parsedTitle = (single.job_title || single.title || '').trim();
+        if (parsedTitle) job_title = parsedTitle;
+
+        const parsedCompany = (single.company && single.company.trim()) ? single.company.trim() : '';
+        if (parsedCompany) company = parsedCompany;
+
+        // Work type and location are usually independent from description length.
+        work_type = single.work_type || work_type;
+        location = single.location || location;
+
+        if (single.job_description && single.job_description.length >= 100) {
+          job_description = single.job_description;
         }
+      } catch (_) {}
+    }
+    if (!job_description || job_description.length < 100) {
+      const fromDigest = jobId ? digestDescriptions.get(jobId) : '';
+      if (fromDigest && fromDigest.length >= 100) {
+        job_description = fromDigest;
+        if (!job_title && (fromExport.job_title || fromExport.title)) job_title = (fromExport.job_title || fromExport.title).trim();
+        if (company === '—' && fromExport.company) company = fromExport.company.trim();
+        work_type = work_type || fromExport.work_type || '';
+      } else {
+        console.error('[CRITICAL] job ' + (jobId || '?') + ': jobs/' + (jobId || '') + '.json missing or description < 100 chars. Using export fallback (title/company/desc from step 1). This should not happen after auto-fix.');
+        job_description = fromExport.job_description || '';
+        job_title = job_title || (fromExport.job_title || fromExport.title || '').trim();
+        company = (company === '—' && fromExport.company) ? fromExport.company.trim() : company;
+        work_type = work_type || fromExport.work_type || '';
+        location = location || fromExport.location || '';
       }
     }
-    const emptyOrViewJob = !job_title || job_title.trim() === '' || /^View job$/i.test(job_title.trim());
-    if (emptyOrViewJob && job_description && job_description.length >= 50) {
+    const isPlaceholderTitle = !job_title || job_title.trim() === '' || job_title.trim() === '—' || /^View job$/i.test(job_title.trim());
+    if (isPlaceholderTitle && job_description && job_description.length >= 50) {
       const derived = deriveTitleFromDescription(job_description);
       if (derived) job_title = derived;
     }
-    if (!job_title || job_title.trim() === '') job_title = '—';
-    return { url, job_title, company, job_description, work_type };
+    if (!job_title || job_title.trim() === '' || job_title.trim() === '—') job_title = '—';
+    if ((company || '').trim() === '') company = '—';
+    if (!job_description || job_description.trim().length < 50) {
+      // Teal now blocks "Add Job" when description is empty.
+      // Keep flow resilient even when LinkedIn body wasn't captured.
+      const wt = (work_type || '').trim();
+      const loc = (location || '').trim();
+      job_description = [
+        'Job captured from LinkedIn (fallback description).',
+        `Title: ${job_title}`,
+        `Company: ${company}`,
+        wt ? `Work type: ${wt}` : '',
+        loc ? `Location: ${loc}` : '',
+        `Source URL: ${canonicalLinkedInJobUrl(url || lookupUrl)}`
+      ].filter(Boolean).join('\n');
+    }
+    return { url: canonicalLinkedInJobUrl(url || lookupUrl), job_title, company, job_description, work_type, location };
   });
-  return limit > 0 ? list.slice(0, limit) : list;
+  list = limit > 0 ? list.slice(0, limit) : list;
+  if (list.length === 0) return [];
+  const byKey = new Map();
+  for (const job of list) {
+    const key = normCompanyTitle(job.company, job.job_title);
+    if (!byKey.has(key)) byKey.set(key, []);
+    byKey.get(key).push(job);
+  }
+  const onePerRole = [];
+  for (const group of byKey.values()) {
+    const best = group.slice().sort((a, b) => locationRank(a.location) - locationRank(b.location))[0];
+    onePerRole.push(best);
+  }
+  return onePerRole;
 }
 
 function sleep(ms) {
@@ -193,14 +467,22 @@ async function main() {
   const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : 0;
   ensureDirs();
 
+  const exportIdx = process.argv.indexOf('--export');
+  const exportPath = exportIdx >= 0 && process.argv[exportIdx + 1] ? process.argv[exportIdx + 1] : null;
+
   const input = args[0] || 'linkedin-jobs-' + new Date().toISOString().slice(0, 10) + '.md';
   let digestPath = path.isAbsolute(input) ? input : path.join(DIGESTS_DIR, input);
   if (!fs.existsSync(digestPath) && /^\d{4}-\d{2}-\d{2}$/.test(input)) {
     digestPath = path.join(DIGESTS_DIR, `linkedin-jobs-${input}.md`);
   }
   const dateMatch = path.basename(digestPath).match(/(\d{4}-\d{2}-\d{2})/);
-  const jsonPath = dateMatch ? path.join(DATA_DIR, `job-descriptions-${dateMatch[1]}.json`) : null;
+  const jsonPath = exportPath
+    ? (path.isAbsolute(exportPath) ? exportPath : path.resolve(process.cwd(), exportPath))
+    : (dateMatch ? path.join(DATA_DIR, `job-descriptions-${dateMatch[1]}.json`) : null);
 
+  if (useApp) {
+    await ensureJobsDataAsync(digestPath, jsonPath, limit);
+  }
   const jobs = useApp ? getJobsWithData(digestPath, jsonPath, limit) : [];
   let urls = useApp ? jobs.map((j) => j.url) : (jsonPath ? getUrlsFromJson(jsonPath) : getUrlsFromDigest(digestPath));
   if (urls.length === 0 && !useApp) {
@@ -208,10 +490,76 @@ async function main() {
     if (limit > 0) urls = urls.slice(0, limit);
   }
   if (urls.length === 0 && jobs.length === 0) {
-    console.error('No job URLs found in digest.');
+    console.error('No jobs to add to Teal. Digest has no job lines (filter may have removed all) or export does not match digest.');
+    console.error('Run LinkedIn capture again and ensure the digest contains "- [ ] [Title — Company](url)" lines.');
     process.exit(1);
   }
   if (!useApp && limit > 0) urls = urls.slice(0, limit);
+
+  let jobsToAdd = jobs;
+  let addedKeys = new Set();
+  let keyToLocation = {};
+  const step6EvidencePath = path.join(TEAL_DIR, 'step-6-evidence.json');
+  const writeStep6Evidence = (ev) => {
+    try {
+      if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+      fs.writeFileSync(step6EvidencePath, JSON.stringify(ev, null, 2), 'utf8');
+    } catch (_) {}
+  };
+  if (useApp && jobs.length > 0) {
+    const processedIds = loadAllProcessedJobIds();
+    const loaded = loadTealAddedKeys();
+    addedKeys = loaded.keys;
+    keyToLocation = loaded.keyToLocation;
+    const skippedList = [];
+    jobsToAdd = jobs.filter((job) => {
+      const id = getJobIdFromUrl(job.url);
+      const company = (job.company || '').trim() || '—';
+      const title = (job.job_title || job.title || '').trim() || '—';
+      // For single-job flow, do not skip by processedIds: we may have saved the ID last run without actually adding to Teal. Only skip by addedKeys (really in Teal).
+      if (jobs.length > 1 && id && processedIds.has(id)) {
+        skippedList.push({ jobId: id, linkedinUrl: job.url, company, title, reason: 'already_processed' });
+        return false;
+      }
+      const key = normCompanyTitle(job.company, job.job_title);
+      // Placeholder key (e.g. "—|—") is not unique: multiple single jobs can have it. Do not skip by addedKeys so we always add the job to Teal.
+      const isPlaceholderKey = !key || key === '—|—' || key === '|' || /^[\s|—\-]+$/.test(key);
+      // IMPORTANT: For single-job runs (jobs.length === 1), always attempt to add the job in Teal UI.
+      // Even if our local cache thinks it's a duplicate, we must let Teal confirm via "already saved" toast.
+      if (jobs.length > 1) {
+        if (!isPlaceholderKey && addedKeys.has(key)) {
+          skippedList.push({ jobId: id, linkedinUrl: job.url, company, title, reason: 'already_in_teal' });
+          if (locationRank(job.location) < locationRank(keyToLocation[key] || '')) return true;
+          return false;
+        }
+      }
+      return true;
+    });
+    const skipped = jobs.length - jobsToAdd.length;
+    if (skipped > 0) {
+      console.log('On our side: skipping ' + skipped + ' (already processed or already in Teal). Adding ' + jobsToAdd.length + ' jobs.');
+    }
+    if (jobsToAdd.length === 0) {
+      writeStep6Evidence({
+        added: [],
+        skipped: skippedList,
+        noJobsToAddReason: 'all skipped (already processed or already in Teal)',
+        digestPath: path.relative(VAULT, digestPath),
+        writtenAt: new Date().toISOString()
+      });
+      const skippedAlreadyInTealIds = skippedList.filter((s) => s.reason === 'already_in_teal').map((s) => s.jobId).filter(Boolean);
+      try {
+        if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+        fs.writeFileSync(
+          path.join(TEAL_DIR, 'last-added-job-ids.json'),
+          JSON.stringify({ addedIds: skippedAlreadyInTealIds, addedAt: new Date().toISOString() }, null, 2),
+          'utf8'
+        );
+      } catch (_) {}
+      console.log('No jobs to add (all skipped on our side). ' + (skippedAlreadyInTealIds.length > 0 ? 'Step 7 will create resumes for ' + skippedAlreadyInTealIds.length + ' job(s) already in Teal.' : '') + ' Done.');
+      return;
+    }
+  }
 
   let playwright;
   try {
@@ -229,12 +577,13 @@ async function main() {
   const useSystemChrome = useApp && !!chromeProfileDir;
 
   if (useSystemChrome) {
-    console.log('Используется профиль Chrome:', profileDir);
-    console.log('(Если Chrome уже открыт — закройте его перед запуском, иначе возможны вылеты.)');
+    console.log('Используется профиль Chrome (при занятости — следующий из списка):', profileDir);
+    console.log('(Если Chrome уже открыт с этим профилем — скрипт попробует другой профиль.)');
   } else if (useApp) {
     console.log('Профиль Chrome не найден — временный профиль. Войдите в Teal в открывшемся окне.');
   }
 
+  // Teal automation: always visible browser (headless: false). Rule: no headless for Teal — script does not work otherwise.
   const launchOptions = {
     headless: false,
     timeout: 90000,
@@ -245,17 +594,50 @@ async function main() {
   }
 
   let context;
-  try {
-    context = await playwright.chromium.launchPersistentContext(profileDir, launchOptions);
-  } catch (e) {
-    if (!useApp && e.message && e.message.includes('channel')) {
-      console.error('Chrome не найден. Используйте --app для добавления вакансий через веб-приложение Teal.');
-      process.exit(1);
+  let usedProfileDir = profileDir;
+  if (useApp && useSystemChrome) {
+    const candidates = getTealProfileCandidates();
+    ensureDirs();
+    for (const p of candidates) {
+      try {
+        context = await playwright.chromium.launchPersistentContext(p, launchOptions);
+        usedProfileDir = p;
+        if (p !== (chromeProfileDir || '')) {
+          console.log('Запущен профиль (предпочтительный был занят): ' + p);
+        }
+        break;
+      } catch (e) {
+        if (!isProfileInUseError(e)) throw e;
+        console.log('Профиль занят; пробуем следующий…');
+      }
     }
-    throw e;
+    if (!context) {
+      const tealEmail = process.env.TEAL_EMAIL && process.env.TEAL_EMAIL.trim();
+      const tealPassword = process.env.TEAL_PASSWORD;
+      if (tealEmail && tealPassword) {
+        console.log('Все профили заняты — временный профиль и вход по TEAL_EMAIL/TEAL_PASSWORD.');
+        usedProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'teal-playwright-'));
+        context = await playwright.chromium.launchPersistentContext(usedProfileDir, launchOptions);
+        if (useApp && usedProfileDir && usedProfileDir.startsWith(os.tmpdir())) {
+          context.on('close', () => { try { fs.rmSync(usedProfileDir, { recursive: true, force: true }); } catch (_) {} });
+        }
+      } else {
+        throw new Error('Не удалось запустить Chrome: все профили заняты. Задайте TEAL_EMAIL и TEAL_PASSWORD в .env или закройте окно Teal/Chrome.');
+      }
+    }
+  } else {
+    try {
+      context = await playwright.chromium.launchPersistentContext(profileDir, launchOptions);
+    } catch (e) {
+      if (!useApp && e.message && e.message.includes('channel')) {
+        console.error('Chrome не найден. Используйте --app для добавления вакансий через веб-приложение Teal.');
+        process.exit(1);
+      }
+      throw e;
+    }
   }
   if (useApp && !useSystemChrome) {
-    context.on('close', () => { try { fs.rmSync(profileDir, { recursive: true, force: true }); } catch (_) {} });
+    context.on('close', () => { try { fs.rmSync(usedProfileDir, { recursive: true, force: true }); } catch (_) {} });
   }
 
   await sleep(2000);
@@ -355,15 +737,25 @@ async function main() {
         process.exit(1);
       }
     }
-    for (let i = 0; i < jobs.length; i++) {
-      const job = jobs[i];
-      console.log(`[${i + 1}/${jobs.length}] ${(job.job_title || job.url).slice(0, 50)} …`);
+
+    const addedToTeal = [];
+    for (let i = 0; i < jobsToAdd.length; i++) {
+      const job = jobsToAdd[i];
+      const cTitleKey = normCompanyTitle(job.company, job.job_title);
+      console.log(`[${i + 1}/${jobsToAdd.length}] ${(job.job_title || job.url).slice(0, 50)} …`);
       try {
+        if (requiresNonEnglishLanguage(job.job_title || '', job.job_description || '')) {
+          console.log('  → Skip: non-English language required (e.g. Deutsch- und Englischkenntnisse).');
+          continue;
+        }
         if (!(job.job_description || '').trim() || (job.job_description || '').trim().length < 50) {
           console.log('  → Skip: no description or too short (required).');
           continue;
         }
-        const addNewJobBtn = page.locator('button:has-text("Add a new job"), button:has-text("Add a New Job"), a:has-text("Add a new job")').first();
+        const addNewJobBtn = page
+          .locator('button:has-text("Add Job")')
+          .or(page.locator('button:has-text("Add a new job"), button:has-text("Add a New Job"), a:has-text("Add a new job")'))
+          .first();
         if ((await addNewJobBtn.count()) > 0 && (await addNewJobBtn.isVisible())) await addNewJobBtn.click();
         else {
           const fallback = page.locator('button, a').filter({ hasText: /add a new job/i }).first();
@@ -386,7 +778,25 @@ async function main() {
           }
         }
 
-        await fillField(['input[type="url"]', 'input[placeholder*="url" i]', 'input[placeholder*="link" i]', 'input[name*="url" i]'], job.url);
+        const pastedJob = isPastedJob(job);
+        async function switchToManualDescriptionMode() {
+          // Teal UI variants:
+          // - old: direct description editor is visible
+          // - new: "search by URL" mode is default, description is behind a tab/button (often with a magnifier icon nearby)
+          const manualMode = form
+            .locator('button, [role="tab"], [role="button"], a')
+            .filter({ hasText: /description|paste|manual|enter manually|job details/i })
+            .first();
+          if ((await manualMode.count()) > 0 && (await manualMode.isVisible().catch(() => false))) {
+            await manualMode.click().catch(() => {});
+            await sleep(600);
+          }
+        }
+        // Always attempt to switch; safe no-op on old UI and fixes new hidden-description mode.
+        await switchToManualDescriptionMode();
+        if (!pastedJob) {
+          await fillField(['input[type="url"]', 'input[placeholder*="url" i]', 'input[placeholder*="link" i]', 'input[name*="url" i]'], job.url);
+        }
         await fillField(['input[placeholder*="job title" i]', 'input[placeholder*="position" i]', 'input[name*="title" i]', 'input[name*="position" i]', 'input[aria-label*="title" i]'], job.job_title);
         const companyValue = (job.company || '').trim() || '—';
         await fillField(['input[placeholder*="company" i]', 'input[name*="company" i]', 'input[aria-label*="company" i]', 'input[placeholder*="Company" i]'], companyValue);
@@ -400,27 +810,55 @@ async function main() {
         ];
         let descTextarea = null;
         const descText = (job.job_description || '').trim().slice(0, 15000);
-        for (const sel of descSelectors) {
-          const textarea = form.locator(sel).first();
-          if ((await textarea.count()) > 0 && (await textarea.isVisible()) && descText.length > 0) {
-            await textarea.click();
-            await sleep(200);
-            await textarea.fill(descText);
-            await sleep(300);
-            let valueNow = await textarea.inputValue().catch(() => '') || await textarea.textContent().catch(() => '') || '';
-            if ((valueNow || '').trim().length < 50 && /ProseMirror|tiptap|contenteditable/i.test(sel)) {
-              await page.evaluate((text) => navigator.clipboard.writeText(text), descText);
+        const isRichTextSelector = (sel) => /ProseMirror|tiptap|contenteditable|role="textbox"/i.test(sel);
+        const richPasteShortcut = process.platform === 'darwin' ? 'Meta+v' : 'Control+v';
+        const selectAllShortcut = process.platform === 'darwin' ? 'Meta+a' : 'Control+a';
+        async function tryFillDescriptionOnce() {
+          for (const sel of descSelectors) {
+            const textarea = form.locator(sel).first();
+            if ((await textarea.count()) > 0 && (await textarea.isVisible()) && descText.length > 0) {
               await textarea.click();
-              await sleep(100);
-              await page.keyboard.press(process.platform === 'darwin' ? 'Meta+v' : 'Control+v');
-              await sleep(500);
-              valueNow = await textarea.textContent().catch(() => '') || '';
-            }
-            if ((valueNow || '').trim().length >= 50) {
-              descTextarea = textarea;
-              break;
+              await sleep(200);
+              if (isRichTextSelector(sel)) {
+                // Teal often renders description as ProseMirror/contenteditable where .fill() can be ignored.
+                await textarea.evaluate((el, text) => {
+                  const isEditable = !!el && (el.isContentEditable || el.getAttribute('contenteditable') === 'true');
+                  if (isEditable) {
+                    el.focus();
+                    el.textContent = text;
+                    el.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: text }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                  }
+                }, descText).catch(() => {});
+                await sleep(150);
+                await textarea.click();
+                await page.keyboard.press(selectAllShortcut).catch(() => {});
+                await page.keyboard.insertText(descText).catch(() => {});
+              } else {
+                await textarea.fill(descText);
+              }
+              await sleep(300);
+              let valueNow = await textarea.inputValue().catch(() => '') || await textarea.textContent().catch(() => '') || '';
+              if ((valueNow || '').trim().length < 50 && isRichTextSelector(sel)) {
+                await page.evaluate((text) => navigator.clipboard.writeText(text), descText);
+                await textarea.click();
+                await sleep(100);
+                await page.keyboard.press(richPasteShortcut);
+                await sleep(500);
+                valueNow = await textarea.textContent().catch(() => '') || '';
+              }
+              if ((valueNow || '').trim().length >= 50) {
+                descTextarea = textarea;
+                break;
+              }
             }
           }
+        }
+        await tryFillDescriptionOnce();
+        if (!descTextarea || ((await descTextarea.inputValue().catch(() => '') || await descTextarea.textContent().catch(() => '') || '').trim().length < 50)) {
+          // One more attempt after explicitly re-opening manual description mode.
+          await switchToManualDescriptionMode();
+          await tryFillDescriptionOnce();
         }
         const descValueNow = descTextarea
           ? (await descTextarea.inputValue().catch(() => '') || await descTextarea.textContent().catch(() => '') || '').trim()
@@ -443,17 +881,48 @@ async function main() {
           if ((await anySubmit.count()) > 0 && (await anySubmit.isEnabled())) await anySubmit.click();
         }
         await sleep(2500);
-        const bodyAfter = await page.locator('body').innerText().catch(() => '');
-        const toastDuplicate = page.getByText(/already saved a job post with this URL|you've already saved|duplicate|this job is already in your tracker/i);
-        const alreadySaved =
-          /already saved a job post with this URL|duplicate|this job is already|you've already saved/i.test(bodyAfter) ||
-          ((await toastDuplicate.count()) > 0 && (await toastDuplicate.first().isVisible().catch(() => false)));
+        const toastDuplicate = page.getByRole('alert').filter({ hasText: /already saved a job post with this URL|duplicate/i }).first();
+        const alreadySaved = (await toastDuplicate.count()) > 0 && (await toastDuplicate.isVisible().catch(() => false));
+        if (alreadySaved) {
+          console.log('  → Teal: вакансия уже добавлена (duplicate / already saved). Закрываю форму, возвращаюсь к списку, ищу по названию.');
+        }
+        let tealJobUrl = null;
+        if (!alreadySaved) {
+          await sleep(2000);
+          const currentUrl = page.url();
+          if (/app\.tealhq\.com\/job-tracker\/[a-f0-9-]{36}/i.test(currentUrl)) tealJobUrl = currentUrl;
+          addedToTeal.push({
+            title: (job.job_title || '').trim() || '—',
+            company: (job.company || '').trim() || '—',
+            url: job.url,
+            tealJobUrl
+          });
+        }
+        // Invariant: we only treat a job as "already in Teal" if we have a concrete evidence entry.
+        // For a new add we know Teal accepted the job; for a duplicate toast we know Teal already has it.
+        const evCompany = (job.company || '').trim() || '—';
+        const evTitle = (job.job_title || '').trim() || '—';
+        const evUrl = (job.url || '').trim();
+        if (evUrl) {
+          recordTealAddEvidence({
+            company: evCompany,
+            title: evTitle,
+            linkedinUrl: evUrl,
+            status: alreadySaved ? 'duplicate_detected' : 'created'
+          });
+        }
+        addedKeys.add(cTitleKey);
+        keyToLocation[cTitleKey] = (job.location || '').trim();
         if (alreadySaved) {
           await page.keyboard.press('Escape');
           await sleep(500);
-          await page.goto('https://app.tealhq.com/job-tracker', { waitUntil: 'networkidle', timeout: 20000 });
+          await page.goto('https://app.tealhq.com/job-tracker', { waitUntil: 'domcontentloaded', timeout: 30000 });
           await page.waitForSelector('button:has-text("Add a new job"), button:has-text("Add a New Job")', { state: 'visible', timeout: 10000 }).catch(() => {});
           await sleep(2000);
+          console.log('  → Страница Job Tracker обновлена. Ищу вакансию в списке по названию.');
+          if (pastedJob) {
+            console.log('  → Вакансия уже в Teal (pasted job, без поиска в списке).');
+          } else {
           const descText = (job.job_description || '').trim().slice(0, 15000);
           const jobTitle = (job.job_title || '').trim();
           const company = ((job.company || '').trim() && (job.company || '').trim() !== '—') ? (job.company || '').trim() : '—';
@@ -463,7 +932,24 @@ async function main() {
             const titleMatch = jobTitle.slice(0, 40);
             const titleRegex = titleMatch.length > 1 ? new RegExp(escapeRegex(titleMatch.slice(0, 25)), 'i') : null;
             const filterByPlaceholder = page.getByPlaceholder('Filter Jobs');
-            const filterInput = (await filterByPlaceholder.count()) > 0 ? filterByPlaceholder : page.locator('.ant-input-affix-wrapper.filter-input input, .filter-input input').first();
+            let filterInput = (await filterByPlaceholder.count()) > 0
+              ? filterByPlaceholder
+              : page.locator('input[aria-label="Filter Jobs"], input[placeholder="Filter Jobs"], .ant-input-affix-wrapper.filter-input input, .filter-input input').first();
+            if (!((await filterInput.count()) > 0 && (await filterInput.isVisible().catch(() => false)))) {
+              // New Teal UI: filter input is hidden until Search (magnifier) button click.
+              const searchToggle = page
+                .locator('button:has(span.sr-only:has-text("Search"))')
+                .or(page.locator('button[aria-label="Search"]'))
+                .or(page.locator('button').filter({ hasText: /^Search$/i }))
+                .first();
+              if ((await searchToggle.count()) > 0 && (await searchToggle.isVisible().catch(() => false))) {
+                await searchToggle.click().catch(() => {});
+                await sleep(400);
+              }
+              filterInput = (await filterByPlaceholder.count()) > 0
+                ? filterByPlaceholder
+                : page.locator('input[aria-label="Filter Jobs"], input[placeholder="Filter Jobs"], .ant-input-affix-wrapper.filter-input input, .filter-input input').first();
+            }
             if (titleMatch.length > 0) {
               if ((await filterInput.count()) > 0 && (await filterInput.isVisible().catch(() => false))) {
                 console.log('  → Фильтр: ввожу «' + titleMatch + '»');
@@ -479,8 +965,17 @@ async function main() {
             }
             let toClick = null;
             if (titleRegex) {
-              const linkInTable = page.locator('table tbody tr td a').filter({ hasText: titleRegex }).first();
-              if ((await linkInTable.count()) > 0 && (await linkInTable.isVisible().catch(() => false))) toClick = linkInTable;
+              // Teal Job Tracker uses Tabulator (divs), not <table>: role-cell has div.invisible-button > span (job title)
+              const tabulatorRow = page.locator('div.tabulator-row').filter({ hasText: titleRegex }).first();
+              if ((await tabulatorRow.count()) > 0 && (await tabulatorRow.isVisible().catch(() => false))) toClick = tabulatorRow;
+              if (!toClick) {
+                const tabulatorCell = page.locator('div.tabulator-cell.role-cell div.invisible-button').filter({ hasText: titleRegex }).first();
+                if ((await tabulatorCell.count()) > 0 && (await tabulatorCell.isVisible().catch(() => false))) toClick = tabulatorCell;
+              }
+              if (!toClick) {
+                const linkInTable = page.locator('table tbody tr td a').filter({ hasText: titleRegex }).first();
+                if ((await linkInTable.count()) > 0 && (await linkInTable.isVisible().catch(() => false))) toClick = linkInTable;
+              }
               if (!toClick) {
                 const linkAny = page.locator('a').filter({ hasText: titleRegex }).first();
                 if ((await linkAny.count()) > 0 && (await linkAny.isVisible().catch(() => false))) toClick = linkAny;
@@ -494,7 +989,7 @@ async function main() {
               }
             }
             if (toClick) {
-              console.log('  → Открываю страницу вакансии: «' + titleMatch + '»');
+              console.log('  → В списке найдена вакансия «' + titleMatch + '». Открываю страницу.');
               const urlBefore = page.url();
               await toClick.click();
               await Promise.race([
@@ -550,10 +1045,22 @@ async function main() {
               await page.keyboard.press('Escape');
               await sleep(500);
             } else {
-              console.log('  → В списке не найдена вакансия с названием «' + titleMatch + '». Пропуск.');
+              // Дубликат: строка в списке не найдена по текущему селектору. Не падаем — пропускаем дозаполнение, flow продолжается (match-score найдёт вакансию по-своему).
+              console.log('  → Дубликат: строка в списке не найдена по селектору (искал «' + titleMatch + '»). Пропуск дозаполнения, продолжаю flow.');
+              try {
+                if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+                const prefix = 'teal-list-row-not-found-' + (job.url ? getJobIdFromUrl(job.url) : i) + '-';
+                const ts = Date.now();
+                await page.screenshot({ path: path.join(TEAL_DIR, prefix + ts + '.png') });
+                fs.writeFileSync(path.join(TEAL_DIR, prefix + ts + '.html'), await page.content(), 'utf8');
+                console.log('  → Сохранён снимок и HTML в ' + path.relative(VAULT, TEAL_DIR) + ' для доработки селектора (см. 00-Inbox/Job_Search/teal/TEAL_LIST_SELECTOR_STEPS.md).');
+              } catch (saveErr) {
+                console.log('  → Не удалось сохранить снимок:', saveErr.message);
+              }
             }
           } else {
             console.log('  → Дубликат (дозаполнение не требуется).');
+          }
           }
         }
         await page.goto('https://app.tealhq.com/job-tracker', { waitUntil: 'domcontentloaded', timeout: 15000 });
@@ -570,8 +1077,77 @@ async function main() {
           await sleep(1500);
         } catch (_) {}
       }
+      if (process.env.FULL_FLOW_STATE_FILE) {
+        try {
+          updateFlowProgress(process.env.FULL_FLOW_STATE_FILE, 6, { total: jobsToAdd.length, done: i + 1 }, VAULT);
+        } catch (_) {}
+      }
     }
+    saveTealAddedKeys(addedKeys, keyToLocation);
+    const skippedAlreadyInTealIds = (typeof skippedList !== 'undefined' && Array.isArray(skippedList))
+      ? skippedList.filter((s) => s.reason === 'already_in_teal').map((s) => s.jobId).filter(Boolean)
+      : [];
+    const addedIds = addedToTeal.map((j) => getJobIdFromUrl(j.url)).filter(Boolean).concat(skippedAlreadyInTealIds);
+    try {
+      if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+      fs.writeFileSync(
+        path.join(TEAL_DIR, 'last-added-job-ids.json'),
+        JSON.stringify({ addedIds, addedAt: new Date().toISOString() }, null, 2),
+        'utf8'
+      );
+      const step6EvidencePath = path.join(TEAL_DIR, 'step-6-evidence.json');
+      const skippedForEvidence = (typeof skippedList !== 'undefined' && Array.isArray(skippedList)) ? skippedList : [];
+      fs.writeFileSync(
+        step6EvidencePath,
+        JSON.stringify({
+          added: addedToTeal.map((j) => ({
+            jobId: getJobIdFromUrl(j.url),
+            linkedinUrl: j.url,
+            company: j.company || '—',
+            title: j.title || '—',
+            tealJobUrl: j.tealJobUrl || null
+          })),
+          skipped: skippedForEvidence,
+          writtenAt: new Date().toISOString()
+        }, null, 2),
+        'utf8'
+      );
+      if (addedToTeal.length > 0 && digestPath && fs.existsSync(digestPath)) {
+        const timestamp = new Date().toISOString().replace(/T/, ' ').slice(0, 16);
+        const sectionLines = ['', '## Added to Teal (' + timestamp + ')', 'Ссылки на вакансии, добавленные в Teal (для трекинга):', ''];
+        for (const j of addedToTeal) {
+          const url = j.url || ('https://www.linkedin.com/jobs/view/' + (getJobIdFromUrl(j.url) || '') + '/');
+          const title = (j.title || '—').replace(/\]/g, '\\]');
+          const company = (j.company || '—').replace(/\]/g, '\\]');
+          sectionLines.push('- [' + title + ' · ' + company + '](' + url + ')');
+        }
+        sectionLines.push('');
+        let content = fs.readFileSync(digestPath, 'utf8');
+        const addedSectionRe = /\n## Added to Teal \([^)]+\)[\s\S]*?(?=\n## |\n---|$)/;
+        if (addedSectionRe.test(content)) {
+          content = content.replace(addedSectionRe, sectionLines.join('\n'));
+        } else {
+          content = content.trimEnd() + '\n' + sectionLines.join('\n');
+        }
+        fs.writeFileSync(digestPath, content, 'utf8');
+      }
+    } catch (_) {}
     await context.close();
+    if (addedToTeal.length > 0) {
+      console.log('');
+      console.log('---');
+      console.log('Added to Teal (' + addedToTeal.length + '):');
+      addedToTeal.forEach((j, idx) => {
+        console.log((idx + 1) + '. ' + j.title + ' — ' + j.company);
+        console.log('   ' + j.url);
+      });
+    } else if (jobsToAdd.length > 0) {
+      console.log('');
+      console.log('---');
+      console.error('No jobs were added (all skipped: no description or form not filled).');
+      console.error('Ensure digest and export are from the same capture run. If you re-ran capture, use the digest that was just generated.');
+      process.exitCode = 1;
+    }
     console.log('Done.');
     return;
   }
@@ -586,7 +1162,10 @@ async function main() {
     return;
   }
 
-  await page.goto('https://www.linkedin.com/feed/', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  // Open the page from the link the user gave (LINKEDIN_OPEN_URL from full-flow), or first job from digest, or feed
+  const userUrl = (process.env.LINKEDIN_OPEN_URL || '').trim();
+  const loginCheckUrl = (userUrl && userUrl.includes('linkedin.com')) ? userUrl : (urls.length > 0 ? urls[0] : 'https://www.linkedin.com/feed/');
+  await page.goto(loginCheckUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
   if (page.url().includes('/login') || page.url().includes('/authwall')) {
     await context.close();
     console.error('Not logged into LinkedIn. Run with --setup or use --app to add via Teal web app.');

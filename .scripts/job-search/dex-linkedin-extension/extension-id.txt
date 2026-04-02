@@ -1,0 +1,4 @@
+# Paste your Chrome extension ID on the next line (chrome://extensions → Developer mode → copy ID under Dex).
+# Example: ijobahafahenfngblmhhkggjonpblgom
+ijobahafahenfngblmhhkggjonpblgom
+

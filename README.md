@@ -1,4 +1,4 @@
-# Dex — Your AI Chief of Staff
+# Your AI Chief of Staff
 
 **A personal operating system powered by Claude.**
 
@@ -12,13 +12,11 @@ Companion to [Episode 8 of The Vibe PM Podcast](https://youtu.be/WaqgSvL-V10?si=
 
 ## Who This Is For
 
-Non-engineers.
-
-Product managers, marketers, sales leaders, designers, executives, HR leaders, consultants, coaches, analysts — anyone who wants the same leverage from AI that technical people have had access to.
+Product managers and product owners.
 
 **You don't need to know how to code.** Just follow the setup and talk to your AI assistant.
 
-**If you're an engineer:** Share this with your non-technical colleagues. Distribute Dex across your organization to accelerate AI fluency adoption. When teams build shared understanding of what AI can reliably do (not just chat interfaces, but actual operating systems), you compete far more effectively.
+**If you're an engineer:** Share this with your non-technical colleagues. Share this repo across your organization to accelerate AI fluency adoption. When teams build shared understanding of what AI can reliably do (not just chat interfaces, but actual operating systems), you compete far more effectively.
 
 ---
 
@@ -26,13 +24,13 @@ Product managers, marketers, sales leaders, designers, executives, HR leaders, c
 
 Most people in tech use AI as a chat interface - asking questions, getting answers, starting fresh every time. They've seen the demos but don't understand how to move beyond that. The gap between what's possible and what people actually use continues to widen.
 
-Dex addresses this by giving you a working system immediately. No learning curve, no setup burden.
+This pack of skills is aimed at making product managers' lives easier. A working system from day one, with no learning curve and no setup burden.
 
 The system automates cognitive overhead - you reclaim hours in your day. Meeting prep happens automatically. Commitments don't slip. Context is always available before calls. The time you save compounds: less administrative work means more focus on strategic work and career-advancing goals.
 
 The system teaches you as you go. Start shallow, go deep as you get curious. Two weeks of daily practice and you're in flow. By month one, you don't just have a working system - you understand how to build systems.
 
-**For teams and organizations:** One person adopts Dex, sees the value, shares it with colleagues. Technical leaders can distribute the repo (everyone gets the same foundation, adapted to their role) or share demo mode (let people explore without committing their own data). Teams develop common language around what AI can reliably do. Your organization moves from AI demos to AI operations.
+**For teams and organizations:** One person adopts the system, sees the value, shares it with colleagues. Technical leaders can distribute the repo (everyone gets the same foundation, adapted to their role) or share demo mode (let people explore without committing their own data). Teams develop common language around what AI can reliably do. Your organization moves from AI demos to AI operations.
 
 **Want to share this?** Point colleagues to the [companion blog post](https://www.linkedin.com/pulse/your-ai-chief-staff-building-personal-operating-system-dave-killeen-yxnqe/) for the full story with more detail and color about how everything comes together. At the bottom of this README, there's a ready-to-use message you can copy and paste to share with your team - makes it easy to accelerate AI fluency adoption across your organization.
 
@@ -149,7 +147,7 @@ Copy and paste this command and press Enter:
 ./install.sh
 ```
 
-**What's happening:** This installs the automation that makes Dex work (task sync, career tracking, meeting intelligence). Takes 1-2 minutes. You'll see text scrolling - that's normal.
+**What's happening:** This installs the automation that makes the system work (task sync, career tracking, meeting intelligence). Takes 1-2 minutes. You'll see text scrolling - that's normal.
 
 **When it's done:** You'll see your cursor blinking again, ready for the next command.
 
@@ -166,7 +164,7 @@ pip3 install --user mcp pyyaml
 
 Then restart Cursor.
 
-⚠️ **IMPORTANT: Complete Step 3 now to configure your role - this is what makes Dex work.**
+⚠️ **IMPORTANT: Complete Step 3 now to configure your role - this is what makes the system work.**
 
 <details>
 <summary><strong>Troubleshooting: Common Setup Issues</strong></summary>
@@ -287,7 +285,7 @@ Check the MCP server output:
 
 </details>
 
-### Step 3: Tell Dex About Your Role
+### Step 3: Configure Your Role
 
 In Cursor, look for a **chat panel** (usually on the right side of the screen). This is Claude - your AI assistant.
 
@@ -372,7 +370,7 @@ If you prefer visual interfaces over command line, use the Desktop app.
 2. Install and open the app
 3. Log in with your Claude Pro or Max account
 4. Click the **Code** tab (top left)
-5. Select your Dex folder to start a session
+5. Select your project folder to start a session
 
 **That's it.** Hooks run automatically - session start context loads, person details inject when mentioned, mistake patterns surface.
 
@@ -436,7 +434,7 @@ This opens your browser. Log in with your Claude Pro or Max account.
 
 **Step 3: Start Claude Code**
 
-From your terminal, navigate to your Dex folder and run `claude`.
+From your terminal, navigate to your project folder and run `claude`.
 
 **Note:** Folder name depends on how you got the code:
 - If you **cloned via Git**: folder is named `dex`
@@ -479,7 +477,7 @@ Eight jobs that happen reliably every day:
 | **Keep Projects Moving** | Auto-detects stalls (12+ days no update). Surfaces blockers. You know what needs attention. |
 | **Evolve Itself** | System suggests improvements based on usage patterns. Monitors Claude Code releases daily - when new capabilities drop, explains what they mean for YOUR system and suggests implementations. Captures your improvement ideas too. AI ranks all by impact. `/dex-improve` plans implementation. System adapts to you. |
 
-**Want deeper context?** See [Dex_Jobs_to_Be_Done.md](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) for the full framework.
+**Want deeper context?** See [Jobs to Be Done](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) for the full framework.
 
 ---
 
@@ -517,7 +515,7 @@ Out of the box, working immediately:
 
 Ideas die between having them and recording them. Deciding where things belong kills momentum.
 
-Dex handles this through natural conversation. Just tell Claude things naturally:
+The system handles this through natural conversation. Just tell Claude things naturally:
 
 ```
 You: "Sarah seemed worried about timeline but interested in Q2 pilot"
@@ -545,7 +543,7 @@ One decision instead of many. Immediate filing.
 
 Great work happens daily, but evidence disappears. Review time becomes a scramble to remember what you accomplished.
 
-Run `/career-setup` once (job description, career ladder, recent review, growth goals). From that point forward, Dex automatically captures career evidence:
+Run `/career-setup` once (job description, career ladder, recent review, growth goals). From that point forward, the system automatically captures career evidence:
 
 | When | What Gets Captured |
 |------|-------------------|
@@ -575,9 +573,9 @@ Your data stays on your laptop. It's yours.
 
 Tasks in multiple places (meeting notes, project files, person pages) don't sync in traditional systems. Check off one, others stay open.
 
-Dex handles this with the **Work MCP server** - a Python-based automation layer that syncs tasks with unique IDs across your entire vault. When you process a meeting, action items get IDs like `^task-20260128-001`. Tasks appear in both the meeting note and `03-Tasks/Tasks.md` with the same ID.
+The system handles this with the **Work MCP server** - a Python-based automation layer that syncs tasks with unique IDs across your entire vault. When you process a meeting, action items get IDs like `^task-20260128-001`. Tasks appear in both the meeting note and `03-Tasks/Tasks.md` with the same ID.
 
-Just tell Dex what you finished in natural language:
+Just tell the assistant what you finished in natural language:
 - "I finished following up with John"
 - "Mark the proposal done"  
 - "Completed the API docs"
@@ -617,7 +615,7 @@ flowchart TD
 
 Work backwards from career impact: *What would make you incredibly happy you accomplished three months from now?* Quarterly goals become the north star connecting daily work to career-defining outcomes.
 
-See [Dex_System_Guide.md](06-Resources/Dex_System/Dex_System_Guide.md) for details.
+See [System Guide](06-Resources/Dex_System/Dex_System_Guide.md) for details.
 
 ---
 
@@ -726,11 +724,11 @@ Each session makes the next one better.
 
 Comprehensive guides included in the repo:
 
-- [Dex_System_Guide.md](06-Resources/Dex_System/Dex_System_Guide.md) - Complete feature reference and workflows
-- [Dex_Jobs_to_Be_Done.md](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) - Why each piece exists and how they connect
-- [Dex_Technical_Guide.md](06-Resources/Dex_System/Dex_Technical_Guide.md) - Technical deep dive for those who want it
-- [Folder_Structure.md](06-Resources/Dex_System/Folder_Structure.md) - PARA organization explained
-- [Updating_Dex.md](06-Resources/Dex_System/Updating_Dex.md) - How to safely update while preserving customizations
+- [System Guide](06-Resources/Dex_System/Dex_System_Guide.md) - Complete feature reference and workflows
+- [Jobs to Be Done](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) - Why each piece exists and how they connect
+- [Technical Guide](06-Resources/Dex_System/Dex_Technical_Guide.md) - Technical deep dive for those who want it
+- [Folder Structure](06-Resources/Dex_System/Folder_Structure.md) - PARA organization explained
+- [Updating](06-Resources/Dex_System/Updating_Dex.md) - How to safely update while preserving customizations
 
 Start with what you need. Go deeper if you're curious. No forced learning paths.
 
@@ -738,16 +736,16 @@ These guides live in your vault after setup.
 
 ---
 
-## Updating Dex
+## Updating
 
 **Get updates with one command - no technical knowledge needed.**
 
 ### Automatic Notifications
 
-Dex checks for updates every 7 days during `/daily-plan`:
+The system checks for updates every 7 days during `/daily-plan`:
 
 ```
-🎁 Dex v1.3.0 is available. Run /dex-update to see what's new and update.
+🎁 A new version is available. Run /dex-update to see what's new and update.
 ```
 
 ### Update in One Command
@@ -756,7 +754,7 @@ Dex checks for updates every 7 days during `/daily-plan`:
 /dex-update
 ```
 
-**That's it.** Dex shows you what's new, you confirm, and then it handles everything:
+**That's it.** The system shows you what's new, you confirm, and then it handles everything:
 - ✓ Downloads latest version
 - ✓ Protects your data (never touches notes/tasks/projects)
 - ✓ Handles conflicts automatically
@@ -783,13 +781,13 @@ Updates never touch:
 - Your customizations
 - Your API keys
 
-**For detailed instructions:** See [Updating_Dex.md](06-Resources/Dex_System/Updating_Dex.md)
+**For detailed instructions:** See [Updating](06-Resources/Dex_System/Updating_Dex.md)
 
 ---
 
 ## Obsidian Integration (Optional)
 
-Dex works great with [Obsidian](https://obsidian.md) for visual graph navigation.
+The system works with [Obsidian](https://obsidian.md) for visual graph navigation.
 
 **Why Obsidian?**
 - See your entire knowledge system as connected nodes
@@ -812,9 +810,9 @@ Dex works great with [Obsidian](https://obsidian.md) for visual graph navigation
 
 **New to Obsidian?** Watch this [beginner's guide (5 min)](https://www.youtube.com/watch?v=gafuqdKwD_U).
 
-Obsidian is completely optional - Dex works perfectly in Cursor/terminal alone. Some users love the graph visualization for navigating their knowledge, others prefer the speed of terminal/Cursor. Both are first-class experiences.
+Obsidian is completely optional — the system works in Cursor/terminal alone. Some users love the graph visualization for navigating their knowledge, others prefer the speed of terminal/Cursor. Both are first-class experiences.
 
-**Learn more:** See [Obsidian_Guide.md](06-Resources/Dex_System/Obsidian_Guide.md)
+**Learn more:** See [Obsidian Guide](06-Resources/Dex_System/Obsidian_Guide.md)
 
 ---
 

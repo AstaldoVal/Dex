@@ -104,10 +104,10 @@ Full matrix with add/skip logic is in `references/decision-matrix.md`.
 
 1. Recommended structure (headers + placeholders)
 2. Checklist of what to fill in per section
-3. Source templates (e.g. `06-Resources/PRD_Templates/` in Dex)
+3. Source templates (path to templates folder in your setup)
 
 ## Notes
 
-- **Portable:** No dependency on Dex or specific paths.
-- **Templates:** Aakash Gupta, Peter Yang, ChatPRD, Aha, Amazon PR/FAQ, Ofri Yehuda, Atlassian, Monday. In Dex: `06-Resources/PRD_Templates/`.
+- **Portable:** No dependency on any specific system or paths.
+- **Templates:** Aakash Gupta, Peter Yang, ChatPRD, Aha, Amazon PR/FAQ, Ofri Yehuda, Atlassian, Monday.
 - **Tone:** Guide, not form filler. Explain the "why" behind each recommendation.

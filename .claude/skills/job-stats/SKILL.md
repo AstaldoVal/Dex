@@ -31,16 +31,31 @@ The user wants to:
 
 ### View Stats (Default)
 
-When user runs `/job-stats` without additional input:
+When user runs `/job-stats` without additional input you **must** run the **review** first, then generate and show stats. The tracker must reflect the current state of applications (including responses/rejections from email) without the user having to update anything manually.
 
-1. **Load tracker** from `00-Inbox/Job_Search/applications-tracker.json`
-2. **Generate report** using `.scripts/job-search/generate-job-stats.js`
-3. **Display** the markdown report from `00-Inbox/Job_Search/job-stats.md`
-4. **Highlight key insights**:
-   - Response Rate and trends
-   - Conversion funnel (applied → responded → interview → offer)
-   - Best performing sources/roles/industries
-   - Recommendations based on data
+**Step 1 — REVIEW (mandatory): sync application state from email**
+
+1. **Gmail:** Search recent job-related email (last 7 days). Use Gmail MCP (`gmail_search` or `gmail_list_messages`) with a query such as:
+   - `newer_than:7d` and (subject/body) terms: `application`, `thank you for applying`, `rejection`, `not moving forward`, `your application`, `we decided to move forward`, `unfortunately`, `next step`, `interview`, company names from the tracker.
+   - Or search `newer_than:7d` and then filter by subject/snippet for job responses.
+2. **Personal and work inbox:** If both `gmail-mcp` and `gmail-work-mcp` are available, run the search on both (job responses may be in either).
+3. **For each relevant message:** Fetch full message if needed (`gmail_get_message`). Classify as:
+   - **rejection** — "not moving forward", "not selected", "unfortunately", "we decided to move forward with other candidates", "we will not move forward", etc.
+   - **interview_invite** — "next step", "schedule", "interview", "would like to discuss".
+   - **offer** — "offer", "congratulations".
+4. **Extract company name** from From (e.g. `careers@n8n.io` → n8n), Subject, or body. Normalize: lowercase, trim, remove common suffixes (careers@, @domain).
+5. **Load tracker** from `00-Inbox/Job_Search/data/applications-tracker.json`. Match email to application by **company name** (case-insensitive, flexible: "n8n", "N8N", "N8n" all match).
+6. **Update tracker:** For each matched application that is still `status: "applied"`:
+   - Rejection → `node .scripts/job-search/track-application.js status <app_id> rejected <today_YYYY-MM-DD>` and optionally `feedback <app_id> generic_rejection "Отказ из письма"`.
+   - Interview invite → `status <app_id> interview <date>`.
+   - Offer → `status <app_id> offer <date>`.
+
+**Step 2 — Generate and show stats**
+
+1. Run `node .scripts/job-search/generate-job-stats.js`.
+2. **Display** the markdown report from `00-Inbox/Job_Search/data/job-stats.md`.
+3. **Highlight key insights**: Response Rate, funnel, best sources/roles, recommendations.
+4. If you updated any application during review, say briefly what was updated (e.g. "Обновил по письмам: N8N — отказ").
 
 ### Add Application
 
@@ -105,10 +120,16 @@ When user says "add feedback" or provides feedback about a response:
 - **"Best sources"** → Show which sources have highest response rates
 - **"Best roles"** → Show which roles have highest response rates
 
+## Automatic tracking (no extra action from user)
+
+- **You** keep application state up to date. When showing job stats or when the context is job search, run the **review** (email scan → match → update tracker) so rejections, interview invites, and offers from email are reflected in the tracker without the user having to add or update anything.
+- **`/job-stats`** always runs the review first, then shows the report.
+- In other flows (e.g. daily plan, "how are my applications"), consider running the same review so the tracker is current.
+
 ## Integration with Existing System
 
 - **Applied.md**: When adding applications, optionally add entry to `Applied.md` for backward compatibility
-- **Job digests**: When user marks `[x]` in digest, offer to add to tracker
+- **Job digests**: When user marks `[x]` in digest, offer to add to tracker; BettingJobs and other digest sources are counted from digest files when generating stats
 - **Job summary**: When generating summary with `/job-summary`, offer to track if user applies
 
 ## Output Format
@@ -137,8 +158,9 @@ When displaying stats, show:
 
 ## Files Used
 
-- `00-Inbox/Job_Search/applications-tracker.json` — Main data store
-- `.scripts/job-search/track-application.js` — CLI tool for tracking
-- `.scripts/job-search/generate-job-stats.js` — Report generator
-- `00-Inbox/Job_Search/job-stats.md` — Generated report
+- `00-Inbox/Job_Search/data/applications-tracker.json` — Main data store
+- `.scripts/job-search/track-application.js` — CLI tool for tracking and status/feedback updates
+- `.scripts/job-search/generate-job-stats.js` — Report generator (uses digest data for BettingJobs count)
+- `00-Inbox/Job_Search/data/job-stats.md` — Generated report
 - `00-Inbox/Job_Search/data/Applied.md` — Legacy tracking (optional sync)
+- Gmail (personal and/or work) — Source for review: job responses, rejections, interview invites

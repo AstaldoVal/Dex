@@ -246,7 +246,36 @@ Then: gmail_classify_emails(message_ids=[...]) to categorize
 **If no unread emails:**
 > "✅ Inbox is clean — no unread emails."
 
-### 5.7 Standard Context Gathering
+### 5.6.1 Personal / family reminders
+
+If `05-Areas/People/External/Mia.md` exists and today's date is between **1 February** and **7 May**, surface a short reminder:
+
+> "🎂 **Мия:** День рождения 07.05. Бюджет ограничен — имеет смысл планировать праздник и расходы заранее. Нужны идеи или напоминание позже?"
+
+(One line in the plan is enough; do not repeat every day.)
+
+### 5.7 Physical State Check (NEW)
+
+Silently check if today's physical log exists:
+
+1. Read `05-Areas/Physical/logs/{today}.json` (if it exists)
+2. If found, extract: `readiness_score`, `energy`, `sleep_hours`, `sleep_quality`, `muscle_soreness`, `posture_tension`, `recommendation`
+3. If not found, skip this section — do NOT prompt the user during daily plan generation
+
+**If log is found, include a Physical block in the plan:**
+
+> "💪 **Physical State** — Readiness: {score}/100 {emoji}
+> 
+> Energy {energy}/10 · Sleep {sleep_hours}h (quality {sleep_quality}/10)
+> {if soreness: Soreness: {zones}}
+> {if tension: Tension: {zones}}
+> 
+> **Today:** {brief recommendation from log or 'Run /physical-check for today\'s prescription'}"
+
+**If log is NOT found, add a soft reminder at the bottom of Heads Up:**
+> 💪 No physical check-in yet. Run `npm run physical:checkin` or `/physical-check --log` for today's prescription.
+
+### 5.8 Standard Context Gathering
 
 Also gather:
 - **Calendar**: Today's meetings with times and attendees
@@ -448,6 +477,21 @@ integrations_used: [calendar, tasks, people, work-intelligence]
 
 ---
 
+## 💪 Physical State
+
+*Include this section only if 05-Areas/Physical/logs/{today}.json exists.*
+
+**Readiness: {{readiness_score}}/100 {{emoji}} {{label}}**
+
+- Energy: {{energy}}/10
+- Sleep: {{sleep_hours}}h (quality {{sleep_quality}}/10)
+{{if soreness: - Soreness: {{soreness_zones}}}}
+{{if tension: - Tension: {{tension_zones}}}}
+
+**Today's prescription:** {{recommendation or "Run /physical-check for today's prescription."}}
+
+---
+
 ## ⚠️ Heads Up
 
 - {{Warning about lagging weekly priority}}
@@ -455,6 +499,7 @@ integrations_used: [calendar, tasks, people, work-intelligence]
 - {{Back-to-back meetings}}
 - {{High unread email count warning if applicable}}
 - {{Other flags}}
+{{if no physical log: - 💪 No physical check-in yet → run `npm run physical:checkin` or `/physical-check --log`}}
 
 ---
 
@@ -463,6 +508,18 @@ integrations_used: [calendar, tasks, people, work-intelligence]
 ```
 
 **Then:** Output the full plan (same content as above) in the chat so the user can read it without opening the file.
+
+---
+
+## Step 7.5: Double Plan (stress-test)
+
+After presenting the plan, run the Double Plan phase per `.claude/skills/double-plan/SKILL.md`:
+
+- Stress-test the plan (weak spots, assumptions, value, risks). Assume 6/10 → 10/10; focus on value, not implementation complexity.
+- Add a short **"Double Plan: stress-test"** block to your reply: 2–4 bullets on what was weak and what was strengthened; any concrete edits to focus, heads-up, or tasks.
+- If changes are non-trivial, optionally update the plan file and note the edits.
+
+Skip only if the user explicitly says "no stress-test" or "skip double plan."
 
 ---
 

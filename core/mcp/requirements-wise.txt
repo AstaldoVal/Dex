@@ -1,0 +1,2 @@
+# Wise MCP: stdio MCP server, no extra HTTP deps (uses stdlib urllib)
+mcp>=1.0.0

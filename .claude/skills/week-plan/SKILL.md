@@ -330,6 +330,18 @@ Create updated `02-Week_Priorities/Week_Priorities.md`:
 
 ---
 
+## Step 6.5: Double Plan (stress-test)
+
+After generating and summarizing the week priorities, run the Double Plan phase per `.claude/skills/double-plan/SKILL.md`:
+
+- Stress-test the plan (weak spots, goal alignment, capacity, value). Assume 6/10 → 10/10; focus on value.
+- Add a short **"Double Plan: stress-test"** block to your reply: 2–4 bullets on what was weak and what was strengthened; any concrete edits to priorities or file.
+- If changes are non-trivial, update `02-Week_Priorities/Week_Priorities.md` and note the edits.
+
+Skip only if the user explicitly says "no stress-test" or "skip double plan."
+
+---
+
 ## Step 7: Track Usage (Silent)
 
 Update `System/usage_log.md`.
