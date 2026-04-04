@@ -82,7 +82,11 @@ System/my-customizations.md
 # ============================================
 
 # Pi integration (created when user activates Pi beta)
-.pi/
+# Use .pi/* not .pi/ so a tracked symlink under .pi/agent/... can be un-ignored (Git does not re-include files inside an ignored directory)
+.pi/*
+!.pi/agent/
+!.pi/agent/extensions/
+!.pi/agent/extensions/dex
 
 # Beta documentation (created on feature activation)
 System/Beta/

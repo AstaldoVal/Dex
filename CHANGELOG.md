@@ -9,7 +9,27 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased] — Fix diarization crash with broken `torchcodec` (2026-04-03)
 
+**Chat-reply panel (расширение v1.8.1):** Загрузка правил, операторского контекста, добивов и генерация вариантов идёт через **service worker** (`dexChatReplyGet` / `dexChatReplyPost` → `fetch` на `127.0.0.1:8777`), с запасным прямым `fetch` из панели. Так обходятся случаи, когда боковая панель не может достучаться до локального сервера напрямую. В **`chat-reply-server.cjs`** маршруты сравниваются по **pathname** (query string больше не ломает `GET`).
+
+**Dex extension (Match Club DOM, v1.7.3):** Исправлен ответ контент-скрипта: при синхронном `sendResponse` больше не используется `return true` (из-за этого ответ терялся и плашка не появлялась). Плашка на странице в Shadow DOM внизу по центру; после успеха service worker показывает системное уведомление (`notifications`). Кнопка в боковой панели тоже показывает плашку на вкладке (убран `silentToast`); статус под кнопкой по-прежнему обновляется.
+
+**Follow-up phrases (EN):** Разделение на **`chat-followup-phrases-approved-en.md`** (**9** утверждённых, в т.ч. две новые: про «тот самый мужчина» и про выходные) и **`chat-followup-phrases-draft-en.md`** (**12** черновиков). Обзор: `chat-followup-phrases-en.md`. Сервер подмешивает в промпт только утверждённые; `GET /api/chat-followup-phrases-approved` и `GET /api/chat-followup-phrases-draft`. Боковая панель расширения v1.7.4 показывает оба блока.
+
+**Добивы: темп куратора (3–5 мин):** В `chat-project-rules.md` и `chat-operator-workflow.md` зафиксировано: **3–5 минут** между **исходящими** добивами, фильтр **Online**, только утверждённые фразы и ротация; автоматической отправки нет (ручная дисциплина). В `sidepanel-chat.html` (расширение **v1.7.5**) краткая подсказка под блоками добивов.
+
+**Match Club DOM (v1.7.6):** В `match-club-inventory.js` при успешном снимке в **консоль вкладки** (DevTools → Console на странице match-club) выводится `console.info` «страница захвачена — HTML/DOM структура снята» с `url`, `pathname`, `elementCount`, `capturedAt`; при ошибке — `console.warn`.
+
+**Match Club чат (расширение v1.8.0):** Новый контент-скрипт `match-club-chat.js`: эвристики поля ввода и области переписки, `matchClubGetChatContext` / `matchClubInsertDraft`. Панель: чекбокс **Debug Match Club** (`[Dex MC]` в консоли вкладки), кнопка **«Забрать переписку…»**, у вариантов ответа — **«В поле чата (отправить вручную)»**. Отправку сообщения на сайте по-прежнему делает пользователь.
+
+**Dex browser extension (Match Club DOM, v1.7.1):** Контент-скрипт `match-club-inventory.js` на `match-club.club`: снимок значимых элементов (id, role, ссылки, поля ввода, превью текста). ПКМ «Dex: Match Club — снять структуру страницы (DOM)»; в боковой панели кнопка сохраняет JSON через `POST /api/match-club-inventory` в `.scripts/chat-reply/match-club-snapshots/` и строку в `match-club-dom-inventory.md`. При остановленном сервере JSON копируется в буфер.
+
 **Dex browser extension (chat replies v1.7):** Side panel — вставка текста сообщения, стили, три варианта через `npm run chat-reply:server` (`POST /api/suggest-replies`). Добавлены: **операторский контекст** `.scripts/chat-reply/chat-operator-workflow.md` (подмешивается в системный промпт после правил проекта; `GET /api/chat-operator-workflow`; опционально `CHAT_REPLY_OPERATOR_FILE`); **Match Club:** `host_permissions` для `match-club.club`, разрешение `tabs`, подсказка в панели на вкладке сайта, пункт контекстного меню «Dex: Открыть Match Club (вход вручную)». Учётные данные сайта не в репозитории: шаблон `.scripts/chat-reply/match-club.env.example`, фактические значения в локальном `.env` (`MATCH_CLUB_*`). Ранее: правила `.scripts/chat-reply/chat-project-rules.md` (`GET /api/chat-project-rules`), точки входа панели по иконке и ПКМ «Dex: Ответы в чатах». LinkedIn/job content-скрипты не менялись.
+
+**Chat project rules (timezones):** В `chat-project-rules.md` у блока **«Часовой пояс»** добавлен подблок **«Время суток в тексте»**: привязка к утру/вечеру/часу (в т.ч. в добивах) по **локальному времени мужчины** (США EST, PST и т.д.), не по времени оператора в Португалии; классификация сообщений по времени; при сомнении нейтральные формулировки. В `chat-followup-phrases-en.md` предупреждение про таймзоны; смягчены фразы с «morning», «11pm», «after work». В `chat-operator-workflow.md` краткая отсылка к этому правилу.
+
+**Chat project rules (follow-ups):** В `chat-project-rules.md` добавлен раздел **«Добивы (follow-up): принципы»**: добив не механический дожим, ориентир на мужчину **50+** и американский контекст, коротко и живо, критерий **«заплатил бы за это SMS»**, три опоры (короткость, крючок к нему, свой голос), как формулировать задачу для GPT, логика цепочки по шагам, примеры стиля. Файл **`.scripts/chat-reply/chat-followup-phrases-en.md`**: 20 универсальных фраз на английском для ротации.
+
+**Chat project rules (location):** В `chat-project-rules.md` добавлен блок **«Местоположение: как это видит мужчина и как отвечаем»** (профиль не показывает реальную локацию; у мужчины «Спросите меня о городе»; он не знает, что вы видите его локацию; сначала выясняем откуда он; персона из его крупного города / ближайший крупный по Maps; сверка профиля, наставник, надежда «рядом»; часовой пояс и избегание нелепых good morning/night). Блок «Откуда ты?» сжат и отсылает к нему. `chat-persona-bristol.md` в «Кто я» согласован с этой логикой.
 
 **Chat persona (Bristol):** Добавлен `.scripts/chat-reply/chat-persona-bristol.md` — история персоны (работа удалённо, дом и собака, море и плавание, характер, стиль сообщений на EN для США), согласованная с профилем Flirt / 47 / Gemini и визуалом фото; ссылка из `chat-operator-workflow.md`.
 
@@ -19,7 +39,21 @@ All notable changes to Dex will be documented in this file.
 
 **C-level training deck (resources):** Добавлены план `06-Resources/C_Level_Claude_Cursor_Training_Presentation_Plan.md`, слайды `06-Resources/C_Level_Claude_Cursor_Training_Deck.pptx` и скрипт `.scripts/generate_c_level_claude_training_deck.py` для повторной генерации презентации по обучению C-level (Cursor-first, облако и агенты по задаче, волны enablement).
 
-**C-level narrative:** Акцент смещён с «Claude-first» на **Cursor-first**: в IDE сначала настраиваем проект, папки и файлы; **облачный Claude** — стратегия и черновики без привязки к локальному репозиторию; **Claude Code / агент** — сложные агентские сценарии по папке. Обновлены план, `.scripts/c-level-slides-batch-requests.json` и генератор PPTX; слайд 4 переименован в «Три опоры без путаницы». Для уже загруженной в Drive презентации: обновить текст вручную или повторно применить батч к той же презентации (если объекты слайдов совпадают).
+**C-level title slide:** Убрана строка «Источники: Granola…, vault» — внутренние источники подготовки не выносим на слайды (остаются в `C_Level_Claude_Cursor_Training_Presentation_Plan.md`).
+
+**C-level slide 2:** Текст переписан: явно «топ-менеджмент» вместо неясного «вы»; «культура эксперимента» заменена на нормы внедрения ИИ; убрана тавтология «общая презентация для всего C-level» — вместо неё «сначала общая рамка для руководства, затем треки по ролям» (этап программы, не описание текущего слайда).
+
+**C-level slide 2 (ещё раз):** Убрана формулировка «речь о вас как о топ-менеджменте»; слайд в формате **что делаем / как / ваш эффект** — обещание программы и выгода, а не метаописание «о ком речь».
+
+**C-level narrative:** Акцент смещён с «Claude-first» на **Cursor-first**: в IDE сначала настраиваем проект, папки и файлы; **облачный Claude** — стратегия и черновики без привязки к локальному репозиторию; **Claude Code / агент** — сложные агентские сценарии по папке. Обновлены план, `.scripts/c-level-slides-batch-requests.json` и генератор PPTX; слайд 4 переименован в «Три опоры без путаницы».
+
+**C-level → Google Slides (живая презентация):** После правки текста в `.scripts/c-level-slides-batch-requests.json` (поля `insertText`) запускать из корня репозитория: `node .claude/mcp-servers/google-slides-mcp/scripts/sync-c-level-deck-content.mjs` — текст подтягивается в презентацию по `presentationId` из того же JSON. При необходимости затем: `node .claude/mcp-servers/google-slides-mcp/scripts/format-c-level-deck.mjs` (стили заголовков/тела). См. `.claude/reference/google-slides-mcp-setup.md` → раздел про C-level.
+
+**C-level deck (текст):** Все слайды переписаны в тоне самопрезентации услуги для C-level: предложение сопровождения, эффект для компании и для управленца, деловой регистр; обновлены JSON, `generate_c_level_claude_training_deck.py`, план в `06-Resources/`, синхронизация в Google Slides.
+
+**C-level deck (тон и термины):** Заголовки и тела слайдов смягчены, добавлен хук на первом слайде (генеративный AI уже в потоке, вопрос про рамку); вместо русского «ИИ» в тексте используется **AI**; исправлена тавтология в описании слоя Cursor. `generate_c_level_claude_training_deck.py` приведён в соответствие с JSON; синхронизация в Google Slides выполнена скриптом `sync-c-level-deck-content.mjs`.
+
+**C-level deck (формулировки):** Слово «совет» без уточнения в русском читается двусмысленно; титул **«AI в работе руководства»**, второй слайд **«Почему без уровня C-level…»** вместо «без совета».
 
 **google-slides-mcp `get-token`:** если порт **3000** занят, скрипт выбирает следующий свободный до **3100**, печатает redirect URI и URL авторизации; опционально `GOOGLE_OAUTH_PORT` / `GOOGLE_OAUTH_PORT_END`. См. `.claude/reference/google-slides-mcp-setup.md`.
 
@@ -28,6 +62,8 @@ All notable changes to Dex will be documented in this file.
 **Progress (`transcript-media`):** по умолчанию **`--progress-format rich`**. **`auto`** — алиас **`rich`** (полоса Rich на TTY; при pipe/`2>log`/`tee` — ASCII-полоса с ETA, не лавина строк **lines**). Раньше **`auto`** зависел от `interactive_tty_available()` и мог уходить в **lines** или **rewrite**; это убрано.
 
 **Before:** diarization мог падать на `name 'AudioDecoder' is not defined` или ошибках загрузки `torchcodec`, потому что `pyannote` по пути к файлу всегда использует `torchcodec`.
+
+**Speaker display names:** После диаризации можно подставить человекочитаемые имена вместо `SPEAKER_00`: **`--speaker-map SPEAKER_00=Alexei`** (повторяемо) и/или **`--speaker-map-json path.json`**. В JSON ответа: `speaker_label_map`, `speaker_label_map_applied`. Уже сохранённый результат без повторного Whisper: `packages/transcript-skill/scripts/remap_transcript_speakers.py`. Функция `apply_speaker_label_map` в `diarize.py` сохраняет исходный id в `speaker_pyannote` при подстановке имени.
 
 **Now:** `transcript-skill` для диаризации декодирует WAV через **stdlib `wave`** (16-bit PCM) и передаёт в `pyannote` словарь `{"waveform", "sample_rate"}`, без `torchaudio.load`: начиная с TorchAudio 2.9 он идёт через TorchCodec и при несовместимости FFmpeg/PyTorch падает ещё до pyannote. Метрики pyannote по-прежнему отключены (`PYANNOTE_METRICS_ENABLED=false`). Результат `DiarizeOutput` (pyannote 3.x) нормализуется до `Annotation` перед разбором спикеров. Импорт и вызов `Pipeline` идут внутри `warnings.catch_warnings` с игнорированием `UserWarning`: иначе предупреждение pyannote о сломанном `torchcodec` при глобальном «warnings as errors» обрывало прогон до `pipeline(...)`, хотя вход только в памяти.
 
@@ -42,6 +78,8 @@ All notable changes to Dex will be documented in this file.
 **Fork / upstream (пакет 2B):** Добавлены семь скриптов в `.claude/hooks/`, `commitment.json` в `.claude/mcp/`, `integration-patterns.md` и `beta-templates/screenpipe/README.md` в `.claude/reference/`. Пути были только на upstream, локальные хуки не перезаписывались.
 
 **Fork / upstream (пакет 2C):** Добавлены 24 файла скиллов из `upstream/main` под `.claude/skills/` (интеграции, setup-скиллы, `product-brief`, `project-health`, `xray`, screenpipe и др.). Только пути, которых не было в форке; существующие кастомные скиллы не трогались.
+
+**Fork / upstream (пакет 2D):** Добавлены `.scripts/dex-agent-health.sh`, `.scripts/semantic-search/check-availability.cjs` и симлинк `.pi/agent/extensions/dex` на `pi-extensions/dex` (как у upstream). В `.gitignore` — паттерн `.pi/*` и цепочка отрицаний до `!.pi/agent/extensions/dex`, чтобы симлинк под `.pi/` трекался (полный игнор `.pi/` не позволяет re-include). Дерево `pi-extensions/dex/` переносится отдельным пакетом 2F; до этого симлинк может быть «битым», см. `ops/upstream-integration-log.md`.
 
 ---
 
