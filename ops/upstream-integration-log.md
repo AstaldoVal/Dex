@@ -103,6 +103,6 @@ git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
 
 **Пакет 2C (2026-04-03):** скиллы из upstream, только отсутствовавшие пути (24 файла): `ai-setup`, `ai-status`, `calendar-setup`, `commitment-scan`, `enable-semantic-search`, `google-workspace-setup`, `identity-snapshot`, `integrations/*`, `ms-teams-setup`, `product-brief`, `project-health`, `scrape`, `screenpipe-setup` (+ `screenpipe-setup.md`), `things-setup`, `todoist-setup`, `trello-setup`, `xray`, `zoom-setup`.
 
-**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108**; после пакета 2B — **98**; после пакета 2C — **74** (пересчёт: `comm -23` между `upstream/main` и `HEAD`).
+**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108**; после пакета 2B — **98**; после пакета 2C — **76** (пересчёт: `comm -23` между `upstream/main` и `HEAD`).
 
 **Следующие кандидаты (позже):** `.scripts/dex-agent-health.sh`, `.scripts/semantic-search/check-availability.cjs`, `.pi/agent/extensions/dex`, `pi-extensions/dex/`, шаблоны vault `00-`…`07-` и `System/*` — по кластерам; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` всего каталога `core/`.
