@@ -89,4 +89,10 @@ git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
 - `.github/workflows/nightly-quality.yml`
 - `scripts/benchmark_large_vault.py`, `build-release.sh`, `check-coverage-threshold.py`, `check-doc-drift.sh`, `check-path-consistency.sh`, `check-path-contract-usage.sh`, `check-test-delta.sh`, `detect-flaky-tests.sh`, `security-allowlist.txt`, `security-gate.sh`
 
-**Следующие кандидаты (позже, возможны пересечения с локальными правками):** дополнительные хуки и скиллы `.claude/`, дерево `core/` и `pi-extensions/dex/`, шаблоны vault — по одному кластеру с ручной проверкой конфликтов.
+**Пакет 2A (2026-04-03):** официальный корень Python-инструментария и недостающие модули `core/`, без перезаписи уже существующих путей в `core/` (у форка уже есть свой `core/mcp/*`, `ritual_intelligence/`, тесты и т.д.; импортированы **только** пути, которых не было в `HEAD`).
+
+- корень: `pyproject.toml` (Ruff + pytest для `core/tests`)
+- `docs/`: `FAQ-DRAFT.md`, `analytics-proxy.md`, `calendar-performance.md`, `merge-gates.md`, `testing-governance.md`, `testing-hardening-merge-runbook.md`
+- `core/__init__.py`, `core/integrations/*`, доп. MCP (`analytics_server`, `commitment_server`, `demo_mode_server`, `session_memory_server`, скрипты calendar/reminders), `core/migrations/migrate_v1_to_v2.py` + тест, `core/scripts/screenpipe-cleanup.*`, `core/tests/__init__.py`, `test_file_ops.py`, `test_large_vault_performance.py`, `core/utils/dex_logger.py`, `file_ops.py`, `preflight.py`, `qmd_indexer.py`, `timezone.py`
+
+**Следующие кандидаты (позже):** хуки и скиллы `.claude/` (новые пути), `pi-extensions/dex/`, шаблоны vault `00-`…`07-` и `System/*` — по кластерам; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` всего каталога `core/`.
