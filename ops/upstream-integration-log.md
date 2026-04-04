@@ -96,3 +96,5 @@ git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
 - `core/__init__.py`, `core/integrations/*`, доп. MCP (`analytics_server`, `commitment_server`, `demo_mode_server`, `session_memory_server`, скрипты calendar/reminders), `core/migrations/migrate_v1_to_v2.py` + тест, `core/scripts/screenpipe-cleanup.*`, `core/tests/__init__.py`, `test_file_ops.py`, `test_large_vault_performance.py`, `core/utils/dex_logger.py`, `file_ops.py`, `preflight.py`, `qmd_indexer.py`, `timezone.py`
 
 **Следующие кандидаты (позже):** хуки и скиллы `.claude/` (новые пути), `pi-extensions/dex/`, шаблоны vault `00-`…`07-` и `System/*` — по кластерам; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` всего каталога `core/`.
+
+**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108** (пересчёт: `comm -23` между `upstream/main` и `HEAD`).
