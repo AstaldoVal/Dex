@@ -9,11 +9,17 @@ All notable changes to Dex will be documented in this file.
 
 ## [Unreleased] — Fix diarization crash with broken `torchcodec` (2026-04-03)
 
-**Dex browser extension (chat replies v1):** Side panel `sidepanel-chat.html` — вставка текста сообщения, выбор стиля (нейтральный, тёплый, игривый, шутка, лёгкий флирт, коротко), три варианта ответа через локальный сервер `npm run chat-reply:server` (порт 8777, `POST /api/suggest-replies`, OpenAI из `.env`). Точки входа: клик по иконке расширения (открывает боковую панель) и контекстное меню страницы «Dex: Ответы в чатах». LinkedIn/job content-скрипты не менялись.
+**Dex browser extension (chat replies v1.7):** Side panel — вставка текста сообщения, стили, три варианта через `npm run chat-reply:server` (`POST /api/suggest-replies`). Добавлены: **операторский контекст** `.scripts/chat-reply/chat-operator-workflow.md` (подмешивается в системный промпт после правил проекта; `GET /api/chat-operator-workflow`; опционально `CHAT_REPLY_OPERATOR_FILE`); **Match Club:** `host_permissions` для `match-club.club`, разрешение `tabs`, подсказка в панели на вкладке сайта, пункт контекстного меню «Dex: Открыть Match Club (вход вручную)». Учётные данные сайта не в репозитории: шаблон `.scripts/chat-reply/match-club.env.example`, фактические значения в локальном `.env` (`MATCH_CLUB_*`). Ранее: правила `.scripts/chat-reply/chat-project-rules.md` (`GET /api/chat-project-rules`), точки входа панели по иконке и ПКМ «Dex: Ответы в чатах». LinkedIn/job content-скрипты не менялись.
+
+**Chat persona (Bristol):** Добавлен `.scripts/chat-reply/chat-persona-bristol.md` — история персоны (работа удалённо, дом и собака, море и плавание, характер, стиль сообщений на EN для США), согласованная с профилем Flirt / 47 / Gemini и визуалом фото; ссылка из `chat-operator-workflow.md`.
+
+**Chat operator workflow:** В `chat-operator-workflow.md` добавлена сводка по презентации «Интерфейс сайта»: вход (Log in), разделы My Profile / My Messages / Settings / Withdraw, метрики дашборда, фильтры (Unread, Online, Paid, Retention и др.), переводчик, признаки оплаты и 10 платных сообщений, поля профиля мужчины (в т.ч. осторожно с локацией), About me и бот (рассылка до 3×/день через куратора), золотой/зелёный $. Согласовано с правилом не менять анкету без куратора.
 
 ---
 
-**C-level training deck (resources):** Добавлены план `06-Resources/C_Level_Claude_Cursor_Training_Presentation_Plan.md`, слайды `06-Resources/C_Level_Claude_Cursor_Training_Deck.pptx` и скрипт `.scripts/generate_c_level_claude_training_deck.py` для повторной генерации презентации по обучению C-level (Claude-first, Cursor, волны enablement).
+**C-level training deck (resources):** Добавлены план `06-Resources/C_Level_Claude_Cursor_Training_Presentation_Plan.md`, слайды `06-Resources/C_Level_Claude_Cursor_Training_Deck.pptx` и скрипт `.scripts/generate_c_level_claude_training_deck.py` для повторной генерации презентации по обучению C-level (Cursor-first, облако и агенты по задаче, волны enablement).
+
+**C-level narrative:** Акцент смещён с «Claude-first» на **Cursor-first**: в IDE сначала настраиваем проект, папки и файлы; **облачный Claude** — стратегия и черновики без привязки к локальному репозиторию; **Claude Code / агент** — сложные агентские сценарии по папке. Обновлены план, `.scripts/c-level-slides-batch-requests.json` и генератор PPTX; слайд 4 переименован в «Три опоры без путаницы». Для уже загруженной в Drive презентации: обновить текст вручную или повторно применить батч к той же презентации (если объекты слайдов совпадают).
 
 **google-slides-mcp `get-token`:** если порт **3000** занят, скрипт выбирает следующий свободный до **3100**, печатает redirect URI и URL авторизации; опционально `GOOGLE_OAUTH_PORT` / `GOOGLE_OAUTH_PORT_END`. См. `.claude/reference/google-slides-mcp-setup.md`.
 
@@ -34,6 +40,8 @@ All notable changes to Dex will be documented in this file.
 **Fork / upstream (пакет 2A):** Добавлены `pyproject.toml` (Ruff/pytest для `core/tests`), шесть документов в `docs/` (merge gates, тестирование, календарь, analytics proxy, FAQ draft), и **только отсутствовавшие на форке** файлы под `core/` (integrations, дополнительные MCP-серверы, миграция v1→v2, screenpipe cleanup, утилиты `dex_logger`/`file_ops`/`preflight`/`qmd_indexer`/`timezone`, новые тесты). Уже существующие у форка файлы в `core/` не затирались.
 
 **Fork / upstream (пакет 2B):** Добавлены семь скриптов в `.claude/hooks/`, `commitment.json` в `.claude/mcp/`, `integration-patterns.md` и `beta-templates/screenpipe/README.md` в `.claude/reference/`. Пути были только на upstream, локальные хуки не перезаписывались.
+
+**Fork / upstream (пакет 2C):** Добавлены 24 файла скиллов из `upstream/main` под `.claude/skills/` (интеграции, setup-скиллы, `product-brief`, `project-health`, `xray`, screenpipe и др.). Только пути, которых не было в форке; существующие кастомные скиллы не трогались.
 
 ---
 
