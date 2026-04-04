@@ -33,6 +33,8 @@ All notable changes to Dex will be documented in this file.
 
 **Fork / upstream (пакет 2A):** Добавлены `pyproject.toml` (Ruff/pytest для `core/tests`), шесть документов в `docs/` (merge gates, тестирование, календарь, analytics proxy, FAQ draft), и **только отсутствовавшие на форке** файлы под `core/` (integrations, дополнительные MCP-серверы, миграция v1→v2, screenpipe cleanup, утилиты `dex_logger`/`file_ops`/`preflight`/`qmd_indexer`/`timezone`, новые тесты). Уже существующие у форка файлы в `core/` не затирались.
 
+**Fork / upstream (пакет 2B):** Добавлены семь скриптов в `.claude/hooks/`, `commitment.json` в `.claude/mcp/`, `integration-patterns.md` и `beta-templates/screenpipe/README.md` в `.claude/reference/`. Пути были только на upstream, локальные хуки не перезаписывались.
+
 ---
 
 ## [1.18.2] — Fix Background Meeting Sync Installation (2026-03-12)

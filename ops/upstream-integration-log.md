@@ -95,6 +95,12 @@ git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
 - `docs/`: `FAQ-DRAFT.md`, `analytics-proxy.md`, `calendar-performance.md`, `merge-gates.md`, `testing-governance.md`, `testing-hardening-merge-runbook.md`
 - `core/__init__.py`, `core/integrations/*`, доп. MCP (`analytics_server`, `commitment_server`, `demo_mode_server`, `session_memory_server`, скрипты calendar/reminders), `core/migrations/migrate_v1_to_v2.py` + тест, `core/scripts/screenpipe-cleanup.*`, `core/tests/__init__.py`, `test_file_ops.py`, `test_large_vault_performance.py`, `core/utils/dex_logger.py`, `file_ops.py`, `preflight.py`, `qmd_indexer.py`, `timezone.py`
 
-**Следующие кандидаты (позже):** хуки и скиллы `.claude/` (новые пути), `pi-extensions/dex/`, шаблоны vault `00-`…`07-` и `System/*` — по кластерам; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` всего каталога `core/`.
+**Пакет 2B (2026-04-03):** хуки и справочники из upstream, только отсутствовавшие пути.
 
-**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108** (пересчёт: `comm -23` между `upstream/main` и `HEAD`).
+- `.claude/hooks/`: `career-evidence-capture.cjs`, `daily-plan-quick-ref.cjs`, `dex-safety-guard.sh`, `maintenance.cjs`, `meeting-cache-builder.cjs`, `meeting-summary-generator.cjs`, `post-meeting-person-update.cjs`
+- `.claude/mcp/commitment.json`
+- `.claude/reference/beta-templates/screenpipe/README.md`, `integration-patterns.md`
+
+**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108**; после пакета 2B — **98** (пересчёт: `comm -23` между `upstream/main` и `HEAD`).
+
+**Следующие кандидаты (позже):** скиллы `.claude/skills/` (новые пути), `.scripts/dex-agent-health.sh`, `.scripts/semantic-search/check-availability.cjs`, `.pi/agent/extensions/dex`, `pi-extensions/dex/`, шаблоны vault `00-`…`07-` и `System/*` — по кластерам; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` всего каталога `core/`.
