@@ -7,6 +7,32 @@ All notable changes to Dex will be documented in this file.
 
 ---
 
+## [Unreleased] — Fix diarization crash with broken `torchcodec` (2026-04-03)
+
+**Dex browser extension (chat replies v1):** Side panel `sidepanel-chat.html` — вставка текста сообщения, выбор стиля (нейтральный, тёплый, игривый, шутка, лёгкий флирт, коротко), три варианта ответа через локальный сервер `npm run chat-reply:server` (порт 8777, `POST /api/suggest-replies`, OpenAI из `.env`). Точки входа: клик по иконке расширения (открывает боковую панель) и контекстное меню страницы «Dex: Ответы в чатах». LinkedIn/job content-скрипты не менялись.
+
+---
+
+**C-level training deck (resources):** Добавлены план `06-Resources/C_Level_Claude_Cursor_Training_Presentation_Plan.md`, слайды `06-Resources/C_Level_Claude_Cursor_Training_Deck.pptx` и скрипт `.scripts/generate_c_level_claude_training_deck.py` для повторной генерации презентации по обучению C-level (Claude-first, Cursor, волны enablement).
+
+**google-slides-mcp `get-token`:** если порт **3000** занят, скрипт выбирает следующий свободный до **3100**, печатает redirect URI и URL авторизации; опционально `GOOGLE_OAUTH_PORT` / `GOOGLE_OAUTH_PORT_END`. См. `.claude/reference/google-slides-mcp-setup.md`.
+
+---
+
+**Progress (`transcript-media`):** по умолчанию **`--progress-format rich`**. **`auto`** — алиас **`rich`** (полоса Rich на TTY; при pipe/`2>log`/`tee` — ASCII-полоса с ETA, не лавина строк **lines**). Раньше **`auto`** зависел от `interactive_tty_available()` и мог уходить в **lines** или **rewrite**; это убрано.
+
+**Before:** diarization мог падать на `name 'AudioDecoder' is not defined` или ошибках загрузки `torchcodec`, потому что `pyannote` по пути к файлу всегда использует `torchcodec`.
+
+**Now:** `transcript-skill` для диаризации декодирует WAV через **stdlib `wave`** (16-bit PCM) и передаёт в `pyannote` словарь `{"waveform", "sample_rate"}`, без `torchaudio.load`: начиная с TorchAudio 2.9 он идёт через TorchCodec и при несовместимости FFmpeg/PyTorch падает ещё до pyannote. Метрики pyannote по-прежнему отключены (`PYANNOTE_METRICS_ENABLED=false`). Результат `DiarizeOutput` (pyannote 3.x) нормализуется до `Annotation` перед разбором спикеров. Импорт и вызов `Pipeline` идут внутри `warnings.catch_warnings` с игнорированием `UserWarning`: иначе предупреждение pyannote о сломанном `torchcodec` при глобальном «warnings as errors» обрывало прогон до `pipeline(...)`, хотя вход только в памяти.
+
+**LinkedIn capture (job-search):** На macOS `npm run job-search:linkedin-capture` раньше вызывал `open -a Google Chrome`, из‑за чего мог открываться не тот профиль Chrome и страница `chrome-extension://…/trigger.html` не загружалась (Dex не в этом профиле). Теперь по умолчанию запускается бинарник Chrome с `--user-data-dir` и `--profile-directory` (профиль `Default`, переопределение через `DEX_CHROME_PROFILE_DIRECTORY` и др.). Опции: `DEX_LINKEDIN_USE_OPEN=1` (старое поведение). Страница trigger с длинным `?url=…` могла обрезаться и вести на `/feed` вместо поиска; по умолчанию теперь открывается прямой URL `jobs/search` с `dex-auto-capture=1`; trigger включается явно: `DEX_LINKEDIN_USE_TRIGGER=1` + `extension-id.txt`.
+
+**Fork / upstream:** Добавлен `ops/upstream-integration-log.md` — журнал cherry-pick с `davekilleen/Dex` (upstream SHA → локальный SHA), инструкция сверки с first-parent `upstream/main`, разделение зон без обязательного суффикса `-custom`, резервная ветка или тег перед крупным шагом интеграции.
+
+**Fork / upstream (пакет 1):** Из `upstream/main` подтянуты только **новые** пути: `COMMERCIAL_LICENSE.md`, `CONTRIBUTING.md`, каталог `.claude-plugin/` (документация плагина), `.github/workflows/nightly-quality.yml`, дополнительные скрипты в `scripts/` (бенчмарк большого vault, security gate, проверки путей и покрытия). Существующие файлы форка не перезаписывались.
+
+---
+
 ## [1.18.2] — Fix Background Meeting Sync Installation (2026-03-12)
 
 `install-automation.sh` failed because it referenced two files that no longer exist: `granola-auth.cjs` (deprecated — Granola now stores credentials in `supabase.json` automatically) and `sync-from-granola-v2.cjs` (never shipped — v1 works fine).

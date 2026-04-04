@@ -1,0 +1,92 @@
+# Журнал интеграции upstream (davekilleen/Dex) в форк
+
+Ветка интеграции: `integrate-upstream-cluster-a`.
+
+**Зачем вести журнал:** после cherry-pick с правками меняется patch-id, поэтому `git cherry` часто врёт. Один источник правды: этот файл.
+
+---
+
+## 1. Список того, что ещё осталось перенести с `upstream/main`
+
+**Опорная точка** (последний first-parent на `upstream/main`, который уже учтён в разделе 2 ниже): `a3422e3`.
+
+**Сколько коммитов висит в очереди:** **0** (ни одного first-parent коммита после `a3422e3` на текущем tip `upstream/main`).
+
+**Сам список (SHA + тема; сюда вручную дописывать или вставлять вывод команды из блока ниже):**
+
+1. *(пусто — переносить нечего, пока Dave не запушит новые коммиты на `main` после `a3422e3`)*
+
+**Обновить список из git** (скопировать вывод и заменить пункты 1, 2, … выше, или дописать новые):
+
+```bash
+cd /path/to/Dex
+git fetch upstream
+git log --first-parent --reverse a3422e3..upstream/main --format="%h %s"
+```
+
+Если команда ничего не вывела — очередь пустая, в списке оставляем одну строку «пусто». Когда перенесёшь новые коммиты и допишешь их в раздел 2 — **поменяй опору** в первой строке этого раздела на новый tip `upstream/main` и снова сгенерируй список.
+
+---
+
+## 2. Уже перенесено (upstream SHA → локальный SHA на ветке)
+
+Формат: тема, upstream SHA, локальный SHA на `integrate-upstream-cluster-a`.
+
+1. **Ritual Intelligence v1 (#30)** — upstream `db9382a` → локально `9a1ecfc`.
+2. **fix: remove references to deleted granola-auth / sync-v2 (#31)** — `8fdb433` → `5640e79`.
+3. **feat: add tau-mirror web UI integration extension** — `d273ce9` → `68dbc1a`.
+4. **fix: repair Granola sync for transcript-only meetings and new cache format** — `0a6ae19` → `d8807ce`.
+5. **feat: automatic meeting processing on by default for new users** — `96dc0ce` → `5b137ca`.
+6. **docs: commercial model in CLAUDE.md** — `f21e3b8` → `2dc273f`.
+7. **feat: add industry-truths skill** — `5bd1764` → `4d1e48e`.
+8. **docs: Strategic Context (Industry Truths) in CLAUDE.md** — `3a26847` → `012b425`.
+9. **fix: use venv for Python deps, fix Atlassian MCP config** — `8845a2c` → `b292b10` (на ветке также есть `28484ee` с тем же сообщением; при чистке истории оставить один наследник по смыслу).
+10. **Semantic search expanded to cover entire vault (14 collections)** — `72f08bc` → `e904bf7`.
+11. **Clean up legacy path references and add QMD to MCP example config** — `a3422e3` → `a095b39`.
+
+Порядок на ветке может отличаться от порядка на `upstream/main` — это нормально.
+
+---
+
+## 3. Полный хвост upstream после Ritual (для сверки с разделом 2)
+
+```bash
+git fetch upstream
+git log --first-parent --reverse db9382a..upstream/main --format="%h %s"
+```
+
+Каждый SHA из вывода должен быть в разделе 2, либо явно помечен «не переносим» с причиной. Новые коммиты после текущего tip сначала попадают в **раздел 1**, после переноса — в раздел 2.
+
+---
+
+## 4. Как не потерять «своё» при переносе: зоны (без обязательного суффикса `-custom`)
+
+- **Блоки `USER_EXTENSIONS` в `CLAUDE.md` / `AGENTS.md`** — при конфликте сохранять ваш блок целиком.
+- **`.gitignore` и локальные деревья** — не снимать с игнора без решения.
+- **Job search, `.scripts/job-search/`** — сравнивать по смыслу, не затирать одним вариантом из upstream.
+- **Персональные навыки** — отдельный каталог или суффикс по договорённости; можно один каталог «только форк» в `.gitignore`.
+
+---
+
+## 5. Резервная точка перед крупным шагом
+
+```bash
+git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
+```
+
+или `git tag backup/integrate-upstream-$(date +%Y%m%d)`. Длинная ветка интеграции не заменяет отдельный снимок перед рискованным cherry-pick или merge.
+
+---
+
+## 6. Пакетные импорты дерева из `upstream/main` (не отдельный cherry-pick)
+
+Когда на форке не было целых путей, их можно подтянуть выборочно: `git checkout upstream/main -- <paths>`. Это не меняет опору в разделе 1 (она про first-parent коммиты на main).
+
+**Пакет 1 (2026-04-03):** лицензия и контрибьютинг, документация `.claude-plugin/`, workflow `nightly-quality`, скрипты качества и безопасности в `scripts/` (все пути **новые**, существующие файлы не перезаписывались).
+
+- `COMMERCIAL_LICENSE.md`, `CONTRIBUTING.md`
+- `.claude-plugin/*` (8 файлов)
+- `.github/workflows/nightly-quality.yml`
+- `scripts/benchmark_large_vault.py`, `build-release.sh`, `check-coverage-threshold.py`, `check-doc-drift.sh`, `check-path-consistency.sh`, `check-path-contract-usage.sh`, `check-test-delta.sh`, `detect-flaky-tests.sh`, `security-allowlist.txt`, `security-gate.sh`
+
+**Следующие кандидаты (позже, возможны пересечения с локальными правками):** дополнительные хуки и скиллы `.claude/`, дерево `core/` и `pi-extensions/dex/`, шаблоны vault — по одному кластеру с ручной проверкой конфликтов.
