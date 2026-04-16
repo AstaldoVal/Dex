@@ -13,6 +13,8 @@ All notable changes to Dex will be documented in this file.
 
 **Superpowers в vault Dex:** Добавлен git submodule `06-Resources/External/superpowers` на [obra/superpowers](https://github.com/obra/superpowers), чтобы методология и скиллы жили в репозитории и обновлялись стандартными командами submodule. Краткая инструкция (клон, обновление, Cursor с диска): `06-Resources/Dex_System/Superpowers_in_Dex.md`.
 
+**Документация:** В `06-Resources/Dex_System/Dex_Technical_Guide.md` (раздел Agent Skills) добавлен подпункт про Superpowers в vault и ссылку на операционный гайд, чтобы технастройка и онбординг сходились в одном «источнике правды».
+
 **Teal match-score `--resume-url`:** Скрипт снова распознаёт короткий URL Teal вида `.../resume-builder/<uuid>/preview` (раньше ожидался только сегмент `resumes/<uuid>`, из‑за чего `resumeId` оставался пустым, запускался режим дайджеста и сразу выводилось «No jobs to process»).
 
 **Match Club: activity tracking + daily report in Dex (расширение v1.9.0):** Для watch-пайплайна добавлен почасовой лог активности в `chrome.storage.local` (`matchClubActivityLogV1`): учитываются минуты активности, активные часы и сессии за день. В side panel добавлена кнопка «Отчёт активности за сегодня»: формирует отчёт (минуты + часы) и сохраняет его через `chat-reply-server` в `.scripts/chat-reply/match-club-activity-reports.md` + JSON snapshot в `match-club-snapshots/`.
