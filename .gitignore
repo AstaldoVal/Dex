@@ -9,6 +9,10 @@ Thumbs.db
 # Dex slash commands (topic-based menu) — keep in repo
 !.cursor/commands/
 !.cursor/commands/**
+# Cursor hooks (project automation; keep in repo)
+!.cursor/hooks.json
+!.cursor/hooks/
+!.cursor/hooks/**
 *.swp
 *.swo
 
@@ -45,6 +49,8 @@ google_drive_token.json
 
 # OpenAI usage logs (local telemetry; see .claude/reference/openai-usage-logging.md)
 System/openai-usage/*.jsonl
+# Local Dex analytics events (privacy-first, local only)
+System/analytics/*.jsonl
 
 # ============================================
 # User Customizations - Protected from Updates
@@ -56,12 +62,16 @@ System/pillars.yaml
 System/usage_log.md
 System/Session_Learnings/
 System/.last-update-check
+System/telegram-news-bridge-runtime.local.md
 
 # Custom extensions (user-created, never in upstream)
 CLAUDE-custom.md
 .claude/skills-custom/
 core/mcp-custom/
 core/mcp-premium/
+
+# Legacy mistake: do not recreate vault paths under repo root (use 05-Areas in the real vault)
+/Active/
 
 # User data folders (PARA structure)
 00-Inbox/
@@ -130,6 +140,7 @@ build/
 eggs/
 .eggs/
 lib/
+!apps/telegram-news-dashboard/lib/
 lib64/
 parts/
 sdist/
@@ -149,6 +160,7 @@ ENV/
 htmlcov/
 
 # Secrets (additional patterns)
+System/Secrets/dex-vercel-token.sh
 .secrets
 .secrets.reference
 *.key
