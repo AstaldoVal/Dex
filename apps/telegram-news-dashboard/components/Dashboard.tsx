@@ -209,6 +209,12 @@ function bridgeMediaSrc(channelKey: string, messageId: number, slot: number): st
 function telegramEmbedSrc(telegramUrl: string): string | null {
   const u = telegramUrl.trim();
   if (!/^https:\/\/t\.me\//i.test(u)) return null;
+  /**
+   * Telegram's public embed widget supports only `t.me/<username>/<id>`.
+   * Private / super-channel links `t.me/c/<internal_id>/<msg>` fail with
+   * "Channel with username @c not found" — skip them.
+   */
+  if (/^https:\/\/t\.me\/c\//i.test(u)) return null;
   if (/[?&]embed=1(?:&|$)/.test(u)) return u;
   return u.includes("?") ? `${u}&embed=1` : `${u}?embed=1`;
 }
@@ -230,15 +236,49 @@ function PostTelegramEmbed({ url }: { url: string }) {
   );
 }
 
-/** Plain `/api/bridge-media`; on 401 (HttpOnly cookie не йде з `<img>`) — підписаний `mt` через POST. */
+/** Photo slot identifier carried into the gallery lightbox. */
+type GalleryItem = {
+  channelKey: string;
+  messageId: number;
+  slot: number;
+};
+
+/**
+ * Signed-URL retry shared by thumbnail and lightbox: `<img>` tags do not send
+ * HttpOnly cookies, so on 401 we POST `/api/bridge-media-sign` for a short-lived
+ * `mt` JWT-backed URL.
+ */
+async function fetchSignedMediaUrl(item: GalleryItem): Promise<string | null> {
+  try {
+    const r = await fetch("/api/bridge-media-sign", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        channel_key: item.channelKey,
+        message_id: item.messageId,
+        slot: item.slot,
+      }),
+    });
+    const j = (await r.json().catch(() => ({}))) as { url?: string };
+    if (r.ok && typeof j.url === "string" && j.url.trim()) return j.url.trim();
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+/** Plain `/api/bridge-media`; on 401 — підписаний `mt` через POST. Clickable when gallery is available. */
 function BridgeMediaImage({
   channelKey,
   messageId,
   slot,
+  onOpen,
 }: {
   channelKey: string;
   messageId: number;
   slot: number;
+  onOpen?: () => void;
 }) {
   const plain = bridgeMediaSrc(channelKey, messageId, slot);
   const [src, setSrc] = useState(plain);
@@ -247,23 +287,14 @@ function BridgeMediaImage({
   const upgradeSrc = useCallback(async () => {
     if (retried.current) return;
     retried.current = true;
-    try {
-      const r = await fetch("/api/bridge-media-sign", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ channel_key: channelKey, message_id: messageId, slot }),
-      });
-      const j = (await r.json().catch(() => ({}))) as { url?: string };
-      if (r.ok && typeof j.url === "string" && j.url.trim()) setSrc(j.url.trim());
-    } catch {
-      /* ignore */
-    }
+    const signed = await fetchSignedMediaUrl({ channelKey, messageId, slot });
+    if (signed) setSrc(signed);
   }, [channelKey, messageId, slot]);
 
+  const clickable = typeof onOpen === "function";
   return (
     <img
-      className="tg-media-thumb"
+      className={`tg-media-thumb${clickable ? " cursor-zoom-in" : ""}`}
       src={src}
       alt=""
       loading="lazy"
@@ -271,6 +302,19 @@ function BridgeMediaImage({
       onError={() => {
         void upgradeSrc();
       }}
+      onClick={clickable ? onOpen : undefined}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onOpen?.();
+              }
+            }
+          : undefined
+      }
     />
   );
 }
@@ -322,10 +366,37 @@ function BridgeMediaVideo({
   );
 }
 
-function PostMediaPreview({ post }: { post: Post }) {
+function PostMediaPreview({
+  post,
+  onOpenGallery,
+}: {
+  post: Post;
+  onOpenGallery?: (items: GalleryItem[], startIndex: number) => void;
+}) {
   const items = post.media?.filter(Boolean) ?? [];
   if (!items.length) return null;
   const album = items.length >= 2;
+
+  // Собираем только фото — видео в галерею не кладём, их смотрят инлайн.
+  const photoItems: Array<{ renderIndex: number; gallery: GalleryItem }> = [];
+  items.forEach((item, i) => {
+    const mime = item.mime?.toLowerCase() ?? "";
+    const isImage =
+      item.kind === "photo" ||
+      (item.kind === "document" && mime.startsWith("image/"));
+    if (!isImage) return;
+    const mid = item.source_message_id ?? item.message_id ?? post.message_id;
+    const slot = item.source_slot ?? i;
+    photoItems.push({
+      renderIndex: i,
+      gallery: { channelKey: post.channel_key, messageId: mid, slot },
+    });
+  });
+  const galleryList = photoItems.map((p) => p.gallery);
+  const galleryPositionByRenderIndex = new Map(
+    photoItems.map((p, idx) => [p.renderIndex, idx]),
+  );
+
   return (
     <div className={`tg-media-preview${album ? " tg-media-album" : ""}`}>
       {items.map((item, i) => {
@@ -340,7 +411,20 @@ function PostMediaPreview({ post }: { post: Post }) {
           (item.kind === "document" && mime.startsWith("video/"));
         const isAnimation = item.kind === "animation";
         if (isImage) {
-          return <BridgeMediaImage key={i} channelKey={post.channel_key} messageId={mid} slot={slot} />;
+          const pos = galleryPositionByRenderIndex.get(i) ?? 0;
+          return (
+            <BridgeMediaImage
+              key={i}
+              channelKey={post.channel_key}
+              messageId={mid}
+              slot={slot}
+              onOpen={
+                onOpenGallery && galleryList.length
+                  ? () => onOpenGallery(galleryList, pos)
+                  : undefined
+              }
+            />
+          );
         }
         if (isVideo || isAnimation) {
           return (
@@ -355,6 +439,150 @@ function PostMediaPreview({ post }: { post: Post }) {
         }
         return null;
       })}
+    </div>
+  );
+}
+
+/**
+ * Full-screen галерея фото. Показуємо один кадр, стрілки/клавіатура/свайп для навігації,
+ * Esc або клік по фону — закрити. `<img>` не шле HttpOnly-cookie, тож на 401 дотягуємо
+ * підписаний `mt` URL через `fetchSignedMediaUrl`.
+ */
+function MediaLightbox({
+  items,
+  index,
+  onClose,
+  onIndexChange,
+}: {
+  items: GalleryItem[];
+  index: number;
+  onClose: () => void;
+  onIndexChange: (next: number) => void;
+}) {
+  const total = items.length;
+  const current = items[index];
+  const plain = current ? bridgeMediaSrc(current.channelKey, current.messageId, current.slot) : "";
+  const [src, setSrc] = useState(plain);
+  const retried = useRef(false);
+  const touchStartX = useRef<number | null>(null);
+
+  useEffect(() => {
+    retried.current = false;
+    setSrc(plain);
+  }, [plain]);
+
+  const go = useCallback(
+    (delta: number) => {
+      if (!total) return;
+      const next = (index + delta + total) % total;
+      onIndexChange(next);
+    },
+    [index, total, onIndexChange],
+  );
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        go(-1);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        go(1);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [go, onClose]);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  if (!current) return null;
+
+  const upgradeSrc = async () => {
+    if (retried.current) return;
+    retried.current = true;
+    const signed = await fetchSignedMediaUrl(current);
+    if (signed) setSrc(signed);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Фото"
+      onClick={onClose}
+      onTouchStart={(e) => {
+        touchStartX.current = e.touches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(e) => {
+        const start = touchStartX.current;
+        touchStartX.current = null;
+        if (start == null) return;
+        const end = e.changedTouches[0]?.clientX ?? start;
+        const delta = end - start;
+        if (Math.abs(delta) > 40) go(delta > 0 ? -1 : 1);
+      }}
+    >
+      <button
+        type="button"
+        aria-label="Закрити"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-sm text-white hover:bg-black/80"
+      >
+        ✕
+      </button>
+      {total > 1 ? (
+        <>
+          <button
+            type="button"
+            aria-label="Попереднє фото"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(-1);
+            }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-3 py-2 text-lg text-white hover:bg-black/80"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="Наступне фото"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(1);
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-3 py-2 text-lg text-white hover:bg-black/80"
+          >
+            ›
+          </button>
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
+            {index + 1} / {total}
+          </div>
+        </>
+      ) : null}
+      <img
+        src={src}
+        alt=""
+        className="max-h-[92vh] max-w-[94vw] select-none object-contain"
+        onClick={(e) => e.stopPropagation()}
+        onError={() => {
+          void upgradeSrc();
+        }}
+        draggable={false}
+      />
     </div>
   );
 }
@@ -382,6 +610,16 @@ export default function Dashboard() {
   const [addKey, setAddKey] = useState("");
   const [addBusy, setAddBusy] = useState(false);
   const [addErr, setAddErr] = useState<string | null>(null);
+  const [gallery, setGallery] = useState<{
+    items: GalleryItem[];
+    index: number;
+  } | null>(null);
+  const openGallery = useCallback((items: GalleryItem[], index: number) => {
+    if (!items.length) return;
+    const safe = Math.max(0, Math.min(index, items.length - 1));
+    setGallery({ items, index: safe });
+  }, []);
+  const closeGallery = useCallback(() => setGallery(null), []);
   const wsRef = useRef<WebSocket | null>(null);
   const pingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reconnectAttempt = useRef(0);
@@ -715,10 +953,20 @@ export default function Dashboard() {
                     dangerouslySetInnerHTML={{ __html: postBodyHtml(post) }}
                   />
                 );
-                const mediaEl = <PostMediaPreview key="media" post={post} />;
+                const mediaEl = (
+                  <PostMediaPreview
+                    key="media"
+                    post={post}
+                    onOpenGallery={openGallery}
+                  />
+                );
                 const hasBridgeMedia = (post.media?.filter(Boolean).length ?? 0) > 0;
+                const hasText = Boolean(post.text?.trim() || post.text_html?.trim());
+                // Embed виджет Telegram показуємо лише як fallback: немає ні тексту, ні медіа,
+                // і URL — публічний (`t.me/<username>/<id>`). Для `t.me/c/...` `telegramEmbedSrc`
+                // сам повертає `null`, інакше виджет падає з "@c not found".
                 const embedEl =
-                  !hasBridgeMedia && post.telegram_url ? (
+                  !hasBridgeMedia && !hasText && post.telegram_url ? (
                     <PostTelegramEmbed key="embed" url={post.telegram_url} />
                   ) : null;
                 return (
@@ -800,6 +1048,16 @@ export default function Dashboard() {
         <footer className="border-t border-zinc-800 px-3 py-1.5 text-center text-[10px] text-zinc-600">
           build {BUILD_SHA.slice(0, 7)}
         </footer>
+      ) : null}
+      {gallery ? (
+        <MediaLightbox
+          items={gallery.items}
+          index={gallery.index}
+          onClose={closeGallery}
+          onIndexChange={(next) =>
+            setGallery((g) => (g ? { ...g, index: next } : g))
+          }
+        />
       ) : null}
     </div>
   );
