@@ -2,6 +2,18 @@
 
 Репозиторій: **https://github.com/AstaldoVal/telegram-dashboard**
 
+## Push з монорепо Dex (одна гілка історії `apps/telegram-news-dashboard`)
+
+З **кореня** репозиторію Dex (після `git commit` змін у `apps/telegram-news-dashboard/`):
+
+```bash
+git subtree split -P apps/telegram-news-dashboard -b tmp-tg-dashboard-split
+git push https://github.com/AstaldoVal/telegram-dashboard.git tmp-tg-dashboard-split:main
+git branch -D tmp-tg-dashboard-split
+```
+
+Перший раз або якщо на GitHub була «чужа» історія, до `git push` додайте `--force`. Після успішного push Vercel (якщо репо підключено) збере новий deployment.
+
 ## Перший раз: підключити проєкт до GitHub
 
 1. Увійдіть у [Vercel](https://vercel.com) → **Add New…** → **Project**.
