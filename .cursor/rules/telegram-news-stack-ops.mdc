@@ -1,0 +1,58 @@
+---
+description: Зміни telegram-news dashboard/bridge — спочатку status, новий UI на Vercel через ship (або push+hook), тунель/env через stack-restart; не закривати задачу без перевірок
+globs: apps/telegram-news-bridge/**,apps/telegram-news-dashboard/**,.scripts/telegram-news-stack-*.cjs,.scripts/telegram-news-dashboard-ship.cjs
+alwaysApply: false
+---
+
+# Telegram news stack — агент не «відпускає» задачу на півдорозі
+
+## 1) Завжди зняти статус на цьому Mac (перед і після дій)
+
+З кореня Dex:
+
+```bash
+npm run telegram-news:stack:status
+```
+
+Очікування: **Bridge /health OK** і процес `telegram_news_bridge`. Якщо **немає cloudflared** або **pidfile dead** — `BRIDGE_URL` на trycloudflare зламаний → далі **обов’язково** `stack:restart` на машині з тунелем.
+
+JSON для логів: `npm run telegram-news:stack:status:json`.
+
+## 2) Нова версія **коду** дашборду на Vercel
+
+`telegram-news:stack:restart` **онлює env** і робить redeploy на базі **вже існуючого** production deployment — це **не** підставляє новий коміт з диска. Для змін у `apps/telegram-news-dashboard/**`:
+
+```bash
+npm run telegram-news:dashboard:ship
+```
+
+- Якщо задано **`VERCEL_DEPLOY_HOOK_URL`** — скрипт білдить локально й тригерить hook (збірка з **Git** на Vercel). Тоді **спочатку push** у підключену гілку, якщо зміни ще не на remote.
+- Інакше з **`VERCEL_TOKEN`** — `npx vercel deploy --prod --yes` з `apps/telegram-news-dashboard` (потрібен `vercel link` або коректні scope flags).
+
+Лише білд без деплою: `npm run telegram-news:dashboard:ship:build-only`.
+
+## 3) Тунель + `NEXT_PUBLIC_BRIDGE_PUBLIC_URL` + перезбірка клієнта з новим env
+
+Коли змінився trycloudflare URL, CORS, bridge, або «530 / WS» після відновлення машини:
+
+```bash
+npm run telegram-news:stack:restart
+```
+
+Потрібні на Mac з тунелем: `cloudflared`, `uv`, `apps/telegram-news-bridge/.env`. Для Vercel env upsert + redeploy: **`VERCEL_TOKEN`** (і за потреби `VERCEL_TEAM_ID`, `VERCEL_PROJECT_NAME`).
+
+Опції: `--dry-run`, `--skip-bridge`, `--skip-tunnel`, `--skip-vercel`, `--skip-cors-patch` — див. заголовок `.scripts/telegram-news-stack-restart.cjs`.
+
+## 4) Коли закінчувати відповідь користувачу
+
+Після змін у dashboard/bridge **не** писати «готово», поки:
+
+1. `npm run telegram-news:stack:status` не показує зрозумілий зелений стан для bridge (і пояснений тунель, якщо релевантно).
+2. Для UI-змін виконано **`dashboard:ship`** або підтверджено push + deploy hook; зачекати/перевірити URL production (за наявності токена — з `stack:status` видно останній deployment).
+3. Якщо тунель мав бути — `stack:restart` відпрацював без помилки.
+
+Якщо немає `VERCEL_TOKEN` у середовищі — **одна** чітка інструкція, що джерело токена (напр. `source System/Secrets/dex-vercel-token.sh`), потім повторити команди; не залишати користувача з довгим ручним чеклістом без автоматизації.
+
+## Секрети
+
+Не комітити токени. Типовий запуск: `source …/dex-vercel-token.sh && npm run telegram-news:stack:restart` (або ship), з кореня репозиторію.

@@ -1,5 +1,7 @@
 # Telegram news dashboard (Next.js → Vercel)
 
+**Canonical GitHub (окремий репо для Vercel CI):** [github.com/AstaldoVal/telegram-dashboard](https://github.com/AstaldoVal/telegram-dashboard) — після змін у коді робіть `git push` у цей remote, щоб production на Vercel зібрався з останнього commit. Інструкція підключення репо до Vercel: [docs/VERCEL_GITHUB.md](./docs/VERCEL_GITHUB.md).
+
 Веб-дашборд: колонки по каналах, **WebSocket** оновлення без перезавантаження, рерайт UA, публікація в ваш канал через **bridge** (Telethon на вашій машині / Pi + **Cloudflare Tunnel**).
 
 Зверху форма **«Додати колонку»**: посилання `t.me/…`, `@канал` або id — bridge підтягує останні пости, зберігає канал у watchlist і вмикає моніторинг нових повідомлень (див. [bridge README](../telegram-news-bridge/README.md#динамічні-канали-дашборд)).
@@ -28,7 +30,7 @@ NPM_CONFIG_SCRIPT_SHELL=/bin/sh npm run dev
 
 ## Vercel
 
-1. Імпорт репозиторію, root directory: `apps/telegram-news-dashboard` (або монорепо з відповідним root у налаштуваннях проєкту).
+1. Імпорт **цього** репозиторію з GitHub: root directory **`.`** (корінь). Якщо проєкт ще зібраний з монорепо Dex — у **Settings → General → Root Directory** приберіть `apps/telegram-news-dashboard` або перепідключіть Git до репо [AstaldoVal/telegram-dashboard](https://github.com/AstaldoVal/telegram-dashboard) (див. [docs/VERCEL_GITHUB.md](./docs/VERCEL_GITHUB.md)).
 2. Environment Variables — як у `.env.example`.
 3. Після деплою відкрийте URL, увійдіть паролем (якщо задано).
 

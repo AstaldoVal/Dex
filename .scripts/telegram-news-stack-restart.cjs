@@ -12,6 +12,9 @@
  *   node .scripts/telegram-news-stack-restart.cjs --dry-run
  *   node .scripts/telegram-news-stack-restart.cjs --skip-bridge --skip-tunnel
  *   node .scripts/telegram-news-stack-restart.cjs --skip-cors-patch   (не змінювати BRIDGE_CORS_ORIGINS у bridge .env)
+ *
+ * Related: `telegram-news-stack-status.cjs` (processes + health + tunnel + Vercel head),
+ * `telegram-news-dashboard-ship.cjs` (build + deploy NEW dashboard code — this script alone does not ship new UI commits).
  */
 /* eslint-disable no-console */
 const fs = require("node:fs");

@@ -1,0 +1,46 @@
+---
+description: Session bootstrap is mandatory in first assistant reply of every new chat
+alwaysApply: true
+---
+
+# Session Bootstrap Enforcer
+
+This rule is mandatory for every new chat.
+
+## Required output contract
+
+In the first assistant reply of a new chat, the response must start with this exact block:
+
+```markdown
+Session bootstrap:
+- using-superpowers: active (skill routing enabled)
+- mcp-health-check-custom: done
+- readiness: ready
+```
+
+Each status line must be a Markdown list item: start with `- ` (hyphen, space) exactly as in the template. Do not print those three lines without the list markers.
+
+## Hard constraints
+
+1. The first line of the first reply must be exactly: `Session bootstrap:`
+2. Lines 2-4 must be exactly the three strings above (including leading `- `).
+3. The block must appear before any other explanatory text or task execution text (hook-injected digest hints, if present in context, go after this four-line block in the same first message).
+4. Do not skip this block even for short prompts (e.g. "ping", "hi", "check", "привет").
+
+## Non-compliance policy
+
+If a first reply is generated without this block, treat it as invalid format: in the **next** assistant message in that chat, acknowledge the miss and paste the correct four-line block at the top (then continue the task). Do not dismiss the requirement as optional.
+
+## Relation to other rules
+
+- **`AGENTS.md` (Learned User Preferences)** mirrors this contract; keep both aligned when changing wording.
+- **`.cursor/rules/dex-chat-session-log.mdc`:** after each completed assistant reply, append a turn block to `System/Chat_logs/YYYY-MM-DD.md` (same session, do not defer “until later”).
+
+## Proof when the user asks to “update rules” or “show proof”
+
+After editing any rule file or `AGENTS.md`, the assistant must give **evidence in the same reply**:
+
+1. List every **path** changed (repo-relative).
+2. Show a short **`git diff`** excerpt for those paths (or full diff if small), or paste the updated paragraph if `git` is unavailable.
+
+Silence or “I updated it” without paths/diff is not acceptable for this user.

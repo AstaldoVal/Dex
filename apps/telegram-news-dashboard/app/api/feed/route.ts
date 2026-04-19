@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { bridgeAuthHeaders, bridgeBaseUrl } from "@/lib/bridge";
+import { nextResponseFromUpstreamBridge } from "@/lib/bridge-upstream";
 
 export async function GET() {
   try {
@@ -8,12 +9,9 @@ export async function GET() {
       cache: "no-store",
     });
     const text = await r.text();
-    return new NextResponse(text, {
-      status: r.status,
-      headers: { "Content-Type": "application/json" },
-    });
+    return nextResponseFromUpstreamBridge(r, text);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "bridge_error";
-    return NextResponse.json({ error: msg }, { status: 502 });
+    return NextResponse.json({ error: msg, channels: {} }, { status: 502 });
   }
 }

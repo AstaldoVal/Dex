@@ -1,8 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 const BUILD_SHA = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ?? "";
+
+/** Показати блоки «звідки дані» (колонки + глобальний ланцюг). Увімкнути: `?debug=1` або `#debug` у URL, або `NEXT_PUBLIC_FEED_DEBUG=1` у збірці (потрібен деплой з цим кодом). */
+const FEED_DEBUG_FROM_ENV =
+  process.env.NEXT_PUBLIC_FEED_DEBUG === "1" || process.env.NEXT_PUBLIC_FEED_DEBUG === "true";
+
+const BRIDGE_PUBLIC_DISPLAY = process.env.NEXT_PUBLIC_BRIDGE_PUBLIC_URL?.trim() ?? "";
 
 type MediaItem = {
   kind: string;
@@ -63,12 +69,70 @@ function postKey(p: Post): string {
   return `${p.channel_key}:${p.message_id}`;
 }
 
+/** All keys that should light up one logical card (covers WS payload vs merged album / max message_id). */
+function highlightKeysForPost(p: Post): string[] {
+  const s = new Set<string>();
+  s.add(postKey(p));
+  s.add(`${p.channel_key}:${p.message_id}`);
+  const gid = p.grouped_id;
+  if (gid != null && gid !== 0) {
+    s.add(`${p.channel_key}:group:${gid}`);
+  }
+  return [...s];
+}
+
+const NEW_HIGHLIGHT_MS = 50_000;
+
+let sharedAudioCtx: AudioContext | null = null;
+
+/** Short ascending chime; reuses one AudioContext. May stay silent until a user gesture on strict autoplay policies. */
+function playNewPostChime(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctx) return;
+    if (!sharedAudioCtx || sharedAudioCtx.state === "closed") {
+      sharedAudioCtx = new Ctx();
+    }
+    const ctx = sharedAudioCtx;
+    const run = () => {
+      const now = ctx.currentTime;
+      const schedule = (freq: number, start: number, dur: number) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.1, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, start + dur);
+        osc.start(start);
+        osc.stop(start + dur + 0.02);
+      };
+      schedule(784, now, 0.11);
+      schedule(988, now + 0.1, 0.14);
+    };
+    void ctx.resume().then(run);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Prefer the album part that actually carries the caption (plain or HTML), not only the first id. */
+function postBodyStrength(p: Post): number {
+  const t = (p.text ?? "").trim().length;
+  const h = (p.text_html ?? "").trim();
+  const plainFromHtml = h ? h.replace(/<[^>]*>/g, "").replace(/&nbsp;/gi, " ").trim().length : 0;
+  return Math.max(t, plainFromHtml);
+}
+
 /** Merge album parts (same grouped_id) into one card; preserve newest-first order. */
 function mergePostGroup(group: Post[]): Post {
   const sorted = [...group].sort((a, b) => a.message_id - b.message_id);
   const ids = sorted.map((g) => g.message_id);
   const primary = sorted.reduce((best, cur) =>
-    (cur.text ?? "").trim().length > (best.text ?? "").trim().length ? cur : best
+    postBodyStrength(cur) > postBodyStrength(best) ? cur : best
   );
   const media: MediaItem[] = [];
   for (const g of sorted) {
@@ -94,6 +158,18 @@ function mergePostGroup(group: Post[]): Post {
       ? titleCandidates.reduce((a, b) => (b.length > a.length ? b : a))
       : (primary.channel_title ?? "").trim();
 
+  let mergedText = (primary.text ?? "").trim();
+  let mergedHtml = (primary.text_html ?? "").trim();
+  let mergedTgUrl = primary.telegram_url;
+  if (!mergedText && !mergedHtml.replace(/<[^>]*>/g, "").replace(/&nbsp;/gi, " ").trim()) {
+    const donor = sorted.find((g) => postBodyStrength(g) > 0);
+    if (donor) {
+      mergedText = (donor.text ?? "").trim();
+      mergedHtml = (donor.text_html ?? "").trim();
+      mergedTgUrl = donor.telegram_url ?? mergedTgUrl;
+    }
+  }
+
   return {
     ...primary,
     message_id: maxId,
@@ -101,9 +177,9 @@ function mergePostGroup(group: Post[]): Post {
     media,
     invert_media,
     channel_title: mergedChannelTitle || primary.channel_title,
-    text: primary.text ?? "",
-    text_html: primary.text_html,
-    telegram_url: primary.telegram_url,
+    text: mergedText,
+    text_html: mergedHtml,
+    telegram_url: mergedTgUrl,
   };
 }
 
@@ -143,20 +219,31 @@ function escapeHtml(s: string): string {
 }
 
 /** Prefer server-built Telegram HTML; fallback for older payloads. */
+/** Never inject active content from Telethon HTML into the DOM (defense in depth). */
+function stripActiveContentFromHtml(html: string): string {
+  return html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+    .replace(/<iframe\b[\s\S]*?<\/iframe>/gi, "")
+    .replace(/<iframe\b[^>]*\/?>/gi, "")
+    .replace(/<embed\b[^>]*\/?>/gi, "")
+    .replace(/<object\b[\s\S]*?<\/object>/gi, "");
+}
+
 function postBodyHtml(post: Post): string {
   const h = post.text_html?.trim();
-  if (h) return h;
+  if (h) return stripActiveContentFromHtml(h);
   const t = post.text?.trim();
   if (!t && (post.media?.length ?? 0) > 0) return "";
   if (!t) return "—";
   return escapeHtml(t).replace(/\n/g, "<br/>");
 }
 
-/** Default titles for `NEWS_SOURCE_MAP` keys (Dex bridge defaults). Overridden by `NEXT_PUBLIC_CHANNEL_LABELS`. */
+/**
+ * Fallback labels when `/feed` ще порожній або немає `channel_title`.
+ * Не підставляйте сюди «заглушки» замість реальної назви з Telegram — заголовок колонки
+ * береться з `channel_title` постів, якщо немає явного `NEXT_PUBLIC_CHANNEL_LABELS`.
+ */
 const DEFAULT_CHANNEL_LABELS: Record<string, string> = {
-  uaonlii: "Ua Onlii",
-  /** Часта опечатка в `NEWS_SOURCE_MAP`: `uasonli` замість `uaonlii`. */
-  uasonli: "Ua Onlii",
   real_kyiv: "Реальний Київ | Украина",
 };
 
@@ -173,28 +260,53 @@ function channelLabelsFromEnv(): Record<string, string> {
   return cachedChannelLabels;
 }
 
-function mergedChannelLabelMap(): Record<string, string> {
-  return { ...DEFAULT_CHANNEL_LABELS, ...channelLabelsFromEnv() };
-}
-
-/** Human column title: built-in + env map, then any post title that is not the slug, then longest title. */
-function columnHeading(posts: Post[] | undefined, key: string): string {
-  const map = mergedChannelLabelMap();
-  const mapped = map[key]?.trim() || map[key.toLowerCase()]?.trim();
-  if (mapped) return mapped;
-
-  if (!posts?.length) return key;
-
+/** Назва каналу з постів колонки (Telegram title), без статичних заглушок. */
+function bestChannelTitleFromPosts(posts: Post[] | undefined, key: string): string | null {
+  if (!posts?.length) return null;
   const titles = posts
     .map((p) => p.channel_title?.trim())
     .filter((t): t is string => Boolean(t));
-  if (!titles.length) return key;
-
+  if (!titles.length) return null;
   const slug = key.toLowerCase();
   const human = titles.find((t) => t.toLowerCase() !== slug);
   if (human) return human;
-
   return titles.reduce((a, b) => (b.length > a.length ? b : a));
+}
+
+/**
+ * Заголовок колонки: лише явний `NEXT_PUBLIC_CHANNEL_LABELS` перебиває Telegram;
+ * інакше — реальний `channel_title` з постів; останній запас — DEFAULT_CHANNEL_LABELS / ключ.
+ */
+function columnHeading(posts: Post[] | undefined, key: string): string {
+  const env = channelLabelsFromEnv();
+  const envOnly = env[key]?.trim() || env[key.toLowerCase()]?.trim();
+  if (envOnly) return envOnly;
+
+  const fromPosts = bestChannelTitleFromPosts(posts, key);
+  if (fromPosts) return fromPosts;
+
+  const defaults = DEFAULT_CHANNEL_LABELS;
+  const fallback = defaults[key]?.trim() || defaults[key.toLowerCase()]?.trim();
+  if (fallback) return fallback;
+
+  return key;
+}
+
+/** Короткий опис, звідки взятий заголовок колонки (лише для debug-панелі). */
+function columnHeadingSource(posts: Post[] | undefined, key: string): string {
+  const env = channelLabelsFromEnv();
+  const envHit = env[key]?.trim() || env[key.toLowerCase()]?.trim();
+  if (envHit) return "NEXT_PUBLIC_CHANNEL_LABELS (env JSON) — явний override";
+
+  const fromPosts = bestChannelTitleFromPosts(posts, key);
+  if (fromPosts) return "channel_title з постів колонки (Telegram)";
+
+  const defaults = DEFAULT_CHANNEL_LABELS;
+  const fb = defaults[key]?.trim() || defaults[key.toLowerCase()]?.trim();
+  if (fb) return "DEFAULT_CHANNEL_LABELS у коді Dashboard (немає постів / без channel_title)";
+
+  if (!posts?.length) return "немає постів → показано ключ об’єкта channels";
+  return "немає channel_title у постах → показано ключ";
 }
 
 function bridgeMediaSrc(channelKey: string, messageId: number, slot: number): string {
@@ -204,36 +316,6 @@ function bridgeMediaSrc(channelKey: string, messageId: number, slot: number): st
     slot: String(slot),
   });
   return `/api/bridge-media?${q.toString()}`;
-}
-
-function telegramEmbedSrc(telegramUrl: string): string | null {
-  const u = telegramUrl.trim();
-  if (!/^https:\/\/t\.me\//i.test(u)) return null;
-  /**
-   * Telegram's public embed widget supports only `t.me/<username>/<id>`.
-   * Private / super-channel links `t.me/c/<internal_id>/<msg>` fail with
-   * "Channel with username @c not found" — skip them.
-   */
-  if (/^https:\/\/t\.me\/c\//i.test(u)) return null;
-  if (/[?&]embed=1(?:&|$)/.test(u)) return u;
-  return u.includes("?") ? `${u}&embed=1` : `${u}?embed=1`;
-}
-
-/** When bridge did not attach media slots, still show the post visually (Telegram widget). */
-function PostTelegramEmbed({ url }: { url: string }) {
-  const src = telegramEmbedSrc(url);
-  if (!src) return null;
-  return (
-    <div className="tg-embed-wrap my-2 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950">
-      <iframe
-        title="Telegram"
-        src={src}
-        className="tg-embed-frame block h-[min(380px,50vh)] w-full border-0"
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
-      />
-    </div>
-  );
 }
 
 /** Photo slot identifier carried into the gallery lightbox. */
@@ -292,7 +374,7 @@ function BridgeMediaImage({
   }, [channelKey, messageId, slot]);
 
   const clickable = typeof onOpen === "function";
-  return (
+  const img = (
     <img
       className={`tg-media-thumb${clickable ? " cursor-zoom-in" : ""}`}
       src={src}
@@ -302,21 +384,22 @@ function BridgeMediaImage({
       onError={() => {
         void upgradeSrc();
       }}
-      onClick={clickable ? onOpen : undefined}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onOpen?.();
-              }
-            }
-          : undefined
-      }
+      draggable={false}
     />
   );
+  if (clickable && onOpen) {
+    return (
+      <button
+        type="button"
+        className="m-0 block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+        onClick={() => onOpen()}
+        aria-label="Відкрити фото"
+      >
+        {img}
+      </button>
+    );
+  }
+  return img;
 }
 
 function BridgeMediaVideo({
@@ -516,7 +599,7 @@ function MediaLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Фото"
@@ -610,6 +693,9 @@ export default function Dashboard() {
   const [addKey, setAddKey] = useState("");
   const [addBusy, setAddBusy] = useState(false);
   const [addErr, setAddErr] = useState<string | null>(null);
+  /** Помилка початкового завантаження /api/feed (тунель, BRIDGE_URL). */
+  const [feedBanner, setFeedBanner] = useState<string | null>(null);
+  const [feedRefreshing, setFeedRefreshing] = useState(false);
   const [gallery, setGallery] = useState<{
     items: GalleryItem[];
     index: number;
@@ -624,8 +710,52 @@ export default function Dashboard() {
   const pingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reconnectAttempt = useRef(0);
   const doRewriteRef = useRef<(post: Post) => Promise<void>>(async () => {});
+  /** Post keys (`postKey`) that arrived via WS — green highlight until timeout. */
+  const [newPostHighlights, setNewPostHighlights] = useState<Set<string>>(() => new Set());
+  const highlightTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const lastChimeAtRef = useRef(0);
+
+  const markAsNewFromRealtime = useCallback((post: Post) => {
+    const keys = highlightKeysForPost(post);
+    const timerId = keys.join("|");
+    setNewPostHighlights((prev) => {
+      const next = new Set(prev);
+      for (const k of keys) next.add(k);
+      return next;
+    });
+    const prevT = highlightTimersRef.current.get(timerId);
+    if (prevT) clearTimeout(prevT);
+    const t = setTimeout(() => {
+      setNewPostHighlights((prev) => {
+        const next = new Set(prev);
+        for (const k of keys) next.delete(k);
+        return next;
+      });
+      highlightTimersRef.current.delete(timerId);
+    }, NEW_HIGHLIGHT_MS);
+    highlightTimersRef.current.set(timerId, t);
+
+    const now = Date.now();
+    if (now - lastChimeAtRef.current > 400) {
+      lastChimeAtRef.current = now;
+      playNewPostChime();
+    }
+  }, []);
 
   const wsBase = useMemo(() => wsBaseFromEnv(), []);
+
+  const [feedDebug, setFeedDebug] = useState(FEED_DEBUG_FROM_ENV);
+  /** Одразу після гідратації (до paint), щоб `?debug=1` / `#debug` працювали без окремого «другого» кадру від useEffect. */
+  useLayoutEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const hash = window.location.hash.replace(/^#/, "").split("?")[0] ?? "";
+    const fromUrl =
+      q.get("debug") === "1" ||
+      q.get("feedDebug") === "1" ||
+      hash === "debug" ||
+      hash === "feedDebug";
+    setFeedDebug(FEED_DEBUG_FROM_ENV || fromUrl);
+  }, []);
 
   const doRewrite = useCallback(async (post: Post) => {
     const key = postKey(post);
@@ -668,6 +798,14 @@ export default function Dashboard() {
   useEffect(() => {
     doRewriteRef.current = doRewrite;
   }, [doRewrite]);
+
+  useEffect(() => {
+    return () => {
+      const timers = highlightTimersRef.current;
+      for (const t of timers.values()) clearTimeout(t);
+      timers.clear();
+    };
+  }, []);
 
   const mergeSnapshot = useCallback((snap: ChannelsMap) => {
     setChannels(() => {
@@ -733,6 +871,7 @@ export default function Dashboard() {
             mergeSnapshot(msg.channels || {});
           }
           if (msg.type === "new_post" && msg.post) {
+            markAsNewFromRealtime(msg.post);
             prependPost(msg.post);
             void doRewriteRef.current(msg.post);
           }
@@ -741,15 +880,22 @@ export default function Dashboard() {
         }
       };
       ws.onerror = () => {
-        setWsError("websocket error");
+        setWsError("помилка сокета (деталі після закриття з’єднання)");
       };
-      ws.onclose = () => {
+      ws.onclose = (ev: CloseEvent) => {
         setWsStatus("error");
         wsRef.current = null;
         if (pingRef.current) {
           clearInterval(pingRef.current);
           pingRef.current = null;
         }
+        const why =
+          ev.code === 1006
+            ? "абнормальне закриття (часто: мережа блокує wss до trycloudflare або тунель упав)"
+            : [ev.reason?.trim(), ev.code ? `код ${ev.code}` : ""].filter(Boolean).join(" — ") || "з’єднання закрито";
+        setWsError(
+          `${why}. Резерв: стрічка оновлюється через /api/feed кожні ~30 с з цього домену (Vercel→bridge), навіть якщо WS з браузера не відкривається.`
+        );
         const attempt = ++reconnectAttempt.current;
         const delay = Math.min(30_000, 1000 * 2 ** Math.min(attempt, 5));
         setTimeout(() => {
@@ -760,21 +906,59 @@ export default function Dashboard() {
       setWsStatus("error");
       setWsError(e instanceof Error ? e.message : "connect failed");
     }
-  }, [mergeSnapshot, prependPost, wsBase]);
+  }, [markAsNewFromRealtime, mergeSnapshot, prependPost, wsBase]);
+
+  /** Завантаження стрічки через Next (той самий origin, сесія). Працює навіть коли браузер не може відкрити wss до trycloudflare. */
+  const refreshFeedFromApi = useCallback(async (): Promise<boolean> => {
+    try {
+      const r = await fetch("/api/feed", { credentials: "same-origin" });
+      const j = (await r.json().catch(() => ({}))) as {
+        channels?: ChannelsMap;
+        error?: string;
+        detail?: unknown;
+      };
+      if (r.ok && j.channels && typeof j.channels === "object") {
+        mergeSnapshot(j.channels);
+        setFeedBanner(null);
+        return true;
+      }
+      const detailStr =
+        typeof j.detail === "string"
+          ? j.detail
+          : Array.isArray(j.detail) && j.detail[0] && typeof (j.detail[0] as { msg?: string }).msg === "string"
+            ? (j.detail[0] as { msg: string }).msg
+            : null;
+      const msg =
+        typeof j.error === "string" && j.error.trim()
+          ? j.error.trim()
+          : detailStr?.trim() || `Не вдалося завантажити стрічку (HTTP ${r.status})`;
+      setFeedBanner(msg);
+      return false;
+    } catch {
+      setFeedBanner("Не вдалося звернутися до /api/feed");
+      return false;
+    }
+  }, [mergeSnapshot]);
+
+  const handleManualFeedRefresh = useCallback(async () => {
+    setFeedRefreshing(true);
+    try {
+      await refreshFeedFromApi();
+    } finally {
+      setFeedRefreshing(false);
+    }
+  }, [refreshFeedFromApi]);
 
   useEffect(() => {
-    void (async () => {
-      try {
-        const r = await fetch("/api/feed");
-        if (r.ok) {
-          const j = (await r.json()) as { channels?: ChannelsMap };
-          if (j.channels) mergeSnapshot(j.channels);
-        }
-      } catch {
-        /* ignore */
-      }
-    })();
-  }, [mergeSnapshot]);
+    void refreshFeedFromApi();
+  }, [refreshFeedFromApi]);
+
+  /** Поки WS не live — підтягуємо стрічку з Vercel→bridge по HTTPS (обхід блокування wss до тунелю з браузера). */
+  useEffect(() => {
+    if (wsStatus === "live") return;
+    const id = setInterval(() => void refreshFeedFromApi(), 30_000);
+    return () => clearInterval(id);
+  }, [wsStatus, refreshFeedFromApi]);
 
   useEffect(() => {
     void connectWs();
@@ -783,6 +967,24 @@ export default function Dashboard() {
       wsRef.current?.close();
     };
   }, [connectWs]);
+
+  /** Разблокирует AudioContext после первого жеста (политика autoplay в браузерах). */
+  useEffect(() => {
+    const unlock = () => {
+      try {
+        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!Ctx) return;
+        if (!sharedAudioCtx || sharedAudioCtx.state === "closed") {
+          sharedAudioCtx = new Ctx();
+        }
+        void sharedAudioCtx.resume();
+      } catch {
+        /* ignore */
+      }
+    };
+    document.addEventListener("pointerdown", unlock, { once: true });
+    return () => document.removeEventListener("pointerdown", unlock);
+  }, []);
 
   const channelKeys = useMemo(() => Object.keys(channels).sort(), [channels]);
 
@@ -865,6 +1067,11 @@ export default function Dashboard() {
             WS:{" "}
             <span className={wsStatus === "live" ? "text-emerald-400" : "text-amber-400"}>{wsStatus}</span>
             {wsError ? ` — ${wsError}` : null}
+            {wsStatus !== "live" ? (
+              <span className="mt-0.5 block text-zinc-600">
+                Поки WS offline, дані підтягуються по HTTPS з цього ж сайту (не потрібен довгий домен тунелю в адресному рядку).
+              </span>
+            ) : null}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -877,6 +1084,15 @@ export default function Dashboard() {
           </button>
         </div>
       </header>
+
+      {feedBanner ? (
+        <div
+          className="border-b border-amber-800/60 bg-amber-950/40 px-4 py-2 text-sm text-amber-100/95"
+          role="alert"
+        >
+          <span className="font-medium text-amber-200">Стрічка:</span> {feedBanner}
+        </div>
+      ) : null}
 
       <section className="border-b border-zinc-800 px-4 py-3">
         <p className="mb-2 text-xs font-medium text-zinc-400">Додати колонку (канал)</p>
@@ -913,15 +1129,86 @@ export default function Dashboard() {
           </button>
         </div>
         <p className="mt-1 text-[11px] text-zinc-600">
-          Після додавання канал зберігається на bridge (файл watchlist), підтягуються останні пости й увімкнено
-          моніторинг нових повідомлень. Потрібен перезапуск bridge лише якщо змінювався код, не watchlist.
+          Після додавання канал зберігається на bridge (файл watchlist) як числовий id — після перезапуску bridge
+          зайвих запитів на @username не буде. Якщо Telegram просить довго зачекати на @канал, вставте посилання
+          з веб-версії виду <code className="text-zinc-500">t.me/c/…/…</code> або числовий id. Потрібен перезапуск
+          bridge лише якщо змінювався код, не watchlist.
         </p>
         {addErr ? <p className="mt-2 text-xs text-red-400">{addErr}</p> : null}
       </section>
 
+      {feedDebug ? (
+        <section
+          className="border-b border-amber-900/50 bg-amber-950/25 px-4 py-2 text-[11px] leading-snug text-amber-100/95"
+          aria-label="Дебаг джерел даних стрічки"
+        >
+          <p className="font-semibold text-amber-200">Дебаг: звідки дані в колонках</p>
+          <ul className="mt-1 space-y-0.5 font-mono text-[10px] text-zinc-400">
+            <li>
+              Стартовий знімок:{" "}
+              <code className="text-zinc-300">fetch(&quot;/api/feed&quot;)</code> → Next.js → bridge{" "}
+              <code className="text-zinc-300">GET …/feed</code> → JSON{" "}
+              <code className="text-zinc-300">channels: Record&lt;channel_key, Post[]&gt;</code> (ключі =
+              slug колонок).
+            </li>
+            <li>
+              Оновлення в реальному часі: WS{" "}
+              <code className="text-zinc-300">
+                {wsBase ? `${wsBase}/ws/feed` : "— (немає NEXT_PUBLIC_BRIDGE_PUBLIC_URL)"}
+              </code>{" "}
+              після <code className="text-zinc-300">POST /api/realtime-token</code> — події{" "}
+              <code className="text-zinc-300">snapshot.channels</code> та{" "}
+              <code className="text-zinc-300">new_post</code> (маршрутизація по{" "}
+              <code className="text-zinc-300">post.channel_key</code>).
+            </li>
+            <li>
+              Медіа в картці: <code className="text-zinc-300">/api/bridge-media?channel_key=…</code> (за
+              потреби <code className="text-zinc-300">/api/bridge-media-sign</code>).
+            </li>
+            <li>
+              <code className="text-zinc-300">NEXT_PUBLIC_BRIDGE_PUBLIC_URL</code>:{" "}
+              <span className="text-zinc-300">
+                {BRIDGE_PUBLIC_DISPLAY || "не задано"}
+              </span>
+            </li>
+            <li className="text-zinc-500">
+              Увімкнення без env: <code className="text-zinc-400">?debug=1</code> або{" "}
+              <code className="text-zinc-400">#debug</code> у URL. Постійно:{" "}
+              <code className="text-zinc-400">NEXT_PUBLIC_FEED_DEBUG=1</code> (потрібен деплой). Спочатку на
+              Vercel має бути збірка, де вже є цей UI — інакше працюватиме лише після git push / redeploy.
+            </li>
+          </ul>
+        </section>
+      ) : null}
+
       <main className="flex gap-3 overflow-x-auto p-3" style={{ minHeight: "calc(100vh - 56px)" }}>
         {channelKeys.length === 0 ? (
-          <p className="p-4 text-sm text-zinc-500">Немає каналів у стрічці. Запустіть bridge і авторизуйте Telethon.</p>
+          <div className="flex max-w-xl flex-col gap-3 rounded-lg border border-zinc-800/80 bg-zinc-900/40 p-4 text-sm leading-relaxed text-zinc-400">
+            <p className="font-medium text-zinc-200">Немає колонок у стрічці</p>
+            {feedBanner ? (
+              <p>
+                Знімок з bridge не завантажився — причина в{" "}
+                <span className="text-amber-200/90">жовтому блоці</span> вище (зазвичай tunnel недоступний,
+                <code className="mx-0.5 text-zinc-500"> BRIDGE_URL</code> на Vercel або bridge не запущений).
+                Після відновлення натисніть кнопку або зачекайте автооновлення (~30 с).
+              </p>
+            ) : (
+              <p>
+                Якщо <code className="text-zinc-500">/api/feed</code> відповів OK, але колонок немає — на
+                bridge у watchlist ще немає каналів: додайте їх формою «Підключити й завантажити» вище. На машині з
+                bridge має працювати процес; при першому запуску Telethon попросить логін у терміналі (сесія
+                зберігається у файлі <code className="text-zinc-500">.session</code> поруч із bridge).
+              </p>
+            )}
+            <button
+              type="button"
+              disabled={feedRefreshing}
+              onClick={() => void handleManualFeedRefresh()}
+              className="w-fit rounded border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs font-medium text-zinc-100 hover:bg-zinc-700 disabled:opacity-50"
+            >
+              {feedRefreshing ? "Завантаження…" : "Оновити стрічку зараз"}
+            </button>
+          </div>
         ) : null}
         {channelKeys.map((key) => {
           const columnPosts = mergeChannelPosts(channels[key] || []);
@@ -933,6 +1220,27 @@ export default function Dashboard() {
             <div className="border-b border-zinc-800 px-3 py-2 text-sm font-medium text-zinc-100">
               {columnHeading(columnPosts, key)}
             </div>
+            {feedDebug ? (
+              <div className="border-b border-dashed border-amber-800/50 bg-zinc-950/90 px-3 py-1.5 text-[10px] leading-relaxed text-amber-100/85">
+                <div className="font-mono">
+                  <span className="text-zinc-500">channel_key:</span>{" "}
+                  <span className="text-emerald-400">{key}</span>
+                </div>
+                <div className="font-mono text-zinc-400">
+                  у state: {channels[key]?.length ?? 0} сирих → {columnPosts.length} карток після merge
+                  альбомів
+                </div>
+                <div className="font-mono text-zinc-500">заголовок: {columnHeadingSource(channels[key], key)}</div>
+                {(channels[key]?.length ?? 0) === 0 ? (
+                  <div className="mt-1 font-mono text-[9px] leading-tight text-amber-200/85">
+                    Порожньо вже з <code className="text-zinc-400">/feed</code> — на bridge перевірте peer у{" "}
+                    <code className="text-zinc-400">NEWS_SOURCE_MAP</code>, опечатку ключа (
+                    <code className="text-zinc-400">uasonli</code> vs <code className="text-zinc-400">uaonlii</code>
+                    ), логи Telethon або <code className="text-zinc-400">GET /channels?include_post_counts=true</code>.
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             <div className="flex flex-col gap-3 overflow-y-auto p-3" style={{ maxHeight: "calc(100vh - 120px)" }}>
               {columnPosts.map((post) => {
                 const pk = postKey(post);
@@ -960,19 +1268,15 @@ export default function Dashboard() {
                     onOpenGallery={openGallery}
                   />
                 );
-                const hasBridgeMedia = (post.media?.filter(Boolean).length ?? 0) > 0;
-                const hasText = Boolean(post.text?.trim() || post.text_html?.trim());
-                // Embed виджет Telegram показуємо лише як fallback: немає ні тексту, ні медіа,
-                // і URL — публічний (`t.me/<username>/<id>`). Для `t.me/c/...` `telegramEmbedSrc`
-                // сам повертає `null`, інакше виджет падає з "@c not found".
-                const embedEl =
-                  !hasBridgeMedia && !hasText && post.telegram_url ? (
-                    <PostTelegramEmbed key="embed" url={post.telegram_url} />
-                  ) : null;
+                const isNewHighlight = highlightKeysForPost(post).some((k) => newPostHighlights.has(k));
                 return (
                   <article
                     key={pk}
-                    className="rounded border border-zinc-800 bg-zinc-950/80 p-3 text-sm shadow-sm"
+                    className={
+                      isNewHighlight
+                        ? "rounded border-2 border-emerald-400 bg-emerald-500/20 p-3 text-sm shadow-[0_0_0_1px_rgba(52,211,153,0.35),0_0_24px_rgba(16,185,129,0.25)] ring-2 ring-emerald-400/50 transition-[background-color,box-shadow,border-color] duration-300"
+                        : "rounded border border-zinc-800 bg-zinc-950/80 p-3 text-sm shadow-sm transition-[background-color,box-shadow] duration-500"
+                    }
                   >
                     <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
                       <span>
@@ -994,12 +1298,10 @@ export default function Dashboard() {
                       <>
                         {bodyEl}
                         {mediaEl}
-                        {embedEl}
                       </>
                     ) : (
                       <>
                         {mediaEl}
-                        {embedEl}
                         {bodyEl}
                       </>
                     )}

@@ -1,0 +1,54 @@
+---
+description: Re-anchor Superpowers guide + Karpathy on every substantive coding turn (paired)
+alwaysApply: true
+---
+
+# Dex coding skills gate (Superpowers + Karpathy)
+
+`sessionStart` injects **both** `.claude/reference/superpowers-guide.md` and `.claude/skills/karpathy-guidelines/SKILL.md` under `=== PRE-LOADED SKILLS ===`. Treat **both** as standing policy for code work. Early pre-load loses salience in long threads — **re-anchor** the same way a manual slash or `@`-attachment does.
+
+## Why manual slash / paste feels stronger than the first message
+
+Cursor has **no separate skill runtime**. Content in **recent** turns is weighted heavily. Pre-load is **early** context. **`Read`** of the two canonical files before substantive edits reproduces the effect of attaching **Superpowers + Karpathy together** without requiring you to run slash commands every time.
+
+## When this applies
+
+Whenever the **latest user message** asks for implementation, refactor, fixes, tests, or other work that will use **tools that modify repo files** (patches, writes, codegen scripts, etc.), do the following **in order** before the **first file-changing tool** in your **current** assistant turn:
+
+### A. Re-anchor `Read` — substantive work
+
+For **substantive** work (new prototype/page/route, new feature, new component area, “build X”, refactors touching **multiple files**, unclear product scope), **`Read`** **both**:
+
+1. **`.claude/reference/superpowers-guide.md`** — Dex `using-superpowers` routing: which skills / playbooks apply **this turn**. If the guide tells you to **`Read`** another Dex skill (e.g. frontend, BMAD), do that **after** this `Read`, still **before** file-changing tools, unless the guide says otherwise.
+2. **`.claude/skills/karpathy-guidelines/SKILL.md`** — Karpathy coding discipline.
+
+**Skip both `Read`s** only for a **trivial** change: a single-line (or few-line) edit at a **user-specified** file + location, with no skill-routing ambiguity.
+
+**Partial skip:** If the **latest user message** already contains the **full** body of one of these files, skip `Read` for **that** file only; still **`Read`** the other unless **both** are fully inlined.
+
+### B. Visible alignment (after required `Read`s)
+
+Output a short **Dex skills alignment** block (plain markdown, max ~12 lines total):
+
+**Superpowers / using-superpowers (1–4 lines):** Which use-case path from the guide you are following this turn (e.g. “UI prototype → consult guide + relevant Dex skill”). Do **not** treat the bootstrap line `using-superpowers: active` as a substitute for applying the guide.
+
+**Karpathy (≤8 lines):**
+
+- **Assumptions:** one line (or “none beyond the user message”).
+- **Scope / out of scope:** what you will **not** do unless asked.
+- **Done means:** verifiable checks (commands, pages, behaviors).
+
+**Trivial-only exception:** If §A skipped both `Read`s, use **one** line: `Dex skills gate: trivial fix at path:L; Superpowers: N/A; Karpathy: assumptions X; done = Y.`
+
+### C. Ambiguity and Plan mode
+
+- If something is ambiguous, **ask** before editing (Karpathy §1) — do not pick among interpretations silently.
+- For **non-trivial** work: after alignment, **suggest** **Plan mode** when appropriate (Cursor: **Shift+Tab** or mode picker; [Plan mode docs](https://cursor.com/docs/agent/plan-mode)). If the user wants immediate Agent execution, continue with strict scope from the alignment block.
+
+## What this is not
+
+- Not a requirement to re-print the full Session bootstrap or the four-line Karpathy **echo** on every turn — only on the **first** reply of a new chat (see `session-bootstrap-enforcer.mdc`).
+
+## Relation to bootstrap
+
+The first-message bootstrap + pre-load **prime** the session; **this rule** forces **paired `Read` + combined alignment** on substantive coding turns so **Superpowers and Karpathy apply together** for the rest of the chat, not only in the opening banner.
