@@ -1,0 +1,3 @@
+[submodule "06-Resources/External/claude-code-best-practice"]
+	path = 06-Resources/External/claude-code-best-practice
+	url = https://github.com/shanraisshan/claude-code-best-practice.git
