@@ -5,15 +5,10 @@ alwaysApply: true
 
 # First Reply Bootstrap (Hard)
 
-In every NEW chat, the very first assistant reply must start with this exact 4-line block and nothing before it:
+**Priority:** This file is the short reminder. The full contract lives in **`.cursor/rules/session-bootstrap-enforcer.mdc`**.
 
-Session bootstrap:
-- using-superpowers: active (skill routing enabled)
-- mcp-health-check-custom: done
-- readiness: ready
-
-Lines 2-4 must each start with `- ` (hyphen, space). Do not omit the list markers.
-
-If the user message is just `ping`, still print this block first. Optional hook context (e.g. Telegram digest paths) belongs after this block in the same message, separated by one blank line.
-
-Full enforcement notes, non-compliance recovery, and proof-on-rule-change: **`.cursor/rules/session-bootstrap-enforcer.mdc`** (keep both files consistent).
+- In every NEW chat, the first assistant line must be exactly `Session bootstrap:`.
+- Nothing may appear before that line.
+- The visible Karpathy echo block is still mandatory on every first reply, including `ping`.
+- If pre-load is absent and the first user message already requests substantive code work, follow the fallback described in `.cursor/rules/session-bootstrap-enforcer.mdc`.
+- For later substantive coding turns, follow `.cursor/rules/dex-coding-skills-gate.mdc`.

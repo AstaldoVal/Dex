@@ -68,6 +68,10 @@ After core onboarding (Step 9), offer Phase 2 tour via `/getting-started` skill:
 
 The system automatically suggests `/getting-started` at next session if vault < 7 days old.
 
+### Coding discipline (Karpathy guidelines)
+
+New Cursor chats **inject full Karpathy + Superpowers guide text** via **`sessionStart`** — `.cursor/hooks/session-bootstrap-context.cjs` (`=== PRE-LOADED SKILLS ===`). Apply those guidelines when present. The **first reply** must still print the **Karpathy echo block** after Session bootstrap (every new chat, including `ping`); see `.cursor/rules/session-bootstrap-enforcer.mdc`. **`Read`** the skill file only when pre-load is missing. **Subagents / delegated runs** may not get the hook: use enforcer fallback (echo + Read) for that turn’s first code work if needed. Upstream mirror: `06-Resources/External/andrej-karpathy-skills/` ([forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills), MIT).
+
 ---
 
 ## User Profile
@@ -93,6 +97,10 @@ For detailed information, see:
 - **Update guide:** `06-Resources/Dex_System/Updating_Dex.md`
 - **Skills catalog:** `.claude/skills/README.md` or run `/dex-level-up`
 - **Writing (anti-AI style):** `.claude/reference/ai-writing-signs-banned.md` — banned patterns for all generated text (summaries, cover letters, posts, docs).
+- **Superpowers guide:** `.claude/reference/superpowers-guide.md`
+- **Superpowers playbook:** `.claude/reference/superpowers-operational-playbook.md`
+- **Superpowers smoke checklist:** `.claude/reference/superpowers-smoke-checklist.md`
+- **Karpathy coding guidelines (vendored upstream):** `.claude/skills/karpathy-guidelines/SKILL.md` — see also `06-Resources/External/andrej-karpathy-skills/`
 
 Read these files when users ask about system details, features, or setup.
 
@@ -104,6 +112,9 @@ Add any personal instructions between these markers. The `/dex-update` process p
 
 ## USER_EXTENSIONS_START
 <!-- Add your personal customizations here. -->
+
+### Результат: сначала что сделать, не «почему нельзя»
+Канонический источник: `.cursor/rules/action-first-outcomes.mdc`. Здесь сохраняем только напоминание: ответы вести от действий и автоматизации; если нужен только человек (OAuth, секрет), запрашивать одним коротким блоком. См. также `AGENTS.md`.
 
 ### Markdown: только списки, без таблиц
 В MD-файлах не использовать таблицы. Всегда оформлять данные нумерованными или маркированными списками.
@@ -152,10 +163,14 @@ All routine work must be automated. Do not suggest the user do repetitive or man
 
 **Run flows yourself; report only result.** Do not ask the user to run commands, scripts, or steps manually. Execute scripts and flows (e.g. catch-up, job-search, cron) yourself and report the outcome: success or a concrete error. The expected outcome is success; if it fails, fix and retry or report the blocking cause.
 
+### Apple Health export: правильный первый поиск
+Канонический источник: `.cursor/rules/apple-health-export-routing.mdc`. Здесь сохраняем только напоминание следовать именно этому порядку поиска.
+
 ### Exclude Russia-related services and recommendations
 Do not suggest, recommend, or prioritize any tools, services, companies, payment methods, marketplaces, or providers connected to Russia. Treat this as a hard exclusion in all domains (apps, finance, legal/docs, hiring, integrations, communications, and examples).
 
 ### Writing rules for all generated text (cover letters, summaries, application text)
+- **Centralized summary rules (single source of truth):** use `.claude/reference/summary-writing-checklist.md` for all summary/cover-letter/recruiter-intro writing and rewrites.
 - **Anti-AI-writing (mandatory):** For all generated text (articles, summaries, cover letters, posts, docs), follow **negative guidance** from `.claude/reference/ai-writing-signs-banned.md`. Do not use: AI-vocabulary clusters (pivotal, crucial, underscore, tapestry, delve, foster, showcase); puffery (testament, vital role, evolving landscape, commitment to, nestled, vibrant); weasel attributions (experts argue, several sources); formulaic structures (Despite X... faces challenges; Not only... but...; **the mirrored pair "The problem is not X. The problem is Y."** and close variants); promotional tone. Prefer simple "is/are/has" over "serves as/boasts/features/offers". No meta phrases (I hope this helps, let me know) in deliverables. See the reference file for the full list.
 - **No em dashes (—):** The character — (em dash, Unicode U+2014) is **forbidden** in cover letters, resume summaries (including Teal Professional Summary), and any generated application text. Use commas, periods, or separate sentences instead. **Before delivering** any summary or cover letter, scan the text for — and replace every occurrence with a comma or period; if you find any, fix and re-output.
 - **Normal capitalization:** Write like a normal person. Do not capitalize words mid-sentence for emphasis (e.g. "Revenue Growth", "Conversions", "Retention"). Only capitalize sentence start and proper nouns. Use lowercase for common terms: revenue growth, conversions, retention, LTV, ARPU, churn, product initiatives, forecasting.
@@ -164,12 +179,39 @@ Do not suggest, recommend, or prioritize any tools, services, companies, payment
 - **Banned phrase:** Do not use "I am drawn to". Use instead: "I am keen to", "I am interested in", or "I want to".
 - **Application text (why this role, motivation, vacancy feedback):** Do not paraphrase or repeat the job description. Write in the candidate's voice, grounded in their real background, so it reads as genuine motivation. Avoid sounding like "I tailored myself to the JD"; instead, state what they actually care about and how this role fits.
 - **Posts in English:** All LinkedIn posts and similar social/professional posts are written in English.
+- **Banned wording:** Do not use the word `контур` in user-facing Russian/Ukrainian text when plain language alternatives exist. Prefer specific wording such as `структура`, `схема`, `процесс`, `workflow`, `логика`, `система`, `pipeline`, or rewrite the sentence in natural language.
+- **Banned abbreviations:** Do not use opaque abbreviations in user-facing text (e.g., `NDP`, `компы`). Spell out what happened in plain language (e.g., `first working version`, `internal pilot`, `early beta`, `денежные компенсации`) instead of internal shorthand.
 
 ### Веб-ресёрч (факты из интернета)
 - **Порядок по умолчанию:** сначала **exa-mcp** (`web_search_exa`) для статей, авторов и семантики, с `category` при необходимости (`research paper`, `people`, `company`); при нехватке выдачи или нужде в новостях/другом срезе — **brave-search-mcp** и/или **tavily-mcp**; полный текст страницы, SPA или PDF — **browser MCP** по URL из выдачи. Без ключей платных API на старте допустим **open-websearch-mcp**. Не отвечать «с памяти», где нужны проверяемые факты из сети.
 - **Обогащение и сводка по уже собранным результатам** (ссылки, сниппеты из Exa/Brave/Tavily, выписки из браузера): по запросу пользователя или когда нужна связная многоабзацная сводка или доп. веб-проход **Claude Code** — инструмент **`claude_code`** сервера **claude-code-mcp** (см. `.claude/reference/research-search-mcp.md`). Не использовать как **первый** шаг обычного поиска (медленнее и дороже прямых поисковых MCP). В промпте для `claude_code` ограничивать задачу ресёрчем и обобщением, если пользователь явно не просит правки файлов/репозитория: у процесса действует **`--dangerously-skip-permissions`**.
 - Для спорных или критичных тем: как минимум два независимых источника или явно пометить, что опора на один источник.
 - Детали инструментов и синк: `.claude/reference/research-search-mcp.md`.
+
+### Cursor: лог чата в vault (не в истории Cursor)
+Канонический enforcement: `.cursor/rules/dex-chat-session-log.mdc`. Human-facing пояснения и ограничения: `System/Chat_logs/README.md`.
+
+### Session bootstrap в начале каждого нового чата (обязательно)
+Канонический контракт, recovery и proof: `.cursor/rules/session-bootstrap-enforcer.mdc`. Здесь сохраняем только напоминание: `sessionStart` подмешивает полный Superpowers + Karpathy, а первый ответ нового чата всё равно обязан следовать enforcer-контракту. Для консистентности можно использовать `.claude/skills/session-bootstrap-custom/SKILL.md` как компактный reminder layer.
+
+### Superpowers: использовать как основной инженерный гайд
+- В Cursor на **существенных** шагах с правками кода: follow `.cursor/rules/dex-coding-skills-gate.mdc` as the canonical paired re-anchor rule.
+- Для инженерных задач использовать `.claude/reference/superpowers-guide.md` как основной reference по выбору skills.
+- Для типовых сценариев использовать `.claude/reference/superpowers-operational-playbook.md` и его порядок шагов по умолчанию.
+- Если сценарий не покрыт playbook, начинать с `using-superpowers`, затем выбирать следующий skill по контексту.
+
+### Superpowers: правило добавления стандартных сценариев
+- Если Cursor/агент замечает повторяемый новый паттерн инженерной задачи (>=3 раза за 14 дней), этот сценарий нужно добавить в `.claude/reference/superpowers-operational-playbook.md`.
+- Для каждого нового сценария обязательно зафиксировать:
+ - название сценария;
+ - рекомендуемый порядок skills;
+ - критерий готовности.
+- После добавления сценария обновить при необходимости `.claude/reference/superpowers-guide.md` и отметить изменение в `System/Chat_logs/YYYY-MM-DD.md`.
+- Для проверки использовать `.claude/reference/superpowers-smoke-checklist.md`.
+- Для автоматического обнаружения паттернов использовать Cursor `sessionStart` hook + detector:
+ - `.scripts/superpowers_pattern_webhook.py`
+- hook запускает detector в начале каждого нового чата, без фонового polling
+ - candidate-файл: `System/superpowers-playbook-pending.md`
 
 ## USER_EXTENSIONS_END
 
@@ -330,7 +372,7 @@ When the user says they completed a task (any phrasing):
    - Person pages (Related Tasks sections)
    - Project/company pages
    - Adds completion timestamp (e.g., `✅ 2026-01-28 14:35`)
-5. **Linear sync (Dex → Linear):** If Linear MCP is available, call `get_task_linear_link(task_id)`. If `linked: true`, call `linear_set_issue_completed(linear_identifier)` (or `linear_id`) so the issue in Linear is set to Done.
+5. **Linear sync (Dex → Linear):** If Linear integration is available, call `get_task_linear_link(task_id)`. If `linked: true`, use Plugin Linear to set the issue to Done (e.g. `save_issue(id=<linear_identifier or linear_id>, state="completed")`).
 6. Confirm to user: "Done! Marked complete in [list locations] at [timestamp]"
 
 **Key points:**
@@ -345,8 +387,8 @@ When Linear MCP is enabled and `03-Tasks/linear_sync.json` exists (e.g. after ex
 **Создание задачи (сразу создавать тикет в Linear):**  
 После каждого вызова `create_task` без исключения создавать тикет в Linear и связь:
 
-1. Вызвать **Linear MCP:** `linear_create_my_issue(title=<заголовок из create_task>, description=<context задачи или пусто>)`.
-2. Из ответа взять `issue.identifier` и `issue.id`.
+1. Вызвать **Plugin Linear**: `list_teams` (взять первую команду или подходящую по имени), затем `save_issue(title=<заголовок из create_task>, description=<context задачи или пусто>, team=<team>)`.
+2. Из ответа взять `identifier` и `id`.
 3. Вызвать **Work MCP:** `add_linear_sync_link(task_id=<id из create_task>, linear_identifier=..., linear_id=...)`.
 
 Если Linear MCP недоступен или вернул ошибку — выполнить скрипт:  
@@ -355,15 +397,15 @@ When Linear MCP is enabled and `03-Tasks/linear_sync.json` exists (e.g. after ex
 Итог: каждая новая задача в Dex сразу получает тикет в Linear. Вопросов не задавать — делать по умолчанию.
 
 **Завершение задачи:**  
-When marking a task done (Task Completion above), after `update_task_status` call `get_task_linear_link(task_id)`; if linked, call `linear_set_issue_completed(linear_identifier)` so the Linear issue moves to Done.
+When marking a task done (Task Completion above), after `update_task_status` call `get_task_linear_link(task_id)`; if linked, move the issue to Done via Plugin Linear (`save_issue(id=<linear_identifier or linear_id>, state="completed")`).
 
 **Linear → Dex (тикеты из Linear попадают в Dex):**
 
 1. **Автоматически, без вебхука (рекомендуется):** Раз в 10 минут скрипт опрашивает Linear API и создаёт в Dex задачи по тикетам, которых ещё нет в `linear_sync.json`. Никакого публичного URL и туннеля. Один раз: `LINEAR_API_KEY` в `.env`, затем из корня репо запустить `./.scripts/install-linear-sync-launchd.sh` — после этого новые тикеты в Linear будут подтягиваться в Cursor сами. Лог: `.scripts/logs/linear-sync.log`.
 
-2. **По запросу через MCP:** Linear MCP `linear_my_issues` → Work MCP `sync_linear_issues_to_dex(issues=[...])` — подтянуть задачи из Linear вручную.
+2. **По запросу через MCP:** Plugin Linear `list_issues(assignee="me")` → Work MCP `sync_linear_issues_to_dex(issues=[...])` — подтянуть задачи из Linear вручную.
 
-3. **Через вебхук (мгновенно, но нужен туннель):** Запуск `linear_webhook_server.py` + проброс URL (ngrok), URL добавить в Linear → Webhooks. Тогда при создании/обновлении issue в Linear вебхук сразу создаёт или обновляет задачу в Dex. См. `.claude/reference/mcp-servers.md` → Linear MCP.
+3. **Через вебхук (мгновенно, но нужен туннель):** Запуск `linear_webhook_listener.py` + проброс URL (ngrok), URL добавить в Linear → Webhooks. Тогда при создании/обновлении issue в Linear вебхук сразу создаёт или обновляет задачу в Dex. См. `.claude/reference/mcp-servers.md` → Linear.
 
 ### Career Evidence Capture
 If `05-Areas/Career/` folder exists, the system automatically captures career development evidence:

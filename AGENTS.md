@@ -1,8 +1,13 @@
 ## Learned User Preferences
 
-- **Cursor chat log in Dex:** After each completed assistant reply, append a turn block to `System/Chat_logs/YYYY-MM-DD.md` per `.cursor/rules/dex-chat-session-log.mdc`. See `System/Chat_logs/README.md`. Do not skip this because the reply was “short” or “meta” (rule updates, proof, bootstrap fixes).
-- **First reply bootstrap (hard requirement):** In every new chat, the first assistant message must start with `Session bootstrap:` and include exactly three lines: `using-superpowers`, `mcp-health-check-custom`, `readiness` (in that order). Enforced by `.cursor/rules/session-bootstrap-enforcer.mdc` and `.claude/skills/session-bootstrap-custom/SKILL.md`. If the first reply missed the block, the **next** reply must lead with the correct four-line block, then continue. When the user asks to change rules or wants **proof** of edits: list changed paths and show `git diff` (or equivalent) in the same reply.
-- **Execute, don’t delegate shell work:** Real environment — run commands yourself when safe; see `.cursor/rules/action-first-outcomes.mdc` and the user rule «You MUST run commands… MUST NOT simply tell the user what to run».
+- **Repository root:** Do not add loose files or secrets at the Dex repo root; use `Credentials/`, PARA folders, `.scripts/`, etc. See `.cursor/rules/dex-root-hygiene.mdc` and `Credentials/README.md`.
+- **No opaque abbreviations in artifacts:** Do not use shorthand like `компы` in user-facing documents. Use explicit wording such as `денежные компенсации`.
+- **Apple Health export lookup:** Follow `.cursor/rules/apple-health-export-routing.mdc` as the canonical routing rule.
+- **Cursor chat log in Dex:** Follow `.cursor/rules/dex-chat-session-log.mdc` for enforcement and `System/Chat_logs/README.md` for human-facing behavior notes.
+- **First reply bootstrap (hard requirement):** Full canonical contract, recovery, and proof requirements live in `.cursor/rules/session-bootstrap-enforcer.mdc`. Keep `.cursorrules` only as the minimal fallback reminder.
+- **Superpowers + Karpathy after turn one:** Follow `.cursor/rules/dex-coding-skills-gate.mdc` as the canonical paired re-anchor rule for substantive coding turns.
+- **Cursor Plan mode:** The repo cannot force the IDE into Plan mode (no hook API). Use **Shift+Tab** in the chat input or the mode picker; Cursor may **suggest** Plan for complex tasks ([docs](https://cursor.com/docs/agent/plan-mode)). Habit for big features: Plan first → review → Build.
+- **Execute, don’t delegate shell work:** Follow `.cursor/rules/action-first-outcomes.mdc` as the canonical rule; keep the behavior unchanged.
 - **Parimatch Test Assignment (`04-Projects/Parimatch_Test_Assignment/final/`):** After any edit to submission/scope/strategy/analysis markdown that feeds Google Docs, **always** run `python3 04-Projects/Parimatch_Test_Assignment/gdrive_upload.py` from the Dex repo root (no “if you want” prompt), then update the `for doc_id in [...]` list in `gdrive_upload.py` with the new document IDs from the script output.
 - Explanations of system behavior (routing, flags, bots): coherent paragraphs in the user’s language, not a fragment dump; see `CLAUDE.md` USER_EXTENSIONS «Формат ответов в чате» points 7–8.
 - When describing instructions for Cursor or Claude Code, use a structured format (numbered list or bullets), not a long paragraph.
