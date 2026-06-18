@@ -1,0 +1,44 @@
+---
+description: Applicator (04-Projects/Applicator) — git, коммиты и качество при правках из корня Dex
+globs:
+  - 04-Projects/Applicator/**
+alwaysApply: false
+---
+
+# Applicator: разработка из Dex vault
+
+Применять при **любой** правке под `04-Projects/Applicator/` (код, зависимости, правила, доки), когда чат открыт от **корня Dex**, а не от папки Applicator.
+
+**Канон внутри репозитория Applicator:** `04-Projects/Applicator/.cursorrules`, `04-Projects/Applicator/.cursor/rules/development-rules/RULE.md`, `04-Projects/Applicator/.cursor/rules/development-rules/COMMIT_REMINDER.md`, `04-Projects/Applicator/instructions/DEVELOPMENT_RULES.md`.
+
+## Отдельный git-репозиторий
+
+- Applicator — **свой** git (remote `applicator`), не корневой коммит Dex.
+- Все `git add` / `git commit` для кода Applicator выполнять с **`working_directory`** = `04-Projects/Applicator` (или абсолютный путь к этой папке).
+- **Не** коммитить изменения Applicator только в Dex: в Dex фиксируются только правила vault, job-search, ссылки — не дублируется весь код Applicator, если он не submodule.
+
+## Автокоммиты (приоритет для Applicator)
+
+Правило Dex «коммит только по явной просьбе» **не** отменяет политику Applicator для путей `04-Projects/Applicator/**`.
+
+После **каждого логически завершённого** изменения в Applicator:
+
+1. Проверить линтер для затронутых файлов (`read_lints`), исправить ошибки.
+2. **`git add`** только релевантные файлы.
+3. **`git commit`** с понятным сообщением (conventional commits: `feat:` / `fix:` / `chore:` / `refactor:` / `test:` / `docs:`).
+4. **Не накапливать** правки «на потом» и **не** просить Roman выполнить git вручную.
+
+**Push:** только если Roman явно просит push (как в Applicator `.cursorrules`).
+
+**Исключения:** Roman явно пишет «не коммить» или просит один коммит на несколько шагов.
+
+## Локальный dev
+
+- Запуск: `npm run dev:no-ngrok` из `04-Projects/Applicator` (веб :3000, API :8000).
+- API venv: Python **3.12** через `uv` в `apps/api/venv` (не полагаться на системный 3.14 для PyMuPDF).
+
+## Согласованность
+
+- `.cursor/rules/applicator-resume-section-feedback.mdc` — full-flow-v2 step 9–10.
+- `.cursor/rules/dex-flow-v2-applicator-report.mdc` — отчёт Roman после apply.
+- `action-first-outcomes.mdc` — git-команды выполняет агент сам.
