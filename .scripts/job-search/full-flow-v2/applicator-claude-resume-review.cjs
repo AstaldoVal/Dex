@@ -11,14 +11,17 @@ const { spawnSync } = require('child_process');
 const { REPO_ROOT } = require('./paths.cjs');
 const { COWORK_CLI_TIMEOUT_MS } = require('../job-search-timeouts.cjs');
 const { normalizeSectionReviews } = require('./applicator-resume-section-reviews.cjs');
+const { extractJsonFromClaudeOutput } = require('./applicator-claude-json.cjs');
 const {
   buildClaudeArgs,
   buildSharedOptimizationContext,
   resolveMonolithicModel,
   getTokenBudget,
   truncateToTokenBudget,
-  estimateTokens
+  estimateTokens,
+  usageToCogsUsd
 } = require('./applicator-cost-routing.cjs');
+const { resolveLlmProvider, runAnthropicApiForJson } = require('./applicator-anthropic-llm.cjs');
 
 const PROMPT_PATH = path.join(REPO_ROOT, '.claude/reference/applicator-resume-review-prompt.md');
 const CONTRACT_PATH = path.join(REPO_ROOT, '.claude/reference/applicator-resume-section-feedback-contract.md');
@@ -27,14 +30,6 @@ function readStdinJson() {
   const raw = fs.readFileSync(0, 'utf8');
   if (!raw.trim()) throw new Error('applicator-claude-resume-review: empty stdin');
   return JSON.parse(raw);
-}
-
-function extractJsonFromClaudeOutput(text) {
-  const fence = text.match(/```json\s*([\s\S]*?)```/i);
-  if (fence) return fence[1].trim();
-  const trimmed = (text || '').trim();
-  if (trimmed.startsWith('{')) return trimmed;
-  throw new Error('applicator-claude-resume-review: no JSON in claude output');
 }
 
 function mergeFeedback(baseline, tailored) {
@@ -98,37 +93,91 @@ function buildInstruction(payload) {
   );
 }
 
+function runClaudeForJson({ label, instruction, model, maxBuffer = 24 * 1024 * 1024, sharedContext = '' }) {
+  if (resolveLlmProvider() === 'api') {
+    return runAnthropicApiForJson({ label, instruction, model, sharedContext });
+  }
+  const args = buildClaudeArgs(instruction, model);
+  const opts = {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+    timeout: COWORK_CLI_TIMEOUT_MS,
+    maxBuffer
+  };
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const r = spawnSync('claude', args, opts);
+    if (r.status !== 0) {
+      const err = (r.stderr || r.stdout || 'claude failed').slice(0, 800);
+      if (attempt === 2) {
+        console.error(`${label}: claude exit ${r.status}: ${err}`);
+        process.exit(1);
+      }
+      console.error(`${label}: claude exit ${r.status}, retrying…`);
+      continue;
+    }
+    try {
+      const stdout = r.stdout || '';
+      return {
+        parsed: JSON.parse(extractJsonFromClaudeOutput(stdout)),
+        stdout,
+        instruction,
+        _cost: {
+          call_id: label,
+          model,
+          input_tokens: estimateTokens(instruction),
+          output_tokens: estimateTokens(stdout)
+        }
+      };
+    } catch (e) {
+      if (attempt === 2) {
+        console.error(`${label}: parse error:`, e.message);
+        process.exit(1);
+      }
+      console.error(`${label}: parse error (${e.message}), retrying…`);
+    }
+  }
+}
+
 function main() {
   const payload = readStdinJson();
   const instruction = buildInstruction(payload);
   const model = resolveMonolithicModel();
-  console.error(`applicator-claude-resume-review: claude --model ${model} round ${payload.round || 1}…`);
-  const r = spawnSync('claude', buildClaudeArgs(instruction, model), {
-    cwd: REPO_ROOT,
-    encoding: 'utf8',
-    timeout: COWORK_CLI_TIMEOUT_MS,
-    maxBuffer: 24 * 1024 * 1024
-  });
-  if (r.status !== 0) {
-    const err = (r.stderr || r.stdout || 'claude failed').slice(0, 800);
-    console.error(`applicator-claude-resume-review: claude exit ${r.status}: ${err}`);
-    process.exit(1);
-  }
-  let tailored;
-  try {
-    tailored = JSON.parse(extractJsonFromClaudeOutput(r.stdout || ''));
-  } catch (e) {
-    console.error('applicator-claude-resume-review: parse error:', e.message);
-    process.exit(1);
-  }
-  const merged = mergeFeedback(payload.currentFeedback, tailored);
-  merged._cost = {
-    call_id: 'monolithic-review',
+  const sharedContext =
+    payload.shared_context ||
+    buildSharedOptimizationContext(payload.jdText, payload.resumeMarkdown);
+  console.error(
+    `applicator-claude-resume-review: ${resolveLlmProvider()} ${model} round ${payload.round || 1}…`
+  );
+  const run = runClaudeForJson({
+    label: 'applicator-claude-resume-review',
+    instruction,
     model,
-    input_tokens: estimateTokens(instruction),
-    output_tokens: estimateTokens(r.stdout || '')
+    sharedContext
+  });
+  const finish = (result) => {
+    const { parsed: tailored, stdout, instruction: instr, _cost } = result;
+    const merged = mergeFeedback(payload.currentFeedback, tailored);
+    merged._cost =
+      _cost ||
+      {
+        call_id: 'monolithic-review',
+        model,
+        input_tokens: estimateTokens(instr),
+        output_tokens: estimateTokens(stdout)
+      };
+    if (merged._cost && !merged._cost.optimization_cogs_usd) {
+      merged._cost.optimization_cogs_usd = usageToCogsUsd(merged._cost);
+    }
+    process.stdout.write(JSON.stringify(merged));
   };
-  process.stdout.write(JSON.stringify(merged));
+  if (run && typeof run.then === 'function') {
+    run.then(finish).catch((err) => {
+      console.error(err && err.stack ? err.stack : String(err));
+      process.exit(1);
+    });
+    return;
+  }
+  finish(run);
 }
 
 if (require.main === module) {
@@ -140,4 +189,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { mergeFeedback, buildInstruction, extractJsonFromClaudeOutput };
+module.exports = { mergeFeedback, buildInstruction, runClaudeForJson };

@@ -33,10 +33,10 @@ const HARD_MAX_ROUNDS_CAP = Math.max(
   Number(process.env.APPLICATOR_REVIEW_MAX_ROUNDS_CAP || 2)
 );
 
-/** USD per 1M tokens (input / output) — Claude Sonnet 4 / Haiku 3.5 list prices, approximate. */
+/** USD per 1M tokens (input / output / cache_read) — Haiku 4.5 + Sonnet 4.6 list prices (2026-06). */
 const MODEL_USD_PER_M = {
-  haiku: { input: 0.8, output: 4.0 },
-  sonnet: { input: 3.0, output: 15.0 }
+  haiku: { input: 1.0, output: 5.0, cache_read: 0.1, cache_write: 1.25 },
+  sonnet: { input: 3.0, output: 15.0, cache_read: 0.3, cache_write: 3.75 }
 };
 
 const SECTION_TOKEN_BUDGETS = {
@@ -159,6 +159,26 @@ function assignModelsToTasks(tasks) {
   }));
 }
 
+function usageToCogsUsd(call) {
+  if (!call || typeof call !== 'object') return 0;
+  const model = (call.model || 'haiku').toLowerCase();
+  const rates = MODEL_USD_PER_M[model] || MODEL_USD_PER_M.haiku;
+  const input = Number(call.input_tokens) || 0;
+  const output = Number(call.output_tokens) || 0;
+  const cacheRead = Number(call.cache_read_input_tokens) || 0;
+  const cacheWrite = Number(call.cache_creation_input_tokens) || 0;
+  const billableInput = Math.max(0, input - cacheRead - cacheWrite);
+  let total = (billableInput / 1_000_000) * rates.input;
+  total += (output / 1_000_000) * rates.output;
+  if (cacheRead > 0) {
+    total += (cacheRead / 1_000_000) * (rates.cache_read || rates.input * 0.1);
+  }
+  if (cacheWrite > 0) {
+    total += (cacheWrite / 1_000_000) * (rates.cache_write || rates.input * 1.25);
+  }
+  return Math.round(total * 10_000) / 10_000;
+}
+
 function createTelemetryCollector() {
   const calls = [];
   return {
@@ -170,19 +190,21 @@ function createTelemetryCollector() {
         call.input_tokens != null ? Number(call.input_tokens) : estimateTokens(call.input_text);
       const outputTokens =
         call.output_tokens != null ? Number(call.output_tokens) : estimateTokens(call.output_text);
-      calls.push({
+      const entry = {
         call_id: call.call_id || 'unknown',
         model,
         input_tokens: inputTokens,
-        output_tokens: outputTokens
-      });
+        output_tokens: outputTokens,
+        cache_creation_input_tokens: Number(call.cache_creation_input_tokens) || 0,
+        cache_read_input_tokens: Number(call.cache_read_input_tokens) || 0
+      };
+      entry.cogs_usd = usageToCogsUsd(entry);
+      calls.push(entry);
     },
     optimizationCogsUsd() {
       let total = 0;
       for (const c of calls) {
-        const rates = MODEL_USD_PER_M[c.model] || MODEL_USD_PER_M.haiku;
-        total += (c.input_tokens / 1_000_000) * rates.input;
-        total += (c.output_tokens / 1_000_000) * rates.output;
+        total += c.cogs_usd != null ? c.cogs_usd : usageToCogsUsd(c);
       }
       return Math.round(total * 10_000) / 10_000;
     },
@@ -225,5 +247,6 @@ module.exports = {
   assignModelsToTasks,
   createTelemetryCollector,
   buildClaudeArgs,
-  estimateTokens
+  estimateTokens,
+  usageToCogsUsd
 };

@@ -25,6 +25,17 @@ LinkedIn data (`data/`, `digests/`) общие с v1. Менять селект�
 
 Env: `APPLICATOR_REVIEW_MODE=parallel` (default) | `monolithic`; `APPLICATOR_PARALLEL_CONCURRENCY=8`.
 
+### LLM provider (HIR-156)
+
+| Env | Default | Meaning |
+|-----|---------|---------|
+| `APPLICATOR_LLM_PROVIDER` | `cli` | `cli` = local `claude -p`; `api` = Applicator `apps/api` Anthropic proxy |
+| `APPLICATOR_API_URL` | `http://localhost:8000` | API base (staging: Cloud Run URL) |
+| `ANTHROPIC_API_KEY` | — | Required in `apps/api/.env` for API path |
+| `APPLICATOR_INTERNAL_API_KEY` | — | Optional gate for `/api/v1/optimization/*` |
+
+Module: `applicator-anthropic-llm.cjs` · API routes: `apps/api/app/routers/optimization.py`
+
 ### Cost routing (Genufit v1 / HIR-80)
 
 | Lever | Env / default |

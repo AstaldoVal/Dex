@@ -15,8 +15,11 @@ const {
   resolveOrchestratorModel,
   getTokenBudget,
   truncateToTokenBudget,
-  estimateTokens
+  estimateTokens,
+  usageToCogsUsd
 } = require('./applicator-cost-routing.cjs');
+const { resolveLlmProvider, runAnthropicApiForJson } = require('./applicator-anthropic-llm.cjs');
+const { extractJsonFromClaudeOutput } = require('./applicator-claude-json.cjs');
 
 const ORCHESTRATOR_TIMEOUT_MS = Math.min(
   Number(process.env.APPLICATOR_ORCHESTRATOR_TIMEOUT_MS || 180_000),
@@ -30,11 +33,7 @@ function readStdinJson() {
 }
 
 function extractJsonFromText(text) {
-  const fence = String(text || '').match(/```json\s*([\s\S]*?)```/i);
-  if (fence) return fence[1].trim();
-  const trimmed = String(text || '').trim();
-  if (trimmed.startsWith('{')) return trimmed;
-  throw new Error('no JSON in orchestrator output');
+  return extractJsonFromClaudeOutput(text);
 }
 
 function fallbackBrief(payload) {
@@ -79,9 +78,56 @@ function main() {
     return;
   }
 
-  console.error('applicator-claude-orchestrator-brief: claude -p…');
   const model = resolveOrchestratorModel();
   const instruction = buildInstruction(payload);
+  const sharedContext = buildSharedOptimizationContext(payload.jdText, payload.resumeMarkdown);
+  const provider = resolveLlmProvider();
+  console.error(`applicator-claude-orchestrator-brief: ${provider} ${model}…`);
+
+  const writeParsed = (parsed, stdout, costExtra = {}) => {
+    if (!parsed.orchestrator_brief) {
+      parsed.orchestrator_brief = fallbackBrief(payload).orchestrator_brief;
+    }
+    parsed._cost = {
+      call_id: costExtra.call_id || 'orchestrator-brief',
+      model: costExtra.model || model,
+      input_tokens: costExtra.input_tokens ?? estimateTokens(instruction),
+      output_tokens: costExtra.output_tokens ?? estimateTokens(stdout || ''),
+      cache_creation_input_tokens: costExtra.cache_creation_input_tokens || 0,
+      cache_read_input_tokens: costExtra.cache_read_input_tokens || 0
+    };
+    parsed._cost.optimization_cogs_usd = usageToCogsUsd(parsed._cost);
+    process.stdout.write(JSON.stringify(parsed));
+  };
+
+  const onApi = async () => {
+    try {
+      const result = await runAnthropicApiForJson({
+        label: 'orchestrator-brief',
+        instruction,
+        model,
+        sharedContext,
+        maxOutputTokens: 1200
+      });
+      writeParsed(result.parsed, result.stdout, result._cost || {});
+    } catch (e) {
+      console.error('orchestrator brief API failed; using fallback:', e.message);
+      const fb = fallbackBrief(payload);
+      fb._cost = {
+        call_id: 'orchestrator-brief-api-fallback',
+        model,
+        input_tokens: estimateTokens(instruction),
+        output_tokens: 0
+      };
+      process.stdout.write(JSON.stringify(fb));
+    }
+  };
+
+  if (provider === 'api') {
+    onApi();
+    return;
+  }
+
   const r = spawnSync('claude', buildClaudeArgs(instruction, model), {
     cwd: REPO_ROOT,
     encoding: 'utf8',
@@ -101,15 +147,8 @@ function main() {
     return;
   }
   try {
-    const parsed = JSON.parse(extractJsonFromText(r.stdout || ''));
-    if (!parsed.orchestrator_brief) parsed.orchestrator_brief = fallbackBrief(payload).orchestrator_brief;
-    parsed._cost = {
-      call_id: 'orchestrator-brief',
-      model,
-      input_tokens: estimateTokens(instruction),
-      output_tokens: estimateTokens(r.stdout || '')
-    };
-    process.stdout.write(JSON.stringify(parsed));
+    const parsed = JSON.parse(extractJsonFromClaudeOutput(r.stdout || ''));
+    writeParsed(parsed, r.stdout || '');
   } catch (e) {
     console.error('orchestrator parse error; using fallback:', e.message);
     const fb = fallbackBrief(payload);

@@ -7,15 +7,14 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
 const { REPO_ROOT } = require('./paths.cjs');
-const { COWORK_CLI_TIMEOUT_MS } = require('../job-search-timeouts.cjs');
-const { extractJsonFromClaudeOutput } = require('./applicator-claude-resume-review.cjs');
+const { runClaudeForJson } = require('./applicator-claude-resume-review.cjs');
+const { resolveLlmProvider } = require('./applicator-anthropic-llm.cjs');
 const {
-  buildClaudeArgs,
   getTokenBudget,
   truncateToTokenBudget,
-  estimateTokens
+  estimateTokens,
+  usageToCogsUsd
 } = require('./applicator-cost-routing.cjs');
 
 const PROMPT_PATH = path.join(REPO_ROOT, '.claude/reference/applicator-section-subagent-prompt.md');
@@ -120,39 +119,50 @@ function readStdinJson() {
   return JSON.parse(raw);
 }
 
+function finishSubagent(payload, result) {
+  const { parsed, stdout, instruction: instr, _cost } = result;
+  if (!parsed.task_id && payload.task_id) parsed.task_id = payload.task_id;
+  parsed._cost =
+    _cost ||
+    {
+      call_id: payload.task_id || payload.section_id || 'subagent',
+      model: payload.model || 'haiku',
+      input_tokens: estimateTokens(instr),
+      output_tokens: estimateTokens(stdout)
+    };
+  if (!parsed._cost.optimization_cogs_usd) {
+    parsed._cost.optimization_cogs_usd = usageToCogsUsd(parsed._cost);
+  }
+  process.stdout.write(JSON.stringify(parsed));
+}
+
 function main() {
   const payload = readStdinJson();
   const instruction = buildInstruction(payload);
   const model = payload.model || 'haiku';
   const label = payload.task_id || payload.section_id || 'subagent';
-  console.error(`applicator-claude-section-subagent: ${label} — claude --model ${model}…`);
+  const sharedContext = payload.shared_context || '';
+  console.error(
+    `applicator-claude-section-subagent: ${label} — ${resolveLlmProvider()} ${model}…`
+  );
 
-  const r = spawnSync('claude', buildClaudeArgs(instruction, model), {
-    cwd: REPO_ROOT,
-    encoding: 'utf8',
-    timeout: COWORK_CLI_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
-  });
-  if (r.status !== 0) {
-    const err = (r.stderr || r.stdout || 'claude failed').slice(0, 800);
-    console.error(`applicator-claude-section-subagent: exit ${r.status}: ${err}`);
-    process.exit(1);
-  }
-  let parsed;
-  try {
-    parsed = JSON.parse(extractJsonFromClaudeOutput(r.stdout || ''));
-  } catch (e) {
-    console.error('applicator-claude-section-subagent: parse error:', e.message);
-    process.exit(1);
-  }
-  if (!parsed.task_id && payload.task_id) parsed.task_id = payload.task_id;
-  parsed._cost = {
-    call_id: payload.task_id || label,
+  const run = runClaudeForJson({
+    label: `applicator-claude-section-subagent: ${label}`,
+    instruction,
     model,
-    input_tokens: estimateTokens(instruction),
-    output_tokens: estimateTokens(r.stdout || '')
-  };
-  process.stdout.write(JSON.stringify(parsed));
+    maxBuffer: 16 * 1024 * 1024,
+    sharedContext
+  });
+  if (run && typeof run.then === 'function') {
+    run
+      .then((result) => finishSubagent(payload, result))
+      .catch((err) => {
+        console.error(err && err.stack ? err.stack : String(err));
+        process.exit(1);
+      });
+    return;
+  }
+  finishSubagent(payload, run);
 }
 
 if (require.main === module) {
