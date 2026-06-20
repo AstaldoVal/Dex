@@ -23,6 +23,15 @@ function getApiBaseUrl() {
   return (process.env.APPLICATOR_API_URL || DEFAULT_API_BASE).replace(/\/+$/, '');
 }
 
+function resolveModelStack() {
+  return (process.env.APPLICATOR_MODEL_STACK || 'openai_5_nano_5').trim();
+}
+
+function resolveTelemetryProvider() {
+  const stack = resolveModelStack();
+  return stack.startsWith('openai_') ? 'openai' : 'anthropic';
+}
+
 function buildCostFromUsage({ callId, model, usage }) {
   const u = usage || {};
   return {
@@ -85,6 +94,7 @@ async function runAnthropicApiForJson({
   const payload = {
     instruction,
     model: tier === 'sonnet' || tier === 'opus' ? 'sonnet' : 'haiku',
+    model_stack: resolveModelStack(),
     shared_context: sharedContext || undefined,
     use_prompt_cache: sharedContext ? true : false,
     max_output_tokens: maxOutputTokens,
@@ -131,7 +141,7 @@ async function recordOptimizationTelemetry({
   jobId,
   optimizationCogsUsd,
   calls,
-  provider = 'anthropic'
+  provider = resolveTelemetryProvider()
 }) {
   const url = `${getApiBaseUrl()}/api/v1/optimization/telemetry`;
   const headers = { 'Content-Type': 'application/json' };
@@ -159,6 +169,8 @@ async function recordOptimizationTelemetry({
 
 module.exports = {
   resolveLlmProvider,
+  resolveModelStack,
+  resolveTelemetryProvider,
   getApiBaseUrl,
   runAnthropicApiForJson,
   runAnthropicApiForJsonSync,
