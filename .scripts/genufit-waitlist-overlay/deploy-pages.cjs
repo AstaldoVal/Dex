@@ -85,6 +85,11 @@ try {
     }
     fs.copyFileSync(src, path.join(unsubscribeDest, name));
   }
+  const redirectsSrc = path.join(root, '.scripts/genufit-email-overlay/sites/_redirects');
+  if (fs.existsSync(redirectsSrc)) {
+    fs.copyFileSync(redirectsSrc, path.join(workDir, '_redirects'));
+    console.log('→ _redirects copied for /unsubscribe/ on custom domain');
+  }
   console.log('→ unsubscribe page copied to /unsubscribe/');
 
   console.log('→ wrangler pages deploy', projectName, '(account', process.env.CLOUDFLARE_ACCOUNT_ID + ')');

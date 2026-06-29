@@ -9,10 +9,14 @@
   function resolveApiBase() {
     var configured = readMeta('unsubscribe-api-base');
     if (configured) return configured.replace(/\/$/, '');
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    var host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
       return 'http://localhost:8000';
     }
-    if (window.location.hostname.indexOf('staging.') === 0) {
+    if (host.indexOf('staging.') === 0 || host.endsWith('.pages.dev')) {
+      return 'https://applicator-api-staging-881835053636.us-central1.run.app';
+    }
+    if (host === 'genufit.app' || host === 'www.genufit.app') {
       return 'https://staging.genufit.app';
     }
     return 'https://genufit.app';

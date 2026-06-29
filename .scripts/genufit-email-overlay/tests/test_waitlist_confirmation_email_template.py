@@ -104,9 +104,40 @@ def test_get_unsubscribe_redirects_to_page() -> None:
     app = FastAPI()
     app.include_router(router, prefix="/api/v1/waitlist")
     client = TestClient(app)
-    response = client.get("/api/v1/waitlist/unsubscribe/", follow_redirects=False)
+    for path in (
+        "/api/v1/waitlist/unsubscribe/",
+        "/api/v1/waitlist/unsubscribe",
+        "/api/v1/waitlist/unsubscribe?token=legacy-token-from-old-email",
+    ):
+        response = client.get(path, follow_redirects=False)
+        assert response.status_code == 302, path
+        assert response.headers["location"] == UNSUBSCRIBE_PAGE_URL
+
+
+def test_get_with_token_never_returns_plain_text_body() -> None:
+    from fastapi.testclient import TestClient
+    from fastapi import FastAPI
+
+    from genufit_waitlist_unsubscribe import router
+
+    app = FastAPI()
+    app.include_router(router, prefix="/api/v1/waitlist")
+    client = TestClient(app)
+    response = client.get(
+        "/api/v1/waitlist/unsubscribe?token=abcdefgh12345678",
+        follow_redirects=False,
+    )
     assert response.status_code == 302
-    assert response.headers["location"] == UNSUBSCRIBE_PAGE_URL
+    assert "unsubscribed" not in (response.text or "").lower()
+
+
+def test_build_unsubscribe_link_is_page_not_api() -> None:
+    from genufit_waitlist_unsubscribe import build_unsubscribe_link_for_email
+
+    link = build_unsubscribe_link_for_email()
+    assert link == UNSUBSCRIBE_PAGE_URL
+    assert "run.app" not in link
+    assert "token=" not in link
 
 
 def test_post_unsubscribe_requires_configured_store() -> None:
