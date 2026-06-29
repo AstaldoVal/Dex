@@ -4,6 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '../..');
 
@@ -32,4 +33,42 @@ function loadCloudflareEnv() {
   parseEnvFile(path.join(root, 'Credentials/applicator-staging/cloudflare-genufit.env'));
 }
 
-module.exports = { loadCloudflareEnv };
+/** Set CLOUDFLARE_ACCOUNT_ID from API when token is present but account id is not. */
+function ensureCloudflareAccountId() {
+  if (process.env.CLOUDFLARE_ACCOUNT_ID) return process.env.CLOUDFLARE_ACCOUNT_ID;
+  if (!process.env.CLOUDFLARE_API_TOKEN) return null;
+
+  let raw;
+  try {
+    raw = execSync(
+      'curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/accounts',
+      { encoding: 'utf8', env: process.env }
+    );
+  } catch (err) {
+    console.error('Could not list Cloudflare accounts. Set CLOUDFLARE_ACCOUNT_ID in GitHub Secrets.');
+    throw err;
+  }
+
+  const payload = JSON.parse(raw);
+  if (!payload.success || !Array.isArray(payload.result) || payload.result.length === 0) {
+    throw new Error('Cloudflare accounts API returned no accounts for this token.');
+  }
+
+  const accounts = payload.result;
+  const preferred =
+    accounts.find((a) => /genufit/i.test(a.name || '')) ||
+    (accounts.length === 1 ? accounts[0] : null);
+
+  if (!preferred) {
+    const names = accounts.map((a) => `${a.name} (${a.id})`).join(', ');
+    throw new Error(
+      `Multiple Cloudflare accounts; set CLOUDFLARE_ACCOUNT_ID in secrets. Available: ${names}`
+    );
+  }
+
+  process.env.CLOUDFLARE_ACCOUNT_ID = preferred.id;
+  console.log('→ Cloudflare account:', preferred.name, preferred.id);
+  return preferred.id;
+}
+
+module.exports = { loadCloudflareEnv, ensureCloudflareAccountId };

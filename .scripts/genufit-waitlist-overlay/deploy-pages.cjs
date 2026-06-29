@@ -8,7 +8,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { loadCloudflareEnv } = require('./load-cloudflare-env.cjs');
+const { loadCloudflareEnv, ensureCloudflareAccountId } = require('./load-cloudflare-env.cjs');
 
 const root = path.resolve(__dirname, '../..');
 loadCloudflareEnv();
@@ -43,6 +43,8 @@ if (!process.env.CLOUDFLARE_API_TOKEN) {
   process.exit(1);
 }
 
+ensureCloudflareAccountId();
+
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-landing-deploy-'));
 
 function run(cmd, opts = {}) {
@@ -72,9 +74,7 @@ try {
     process.exit(1);
   }
 
-  const accountFlag = process.env.CLOUDFLARE_ACCOUNT_ID
-    ? ` --account-id=${process.env.CLOUDFLARE_ACCOUNT_ID}`
-    : '';
+  const accountFlag = ` --account-id=${process.env.CLOUDFLARE_ACCOUNT_ID}`;
   console.log('→ wrangler pages deploy', projectName);
   run(
     `npx --yes wrangler@4 pages deploy "${workDir}" --project-name=${projectName} --branch=main --commit-dirty=true${accountFlag}`,
