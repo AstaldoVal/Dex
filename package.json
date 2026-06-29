@@ -52,6 +52,7 @@
     "paperclip:routine-reliability": "node .scripts/paperclip/ensure-paperclip-routine-reliability.cjs",
     "paperclip:routine-reliability:all-scheduled": "PAPERCLIP_ROUTINE_FIX_ALL_SCHEDULED=1 node .scripts/paperclip/ensure-paperclip-routine-reliability.cjs",
     "paperclip:sync-ui": "node .scripts/paperclip/sync-paperclip-ui-to-runtime.cjs",
+    "paperclip:create-roman-credential-rotation-issue": "node .scripts/paperclip/create-roman-credential-rotation-issue.mjs",
     "cursor:sync-slash": "node .scripts/cursor/sync-slash-autosuggest.cjs",
     "cursor:sync-slash:check": "node .scripts/cursor/sync-slash-autosuggest.cjs --check",
     "cursor:sync-cursor-team-kit-stubs": "node .scripts/cursor/sync-slash-autosuggest.cjs --cursor-team-kit-only",
