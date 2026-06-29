@@ -15,6 +15,7 @@ loadCloudflareEnv();
 
 const applicatorWaitlistDir = path.join(root, '04-Projects/Applicator/sites/waitlist');
 const overlayDir = path.join(__dirname, 'sites/waitlist');
+const emailOverlayDir = path.join(root, '.scripts/genufit-email-overlay/sites/unsubscribe');
 
 function resolveWaitlistSourceDir() {
   const candidates = [applicatorWaitlistDir, overlayDir];
@@ -74,6 +75,18 @@ try {
     process.exit(1);
   }
 
+  const unsubscribeDest = path.join(workDir, 'unsubscribe');
+  fs.mkdirSync(unsubscribeDest, { recursive: true });
+  for (const name of ['index.html', 'unsubscribe.js', 'unsubscribe.css']) {
+    const src = path.join(emailOverlayDir, name);
+    if (!fs.existsSync(src)) {
+      console.error('Missing unsubscribe overlay file:', src);
+      process.exit(1);
+    }
+    fs.copyFileSync(src, path.join(unsubscribeDest, name));
+  }
+  console.log('→ unsubscribe page copied to /unsubscribe/');
+
   console.log('→ wrangler pages deploy', projectName, '(account', process.env.CLOUDFLARE_ACCOUNT_ID + ')');
   run(
     `npx --yes wrangler@4 pages deploy "${workDir}" --project-name=${projectName} --branch=main --commit-dirty=true`,
@@ -81,6 +94,7 @@ try {
   );
 
   console.log('Live:', baseUrl + '/preview-people/');
+  console.log('Unsubscribe:', baseUrl + '/unsubscribe/');
 } finally {
   fs.rmSync(workDir, { recursive: true, force: true });
 }
