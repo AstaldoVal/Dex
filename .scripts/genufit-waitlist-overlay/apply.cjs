@@ -25,4 +25,10 @@ for (const name of ['waitlist.js', 'waitlist.css']) {
   console.log('copied', name, '->', path.relative(root, dest));
 }
 
-console.log('Done. From 04-Projects/Applicator run: ./scripts/deploy-staging-pages.sh');
+if (process.env.CLOUDFLARE_API_TOKEN) {
+  require('child_process').execSync('node .scripts/genufit-waitlist-overlay/deploy-pages.cjs', {
+    stdio: 'inherit',
+    cwd: root,
+    env: process.env,
+  });
+}

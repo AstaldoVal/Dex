@@ -110,6 +110,7 @@
     "meeting-sync:force": "node .scripts/meeting-intel/sync-from-granola.cjs --force",
     "granola-daily-vault": "bash .scripts/meeting-intel/granola-daily-vault.sh",
     "genufit:waitlist-overlay-apply": "node .scripts/genufit-waitlist-overlay/apply.cjs",
+    "genufit:waitlist-pages-deploy": "node .scripts/genufit-waitlist-overlay/deploy-pages.cjs",
     "banda:board-drive-sync": "python3 .scripts/banda/generate_board_obsidian_cards_and_drive_upload.py",
     "banda:board-drive-sync:dry-run": "python3 .scripts/banda/generate_board_obsidian_cards_and_drive_upload.py --dry-run",
     "banda:external-audits-drive-sync": "python3 .scripts/banda/external_audits_drive_upload.py",
