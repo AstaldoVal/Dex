@@ -76,10 +76,14 @@ function ensureCloudflareAccountId() {
 
   const payload = JSON.parse(raw);
   if (!payload.success || !Array.isArray(payload.result) || payload.result.length === 0) {
-    throw new Error(
-      'Cloudflare token cannot list accounts. Add CLOUDFLARE_ACCOUNT_ID to GitHub Secrets ' +
-        '(same value as in Credentials/applicator-staging/cloudflare-genufit.env).'
+    const fallback =
+      process.env.GENUFIT_CLOUDFLARE_ACCOUNT_ID || '52be820927c935440b956130539cc0a9';
+    process.env.CLOUDFLARE_ACCOUNT_ID = fallback;
+    console.log(
+      '→ Cloudflare account (fallback for Pages-only token):',
+      fallback
     );
+    return fallback;
   }
 
   const accounts = payload.result;
