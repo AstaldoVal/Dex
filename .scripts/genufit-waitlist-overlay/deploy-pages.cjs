@@ -2,7 +2,7 @@
 /**
  * Deploy patched waitlist.js/css to Cloudflare Pages (genufit-landing).
  * Source: Applicator sites/waitlist when present, else overlay.
- * Requires CLOUDFLARE_API_TOKEN (+ optional CLOUDFLARE_ACCOUNT_ID).
+ * Requires CLOUDFLARE_API_TOKEN in GitHub Actions or Cloud Agent secrets.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
