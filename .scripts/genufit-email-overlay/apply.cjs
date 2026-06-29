@@ -29,7 +29,11 @@ const copies = [
     dest: path.join(applicatorRoot, 'sites/unsubscribe/unsubscribe.css'),
   },
   {
-    src: path.join(__dirname, 'applicator-overlay/apps/api/genufit_waitlist_unsubscribe.py'),
+    src: path.join(__dirname, 'applicator-overlay/apps/api/genufit_waitlist_email.py'),
+    dest: path.join(applicatorRoot, 'apps/api/app/genufit_waitlist_email.py'),
+    altDest: path.join(applicatorRoot, 'apps/api/genufit_waitlist_email.py'),
+  },
+  {
     dest: path.join(applicatorRoot, 'apps/api/app/genufit_waitlist_unsubscribe.py'),
     altDest: path.join(applicatorRoot, 'apps/api/genufit_waitlist_unsubscribe.py'),
   },

@@ -77,7 +77,7 @@
           showMessage(
             messageEl,
             (result.data && result.data.message) ||
-              'You are unsubscribed. You will not receive further waitlist emails from Genufit.',
+              'You are unsubscribed. You will not receive further waitlist emails from GenuFit.',
             'success'
           );
         })

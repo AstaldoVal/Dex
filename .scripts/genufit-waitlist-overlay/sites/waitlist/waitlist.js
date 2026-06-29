@@ -2,9 +2,9 @@
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   var EU_HOST = 'https://eu.i.posthog.com';
   var DEFAULT_SUCCESS =
-    "You're on the list. Check your inbox for a confirmation email from Genufit.";
+    "You're on the list. Check your inbox for a confirmation email from GenuFit.";
   var ALREADY_REGISTERED_BODY =
-    'This email is already on the Genufit waitlist.';
+    'This email is already on the GenuFit waitlist.';
   var ALREADY_REGISTERED_HINT =
     'We did not send another confirmation email. Check your inbox or spam for the original message.';
   var ALREADY_REGISTERED_INLINE = "You're already on the waitlist.";

@@ -22,10 +22,32 @@ def test_template_file_exists() -> None:
     assert TEMPLATE_PATH.is_file()
 
 
-def test_branding_genufit_not_genofit(template_html: str) -> None:
+def test_branding_genufit_not_genofit_or_genufit(template_html: str) -> None:
     assert "genofit" not in template_html.lower()
-    assert "GenuFit" not in template_html
-    assert "Genufit" in template_html
+    assert "Genufit" not in template_html
+    assert "GenuFit" in template_html
+
+
+def test_no_wait_list_hyphen_in_copy(template_html: str) -> None:
+    assert "wait-list" not in template_html.lower()
+
+
+def test_eyebrow_preserves_genufit_casing(template_html: str) -> None:
+    assert "text-transform:uppercase" not in template_html.replace(" ", "")
+    assert "GenuFit waitlist" in template_html
+
+
+def test_canonical_email_subject_and_from() -> None:
+    from genufit_waitlist_email import (
+        WAITLIST_CONFIRMATION_SUBJECT,
+        WAITLIST_EMAIL_FROM,
+        WAITLIST_EMAIL_FROM_NAME,
+    )
+
+    assert WAITLIST_EMAIL_FROM_NAME == "GenuFit"
+    assert "GenuFit" in WAITLIST_EMAIL_FROM
+    assert WAITLIST_CONFIRMATION_SUBJECT == "You're on the GenuFit waitlist"
+    assert "wait-list" not in WAITLIST_CONFIRMATION_SUBJECT.lower()
 
 
 def test_footer_site_link_is_clickable(template_html: str) -> None:

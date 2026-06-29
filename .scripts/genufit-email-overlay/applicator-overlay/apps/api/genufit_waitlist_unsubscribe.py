@@ -79,7 +79,7 @@ async def unsubscribe_post(body: UnsubscribeRequest, request: Request) -> JSONRe
     ):
         return JSONResponse(
             {
-                "message": "That email is already unsubscribed from Genufit waitlist emails.",
+                "message": "That email is already unsubscribed from GenuFit waitlist emails.",
                 "unsubscribed": True,
             }
         )
@@ -87,7 +87,7 @@ async def unsubscribe_post(body: UnsubscribeRequest, request: Request) -> JSONRe
     _waitlist_unsubscribe(email)
     return JSONResponse(
         {
-            "message": "You are unsubscribed. You will not receive further waitlist emails from Genufit.",
+            "message": "You are unsubscribed. You will not receive further waitlist emails from GenuFit.",
             "unsubscribed": True,
         }
     )
