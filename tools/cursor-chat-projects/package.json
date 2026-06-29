@@ -1,0 +1,123 @@
+{
+  "name": "cursor-chat-projects",
+  "displayName": "Cursor Chat Projects",
+  "description": "Organize Cursor chats in a project hierarchy (projects → chats)",
+  "version": "0.1.6",
+  "publisher": "dex",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onUri"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cursorChatProjects",
+          "title": "Chat Projects",
+          "icon": "$(folder)"
+        }
+      ]
+    },
+    "views": {
+      "cursorChatProjects": [
+        {
+          "type": "tree",
+          "id": "cursorChatProjects.tree",
+          "name": "Projects",
+          "contextualTitle": "Chat Projects"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "cursorChatProjects.tree",
+        "contents": "No projects yet.\n[Create project](command:cursorChatProjects.createProject)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cursorChatProjects.createProject",
+        "title": "Create project"
+      },
+      {
+        "command": "cursorChatProjects.addChatToProject",
+        "title": "Add chat to project"
+      },
+      {
+        "command": "cursorChatProjects.assignToProject",
+        "title": "Chat Projects: Assign conversation to project"
+      },
+      {
+        "command": "cursorChatProjects.removeFromProject",
+        "title": "Chat Projects: Remove from project"
+      },
+      {
+        "command": "cursorChatProjects.moveToProject",
+        "title": "Chat Projects: Move to project..."
+      },
+      {
+        "command": "cursorChatProjects.refresh",
+        "title": "Chat Projects: Refresh"
+      },
+      {
+        "command": "cursorChatProjects.focusView",
+        "title": "Chat Projects: Open Chat Projects panel"
+      },
+      {
+        "command": "cursorChatProjects.openChat",
+        "title": "Open chat in Cursor"
+      },
+      {
+        "command": "cursorChatProjects.quickOpen",
+        "title": "Dex: Quick Open (prefill path)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "cursorChatProjects.createProject",
+          "when": "view == cursorChatProjects.tree",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "cursorChatProjects.removeFromProject",
+          "when": "view == cursorChatProjects.tree && viewItem == chat"
+        },
+        {
+          "command": "cursorChatProjects.moveToProject",
+          "when": "view == cursorChatProjects.tree && viewItem == chat"
+        },
+        {
+          "command": "cursorChatProjects.addChatToProject",
+          "when": "view == cursorChatProjects.tree && viewItem == project"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "sql.js": "^1.14.0"
+  }
+}

@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { VAULT, DIGESTS_DIR, DATA_DIR, ensureDirs } = require('./job-search-paths.cjs');
+const { VAULT, DIGESTS_DIR, LINKEDIN_DIGESTS_DIR, DATA_DIR, JOBS_DIR, ensureDirs } = require('./job-search-paths.cjs');
 
 const JOB_LINE_RE = /^- \[[ x\-]\] \[([^\]]*)\]\((https?:[^)]+)\)/;
 
@@ -29,11 +29,12 @@ function getJobViewUrl(url) {
 function main() {
   const args = process.argv.slice(2).filter((a) => !a.startsWith('-'));
   const digestArg = args[0];
+  const linkedinDir = LINKEDIN_DIGESTS_DIR || DIGESTS_DIR;
   const digestPath = digestArg
     ? path.isAbsolute(digestArg)
       ? digestArg
-      : path.join(DIGESTS_DIR, digestArg)
-    : path.join(DIGESTS_DIR, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
+      : path.join(linkedinDir, digestArg.replace(/^linkedin\//, ''))
+    : path.join(linkedinDir, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
 
   if (!fs.existsSync(digestPath)) {
     console.error('Digest not found:', digestPath);
@@ -93,21 +94,100 @@ function main() {
   <ul>
 ${list}
   </ul>
-  <script id="dex-job-urls" type="application/json">${escapeHtml(jobUrlsJson)}</script>
+  <script id="dex-job-urls" type="application/json">${jobUrlsJson.replace(/<\/script>/g, '<\\/script>')}</script>
   <p class="hint">When auto-capture finishes, click &quot;Export for Dex&quot; in the extension banner and save the JSON to <code>00-Inbox/Job_Search/data/</code>.</p>
 </body>
 </html>`;
 
   const outPath = path.join(DATA_DIR, `digest-open-links-${digestName.replace('.md', '')}.html`);
   fs.writeFileSync(outPath, html, 'utf8');
-  console.log('Wrote', path.relative(VAULT, outPath), '—', jobs.length, 'job links.');
+  const relativePath = path.relative(VAULT, outPath);
+  const absolutePath = outPath;
+  console.log('Wrote', relativePath, '—', jobs.length, 'job links.');
+  console.log('File saved:', absolutePath);
 
   const serve = process.argv.includes('--serve');
   if (serve) {
     const http = require('http');
-    const port = 8765;
+    const portArg = process.argv.find((a) => a.startsWith('--port='));
+    const port = portArg ? parseInt(portArg.split('=')[1], 10) : 8765;
     const server = http.createServer((req, res) => {
-      const subPath = (req.url || '/').replace(/^\//, '').split('?')[0].replace(/\.\./g, '');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Filename');
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+      }
+      const pathname = (req.url || '/').split('?')[0];
+      if (req.method === 'POST' && pathname === '/dex-save') {
+        const filename = (req.headers['x-filename'] || 'dex-linkedin-export.json').replace(/[^a-zA-Z0-9._-]/g, '_');
+        const chunks = [];
+        req.on('data', (chunk) => chunks.push(chunk));
+        req.on('end', () => {
+          const body = Buffer.concat(chunks).toString('utf8');
+          const filePath = path.join(DATA_DIR, filename);
+          try {
+            fs.writeFileSync(filePath, body, 'utf8');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true, path: filePath }));
+            console.log('[open-links server] Wrote', filename);
+          } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: e.message }));
+          }
+        });
+        return;
+      }
+      if (req.method === 'POST' && pathname === '/dex-save-job') {
+        const chunks = [];
+        req.on('data', (chunk) => chunks.push(chunk));
+        req.on('end', () => {
+          try {
+            const payload = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+            const id = (payload.id || payload.jobId || '').toString().replace(/[^0-9]/g, '');
+            if (!id) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, error: 'missing id' }));
+              return;
+            }
+            if (!fs.existsSync(JOBS_DIR)) fs.mkdirSync(JOBS_DIR, { recursive: true });
+            const filePath = path.join(JOBS_DIR, id + '.json');
+            // work_type: use only what extension sends (from LinkedIn top card). Do not default to Remote; unknown stays unknown.
+            const out = {
+              id,
+              url: payload.url || 'https://www.linkedin.com/jobs/view/' + id,
+              job_title: payload.job_title || '—',
+              company: payload.company || '—',
+              work_type: payload.work_type || 'unknown',
+              job_description: payload.job_description || ''
+            };
+            fs.writeFileSync(filePath, JSON.stringify(out, null, 2), 'utf8');
+            const logPath = process.env.DEX_FETCH_DESCRIPTIONS_LOG;
+            if (logPath && typeof logPath === 'string') {
+              try {
+                const ts = new Date().toISOString();
+                const title = (out.job_title || '').trim();
+                const company = (out.company || '').trim();
+                const workType = (out.work_type || 'Unknown').trim();
+                const titleStr = title && title !== '—' ? title : '(no title)';
+                const companyStr = company && company !== '—' ? company : '(no company)';
+                const line = ts + ' [Dex] Captured: ' + titleStr + ' — ' + companyStr + ' (' + workType + ') (id ' + id + ')\n';
+                fs.appendFileSync(logPath, line, 'utf8');
+              } catch (_) {}
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true, path: filePath }));
+            console.log('[open-links server] Job', id, 'saved');
+          } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: e.message }));
+          }
+        });
+        return;
+      }
+      const subPath = pathname.replace(/^\//, '').replace(/\.\./g, '');
       const requested = subPath || `digest-open-links-${digestName.replace('.md', '')}.html`;
       const safePath = path.resolve(DATA_DIR, path.normalize(requested));
       if (!safePath.startsWith(path.resolve(DATA_DIR))) {
@@ -130,9 +210,11 @@ ${list}
     server.listen(port, () => {
       const url = `http://127.0.0.1:${port}/digest-open-links-${digestName.replace('.md', '')}.html`;
       console.log('Server at', url);
-      console.log('Open this URL in Chrome (with Dex extension). Click "Start auto-capture".');
-      const open = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
-      require('child_process').exec(`${open} "${url}"`, () => {});
+      if (!process.argv.includes('--serve-no-open')) {
+        console.log('Open this URL in Chrome (with Dex extension). Click "Start auto-capture".');
+        const open = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+        require('child_process').exec(`${open} "${url}"`, () => {});
+      }
     });
   } else {
     console.log('Run with --serve to start local server and open in browser: node generate-digest-open-links.cjs --serve');

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <filter id="bubbleShadow" x="-12%" y="-12%" width="124%" height="124%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-opacity="0.1"/>
+    </filter>
+    <marker id="flowArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L12,4 L0,8 Z" fill="#6b4e32"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f5e3d6"/>
+
+  <text x="800" y="86" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-weight="700" fill="#1a1a1a">&#1062;&#1080;&#1082;&#1083; &#1089; AI</text>
+  <line x1="120" y1="104" x2="1280" y2="104" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.32"/>
+
+  <g transform="translate(1320, 68)" fill="none" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.4">
+    <path d="M0,-10 L2.5,-2.5 L10,0 L2.5,2.5 L0,10 L-2.5,2.5 L-10,0 L-2.5,-2.5 Z"/>
+  </g>
+
+  <g transform="translate(800, 485)">
+    <circle r="248" fill="none" stroke="#d4b896" stroke-width="8" opacity="0.4"/>
+    <circle r="240" fill="none" stroke="#9d7b52" stroke-width="2.2" opacity="0.65"/>
+    <circle r="234" fill="none" stroke="#c4a074" stroke-width="1" opacity="0.35"/>
+    <!-- Arc from step 6 (30 deg) to step 1 (90 deg), r=220 -->
+    <path
+      d="M 190.525 110 A 220 220 0 0 1 0 220"
+      fill="none"
+      stroke="#6b4e32"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      marker-end="url(#flowArrow)"
+    />
+  </g>
+
+  <g font-family="Georgia, 'Times New Roman', serif">
+    <g transform="translate(800, 723)" filter="url(#bubbleShadow)">
+      <rect x="-115" y="-28" width="230" height="56" rx="28" fill="#fffaf3" stroke="#9d7b52" stroke-width="1.8"/>
+      <text x="0" y="6" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a1a">1. &#1055;&#1083;&#1072;&#1085;</text>
+    </g>
+    <g transform="translate(593.9, 604)" filter="url(#bubbleShadow)">
+      <rect x="-118" y="-28" width="236" height="56" rx="28" fill="#fffaf3" stroke="#9d7b52" stroke-width="1.8"/>
+      <text x="0" y="6" text-anchor="middle" font-size="19" font-weight="600" fill="#1a1a1a">2. &#1057;&#1074;&#1077;&#1088;&#1082;&#1072;</text>
+    </g>
+    <g transform="translate(593.9, 366)" filter="url(#bubbleShadow)">
+      <rect x="-118" y="-28" width="236" height="56" rx="28" fill="#fffaf3" stroke="#9d7b52" stroke-width="1.8"/>
+      <text x="0" y="6" text-anchor="middle" font-size="19" font-weight="600" fill="#1a1a1a">3. &#1040;&#1087;&#1088;&#1091;&#1074;</text>
+    </g>
+    <g transform="translate(800, 247)" filter="url(#bubbleShadow)">
+      <rect x="-130" y="-30" width="260" height="60" rx="30" fill="#e8b896" stroke="#8b5a2b" stroke-width="2"/>
+      <text x="0" y="7" text-anchor="middle" font-size="20" font-weight="700" fill="#1a1a1a">4. &#1042;&#1099;&#1087;&#1086;&#1083;&#1085;&#1077;&#1085;&#1080;&#1077;</text>
+    </g>
+    <g transform="translate(1006.1, 366)" filter="url(#bubbleShadow)">
+      <rect x="-145" y="-36" width="290" height="72" rx="36" fill="#fffaf3" stroke="#9d7b52" stroke-width="1.8"/>
+      <text x="0" y="-4" text-anchor="middle" font-size="17" font-weight="600" fill="#1a1a1a">5. &#1059;&#1090;&#1086;&#1095;&#1085;&#1077;&#1085;&#1080;&#1077;</text>
+      <text x="0" y="18" text-anchor="middle" font-size="17" font-weight="600" fill="#1a1a1a">&#1080; &#1087;&#1088;&#1072;&#1074;&#1082;&#1080;</text>
+    </g>
+    <g transform="translate(1006.1, 604)" filter="url(#bubbleShadow)">
+      <rect x="-138" y="-36" width="276" height="72" rx="36" fill="#fffaf3" stroke="#9d7b52" stroke-width="1.8"/>
+      <text x="0" y="-4" text-anchor="middle" font-size="18" font-weight="600" fill="#1a1a1a">6. &#1060;&#1080;&#1085;&#1072;&#1083;&#1100;&#1085;&#1072;&#1103;</text>
+      <text x="0" y="18" text-anchor="middle" font-size="18" font-weight="600" fill="#1a1a1a">&#1074;&#1077;&#1088;&#1089;&#1080;&#1103;</text>
+    </g>
+  </g>
+</svg>

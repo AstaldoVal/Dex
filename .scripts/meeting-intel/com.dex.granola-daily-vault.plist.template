@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dex.granola-daily-vault</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__VAULT_PATH__/.scripts/meeting-intel/granola-daily-vault.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__VAULT_PATH__</string>
+
+    <!-- Every day at 21:00 local time -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>21</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>__VAULT_PATH__/.scripts/logs/granola-daily-vault.stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__VAULT_PATH__/.scripts/logs/granola-daily-vault.stderr.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+    </dict>
+
+    <key>LimitLoadToSessionType</key>
+    <string>Aqua</string>
+
+    <key>Nice</key>
+    <integer>10</integer>
+</dict>
+</plist>

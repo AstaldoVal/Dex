@@ -77,6 +77,10 @@ Reference docs should:
 - **mcp-servers.md** - MCP setup, troubleshooting, and integration patterns
 - **meeting-intel.md** - Meeting processing pipeline details
 - **demo-mode.md** - Demo mode implementation and usage
+- **superpowers-guide.md** - Superpowers skills definitions and selection logic
+- **superpowers-operational-playbook.md** - Operational skill routing for common engineering scenarios
+- **superpowers-smoke-checklist.md** - Regression checklist for Superpowers flow and scenario promotion
+- **superpowers-pattern-webhook.py** (`.scripts/`) - Cursor hook detector for repeated chat patterns (>=3 in 14 days) with auto-proposals
 
 ## Related
 

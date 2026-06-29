@@ -35,13 +35,32 @@ fi
 # Check 3: Check for API keys in tracked files
 echo ""
 echo "✓ Scanning for API keys..."
-KEY_MATCHES=$(git ls-files | xargs grep -E '(sk-ant-api|sk-ant-[a-zA-Z0-9]{90,}|sk-proj-[a-zA-Z0-9]{20,}|AIza[a-zA-Z0-9-_]{35})' 2>/dev/null | grep -v 'env.example\|Distribution_Checklist' || true)
+KEY_MATCHES=$(git ls-files | xargs grep -E '(sk-ant-api|sk-ant-[a-zA-Z0-9]{90,}|sk-proj-[a-zA-Z0-9]{20,}|lsv2_pt_[a-zA-Z0-9_]{20,}|AIza[a-zA-Z0-9-_]{35})' 2>/dev/null | grep -v 'env.example\|Distribution_Checklist\|verify-distribution' || true)
 if [ -n "$KEY_MATCHES" ]; then
     echo "  ❌ ERROR: Potential API keys found:"
     echo "$KEY_MATCHES" | sed 's/^/     /'
     ERRORS=$((ERRORS + 1))
 else
     echo "  ✅ No API keys found"
+fi
+
+# Check 3b: Chromium / browser profile caches (binary leaks — Secret Scanning)
+echo ""
+echo "✓ Checking browser profile caches are not tracked..."
+CACHE_MATCHES=$(git ls-files | grep -E '(^undefined/|/Code Cache/|/Cache_Data/|/GPUCache/|shared_proto_db/)' || true)
+if [ -n "$CACHE_MATCHES" ]; then
+    echo "  ❌ ERROR: Browser cache paths tracked (may contain embedded API keys):"
+    echo "$CACHE_MATCHES" | head -10 | sed 's/^/     /'
+    echo "     Run: git rm -r --cached undefined/  (and add to .gitignore)"
+    ERRORS=$((ERRORS + 1))
+else
+    echo "  ✅ No browser cache directories tracked"
+fi
+
+# Check 3c: undefined/ folder must not exist tracked or as loose root clutter
+if [ -d "undefined" ] && [ -n "$(git status --porcelain undefined 2>/dev/null)" ]; then
+    echo "  ⚠️  WARNING: undefined/ exists on disk with git changes — do not commit"
+    WARNINGS=$((WARNINGS + 1))
 fi
 
 # Check 4: Check for user data folders

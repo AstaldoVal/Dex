@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>DEX Usage Insights</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; background: #f8fafc; color: #334155; margin: 0; padding: 36px 20px; }
+    .container { max-width: 980px; margin: 0 auto; }
+    h1 { margin: 0 0 6px 0; color: #0f172a; font-size: 32px; }
+    h2 { margin: 34px 0 12px 0; color: #0f172a; font-size: 20px; }
+    .subtitle { color: #64748b; margin-bottom: 20px; font-size: 14px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .stat { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+    .stat-value { color: #0f172a; font-size: 22px; font-weight: 700; }
+    .stat-label { color: #64748b; font-size: 11px; text-transform: uppercase; margin-top: 4px; }
+    .section { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .bar-label { width: 190px; font-size: 12px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { flex: 1; background: #e2e8f0; height: 8px; border-radius: 999px; }
+    .bar-fill { height: 8px; border-radius: 999px; }
+    .bar-value { width: 40px; text-align: right; font-size: 12px; color: #0f172a; font-weight: 600; }
+    .cost-value { width: 64px; text-align: right; font-size: 12px; color: #64748b; }
+    .insights { margin: 0; padding-left: 20px; }
+    .insights li { margin-bottom: 8px; line-height: 1.5; }
+    .note { color: #64748b; font-size: 12px; margin-top: 8px; }
+    @media (max-width: 840px) {
+      .grid { grid-template-columns: 1fr; }
+      .bar-label { width: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DEX Usage Insights</h1>
+    <div class="subtitle">Диапазон доступной телеметрии: <strong>2026-02-16</strong> - <strong>2026-04-14</strong> (это не дата начала использования Dex)</div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-value">3438</div><div class="stat-label">API calls</div></div>
+      <div class="stat"><div class="stat-value">16,235,055</div><div class="stat-label">Total tokens</div></div>
+      <div class="stat"><div class="stat-value">$41.41</div><div class="stat-label">Estimated cost</div></div>
+      <div class="stat"><div class="stat-value">82.5</div><div class="stat-label">Average eval</div></div>
+      <div class="stat"><div class="stat-value">0</div><div class="stat-label">Truncation risk</div></div>
+      <div class="stat"><div class="stat-value">39</div><div class="stat-label">Active days</div></div>
+      <div class="stat"><div class="stat-value">13%</div><div class="stat-label">Feature adoption</div></div>
+    </div>
+
+    <div class="section">
+      <h2>At a glance</h2>
+      <ul class="insights">
+        <li>Feature adoption пока 13%. Можно поднять покрытие usage за счёт регулярного использования ещё 2-3 ключевых workflow.</li>
+<li>Самый частый quality-сигнал: "no_questions" (1873 случаев). Нужна точечная правка промпта/валидации под этот тип ошибки.</li>
+<li>Нагрузка по дням неравномерная (максимум 438, минимум 1). Полезно выровнять тяжёлые прогоны по расписанию.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Tracked feature adoption</h2>
+      <div class="note">Checked: 9 / 67</div>
+      <ul class="insights">
+        <li>Daily planning (`/daily-plan`)</li>
+<li>Daily review (`/review` or `/daily-review`)</li>
+<li>Weekly planning (`/week-plan`)</li>
+<li>linkedin_profile_audit_completed (`/linkedin-profile-audit` — LinkedIn profile audit skill)</li>
+<li>Feature discovery (`/dex-level-up`)</li>
+<li>Email processing (`/email-process`)</li>
+<li>Web research toolkit (`/web-research`)</li>
+<li>/feature-decision</li>
+      </ul>
+    </div>
+
+    <div class="grid">
+      <div class="section">
+        <h2>Top operations</h2>
+        
+      <div class="bar-row">
+        <div class="bar-label" title="job_summary">job_summary</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:#2563eb"></div></div>
+        <div class="bar-value">1873</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="vision_skills">vision_skills</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65.40309663641217%; background:#2563eb"></div></div>
+        <div class="bar-value">1225</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="cover_letter">cover_letter</div>
+        <div class="bar-track"><div class="bar-fill" style="width:17.138280832888412%; background:#2563eb"></div></div>
+        <div class="bar-value">321</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="meeting_intel">meeting_intel</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.9610250934329952%; background:#2563eb"></div></div>
+        <div class="bar-value">18</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="tts">tts</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.05339028296849973%; background:#2563eb"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+      </div>
+      <div class="section">
+        <h2>Top models</h2>
+        
+      <div class="bar-row">
+        <div class="bar-label" title="gpt-5.2">gpt-5.2</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:#0ea5e9"></div></div>
+        <div class="bar-value">1873</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="gpt-4o">gpt-4o</div>
+        <div class="bar-track"><div class="bar-fill" style="width:83.50240256273358%; background:#0ea5e9"></div></div>
+        <div class="bar-value">1564</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="tts-1-hd">tts-1-hd</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.05339028296849973%; background:#0ea5e9"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="section">
+        <h2>Eval notes hotspots</h2>
+        
+      <div class="bar-row">
+        <div class="bar-label" title="no_questions">no_questions</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:#dc2626"></div></div>
+        <div class="bar-value">1873</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="ok">ok</div>
+        <div class="bar-track"><div class="bar-fill" style="width:79.6583021890016%; background:#dc2626"></div></div>
+        <div class="bar-value">1492</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="forbidden_ai">forbidden_ai</div>
+        <div class="bar-track"><div class="bar-fill" style="width:14.095034703683929%; background:#dc2626"></div></div>
+        <div class="bar-value">264</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="revision">revision</div>
+        <div class="bar-track"><div class="bar-fill" style="width:13.82808328884143%; background:#dc2626"></div></div>
+        <div class="bar-value">259</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="em_dash">em_dash</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.868659903897491%; background:#dc2626"></div></div>
+        <div class="bar-value">35</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="repeated_paragraph_opener">repeated_paragraph_opener</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.1211959423384943%; background:#dc2626"></div></div>
+        <div class="bar-value">21</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="long">long</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.9610250934329952%; background:#dc2626"></div></div>
+        <div class="bar-value">18</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" title="banned_phrase">banned_phrase</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.21356113187399892%; background:#dc2626"></div></div>
+        <div class="bar-value">4</div>
+      </div>
+      </div>
+      <div class="section">
+        <h2>Daily calls and cost</h2>
+        
+      <div class="bar-row">
+        <div class="bar-label">2026-02-16</div>
+        <div class="bar-track"><div class="bar-fill" style="width:4.10958904109589%; background:#7c3aed"></div></div>
+        <div class="bar-value">18</div>
+        <div class="cost-value">$0.23</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-17</div>
+        <div class="bar-track"><div class="bar-fill" style="width:28.538812785388128%; background:#7c3aed"></div></div>
+        <div class="bar-value">125</div>
+        <div class="cost-value">$1.46</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-18</div>
+        <div class="bar-track"><div class="bar-fill" style="width:6.392694063926941%; background:#7c3aed"></div></div>
+        <div class="bar-value">28</div>
+        <div class="cost-value">$0.32</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-19</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.228310502283105%; background:#7c3aed"></div></div>
+        <div class="bar-value">1</div>
+        <div class="cost-value">$0.01</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-20</div>
+        <div class="bar-track"><div class="bar-fill" style="width:2.5114155251141552%; background:#7c3aed"></div></div>
+        <div class="bar-value">11</div>
+        <div class="cost-value">$0.13</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-21</div>
+        <div class="bar-track"><div class="bar-fill" style="width:21.689497716894977%; background:#7c3aed"></div></div>
+        <div class="bar-value">95</div>
+        <div class="cost-value">$1.07</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-22</div>
+        <div class="bar-track"><div class="bar-fill" style="width:23.059360730593607%; background:#7c3aed"></div></div>
+        <div class="bar-value">101</div>
+        <div class="cost-value">$1.30</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-23</div>
+        <div class="bar-track"><div class="bar-fill" style="width:7.30593607305936%; background:#7c3aed"></div></div>
+        <div class="bar-value">32</div>
+        <div class="cost-value">$0.42</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-24</div>
+        <div class="bar-track"><div class="bar-fill" style="width:71.91780821917808%; background:#7c3aed"></div></div>
+        <div class="bar-value">315</div>
+        <div class="cost-value">$3.81</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-25</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:#7c3aed"></div></div>
+        <div class="bar-value">438</div>
+        <div class="cost-value">$5.38</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-02-26</div>
+        <div class="bar-track"><div class="bar-fill" style="width:12.557077625570775%; background:#7c3aed"></div></div>
+        <div class="bar-value">55</div>
+        <div class="cost-value">$0.68</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-02</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.5981735159817352%; background:#7c3aed"></div></div>
+        <div class="bar-value">7</div>
+        <div class="cost-value">$0.09</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-03</div>
+        <div class="bar-track"><div class="bar-fill" style="width:44.29223744292237%; background:#7c3aed"></div></div>
+        <div class="bar-value">194</div>
+        <div class="cost-value">$2.30</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-04</div>
+        <div class="bar-track"><div class="bar-fill" style="width:6.392694063926941%; background:#7c3aed"></div></div>
+        <div class="bar-value">28</div>
+        <div class="cost-value">$0.34</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-05</div>
+        <div class="bar-track"><div class="bar-fill" style="width:11.87214611872146%; background:#7c3aed"></div></div>
+        <div class="bar-value">52</div>
+        <div class="cost-value">$0.63</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-06</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70.31963470319634%; background:#7c3aed"></div></div>
+        <div class="bar-value">308</div>
+        <div class="cost-value">$3.66</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-07</div>
+        <div class="bar-track"><div class="bar-fill" style="width:12.557077625570775%; background:#7c3aed"></div></div>
+        <div class="bar-value">55</div>
+        <div class="cost-value">$0.76</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-08</div>
+        <div class="bar-track"><div class="bar-fill" style="width:21.00456621004566%; background:#7c3aed"></div></div>
+        <div class="bar-value">92</div>
+        <div class="cost-value">$1.12</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-17</div>
+        <div class="bar-track"><div class="bar-fill" style="width:2.73972602739726%; background:#7c3aed"></div></div>
+        <div class="bar-value">12</div>
+        <div class="cost-value">$0.16</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-18</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.91324200913242%; background:#7c3aed"></div></div>
+        <div class="bar-value">4</div>
+        <div class="cost-value">$0.05</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-19</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.228310502283105%; background:#7c3aed"></div></div>
+        <div class="bar-value">1</div>
+        <div class="cost-value">$0.01</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-20</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.228310502283105%; background:#7c3aed"></div></div>
+        <div class="bar-value">1</div>
+        <div class="cost-value">$0.02</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-23</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.91324200913242%; background:#7c3aed"></div></div>
+        <div class="bar-value">4</div>
+        <div class="cost-value">$0.03</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-25</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.228310502283105%; background:#7c3aed"></div></div>
+        <div class="bar-value">1</div>
+        <div class="cost-value">$0.01</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-27</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.228310502283105%; background:#7c3aed"></div></div>
+        <div class="bar-value">1</div>
+        <div class="cost-value">$0.01</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-30</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.684931506849315%; background:#7c3aed"></div></div>
+        <div class="bar-value">3</div>
+        <div class="cost-value">$0.03</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-03-31</div>
+        <div class="bar-track"><div class="bar-fill" style="width:76.48401826484019%; background:#7c3aed"></div></div>
+        <div class="bar-value">335</div>
+        <div class="cost-value">$4.16</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-01</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65.75342465753424%; background:#7c3aed"></div></div>
+        <div class="bar-value">288</div>
+        <div class="cost-value">$3.38</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-02</div>
+        <div class="bar-track"><div class="bar-fill" style="width:8.67579908675799%; background:#7c3aed"></div></div>
+        <div class="bar-value">38</div>
+        <div class="cost-value">$0.41</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-03</div>
+        <div class="bar-track"><div class="bar-fill" style="width:42.922374429223744%; background:#7c3aed"></div></div>
+        <div class="bar-value">188</div>
+        <div class="cost-value">$2.46</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-05</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.5981735159817352%; background:#7c3aed"></div></div>
+        <div class="bar-value">7</div>
+        <div class="cost-value">$0.03</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-06</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.82648401826484%; background:#7c3aed"></div></div>
+        <div class="bar-value">8</div>
+        <div class="cost-value">$0.04</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-07</div>
+        <div class="bar-track"><div class="bar-fill" style="width:5.47945205479452%; background:#7c3aed"></div></div>
+        <div class="bar-value">24</div>
+        <div class="cost-value">$0.12</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-09</div>
+        <div class="bar-track"><div class="bar-fill" style="width:42.00913242009132%; background:#7c3aed"></div></div>
+        <div class="bar-value">184</div>
+        <div class="cost-value">$2.19</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-10</div>
+        <div class="bar-track"><div class="bar-fill" style="width:19.406392694063925%; background:#7c3aed"></div></div>
+        <div class="bar-value">85</div>
+        <div class="cost-value">$1.00</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-11</div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.65296803652968%; background:#7c3aed"></div></div>
+        <div class="bar-value">16</div>
+        <div class="cost-value">$0.20</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-12</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.36986301369863%; background:#7c3aed"></div></div>
+        <div class="bar-value">6</div>
+        <div class="cost-value">$0.07</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-13</div>
+        <div class="bar-track"><div class="bar-fill" style="width:47.48858447488584%; background:#7c3aed"></div></div>
+        <div class="bar-value">208</div>
+        <div class="cost-value">$2.44</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">2026-04-14</div>
+        <div class="bar-track"><div class="bar-fill" style="width:15.753424657534246%; background:#7c3aed"></div></div>
+        <div class="bar-value">69</div>
+        <div class="cost-value">$0.88</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Data scope</h2>
+      <div class="note">
+        Files analyzed: <code>System/openai-usage/*.jsonl</code><br />
+        Этот отчёт строится только по сохранённым логам телеметрии в репозитории.<br />
+        Calendar span: 58 days, active days: 39<br />
+        Totals: prompt=15,296,523, completion=938,532
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+---
+description: Session bootstrap is mandatory in first assistant reply of every new chat
+alwaysApply: true
+---
+
+# Session Bootstrap Enforcer
+
+This rule is mandatory for every new chat.
+
+## Required output contract
+
+In the first assistant reply of a new chat, the response must start with this exact block:
+
+```markdown
+Session bootstrap:
+- using-superpowers: active (skill routing enabled)
+- mcp-health-check-custom: done
+- readiness: ready
+```
+
+Each status line must be a Markdown list item: start with `- ` (hyphen, space) exactly as in the template. Do not print those three lines without the list markers.
+
+### Karpathy / Superpowers — pre-load + visible echo (every new chat)
+
+On **new chats**, the **`sessionStart`** hook injects **`=== PRE-LOADED SKILLS ===`**: full **Superpowers guide** and full **Karpathy guidelines** into the model’s context (not shown in the user’s UI as a separate panel). That is the “deep” copy of the skills.
+
+**User-visible Karpathy:** On the **first assistant reply in every new chat** (including when the user only says `ping`), **immediately after** the four Session bootstrap lines, output **one blank line**, then **exactly** this block (verbatim heading and four bullets; each bullet starts with `- `):
+
+```markdown
+Karpathy guidelines (skill in context — apply this turn):
+- Think before coding — surface assumptions; ask if ambiguous
+- Simplicity first — minimum code; no unrequested scope
+- Surgical changes — touch only what the request requires
+- Goal-driven execution — verifiable success criteria before you claim done
+```
+
+Then you may continue (e.g. answer `ping`). The echo is **required** so the user always sees Karpathy in the chat; the pre-loaded block is the full reference for the session.
+
+**Read file (first reply only):** If the **first** user message is **non-code** (e.g. `ping`) and skills were **pre-loaded**, you **do not** need **`Read`** of the guide or Karpathy file in that **first** reply. If the **first** user message already requests **substantive** code and pre-load is **absent**, **`Read`** `.claude/reference/superpowers-guide.md` and `.claude/skills/karpathy-guidelines/SKILL.md` before the first tool on source files. **Every later coding turn** (and substantive code in the first reply): follow **`.cursor/rules/dex-coding-skills-gate.mdc`** — **paired `Read`** + alignment before the first file-changing tool for non-trivial work, even when pre-load existed at session start (re-anchor Superpowers + Karpathy together).
+
+## Hard constraints
+
+1. The first line of the first reply must be exactly: `Session bootstrap:`
+2. Lines 2-4 must be exactly the three strings above (including leading `- `).
+3. After the four Session bootstrap lines, always include the blank line + **Karpathy echo block** exactly as specified above, before any other free-form text (including answers to `ping`).
+4. The Session bootstrap block must appear first in the **assistant** message. Pre-loaded full skill texts are in **prompt** context; the echo block is what the **user sees** as Karpathy in chat.
+5. Do not skip the four-line Session bootstrap even for short prompts (e.g. "ping", "hi", "check", "привет").
+
+## Non-compliance policy
+
+If a first reply is generated without the required block(s) (missing `- ` on status lines, missing Karpathy echo, or wrong order), treat it as invalid format: in the **next** assistant message, paste the correct Session bootstrap + Karpathy echo at the top, then continue. Do not dismiss the requirement as optional.
+
+## Relation to other rules
+
+- **`AGENTS.md` (Learned User Preferences)** mirrors this contract; keep both aligned when changing wording.
+- **`.cursor/rules/dex-coding-skills-gate.mdc`:** makes **Superpowers guide + Karpathy** operational on every substantive coding turn (**paired `Read`** + alignment before first file-changing tool), not only at session start.
+- **`.cursor/rules/dex-chat-session-log.mdc`:** after each completed assistant reply, append a turn block to `System/Chat_logs/YYYY-MM-DD.md` (same session, do not defer “until later”).
+
+## Proof when the user asks to “update rules” or “show proof”
+
+After editing any rule file or `AGENTS.md`, the assistant must give **evidence in the same reply**:
+
+1. List every **path** changed (repo-relative).
+2. Show a short **`git diff`** excerpt for those paths (or full diff if small), or paste the updated paragraph if `git` is unavailable.
+
+Silence or “I updated it” without paths/diff is not acceptable for this user.

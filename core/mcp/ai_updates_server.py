@@ -2,7 +2,7 @@
 """
 AI & Tech Updates MCP Server for Dex
 
-Следит за обновлениями OpenAI, Google Cloud, Grok (xAI), Manus и Gemini.
+Следит за обновлениями OpenAI, Google Cloud, Grok (xAI), Manus, Gemini и Anthropic.
 Даёт ежедневный дайджест самых заметных изменений в сфере AI за последние сутки.
 
 Tools:
@@ -11,6 +11,7 @@ Tools:
 - get_grok_updates: новости xAI / Grok
 - get_manus_updates: обновления Manus AI
 - get_gemini_updates: новости Google Gemini
+- get_anthropic_updates: новости Anthropic (newsroom)
 - get_daily_ai_summary: дайджест громких AI-изменений за последние N часов
 - get_all_ai_updates: сводка по всем платформам за период
 """
@@ -30,15 +31,21 @@ FEEDS = {
     "openai_blog": "https://openai.com/blog/rss.xml",
     "openai_changelog": "https://platform.openai.com/docs/changelog",  # HTML, not RSS
     "google_blog": "https://blog.google/feed",
+    "google_blog_sitemap": "https://blog.google/news-sitemap.xml",  # blog.google/feed is HTML; sitemap has titles + dates
     "google_cloud": "https://cloudblog.withgoogle.com/rss/",
     "gemini": "https://blog.google/feed",  # Gemini posts are on main Google blog; filter by /gemini or /ai
+    # Anthropic: no RSS; use _fetch_anthropic_news() (HTML parse of www.anthropic.com/news)
 }
+
+# User-Agent for feeds that may block default client (e.g. blog.google)
+FEED_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 
 # Sites without RSS: we fetch HTML and extract links (optional, can be extended)
 BLOG_PAGES = {
     "xai": "https://x.ai/blog",
     "manus": "https://manus.im/updates",
 }
+ANTHROPIC_NEWS_URL = "https://www.anthropic.com/news"
 
 
 def _utc_now() -> datetime:
@@ -75,14 +82,15 @@ def _ssl_context():
         return None
 
 
-async def _fetch_feed(url: str, timeout_sec: int = 15) -> list[dict]:
+async def _fetch_feed(url: str, timeout_sec: int = 15, headers: Optional[dict] = None) -> list[dict]:
     """Fetch RSS/Atom feed and return list of entries with title, link, published, summary."""
     import aiohttp
     ssl_ctx = _ssl_context()
     connector = aiohttp.TCPConnector(ssl=ssl_ctx) if ssl_ctx else None
+    req_headers = headers or {}
     try:
         async with aiohttp.ClientSession(connector=connector) as session:
-            async with session.get(url, timeout=aiohttp.ClientTimeout(total=timeout_sec)) as resp:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=timeout_sec), headers=req_headers) as resp:
                 if resp.status != 200:
                     return []
                 body = await resp.text()
@@ -112,6 +120,167 @@ async def _fetch_feed(url: str, timeout_sec: int = 15) -> list[dict]:
         return entries
     except Exception as e:
         return [{"_error": f"Parse feed: {e}", "_url": url}]
+
+
+async def _fetch_google_blog_sitemap(timeout_sec: int = 15) -> list[dict]:
+    """
+    Fetch blog.google posts: try RSS feed first (blog.google/feed), then news sitemap.
+    Returns entries with title, link, published, summary.
+    Uses browser-like User-Agent to avoid blocking; on aiohttp failure tries sync urllib + certifi.
+    """
+    import aiohttp
+    import xml.etree.ElementTree as ET
+
+    headers = {"User-Agent": FEED_UA, "Accept": "application/xml, application/rss+xml, application/atom+xml, text/xml, */*"}
+
+    # 1) Try RSS feed first (user reports it opens in browser)
+    feed_url = FEEDS["google_blog"]
+    feed_entries = await _fetch_feed(feed_url, timeout_sec, headers)
+    if feed_entries and not any(e.get("_error") for e in feed_entries):
+        return feed_entries
+
+    # 2) Fallback: news sitemap
+    url = FEEDS["google_blog_sitemap"]
+    body = None
+    ssl_ctx = _ssl_context()
+    connector = aiohttp.TCPConnector(ssl=ssl_ctx) if ssl_ctx else None
+    try:
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=timeout_sec), headers=headers) as resp:
+                if resp.status != 200:
+                    return [{"_error": f"HTTP {resp.status}", "_url": url}]
+                body = await resp.text()
+    except Exception as e:
+        try:
+            import ssl
+            import urllib.request
+            try:
+                import certifi
+                ctx = ssl.create_default_context(cafile=certifi.where())
+            except ImportError:
+                ctx = ssl.create_default_context()
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout_sec, context=ctx) as r:
+                body = r.read().decode("utf-8", errors="replace")
+        except Exception as e2:
+            err1, err2 = str(e).strip() or repr(e), str(e2).strip() or repr(e2)
+            return [{"_error": f"{err1}; fallback: {err2}", "_url": url}]
+    if not body:
+        return [{"_error": "empty response", "_url": url}]
+
+    sm_ns = "https://www.sitemaps.org/schemas/sitemap/0.9"
+    news_ns = "http://www.google.com/schemas/sitemap-news/0.9"
+    ns = {"news": news_ns}
+    entries = []
+    try:
+        root = ET.fromstring(body)
+        for url_elem in root.findall(f".//{{{sm_ns}}}url"):
+            loc = url_elem.find(f"{{{sm_ns}}}loc")
+            link = (loc.text or "").strip() if loc is not None else ""
+            if not link:
+                continue
+            news = url_elem.find("news:news", ns)
+            title = ""
+            published = None
+            if news is not None:
+                title_elem = news.find("news:title", ns)
+                if title_elem is not None and title_elem.text:
+                    title = title_elem.text.strip()
+                pub_elem = news.find("news:publication_date", ns)
+                if pub_elem is not None and pub_elem.text:
+                    published = _parse_iso(pub_elem.text.strip())
+                    if published:
+                        published = published.isoformat()
+            if not title:
+                title = link.rstrip("/").split("/")[-1].replace("-", " ").title() or link
+            entries.append({
+                "title": title,
+                "link": link,
+                "published": published,
+                "summary": "",
+            })
+        return entries
+    except ET.ParseError as e:
+        return [{"_error": f"Parse sitemap: {e}", "_url": url}]
+    except Exception as e:
+        err = (str(e) or repr(e)).strip() or "unknown error"
+        return [{"_error": err, "_url": url}]
+
+
+async def _fetch_anthropic_news(timeout_sec: int = 15) -> list[dict]:
+    """
+    Fetch Anthropic newsroom (no RSS; parse HTML). Returns entries with title, link, published, summary.
+    """
+    import aiohttp
+    from bs4 import BeautifulSoup
+
+    url = ANTHROPIC_NEWS_URL
+    ssl_ctx = _ssl_context()
+    connector = aiohttp.TCPConnector(ssl=ssl_ctx) if ssl_ctx else None
+    try:
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.get(
+                url,
+                timeout=aiohttp.ClientTimeout(total=timeout_sec),
+                headers={"User-Agent": "Dex-AI-Updates-MCP/1.0"},
+            ) as resp:
+                if resp.status != 200:
+                    return [{"_error": f"HTTP {resp.status}", "_url": url}]
+                body = await resp.text()
+    except Exception as e:
+        return [{"_error": str(e), "_url": url}]
+
+    date_re = re.compile(
+        r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}",
+        re.I,
+    )
+    months = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+    }
+    seen = set()
+    entries = []
+    try:
+        soup = BeautifulSoup(body, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = (a.get("href") or "").strip()
+            if not href or "/news/" not in href:
+                continue
+            full_url = href if href.startswith("http") else "https://www.anthropic.com" + href
+            if full_url.rstrip("/") == "https://www.anthropic.com/news":
+                continue
+            if full_url in seen:
+                continue
+            seen.add(full_url)
+            text = (a.get_text() or "").strip()
+            if not text or len(text) < 5:
+                continue
+            mo = date_re.search(text)
+            published = None
+            title = text
+            if mo:
+                date_str = mo.group(0)
+                try:
+                    pub_dt = datetime.strptime(date_str, "%b %d, %Y")
+                    published = pub_dt.replace(tzinfo=timezone.utc).isoformat()
+                except Exception:
+                    pass
+                title = date_re.sub("", text, count=1).strip()
+                for cat in ("Announcements", "Product", "Policy", "Research"):
+                    if title.startswith(cat):
+                        title = title[len(cat):].strip()
+                        break
+            title = re.sub(r"\s+", " ", title).strip() or full_url.split("/")[-1].replace("-", " ").title()
+            entries.append({
+                "title": title[:300],
+                "link": full_url,
+                "published": published,
+                "summary": text[:500] if text != title else "",
+            })
+        entries.sort(key=lambda x: (x.get("published") or ""), reverse=True)
+        return entries
+    except Exception as e:
+        return [{"_error": f"Parse Anthropic news: {e}", "_url": url}]
 
 
 def _plain_summary(raw: str, max_len: int = 280) -> str:
@@ -237,12 +406,12 @@ async def get_manus_updates(limit: int = 10, since_days: Optional[int] = 7) -> l
 @mcp.tool()
 async def get_gemini_updates(limit: int = 10, since_days: Optional[int] = 7) -> list[dict]:
     """
-    Получить последние новости Google Gemini (из общего блога Google; фильтр по Gemini/AI).
+    Получить последние новости Google Gemini (из blog.google через news sitemap; фильтр по Gemini/AI).
     """
     since = (_utc_now() - timedelta(days=since_days)) if since_days else None
-    entries = await _fetch_feed(FEEDS["google_blog"])
+    entries = await _fetch_google_blog_sitemap()
     # Оставляем записи, связанные с Gemini / AI (по ссылке или заголовку)
-    gemini_keywords = re.compile(r"gemini|google ai|duet|bard|ai (studio|api)", re.I)
+    gemini_keywords = re.compile(r"gemini|innovation-and-ai|google ai|duet|bard|ai (studio|api)", re.I)
     filtered = []
     for e in entries:
         if e.get("_error"):
@@ -257,39 +426,154 @@ async def get_gemini_updates(limit: int = 10, since_days: Optional[int] = 7) -> 
 
 
 @mcp.tool()
-async def get_daily_ai_summary(hours: int = 24, max_items_per_feed: int = 15) -> dict:
+async def get_anthropic_updates(limit: int = 10, since_days: Optional[int] = 7) -> list[dict]:
+    """
+    Получить последние новости Anthropic (newsroom: Security Scan, ASL-3, Claude, партнёрства).
+    Парсит HTML страницы новостей (RSS у Anthropic нет).
+    """
+    entries = await _fetch_anthropic_news()
+    if not entries or any(e.get("_error") for e in entries):
+        return [{
+            "title": "Anthropic News",
+            "link": ANTHROPIC_NEWS_URL,
+            "published": None,
+            "summary": "Не удалось загрузить. Проверьте вручную: " + ANTHROPIC_NEWS_URL,
+        }]
+    since = (_utc_now() - timedelta(days=since_days)) if since_days else None
+    if since:
+        entries = _filter_since(entries, since)
+    return _limit_entries(entries, limit)
+
+
+# Допустимые значения vendor для get_daily_ai_summary (один источник)
+DAILY_SUMMARY_VENDORS = ("anthropic", "openai", "google_cloud", "gemini")
+
+
+@mcp.tool()
+async def get_daily_ai_summary(
+    hours: int = 24,
+    max_items_per_feed: int = 15,
+    vendor: Optional[str] = None,
+) -> dict:
     """
     Собрать дайджест самых заметных изменений в сфере AI за последние N часов.
-    Агрегирует посты из OpenAI, Google Cloud, Gemini (Google blog), при возможности Grok и Manus.
+    Агрегирует посты из OpenAI, Google Cloud, Gemini (Google blog), Anthropic.
     Args:
         hours: период в часах (по умолчанию 24 — последние сутки).
         max_items_per_feed: макс. записей с каждого источника.
+        vendor: если задан — только этот источник. Допустимо: anthropic, openai, google_cloud, gemini.
     Returns:
-        dict с ключами: summary (краткий текст для ежедневного дайджеста), feeds (по источникам), cutoff_utc.
+        dict с ключами: summary, feeds, cutoff_utc, vendor.
     """
     since = _utc_now() - timedelta(hours=hours)
-    # Только рабочие фиды: blog.google/feed отдаёт 0 записей (формат не парсится feedparser).
-    # Gemini-посты уже есть в Google Cloud Blog.
-    ai_sources = [
-        ("OpenAI", FEEDS["openai_blog"]),
-        ("Google Cloud", FEEDS["google_cloud"]),
-    ]
+    only_vendor = (vendor or "").strip().lower() or None
+    if only_vendor and only_vendor not in DAILY_SUMMARY_VENDORS:
+        only_vendor = None
+
     all_entries = []
-    for name, url in ai_sources:
-        entries = await _fetch_feed(url)
+    if only_vendor == "anthropic":
+        entries = await _fetch_anthropic_news()
         for e in entries:
             if e.get("_error"):
                 continue
-            e["source"] = name
+            e["source"] = "Anthropic"
             all_entries.append(e)
-        source_only = [e for e in all_entries if e.get("source") == name]
-        source_only.sort(key=lambda x: x.get("published") or "", reverse=True)
-        all_entries = [e for e in all_entries if e.get("source") != name] + source_only[:max_items_per_feed]
+        all_entries = _limit_entries(all_entries, max_items_per_feed)
+    elif only_vendor == "openai":
+        entries = await _fetch_feed(FEEDS["openai_blog"])
+        for e in entries:
+            if e.get("_error"):
+                continue
+            e["source"] = "OpenAI"
+            all_entries.append(e)
+        all_entries = _limit_entries(all_entries, max_items_per_feed)
+    elif only_vendor == "google_cloud":
+        entries = await _fetch_feed(FEEDS["google_cloud"])
+        for e in entries:
+            if e.get("_error"):
+                continue
+            e["source"] = "Google Cloud"
+            all_entries.append(e)
+        all_entries = _limit_entries(all_entries, max_items_per_feed)
+    elif only_vendor == "gemini":
+        google_blog_entries = await _fetch_google_blog_sitemap()
+        gemini_re = re.compile(r"gemini|innovation-and-ai|google ai|duet|bard|ai (studio|api)", re.I)
+        for e in google_blog_entries:
+            if e.get("_error"):
+                continue
+            link = e.get("link") or ""
+            title = e.get("title") or ""
+            if not gemini_re.search(link) and not gemini_re.search(title):
+                continue
+            e["source"] = "Google (Gemini/AI)"
+            all_entries.append(e)
+        all_entries = _limit_entries(all_entries, max_items_per_feed)
+        has_fetch_error = any(e.get("_error") for e in google_blog_entries)
+        if not all_entries and has_fetch_error:
+            err_msg = next((e.get("_error", "") for e in google_blog_entries if e.get("_error")), "неизвестная ошибка")
+            all_entries = [{
+                "title": "Google (Gemini/AI): не удалось загрузить blog.google",
+                "link": FEEDS["google_blog_sitemap"],
+                "published": None,
+                "summary": f"Источник недоступен ({err_msg[:120]}).",
+                "source": "Google (Gemini/AI)",
+            }]
+    else:
+        ai_sources = [
+            ("OpenAI", FEEDS["openai_blog"]),
+            ("Google Cloud", FEEDS["google_cloud"]),
+        ]
+        for name, url in ai_sources:
+            entries = await _fetch_feed(url)
+            for e in entries:
+                if e.get("_error"):
+                    continue
+                e["source"] = name
+                all_entries.append(e)
+            source_only = [e for e in all_entries if e.get("source") == name]
+            source_only.sort(key=lambda x: x.get("published") or "", reverse=True)
+            all_entries = [e for e in all_entries if e.get("source") != name] + source_only[:max_items_per_feed]
+        anthropic_entries = await _fetch_anthropic_news()
+        for e in anthropic_entries:
+            if e.get("_error"):
+                continue
+            e["source"] = "Anthropic"
+            all_entries.append(e)
+        anth_only = [e for e in all_entries if e.get("source") == "Anthropic"]
+        anth_only.sort(key=lambda x: x.get("published") or "", reverse=True)
+        all_entries = [e for e in all_entries if e.get("source") != "Anthropic"] + anth_only[:max_items_per_feed]
+        google_blog_entries = await _fetch_google_blog_sitemap()
+        gemini_re = re.compile(r"gemini|innovation-and-ai|google ai|duet|bard|ai (studio|api)", re.I)
+        google_blog_ok = []
+        for e in google_blog_entries:
+            if e.get("_error"):
+                continue
+            link = e.get("link") or ""
+            title = e.get("title") or ""
+            if not gemini_re.search(link) and not gemini_re.search(title):
+                continue
+            e["source"] = "Google (Gemini/AI)"
+            google_blog_ok.append(e)
+            all_entries.append(e)
+        has_fetch_error = any(e.get("_error") for e in google_blog_entries)
+        if not google_blog_ok and has_fetch_error:
+            err_msg = next((e.get("_error", "") for e in google_blog_entries if e.get("_error")), "неизвестная ошибка")
+            all_entries.append({
+                "title": "Google (Gemini/AI): не удалось загрузить blog.google",
+                "link": FEEDS["google_blog_sitemap"],
+                "published": None,
+                "summary": f"Источник blog.google/news-sitemap.xml недоступен ({err_msg[:120]}).",
+                "source": "Google (Gemini/AI)",
+            })
+        google_only = [e for e in all_entries if e.get("source") == "Google (Gemini/AI)"]
+        google_only.sort(key=lambda x: x.get("published") or "", reverse=True)
+        all_entries = [e for e in all_entries if e.get("source") != "Google (Gemini/AI)"] + google_only[:max_items_per_feed]
 
     in_period = _filter_since(all_entries, since)
     in_period.sort(key=lambda x: (x.get("published") or ""), reverse=True)
 
-    lines = [f"# AI дайджест за последние {hours} ч (до {_utc_now().strftime('%Y-%m-%d %H:%M')} UTC)\n"]
+    title_suffix = f" — только {only_vendor}" if only_vendor else ""
+    lines = [f"# AI дайджест за последние {hours} ч (до {_utc_now().strftime('%Y-%m-%d %H:%M')} UTC){title_suffix}\n"]
     by_source = {}
     for e in in_period:
         src = e.get("source", "Other")
@@ -305,10 +589,11 @@ async def get_daily_ai_summary(hours: int = 24, max_items_per_feed: int = 15) ->
             if summary_text:
                 lines.append(f"  {summary_text}")
 
-    source_names = [n for n, _ in ai_sources]
+    source_names = list(sorted(by_source.keys()))
     return {
         "cutoff_utc": since.isoformat(),
         "hours": hours,
+        "vendor": only_vendor,
         "total_items": len(in_period),
         "feeds": {name: [e for e in in_period if e.get("source") == name] for name in source_names},
         "summary": "\n".join(lines).strip(),
@@ -321,7 +606,7 @@ async def get_all_ai_updates(
     limit_per_source: int = 5,
 ) -> dict:
     """
-    Сводка обновлений по всем платформам: OpenAI, Google Cloud, Grok, Manus, Gemini.
+    Сводка обновлений по всем платформам: OpenAI, Google Cloud, Grok, Manus, Gemini, Anthropic.
     Удобно для еженедельного или ежедневного обзора.
     Args:
         since_days: период в днях.
@@ -334,12 +619,15 @@ async def get_all_ai_updates(
     )
     google_cloud_entries = _filter_since(await _fetch_feed(FEEDS["google_cloud"]), since)
     results["google_cloud"] = _limit_entries(google_cloud_entries, limit_per_source)
-    # blog.google/feed не парсится (0 записей); берём Gemini-посты из Google Cloud
-    gemini_re = re.compile(r"gemini|google ai|duet|bard|ai (studio|api)", re.I)
-    results["gemini"] = _limit_entries(
-        [e for e in google_cloud_entries if gemini_re.search((e.get("link") or "") + " " + (e.get("title") or ""))],
-        limit_per_source,
-    )
+    # blog.google через news sitemap; фильтр по Gemini/AI
+    google_blog_entries = await _fetch_google_blog_sitemap()
+    gemini_re = re.compile(r"gemini|innovation-and-ai|google ai|duet|bard|ai (studio|api)", re.I)
+    gemini_entries = [
+        e for e in google_blog_entries
+        if not e.get("_error") and gemini_re.search((e.get("link") or "") + " " + (e.get("title") or ""))
+    ]
+    results["gemini"] = _limit_entries(_filter_since(gemini_entries, since), limit_per_source)
+    results["anthropic"] = await get_anthropic_updates(limit=limit_per_source, since_days=since_days)
     grok = await get_grok_updates(limit=limit_per_source, since_days=since_days)
     results["grok"] = grok
     manus = await get_manus_updates(limit=limit_per_source, since_days=since_days)

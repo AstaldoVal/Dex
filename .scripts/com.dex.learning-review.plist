@@ -8,7 +8,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/dave/Dex/Dex/.scripts/learning-review-prompt.sh</string>
+        <string>/Users/admin.roman.matsukatov/Development/DEX/.scripts/learning-review-prompt.sh</string>
     </array>
     
     <key>StartCalendarInterval</key>
@@ -23,13 +23,13 @@
     <false/>
     
     <key>StandardOutPath</key>
-    <string>/Users/dave/Dex/Dex/.scripts/logs/learning-review-stdout.log</string>
+    <string>/Users/admin.roman.matsukatov/Development/DEX/.scripts/logs/learning-review-stdout.log</string>
     
     <key>StandardErrorPath</key>
-    <string>/Users/dave/Dex/Dex/.scripts/logs/learning-review-stderr.log</string>
+    <string>/Users/admin.roman.matsukatov/Development/DEX/.scripts/logs/learning-review-stderr.log</string>
     
     <key>WorkingDirectory</key>
-    <string>/Users/dave/Dex/Dex</string>
+    <string>/Users/admin.roman.matsukatov/Development/DEX</string>
     
     <key>EnvironmentVariables</key>
     <dict>

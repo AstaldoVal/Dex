@@ -1,0 +1,47 @@
+---
+description: На новую содержательную задачу выбрать category_id из закрытого enum, кратко обосновать, затем Read только из .claude/reference/task-skill-bundles.md для этой категории; расширение пакета по явному запросу пользователя или уточняющему вопросу агента.
+globs: []
+alwaysApply: true
+---
+
+# Router задач Dex → пакет скиллов (экономия Conversation)
+
+## Когда применять
+
+- На **первый содержательный** запрос в ходе работы над **новой** задачей (не чистый `ping`, не одно слово без задачи, не только session bootstrap).
+- Если пользователь **сменил тему** на другой домен, снова выбери `category_id` и обнови набор `Read`.
+
+## Закрытый enum `category_id`
+
+1. `dex_os` — сам Dex: onboarding, update, rollback, health, логи чата, гигиена корня, session bootstrap.
+2. `job_search` — LinkedIn, дайджест, Teal, full-flow, фильтры вакансий.
+3. `career_assets` — резюме, сопроводительные, summary, чеклисты качества текста.
+4. `meetings` — Granola, prep, разбор встреч, person pages.
+5. `pm_delivery` — PRD, BMAD, приоритизация, roadmap, PM-артефакты без деплоя кода.
+6. `engineering` — правки в `.scripts/`, hooks, TS/Python внутри Dex, re-anchor Superpowers + Karpathy по правилам.
+7. `integrations` — MCP, OAuth, Gmail/Calendar/Drive/Linear, sync, mcp-profiles.
+8. `banda_google` — три дерева Drive, синки Board / bundle / External Audits.
+9. `vault_obsidian` — PARA, wiki, Obsidian, QMD-маршрутизация поиска.
+10. `writing_public` — Substack, LinkedIn, анти-AI wording.
+11. `research` — web-research, ai-digest, факты из сети по правилам Dex.
+12. `personal_ops` — physical check-in, инвойсы, бытовые сценарии skills.
+13. `security_offensive` — pentest, red team, exploit-наборы (плюс запреты Dex по инструментам).
+14. `cloud_vendor_sdk` — облачные/SDK-энциклопедии, тяжёлые vendor skills.
+15. `data_ml_academic` — бумаги, формальные PM/исследовательские цепочки, evidence gate.
+16. `misc` — только если ни один пункт выше не подходит; затем уточнить у Roman при необходимости.
+
+## Обязательные шаги агента
+
+1. **Одна строка:** `category_id: …` и **одно короткое предложение**, почему этот пункт enum (не длинный список причин).
+2. **`Read`** в первую очередь **`.claude/reference/task-skill-bundles.md`**, найти секцию `### <category_id>`.
+3. Дальше **`Read` только пути из этой секции** (и вложенные файлы, на которые они ссылаются, если нужно для ответа). Не читать параллельно «весь Skills_library» без причины.
+4. **Расширение пакета:** если пользователь добавил цель («ещё про …»), смени `category_id` или добавь `Read` из другой секции карты / из **`Skills_library/`** по смыслу.
+
+## Согласованность с другими правилами
+
+- Первое сообщение нового чата по-прежнему следует **session bootstrap** и Karpathy echo из **`.cursor/rules/session-bootstrap-enforcer.mdc`**.
+- Содержательные правки кода по-прежнему следуют **`.cursor/rules/dex-coding-skills-gate.mdc`** (paired Read Superpowers + Karpathy), **после** выбора `category_id`, если этот ход про код.
+
+## Источник истины по путям
+
+- **`.claude/reference/task-skill-bundles.md`** — единственная карта стартовых `Read` по категориям.

@@ -1,0 +1,30 @@
+{
+  "exp_id": "098",
+  "area": "PUSH",
+  "short_name": "CLI Smoke Test",
+  "hypothesis": "Smoke test v2: dev-only feature, userId assignment, no datasource.",
+  "value_type": "json",
+  "hash_attribute": "userId",
+  "coverage": 1.0,
+  "variations": [
+    {
+      "name": "Control — Smoke",
+      "value": {
+        "headline": "Control dev smoke",
+        "body": "EXP-098 control on dev only"
+      }
+    },
+    {
+      "name": "Variant A — Smoke",
+      "value": {
+        "headline": "Variant dev smoke",
+        "body": "EXP-098 variant on dev only"
+      }
+    }
+  ],
+  "metrics": {
+    "primary": [],
+    "secondary": [],
+    "guardrails": []
+  }
+}

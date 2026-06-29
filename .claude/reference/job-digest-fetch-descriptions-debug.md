@@ -5,7 +5,7 @@
 ## 1. Сохранить HTML одной страницы вакансии
 
 ```bash
-node .scripts/job-search/fetch-job-descriptions-playwright.cjs 00-Inbox/Job_Search/linkedin-jobs-YYYY-MM-DD.md --debug
+node .scripts/job-search/fetch-job-descriptions.cjs 00-Inbox/Job_Search/linkedin-jobs-YYYY-MM-DD.md --debug
 ```
 
 - Откроется браузер, загрузится первая вакансия, через ~5 с HTML сохранится в `00-Inbox/Job_Search/debug-linkedin-job-page.html`.
@@ -22,7 +22,7 @@ node .scripts/job-search/fetch-job-descriptions-playwright.cjs 00-Inbox/Job_Sear
 
 ## 3. Обновить скрипт
 
-В `.scripts/job-search/fetch-job-descriptions-playwright.cjs`:
+В `.scripts/job-search/fetch-job-descriptions.cjs`:
 
 - Добавить рабочий селектор в массив `descriptionSelectors` или в fallback через `page.evaluate`.
 - При необходимости увеличить ожидание после загрузки (например `PAGE_WAIT_NETWORK_MS`) или добавить `page.waitForSelector(новый_селектор, { timeout: 10000 })` перед извлечением текста.
@@ -31,7 +31,7 @@ node .scripts/job-search/fetch-job-descriptions-playwright.cjs 00-Inbox/Job_Sear
 ## 4. Проверка на малой выборке
 
 ```bash
-node .scripts/job-search/fetch-job-descriptions-playwright.cjs 00-Inbox/Job_Search/linkedin-jobs-YYYY-MM-DD.md --limit=3
+node .scripts/job-search/fetch-job-descriptions.cjs 00-Inbox/Job_Search/linkedin-jobs-YYYY-MM-DD.md --limit=3
 ```
 
 - В `00-Inbox/Job_Search/job-descriptions-YYYY-MM-DD.json` проверить, что у записей есть `job_description` длиной > 100 символов.

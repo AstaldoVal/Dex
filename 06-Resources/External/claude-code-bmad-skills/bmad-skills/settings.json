@@ -1,0 +1,65 @@
+{
+  "$schema": "https://claude.ai/schemas/claude-code-settings.json",
+  "description": "BMAD Skills Configuration for Claude Code",
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "bash $SKILL_DIR/hooks/bmad-session-start.sh",
+        "description": "Initialize BMAD environment variables and context"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "bash $SKILL_DIR/hooks/bmad-pre-tool.sh",
+        "description": "Validate and log BMAD tool usage"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "bash $SKILL_DIR/hooks/bmad-post-tool.sh",
+        "description": "Track BMAD workflow progress after tool execution"
+      }
+    ]
+  },
+  "skills": {
+    "bmad-orchestrator": {
+      "path": "./bmad-orchestrator",
+      "description": "Core BMAD workflow orchestrator"
+    },
+    "business-analyst": {
+      "path": "./business-analyst",
+      "description": "Phase 1 - Product discovery and analysis"
+    },
+    "product-manager": {
+      "path": "./product-manager",
+      "description": "Phase 2 - Requirements and planning"
+    },
+    "system-architect": {
+      "path": "./system-architect",
+      "description": "Phase 3 - System architecture design"
+    },
+    "scrum-master": {
+      "path": "./scrum-master",
+      "description": "Phase 4 - Sprint planning"
+    },
+    "developer": {
+      "path": "./developer",
+      "description": "Phase 4 - Story implementation"
+    },
+    "ux-designer": {
+      "path": "./ux-designer",
+      "description": "Cross-phase UX design"
+    },
+    "creative-intelligence": {
+      "path": "./creative-intelligence",
+      "description": "Cross-phase brainstorming and research"
+    },
+    "builder": {
+      "path": "./builder",
+      "description": "Create custom BMAD skills"
+    }
+  }
+}

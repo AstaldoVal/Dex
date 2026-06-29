@@ -1,0 +1,9 @@
+# Dex vault — first assistant message in every NEW chat (non-negotiable)
+
+Keep this file as a minimal fallback only.
+
+- The first line of the first reply must be exactly `Session bootstrap:`.
+- Do not put greetings, filler, or any text before it.
+- After the bootstrap block, print the Karpathy echo block required by `.cursor/rules/session-bootstrap-enforcer.mdc`.
+- Full contract, recovery policy, and proof requirements live in `.cursor/rules/session-bootstrap-enforcer.mdc`.
+- If hooks do not run, check Cursor Settings -> Workspace Trust.

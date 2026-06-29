@@ -9,8 +9,8 @@
 3. Выполни:
 
 ```bash
-cd /Users/admin.roman.matsukatov/Documents/Development/DEX/Dex
-export VAULT_PATH=/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex
+cd /Users/admin.roman.matsukatov/Development/DEX
+export VAULT_PATH=/Users/admin.roman.matsukatov/Development/DEX
 python3 .scripts/linkedin-jobs-digest-all-followed.py
 ```
 
@@ -18,11 +18,11 @@ python3 .scripts/linkedin-jobs-digest-all-followed.py
 5. Оценка времени: **~20 минут** (148 компаний × 8 сек задержки).
 6. Результат появится в:
    - **Дайджест:** `00-Inbox/Job_Search/linkedin-jobs-digest-all-companies-YYYY-MM-DD.md`
-   - Промежуточные сохранения: `.claude/linkedin/jobs_digest_partial.json` (каждые 10 компаний)
+   - Промежуточные сохранения: **`Credentials/linkedin/jobs_digest_partial.json`** (каждые 10 компаний; symlink **`.claude/linkedin/`** → та же папка)
 
 ## Если прервать (Ctrl+C)
 
-Скрипт сохранит уже собранные данные в `.claude/linkedin/jobs_digest_partial.json`. Дайджест можно будет сформировать вручную из этого файла или перезапустить скрипт позже (он пока не умеет продолжать с места остановки — обходит все компании с начала).
+Скрипт сохранит уже собранные данные в **`Credentials/linkedin/jobs_digest_partial.json`**. Дайджест можно будет сформировать вручную из этого файла или перезапустить скрипт позже (он пока не умеет продолжать с места остановки — обходит все компании с начала).
 
 ## Что в дайджесте
 

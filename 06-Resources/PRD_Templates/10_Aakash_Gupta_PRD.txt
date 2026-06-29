@@ -1,0 +1,39 @@
+SOURCE: https://www.aakashg.com/how-to-write-product-requirements/
+SOURCE_MEDIUM: https://aakashgupta.medium.com/the-prd-that-actually-works-15-years-of-product-lessons-in-5-minutes
+CHATPRD: Community template "Aakash's PRD" (clarity and actionability)
+FETCHED: 2025-03-04
+
+---
+Aakash Gupta's PRD Framework
+
+Author: Aakash Gupta (ex-Google, ex-Meta hiring manager)
+Philosophy: PRD as living, strategic decision-making framework; "shared intelligence" not static spec
+
+Core components (non-negotiable structure):
+
+| Component | Purpose | Example (Subscription Tracker) |
+|-----------|---------|-------------------------------|
+| Problem Statement | Defines "why." Specific user pain point | "Users struggle to track renewals. 78% have been charged for forgotten cancellations." |
+| Goals & Objectives | Business and user outcomes | "Reduce churn 15% in Q3. Increase 'My Subscriptions' engagement 25%." |
+| User Stories | Who, what, why | "As a budget-conscious user, I want a 7-day renewal reminder so I can decide to cancel." |
+| Functional Requirements | What must the product do | "System must send email and push 7 days before auto-renewal." |
+| Acceptance Criteria | Definition of done | "GIVEN subscription 7 days from renewal, WHEN cron runs, THEN email sent." |
+| Non-Functional Requirements | How well (speed, security) | "Status page <500ms. PCI DSS for payment data." |
+
+AI-era essentials:
+- Hypothesis of the change
+- Strategic alignment
+- Rollout approach (full launch or A/B)
+- Success metrics
+- Non-goals and acceptable side effects
+
+Six-stage PRD lifecycle:
+1. Aperture – align leadership
+2. Discovery – identify right problem
+3. Define – shape problem statement
+4. Design – explore solutions
+5. Deliver – finalize and commit
+6. Live – launch, track, iterate
+
+User story format: As a [user], I want [action], so that [goal].
+Acceptance criteria: Gherkin (Given/When/Then).

@@ -16,7 +16,7 @@ Setup:
   1. Install dependencies: pip install -r core/mcp/requirements-linkedin.txt
   2. Install Playwright browsers: playwright install chromium
   3. Use linkedin_login first to authenticate (browser opens, you login manually)
-  4. Session is saved and reused for subsequent operations
+  4. Session is saved under Credentials/linkedin/ (override with LINKEDIN_SESSION_DIR)
 
 Note: Playwright sync API is run in a thread pool (asyncio.to_thread) to avoid
 "Sync API inside asyncio loop" error when MCP runs in async context.
@@ -26,8 +26,14 @@ import asyncio
 import os
 import json
 import logging
+import sys
 import time
 from pathlib import Path
+
+_CORE_DIR = Path(__file__).resolve().parent.parent
+if str(_CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(_CORE_DIR))
+from credentials_paths import linkedin_session_dir
 from typing import Optional, List
 from urllib.parse import urlparse, parse_qs
 
@@ -43,7 +49,11 @@ except ImportError:
     HAS_PLAYWRIGHT = False
 
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", Path.cwd()))
-SESSION_DIR = VAULT_PATH / ".claude" / "linkedin"
+SESSION_DIR = (
+    Path(os.environ["LINKEDIN_SESSION_DIR"]).expanduser()
+    if os.environ.get("LINKEDIN_SESSION_DIR")
+    else linkedin_session_dir()
+)
 SESSION_DIR.mkdir(parents=True, exist_ok=True)
 
 # Session file stores browser context state

@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Telegram-like message body (HTML from Telethon unparse) */
+.telegram-message-html {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.telegram-message-html a {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+.telegram-message-html a:hover {
+  color: #bae6fd;
+}
+.telegram-message-html strong,
+.telegram-message-html b {
+  font-weight: 700;
+}
+.telegram-message-html em,
+.telegram-message-html i {
+  font-style: italic;
+}
+.telegram-message-html u {
+  text-decoration: underline;
+}
+.telegram-message-html del,
+.telegram-message-html s {
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+.telegram-message-html code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgb(39 39 42 / 0.9);
+}
+.telegram-message-html pre {
+  margin: 0.5em 0;
+  padding: 0.5em 0.75em;
+  border-radius: 6px;
+  background: rgb(24 24 27 / 0.95);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.telegram-message-html blockquote {
+  margin: 0.5em 0;
+  padding-left: 0.75em;
+  border-left: 3px solid rgb(63 63 70);
+  color: rgb(212 212 216);
+}
+.telegram-message-html br {
+  line-height: 1.5;
+}
+
+/* Telegram-like rounded media row (photos / video) */
+.tg-media-preview {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  max-width: 100%;
+}
+.tg-media-preview.tg-media-album {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.tg-media-preview .tg-media-thumb {
+  width: 100%;
+  max-width: 100%;
+  max-height: min(52vh, 420px);
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgb(24 24 27);
+  vertical-align: middle;
+}
+.tg-media-preview video.tg-media-thumb {
+  display: block;
+}

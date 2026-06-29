@@ -31,6 +31,18 @@ if [[ -f "$ONBOARDING_MARKER" ]]; then
         node "$CLAUDE_DIR/.scripts/check-anthropic-changelog.cjs" 2>/dev/null &
     fi
 
+    # MCP health check (failures → prompt to run /mcp-health-check-custom)
+    if command -v node &>/dev/null && [[ -f "$CLAUDE_DIR/.claude/skills/mcp-health-check-custom/scripts/mcp-health-check.cjs" ]]; then
+        MCP_CHECK_OUTPUT=$(node "$CLAUDE_DIR/.claude/skills/mcp-health-check-custom/scripts/mcp-health-check.cjs" 2>/dev/null) || true
+        if echo "$MCP_CHECK_OUTPUT" | grep -q '"ok":false'; then
+            FAILED=$(echo "$MCP_CHECK_OUTPUT" | grep '"ok":false' -A1 | head -5)
+            echo "--- ⚠️ MCP Health Check: Failures Detected ---"
+            echo "Some MCP servers failed. Run: /mcp-health-check-custom"
+            echo "---"
+            echo ""
+        fi
+    fi
+
     # Check for pending learnings (if not checked today)
     if [[ -x "$CLAUDE_DIR/.scripts/learning-review-prompt.sh" ]]; then
         LAST_LEARNING_CHECK="$CLAUDE_DIR/System/.last-learning-check"

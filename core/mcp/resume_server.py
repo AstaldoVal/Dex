@@ -20,7 +20,6 @@ Tools:
 - export_resume: Export to file
 """
 
-import os
 import sys
 import json
 import logging
@@ -28,6 +27,17 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 import uuid
+
+# Canonical vault paths (05-Areas/Career/…); requires VAULT_PATH or cwd as vault root.
+_repo_root = str(Path(__file__).resolve().parent.parent.parent)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+from core.paths import (  # noqa: E402
+    EVIDENCE_DIR,
+    RESUME_DIR,
+    SESSIONS_DIR,
+    VAULT_ROOT as BASE_DIR,
+)
 
 from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
@@ -73,13 +83,6 @@ class EnhancedJSONEncoder(json.JSONEncoder):
         if hasattr(obj, '__dict__'):
             return obj.__dict__
         return super().default(obj)
-
-# Configuration - Vault paths
-BASE_DIR = Path(os.environ.get('VAULT_PATH', Path.cwd()))
-CAREER_DIR = BASE_DIR / 'Active' / 'Career'
-RESUME_DIR = CAREER_DIR / 'Resume'
-SESSIONS_DIR = RESUME_DIR / 'Sessions'
-EVIDENCE_DIR = BASE_DIR / 'Resources' / 'Career_Evidence'
 
 # Ensure directories exist
 SESSIONS_DIR.mkdir(parents=True, exist_ok=True)

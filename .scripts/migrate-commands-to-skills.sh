@@ -3,8 +3,10 @@
 
 set -e
 
-SKILLS_DIR="/Users/dave/Dex/Dex/.claude/skills"
-COMMANDS_DIR="/Users/dave/Dex/Dex/.claude/commands"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SKILLS_DIR="$REPO_ROOT/.claude/skills"
+COMMANDS_DIR="$REPO_ROOT/.claude/commands"
 
 # Create skills directory structure
 mkdir -p "$SKILLS_DIR"

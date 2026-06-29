@@ -1,0 +1,24 @@
+**Область:** интеграция **cursor-team-kit** в Dex (vendored `Skills_library/`, 18 stub в `.cursor/skills/`, правка `sync-slash-autosuggest.cjs`, `update.sh`). Тела upstream-skills и проект **Mia-Shopping-PT** (только заметки) не разбирались.
+
+**Вердикт:** для **поведения** — ок (slash → канон, без дублирования логики в stub). Для **поддерживаемости интеграции** — **не проходит** планку скилла: есть риск рассинхрона и наращивание цепочки в `resolveCanonical`. Исправления ниже — не косметика.
+
+### 1. Структурные регрессии
+
+**Два источника правды для stub.**  
+`sync-slash-autosuggest.cjs` умеет `writeWrapper`, но гоняется только по именам из **commands/menus**. Имена cursor-team-kit туда **не входят** — 18 файлов в `.cursor/skills/` написаны вручную. После `update.sh` или правки `description` в каноне stub **сами не обновятся**. Это долг, не «тонкие обёртки по дизайну».
+
+**Рекомендация:** в конце `update.sh` или отдельной командой `npm run cursor:sync-cursor-team-kit-stubs` — обход `Skills_library/cursor-team-kit/skills/*/SKILL.md` и перезапись stub через ту же логику, что `writeWrapper` (один генератор).
+
+### 2. Упущенный «code judo»
+
+**`resolveCanonical` — растущая лестница `if (exists)`.**  
+Уже: `.claude/skills` → `pm/dex` → `cursor-team-kit` → commands. Следующая библиотека = ещё один блок.
+
+## Блокеры перед «approve»
+
+| # | Проблема | Действие |
+|---|----------|----------|
+| B1 | Stub не синхронизируются с каноном | Генератор stub из `Skills_library/cursor-team-kit/skills/` |
+| B2 | `resolveCanonical` разрастается | Табличный resolver |
+
+**Без B1–B2** интеграцию как «закрытую по качеству» не принимаю — через полгода описания slash и канон разъедутся.

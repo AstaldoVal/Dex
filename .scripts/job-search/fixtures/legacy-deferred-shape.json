@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "resume_id": "00000000-0000-0000-0000-000000000001",
+    "job_title": "Product Manager",
+    "company": "TestCo",
+    "review_round": 1,
+    "jd_themes": ["igaming"]
+  },
+  "apply": {
+    "target_title": { "action": "set", "value": "Product Manager" }
+  },
+  "deferred_v1": {
+    "skills_add": ["RGS"],
+    "bullets_add": [
+      {
+        "company": "EBET",
+        "role": "Product Manager",
+        "text": "Owned provider onboarding end-to-end."
+      }
+    ],
+    "new_sections": ["Languages"],
+    "other": []
+  }
+}

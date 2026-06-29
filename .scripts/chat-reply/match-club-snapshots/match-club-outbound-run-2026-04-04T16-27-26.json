@@ -1,0 +1,1396 @@
+{
+  "enabled": true,
+  "queueLength": 9,
+  "queueSource": "approved_followup",
+  "queueSourceFile": ".scripts/chat-reply/chat-followup-phrases-approved-en.md",
+  "insertOnly": true,
+  "manualSendTimeoutMs": 600000,
+  "stats": {
+    "sent": 106,
+    "skipped": 0,
+    "failed": 0,
+    "byReason": {
+      "user_confirmed_send": 106
+    }
+  },
+  "perChat": [
+    {
+      "peerTitle": "bennettalfr246, 75",
+      "peerTitleNormalized": "bennettalfr246",
+      "chatUrl": "https://match-club.club/chats/-94244082/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "coach, 67",
+      "peerTitleNormalized": "coach",
+      "chatUrl": "https://match-club.club/chats/-94244012/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Sanford, 65",
+      "peerTitleNormalized": "Sanford",
+      "chatUrl": "https://match-club.club/chats/-94243937/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "JP, 65",
+      "peerTitleNormalized": "JP",
+      "chatUrl": "https://match-club.club/chats/-94243784/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "jalmptyltd397, 70",
+      "peerTitleNormalized": "jalmptyltd397",
+      "chatUrl": "https://match-club.club/chats/-94243646/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "RoneyD, 60",
+      "peerTitleNormalized": "RoneyD",
+      "chatUrl": "https://match-club.club/chats/-94243616/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Case, 64",
+      "peerTitleNormalized": "Case",
+      "chatUrl": "https://match-club.club/chats/-94243497/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Mike, 68",
+      "peerTitleNormalized": "Mike",
+      "chatUrl": "https://match-club.club/chats/-94243370/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Gary, 71",
+      "peerTitleNormalized": "Gary",
+      "chatUrl": "https://match-club.club/chats/-94243275/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Conan504, 67",
+      "peerTitleNormalized": "Conan504",
+      "chatUrl": "https://match-club.club/chats/-94243188/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Edward, 71",
+      "peerTitleNormalized": "Edward",
+      "chatUrl": "https://match-club.club/chats/-94243152/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Kevin, 57",
+      "peerTitleNormalized": "Kevin",
+      "chatUrl": "https://match-club.club/chats/-94243136/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jason, 54",
+      "peerTitleNormalized": "Jason",
+      "chatUrl": "https://match-club.club/chats/-94243075/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "jc, 70",
+      "peerTitleNormalized": "jc",
+      "chatUrl": "https://match-club.club/chats/-94243068/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jim, 67",
+      "peerTitleNormalized": "Jim",
+      "chatUrl": "https://match-club.club/chats/-94243029/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jeff Kalinoski, 55",
+      "peerTitleNormalized": "Jeff Kalinoski",
+      "chatUrl": "https://match-club.club/chats/-94242655/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Patrick, 62",
+      "peerTitleNormalized": "Patrick",
+      "chatUrl": "https://match-club.club/chats/-94242634/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joey, 55",
+      "peerTitleNormalized": "Joey",
+      "chatUrl": "https://match-club.club/chats/-94242469/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rocker, 61",
+      "peerTitleNormalized": "Rocker",
+      "chatUrl": "https://match-club.club/chats/-94242449/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Scott, 66",
+      "peerTitleNormalized": "Scott",
+      "chatUrl": "https://match-club.club/chats/-94242340/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "James, 58",
+      "peerTitleNormalized": "James",
+      "chatUrl": "https://match-club.club/chats/-94242170/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "JD, 56",
+      "peerTitleNormalized": "JD",
+      "chatUrl": "https://match-club.club/chats/-94240857/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bob, 77",
+      "peerTitleNormalized": "Bob",
+      "chatUrl": "https://match-club.club/chats/-94240640/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Stephen Carr, 64",
+      "peerTitleNormalized": "Stephen Carr",
+      "chatUrl": "https://match-club.club/chats/-94240528/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tom, 76",
+      "peerTitleNormalized": "Tom",
+      "chatUrl": "https://match-club.club/chats/-94240509/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Peter Antonio -, 84",
+      "peerTitleNormalized": "Peter Antonio -",
+      "chatUrl": "https://match-club.club/chats/-94240439/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joe, 66",
+      "peerTitleNormalized": "Joe",
+      "chatUrl": "https://match-club.club/chats/-94240415/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bob, 70",
+      "peerTitleNormalized": "Bob",
+      "chatUrl": "https://match-club.club/chats/-94240384/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Curtis, 68",
+      "peerTitleNormalized": "Curtis",
+      "chatUrl": "https://match-club.club/chats/-94239963/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Denny H, 51",
+      "peerTitleNormalized": "Denny H",
+      "chatUrl": "https://match-club.club/chats/-94239934/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rick, 81",
+      "peerTitleNormalized": "Rick",
+      "chatUrl": "https://match-club.club/chats/-94239878/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "David, 66",
+      "peerTitleNormalized": "David",
+      "chatUrl": "https://match-club.club/chats/-94239873/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Chuck, 74",
+      "peerTitleNormalized": "Chuck",
+      "chatUrl": "https://match-club.club/chats/-94239736/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "david, 69",
+      "peerTitleNormalized": "david",
+      "chatUrl": "https://match-club.club/chats/-94239689/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Leo, 74",
+      "peerTitleNormalized": "Leo",
+      "chatUrl": "https://match-club.club/chats/-94239555/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ron, 59",
+      "peerTitleNormalized": "Ron",
+      "chatUrl": "https://match-club.club/chats/-94239533/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Doug, 56",
+      "peerTitleNormalized": "Doug",
+      "chatUrl": "https://match-club.club/chats/-94239454/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "DonTcare, 61",
+      "peerTitleNormalized": "DonTcare",
+      "chatUrl": "https://match-club.club/chats/-94239310/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Scott, 63",
+      "peerTitleNormalized": "Scott",
+      "chatUrl": "https://match-club.club/chats/-94238950/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Richard, 64",
+      "peerTitleNormalized": "Richard",
+      "chatUrl": "https://match-club.club/chats/-94238783/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Allen, 69",
+      "peerTitleNormalized": "Allen",
+      "chatUrl": "https://match-club.club/chats/-94238739/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Frank, 53",
+      "peerTitleNormalized": "Frank",
+      "chatUrl": "https://match-club.club/chats/48503939/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rusty55, 55",
+      "peerTitleNormalized": "Rusty55",
+      "chatUrl": "https://match-club.club/chats/-94238287/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Don, 70",
+      "peerTitleNormalized": "Don",
+      "chatUrl": "https://match-club.club/chats/-94238152/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "jimmyg, 47",
+      "peerTitleNormalized": "jimmyg",
+      "chatUrl": "https://match-club.club/chats/-94238012/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Vic, 53",
+      "peerTitleNormalized": "Vic",
+      "chatUrl": "https://match-club.club/chats/48497197/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Sigi, 72",
+      "peerTitleNormalized": "Sigi",
+      "chatUrl": "https://match-club.club/chats/-94237749/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rojo, 52",
+      "peerTitleNormalized": "Rojo",
+      "chatUrl": "https://match-club.club/chats/-94237688/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tony, 59",
+      "peerTitleNormalized": "Tony",
+      "chatUrl": "https://match-club.club/chats/-94233559/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ken, 74",
+      "peerTitleNormalized": "Ken",
+      "chatUrl": "https://match-club.club/chats/-94233125/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "James, 69",
+      "peerTitleNormalized": "James",
+      "chatUrl": "https://match-club.club/chats/-94233052/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Daniel, 65",
+      "peerTitleNormalized": "Daniel",
+      "chatUrl": "https://match-club.club/chats/-94232519/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Matt, 65",
+      "peerTitleNormalized": "Matt",
+      "chatUrl": "https://match-club.club/chats/-94232445/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Art, 76",
+      "peerTitleNormalized": "Art",
+      "chatUrl": "https://match-club.club/chats/-94232394/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Terry, 68",
+      "peerTitleNormalized": "Terry",
+      "chatUrl": "https://match-club.club/chats/-94231624/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Peter macdonald, 52",
+      "peerTitleNormalized": "Peter macdonald",
+      "chatUrl": "https://match-club.club/chats/-94231566/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Steve, 71",
+      "peerTitleNormalized": "Steve",
+      "chatUrl": "https://match-club.club/chats/-94231519/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joel, 78",
+      "peerTitleNormalized": "Joel",
+      "chatUrl": "https://match-club.club/chats/48498834/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ray, 62",
+      "peerTitleNormalized": "Ray",
+      "chatUrl": "https://match-club.club/chats/48498832/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Eddy, 58",
+      "peerTitleNormalized": "Eddy",
+      "chatUrl": "https://match-club.club/chats/-94231014/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Raeford, 73",
+      "peerTitleNormalized": "Raeford",
+      "chatUrl": "https://match-club.club/chats/48498829/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "dpp9475525, 67",
+      "peerTitleNormalized": "dpp9475525",
+      "chatUrl": "https://match-club.club/chats/48498819/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Mark Smith, 64",
+      "peerTitleNormalized": "Mark Smith",
+      "chatUrl": "https://match-club.club/chats/48497655/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jim, 67",
+      "peerTitleNormalized": "Jim",
+      "chatUrl": "https://match-club.club/chats/-94230861/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Graham, 67",
+      "peerTitleNormalized": "Graham",
+      "chatUrl": "https://match-club.club/chats/48497600/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Gdub aka Daddy, 56",
+      "peerTitleNormalized": "Gdub aka Daddy",
+      "chatUrl": "https://match-club.club/chats/-94230845/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rick, 56",
+      "peerTitleNormalized": "Rick",
+      "chatUrl": "https://match-club.club/chats/-94230420/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "RUSSELL, 62",
+      "peerTitleNormalized": "RUSSELL",
+      "chatUrl": "https://match-club.club/chats/-94230386/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bill, 66",
+      "peerTitleNormalized": "Bill",
+      "chatUrl": "https://match-club.club/chats/-94230186/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ted, 60",
+      "peerTitleNormalized": "Ted",
+      "chatUrl": "https://match-club.club/chats/-94229986/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Morgan, 55",
+      "peerTitleNormalized": "Morgan",
+      "chatUrl": "https://match-club.club/chats/-94229963/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Greg, 67",
+      "peerTitleNormalized": "Greg",
+      "chatUrl": "https://match-club.club/chats/-94229944/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joe Abbate, 69",
+      "peerTitleNormalized": "Joe Abbate",
+      "chatUrl": "https://match-club.club/chats/-94229729/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Robert, 67",
+      "peerTitleNormalized": "Robert",
+      "chatUrl": "https://match-club.club/chats/48497773/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tim, 67",
+      "peerTitleNormalized": "Tim",
+      "chatUrl": "https://match-club.club/chats/48497756/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "condr4271574, 70",
+      "peerTitleNormalized": "condr4271574",
+      "chatUrl": "https://match-club.club/chats/48497731/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "timosspata907, 52",
+      "peerTitleNormalized": "timosspata907",
+      "chatUrl": "https://match-club.club/chats/48497712/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tony, 65",
+      "peerTitleNormalized": "Tony",
+      "chatUrl": "https://match-club.club/chats/48497708/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Scott, 70",
+      "peerTitleNormalized": "Scott",
+      "chatUrl": "https://match-club.club/chats/48497706/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Csteph, 46",
+      "peerTitleNormalized": "Csteph",
+      "chatUrl": "https://match-club.club/chats/-94229256/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Patrick, 69",
+      "peerTitleNormalized": "Patrick",
+      "chatUrl": "https://match-club.club/chats/48497665/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ironman001, 61",
+      "peerTitleNormalized": "Ironman001",
+      "chatUrl": "https://match-club.club/chats/48497663/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Dwight, 67",
+      "peerTitleNormalized": "Dwight",
+      "chatUrl": "https://match-club.club/chats/-94229202/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Michael, 65",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/48497642/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "DangerRed4, 60",
+      "peerTitleNormalized": "DangerRed4",
+      "chatUrl": "https://match-club.club/chats/48497639/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Mike, 65",
+      "peerTitleNormalized": "Mike",
+      "chatUrl": "https://match-club.club/chats/48497636/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Muddyoldman, 69",
+      "peerTitleNormalized": "Muddyoldman",
+      "chatUrl": "https://match-club.club/chats/-94229180/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rob, 58",
+      "peerTitleNormalized": "Rob",
+      "chatUrl": "https://match-club.club/chats/48497626/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Whitey, 68",
+      "peerTitleNormalized": "Whitey",
+      "chatUrl": "https://match-club.club/chats/-94229153/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Charles Hand, 59",
+      "peerTitleNormalized": "Charles Hand",
+      "chatUrl": "https://match-club.club/chats/-94228500/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Hugh, 72",
+      "peerTitleNormalized": "Hugh",
+      "chatUrl": "https://match-club.club/chats/-94228281/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tim, 65",
+      "peerTitleNormalized": "Tim",
+      "chatUrl": "https://match-club.club/chats/-94228097/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Michael, 50",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/-94228038/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "krob1569kr963, 65",
+      "peerTitleNormalized": "krob1569kr963",
+      "chatUrl": "https://match-club.club/chats/-94227854/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tripp, 53",
+      "peerTitleNormalized": "Tripp",
+      "chatUrl": "https://match-club.club/chats/-94227796/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Justme, 50",
+      "peerTitleNormalized": "Justme",
+      "chatUrl": "https://match-club.club/chats/-94227476/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Friends 227, 67",
+      "peerTitleNormalized": "Friends 227",
+      "chatUrl": "https://match-club.club/chats/-94227142/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Panzerdude, 69",
+      "peerTitleNormalized": "Panzerdude",
+      "chatUrl": "https://match-club.club/chats/-94227117/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Keith, 53",
+      "peerTitleNormalized": "Keith",
+      "chatUrl": "https://match-club.club/chats/-94226961/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "culsnup625, 67",
+      "peerTitleNormalized": "culsnup625",
+      "chatUrl": "https://match-club.club/chats/-94226375/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Roy, 73",
+      "peerTitleNormalized": "Roy",
+      "chatUrl": "https://match-club.club/chats/-94226079/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Charlie, 70",
+      "peerTitleNormalized": "Charlie",
+      "chatUrl": "https://match-club.club/chats/-94225567/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Ed, 68",
+      "peerTitleNormalized": "Ed",
+      "chatUrl": "https://match-club.club/chats/-94244289/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Brad, 68",
+      "peerTitleNormalized": "Brad",
+      "chatUrl": "https://match-club.club/chats/-94244304/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jon, 61",
+      "peerTitleNormalized": "Jon",
+      "chatUrl": "https://match-club.club/chats/-94244315/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Legend, 53",
+      "peerTitleNormalized": "Legend",
+      "chatUrl": "https://match-club.club/chats/-94244392/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    }
+  ]
+}

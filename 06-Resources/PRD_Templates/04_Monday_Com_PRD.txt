@@ -1,0 +1,44 @@
+SOURCE: https://www.monday.com/blog/rnd/prd-template-product-requirement-document/
+FETCHED: 2025-03-04
+ORIGINAL FORMAT: monday dev template (add solution via auth.monday.com)
+
+---
+monday.com PRD Template - 10 Components
+
+1. Project overview and background
+   - Product purpose, target users, strategic context, market analysis, competitive positioning
+
+2. Objectives and success metrics
+   - Product goals, measurable KPIs for impact and alignment
+
+3. Stakeholders, roles, and responsibilities
+   - Team members, decision-makers, contributors, owners per requirement/deliverable
+
+4. User personas, stories, and use cases
+   - Target users, needs, core scenarios, user stories, real-world context
+
+5. Functional requirements
+   - Essential features and behaviors, priorities, linked diagrams/wireframes/process flows
+
+6. Non-functional requirements
+   - Performance, reliability, scalability, security, localization, compliance
+
+7. Assumptions, dependencies, and constraints
+   - External systems, preconditions, limitations, project assumptions
+
+8. Timeline, milestones, and deliverables
+   - Major phases, deadlines, expected outputs
+
+9. Design resources and wireframes
+   - Mockups, diagrams, workflow charts for complex requirements
+
+10. Out-of-scope items and open questions
+    - Intentional exclusions, outstanding questions for team discussion
+
+Template completion (6 sections):
+1. Problem
+2. Target audience
+3. Supporting data
+4. Hypothesis
+5. Solution
+6. Metrics

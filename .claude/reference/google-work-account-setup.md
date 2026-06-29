@@ -1,6 +1,6 @@
 # Подключение рабочего Google (roman.matsukatov@mindera.com)
 
-В Dex уже настроены MCP для рабочего аккаунта (**google-calendar-work-mcp**, **google-drive-work-mcp**) и папка для credentials/токенов (`.claude/google-work/`). Остаётся только выполнить шаги ниже — всё остальное делается автоматически при первом использовании.
+В Dex уже настроены MCP для рабочего аккаунта (**google-calendar-work-mcp**, **google-drive-work-mcp**) и папка для credentials/токенов (**`Credentials/google-work/`**; в репозитории symlink **`.claude/google-work`** указывает сюда). Остаётся только выполнить шаги ниже — всё остальное делается автоматически при первом использовании.
 
 ---
 
@@ -44,8 +44,8 @@
 7. Справа в строке нажми иконку **скачивания** (стрелка вниз).
 8. Сохрани файл и **переименуй** его в **`credentials.json`**.
 9. Перемести этот файл в папку проекта Dex:
-   - Целевой путь: **`Dex/.claude/google-work/credentials.json`**
-   - То есть в папку `google-work` рядом с этим README.
+   - Канонический путь: **`Credentials/google-work/credentials.json`**
+   - Либо тот же путь через symlink: **`Dex/.claude/google-work/credentials.json`** (если symlink уже создан).
 
 ---
 
@@ -61,6 +61,6 @@
 
 ## Если что-то пошло не так
 
-- **Credentials file not found:** проверь, что файл лежит по пути `Dex/.claude/google-work/credentials.json` и называется именно `credentials.json`.
+- **Credentials file not found:** проверь, что файл лежит по пути **`Credentials/google-work/credentials.json`** (или по symlink **`.claude/google-work/credentials.json`**) и называется именно `credentials.json`.
 - **Access blocked / App not verified:** для Internal приложения это обычно не показывают; для External может понадобиться добавить свой email в Test users на OAuth consent screen.
 - **API not enabled:** убедись, что в проекте включены и Calendar API, и Drive API (Шаг 2).

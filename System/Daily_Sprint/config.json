@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "timezone": "Europe/Lisbon",
+  "max_experiments_per_day": 3,
+  "default_phases": [
+    "queued",
+    "spec",
+    "tasks",
+    "implement",
+    "eval",
+    "human_review",
+    "done"
+  ],
+  "terminal_phases": ["done", "blocked", "deferred"],
+  "phase_transitions": {
+    "queued": ["spec", "deferred"],
+    "spec": ["tasks", "blocked", "deferred"],
+    "tasks": ["implement", "blocked", "deferred"],
+    "implement": ["eval", "blocked"],
+    "eval": ["human_review", "implement", "blocked"],
+    "human_review": ["done", "implement", "blocked", "deferred"],
+    "blocked": ["spec", "tasks", "implement", "deferred"],
+    "deferred": [],
+    "done": []
+  },
+  "runs_dir": "System/Daily_Sprint/runs",
+  "skill_map": ".claude/reference/day-sprint-skill-map.md",
+  "session_log": "System/Pomodoro/session-events.jsonl",
+  "handoff_board": "System/Pomodoro/agent-handoff-board.json",
+  "night_shift": {
+    "timezone": "Europe/Lisbon",
+    "work_phases": ["spec", "tasks", "implement"],
+    "max_advances_per_run": 3,
+    "allowed_hours_local": [22, 23, 0, 1, 2, 3, 4, 5, 6],
+    "deferred_commands": {
+      "job_search_full_flow": "npm run job-search:full-flow"
+    },
+    "run_deferred_commands": false
+  },
+  "phase_eval": {
+    "enabled": true,
+    "block_shell_advance": true
+  }
+}

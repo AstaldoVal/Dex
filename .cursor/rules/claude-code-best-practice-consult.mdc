@@ -1,0 +1,39 @@
+---
+description: Consult local shanraisshan/claude-code-best-practice mirror when changing Claude-Code-style agent infra (skills, hooks, MCP, commands, subagents, memory, settings) or adopting orchestration workflows; not for generic app code.
+globs:
+alwaysApply: false
+---
+
+# Claude Code best practice — consult (Dex mirror)
+
+## When to use this rule
+
+User or task touches **agent / Claude Code–style infrastructure**, for example:
+
+- `.claude/` skills, commands, agents (subagents), hooks, `settings.json`, plugins
+- MCP configuration (`.mcp.json`, server wiring, tool design)
+- Memory layout: `CLAUDE.md`, `.claude/rules`, project vs user rules
+- Orchestration: slash command → agent → skill; planning / review **workflows** for agentic dev
+- Headless CLI, scheduled or parallel agent patterns **as concepts** to map into Dex/Cursor
+
+Do **not** use this rule as the primary guide for ordinary application code changes; use Dex coding skills gate (Superpowers + Karpathy) instead.
+
+## Local mirror (source of truth in vault)
+
+- Root: `06-Resources/External/claude-code-best-practice/`
+- Dex entry hub (scenario → path): `06-Resources/Dex_System/Claude_Code_Best_Practice_Consult.md`
+
+## Consultation order (always)
+
+1. **Read** `06-Resources/Dex_System/Claude_Code_Best_Practice_Consult.md` — pick the row that matches the scenario.
+2. **Read** the specific files under the mirror (`best-practice/*.md`, `implementation/*.md`, `orchestration-workflow/orchestration-workflow.md`, `development-workflows/**/*.md`, or targeted `tips/*`) — do not start with repo-wide `grep` as the first step.
+3. If vault semantic search is needed and QMD is available (`node .scripts/semantic-search/check-availability.cjs --quiet` exits 0), use `qmd query "<intent>" -c resources` per `.cursor/rules/search-routing.mdc`. If QMD is unavailable, use `Read` on the index + named paths above.
+
+## Cursor vs Claude Code
+
+- Upstream assumes **Claude Code** paths and behavior. In **Cursor**, map ideas to `.cursor/rules`, Cursor skills, and repo conventions; state deltas explicitly (what applies, what does not).
+
+## Relation to Superpowers / Karpathy
+
+- **Superpowers + Karpathy** remain canonical for **how** to implement and edit code (assumptions, minimal scope, verification).
+- This mirror answers **what** Claude Code ecosystem recommends for **agent product** setup and workflows. Use both where tasks overlap (e.g. new skill: consult mirror for structure; use Karpathy for patch size and scope).

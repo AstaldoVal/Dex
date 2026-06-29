@@ -1,0 +1,30 @@
+{
+  "exp_id": "099",
+  "area": "PUSH",
+  "short_name": "CLI Smoke Test",
+  "hypothesis": "Smoke test: CLI creates feature, draft experiment, and link without warehouse datasource.",
+  "value_type": "json",
+  "hash_attribute": "userId",
+  "coverage": 1.0,
+  "variations": [
+    {
+      "name": "Control — Smoke",
+      "value": {
+        "headline": "Control smoke",
+        "body": "CLI smoke control variation"
+      }
+    },
+    {
+      "name": "Variant A — Smoke",
+      "value": {
+        "headline": "Variant smoke",
+        "body": "CLI smoke variant variation"
+      }
+    }
+  ],
+  "metrics": {
+    "primary": [],
+    "secondary": [],
+    "guardrails": []
+  }
+}

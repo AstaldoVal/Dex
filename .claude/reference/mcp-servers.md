@@ -19,6 +19,24 @@ Traditional approach: AI directly parses raw files/APIs every time (slow, incons
 - **Reusability** - One server, many AI agents can use it
 - **Separation of concerns** - Data layer vs reasoning layer
 
+## Research and web search (Cursor)
+
+For **web and academic research** in Cursor (Open WebSearch, Brave, Tavily, Exa, optional **claude-code-mcp** for one-shot Claude Code enrichment), see:
+- **`.claude/reference/research-capabilities-playbook.md`** (единый "что/когда/зачем" playbook)
+- **`.claude/reference/research-search-mcp.md`** (техдетали MCP, настройка и порядок вызовов)
+
+Server list: **`.cursor/mcp.json.source`**; after edits run **`python3 .scripts/cursor-sync-mcp.py`** and restart Cursor.
+
+### LangSmith MCP (`langsmith-mcp`)
+
+**What it does:** Read-only access to LangSmith workspace: runs/traces, prompts, datasets, experiments, billing usage (official `langsmith-mcp-server` via `uvx`).
+
+**Applicator staging (EU):** API key and endpoint live in **`Credentials/applicator-staging/langsmith-staging.env`** (see `langsmith-staging.env.example`). `cursor-sync-mcp.py` injects `LANGSMITH_API_KEY`, `LANGSMITH_ENDPOINT`, `LANGSMITH_PROJECT` into `~/.cursor/mcp.json` — never commit keys.
+
+**Tools (examples):** `list_projects`, `fetch_runs`, `list_prompts`, `list_datasets`, `get_thread_history`.
+
+**Docs:** https://docs.langchain.com/langsmith/langsmith-mcp-server
+
 ---
 
 ## Built-in MCP Servers
@@ -90,6 +108,13 @@ Dex reads from the **macOS Calendar.app**. To use your Google/Gmail calendar:
 
 No separate Google Calendar MCP or API keys are needed; Calendar.app is the bridge.
 
+**Enable or add the Calendar MCP (Cursor and Claude Code)**
+
+- **Claude — стандартный коннектор:** Если пользуешься приложением Claude (Claude Desktop), можно не настраивать MCP вручную. Открой **Settings** → **Connectors** → нажми **Browse Connector** → в списке выбери **Google Calendar** и подключи (войди в Google при запросе). Календарь будет доступен без Google Cloud и без правки JSON.
+- **Cursor — встроенного коннектора нет.** В Cursor нет аналога «Browse Connector»; подключение только через добавление MCP в конфиг и credentials из Google Cloud (см. ниже раздел Google Calendar MCP и пошаговую настройку).
+
+Пошаговая настройка (куда нажать, куда перейти) для **Google Calendar через npm** (@cocal/google-calendar-mcp) — в разделе **Google Calendar MCP** ниже (подраздел «Пошаговая установка для Cursor и Claude»).
+
 ---
 
 ### Google Calendar MCP (`google_calendar_server.py`)
@@ -121,14 +146,23 @@ Same benefits as Calendar MCP (live events, attendees, day-at-a-glance) but with
    - Application type: **Desktop app** → Create → download the JSON
 
 3. **Credentials**
-   - Save the downloaded file as `credentials.json` in the project root, **or** set `GOOGLE_CALENDAR_CREDENTIALS_PATH` in `.env` to its path.
-   - Optional: set `GOOGLE_CALENDAR_TOKEN_PATH` if you want the token file elsewhere (default: same directory as credentials, file `google_calendar_token.json`).
+   - Save the downloaded file as **`Credentials/personal/credentials.json`** (recommended), **or** set `GOOGLE_CALENDAR_CREDENTIALS_PATH` in `.env` to its path.
+   - Optional: set `GOOGLE_CALENDAR_TOKEN_PATH` if you want the token file elsewhere (default: **`Credentials/personal/google_calendar_token.json`** when using defaults from `core/credentials_paths.py`).
 
 4. **First run**
    - Enable the MCP in Cursor (e.g. add or enable `.claude/mcp/google-calendar.json`). On first tool use, a browser window opens for Google sign-in and consent. After that, the token is saved and no browser is needed.
 
 5. **Use in Dex**
    - For `/daily-plan` and meeting context, use the **gcal_** tools instead of **calendar_** when you rely on Google Calendar only (e.g. `gcal_get_today`, `gcal_get_events_with_attendees`).
+
+**Вариант через npm (@cocal/google-calendar-mcp, без Python)** — пошаговая установка для Cursor и Claude:
+
+1. **Получить credentials в Google Cloud (один раз):** Console → создать проект → **APIs & Services** → **Library** → включить **Google Calendar API** → **OAuth consent screen** (настроить, Internal/External) → **Credentials** → **Create credentials** → **OAuth client ID** → **Desktop app** → скачать JSON. Сохранить файл (например `google-calendar-credentials.json`) и запомнить полный путь. Для External в Test users добавить свой email.
+2. **Cursor:** Открыть конфиг MCP (Cmd+Shift+P → MCP → Open MCP configuration, или Settings → MCP). Добавить в `mcpServers` блок `"google-calendar"` с `"command": "npx"`, `"args": ["-y", "@cocal/google-calendar-mcp"]`, `"env": { "GOOGLE_OAUTH_CREDENTIALS": "/полный/путь/к/файлу.json" }`. Сохранить, перезапустить Cursor. При первом запросе к календарю — вход в Google в браузере.
+3. **Claude (если не используешь стандартный коннектор):** Settings → **Connectors** (раздел один и тот же, без вариантов названий). Конфиг хранится в `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) или `%APPDATA%\Claude\claude_desktop_config.json` (Windows). В объект `mcpServers` добавить тот же блок `google-calendar` с `npx` и `GOOGLE_OAUTH_CREDENTIALS`. Сохранить, перезапустить Claude; при первом использовании — вход в Google в браузере.
+4. **Apple Calendars:** В Dex уже есть встроенный Calendar MCP (Calendar.app); пакет mcp-apple-calendars (npm) требует отдельный Swift-мост на порту 8080 — для простоты лучше встроенный вариант.
+
+**Чеклист (npm):** проект в Google Cloud, Calendar API включён, OAuth Desktop app создан, JSON скачан; в Cursor/Claude в mcpServers добавлен google-calendar с путём к JSON; перезапуск; первый запрос — вход в Google.
 
 ---
 
@@ -145,9 +179,17 @@ Drive holds documents and spreadsheets; the MCP gives Dex structured access with
 - **List** - Files and folders in any folder or root
 - **Read** - Google Docs as plain text, Sheets as CSV, other text files as-is
 - **Metadata** - Id, name, mimeType, size, dates, links, parents
-- **Same credentials** - Can reuse `credentials.json` from Google Calendar MCP (enable Drive API in the same project); token is separate (`google_drive_token.json`)
+- **Same credentials** - Can reuse `credentials.json` from Google Calendar MCP (enable Drive API in the same project); token is separate (`google_drive_token.json`, default under **`Credentials/personal/`**)
 
 **Tools:** `gdrive_list_files`, `gdrive_search`, `gdrive_get_metadata`, `gdrive_read_file`, `gdrive_get_folder_info`
+
+**Save artifact to Google Docs or Google Spreadsheets:**  
+Когда нужно сохранить артефакт (PRD, саммари, отчёт) в Google Doc или в Google Таблицу:
+
+1. **Сейчас (read-only MCP):** Текстовый артефакт сохранить в vault (например `04-Projects/.../PRD.md` или `00-Inbox/`), затем пользователь вручную копирует в Google Docs или создаёт документ через Drive и вставляет текст. Альтернатива: экспорт в .docx (например через `/cover-letter` или скрипты) и загрузка в Drive вручную.
+2. **Расширение (рекомендуется):** Добавить в Google Drive MCP scope на запись (`https://www.googleapis.com/auth/drive.file` и при необходимости Docs/Sheets API) и инструменты `gdrive_create_doc` (создать Google Doc с текстом) и `gdrive_create_sheet` (создать Google Таблицу, опционально с данными). Тогда шаг «сохрани артефакт в Google Docs/Sheets» выполняется из скилла одной командой.
+
+В скиллах, которые производят артефакты (product-brief, deliver-prd, отчёты), явно предусмотрен шаг: **по запросу пользователя или по умолчанию — предложить/сохранить результат в Google Docs или Google Spreadsheets** (через текущий обходной путь или через будущие `gdrive_create_doc` / `gdrive_create_sheet`). См. также «Writing rules» и экспорт в .docx в CLAUDE.md.
 
 **Setup:**
 
@@ -161,8 +203,8 @@ Drive holds documents and spreadsheets; the MCP gives Dex structured access with
    - Use the same OAuth 2.0 Desktop client credentials as Calendar, or create new → download JSON
 
 3. **Credentials**
-   - Same `credentials.json` as Calendar is fine; or set `GOOGLE_DRIVE_CREDENTIALS_PATH` in `.env`
-   - Token is stored in `google_drive_token.json` (or `GOOGLE_DRIVE_TOKEN_PATH`)
+   - Same `credentials.json` as Calendar is fine (typically **`Credentials/personal/credentials.json`**); or set `GOOGLE_DRIVE_CREDENTIALS_PATH` in `.env`
+   - Token defaults to **`Credentials/personal/google_drive_token.json`** (or `GOOGLE_DRIVE_TOKEN_PATH`)
 
 4. **First run**
    - Enable the MCP in Cursor (e.g. `.claude/mcp/google-drive.json`). On first tool use, browser opens for Google sign-in and Drive consent.
@@ -201,7 +243,7 @@ LinkedIn doesn't provide public API for following companies. Browser automation 
 2. **First login**
    - Enable MCP in Cursor (e.g. `.claude/mcp/linkedin.json`)
    - Run `linkedin_login` - browser opens, login manually
-   - Session (cookies) saved to `.claude/linkedin/context_state.json`
+   - Session (cookies) saved to **`Credentials/linkedin/context_state.json`** (compatibility symlink **`.claude/linkedin`** → `../Credentials/linkedin`)
 
 3. **Use with caution**
    - Add delays between actions (3-5 seconds minimum)
@@ -238,6 +280,50 @@ Granola MCP:
 4. Dex summarizes: "Last week you discussed Q1 roadmap priorities. Sarah mentioned hiring concerns for the design team. Follow up on design headcount."
 
 **Tools:** `granola_get_recent_meetings`, `granola_search_meetings`, `granola_get_meeting_details`
+
+---
+
+### Telegram MCP (`telegram_server.py`)
+
+**What it does:**  
+Подключение к аккаунту Telegram пользователя (user client, не бот). Позволяет получать список чатов и читать/искать сообщения в нужных чатах.
+
+**Why it's an MCP:**  
+Доступ к живым данным из Telegram: чаты, последние сообщения, поиск по тексту. Удобно для дайджестов каналов, извлечения информации из переписок или групповых чатов без ручного копирования.
+
+**Power:**
+- **Список чатов** — все диалоги (личные, группы, каналы) с идентификатором для запросов
+- **Чтение сообщений** — последние N сообщений из любого чата по @username или id
+- **Поиск в чате** — поиск по тексту внутри указанного чата
+
+**Tools:** `telegram_list_chats`, `telegram_list_folder_chats` (папки вроде Recruiting через `messages.getDialogFilters`), `telegram_get_messages`, `telegram_search_in_chat`
+
+**Setup:**
+
+1. **API ключи** (один раз): зайти на https://my.telegram.org/apps, создать приложение, получить **API ID** и **API Hash**.
+
+2. **Зависимости** (из корня репо):
+   ```bash
+   uv pip install -r core/mcp/requirements-telegram.txt
+   ```
+
+3. **Первая авторизация** (один раз): положить `TELEGRAM_API_ID` и `TELEGRAM_API_HASH` в `.env` в корне vault. Опционально `TELEGRAM_PHONE=+...` (код страны), чтобы не вводить номер вручную. Затем из корня репо:
+   ```bash
+   npm run job-search:telegram-login
+   ```
+   или `uv run python core/mcp/telegram_login.py`. Ввести код из приложения Telegram (и пароль 2FA, если включён). Сессия сохранится в `VAULT_PATH/.claude/telegram/telegram.session`.
+
+4. **Фидбэк рекрутеров по откликам (Telegram):** после шага 3 — `npm run job-search:telegram-feedback` → `00-Inbox/Job_Search/Job_Application_Feedback_Telegram_Snapshot_*.md`. По умолчанию сканируются **только личные чаты** (не каналы и не группы), **только входящие** сообщения (ответы рекрутера). Отчёт группирует сообщения по **позиции из** `applications-tracker.json` (сопоставление по названию компании в тексте и словам из роли); остальное в блок «без привязки». Параметры: `TELEGRAM_JOB_FEEDBACK_ONLY_PRIVATE`, `TELEGRAM_JOB_FEEDBACK_INCOMING_ONLY`, `TELEGRAM_JOB_FEEDBACK_DAYS`, `TELEGRAM_JOB_FEEDBACK_MAX_*`, `TELEGRAM_JOB_FEEDBACK_INCLUDE_ALL_CHANNELS` (см. заголовок `.scripts/job-search/collect_job_feedback_from_telegram.py`).
+
+5. **Конфиг MCP в Cursor:** включить сервер `user-telegram` (например через `.claude/mcp/user-telegram.json`). Команда по умолчанию: `bash core/mcp/run-telegram-mcp.sh` — подтягивает `mcp`, `telethon`, `python-dotenv` через **uv** (не нужен глобальный `pip install telethon`). В `env` передать `VAULT_PATH`. Ключи `TELEGRAM_API_ID` / `TELEGRAM_API_HASH` сервер подхватывает из `.env` в корне workspace (через `load_dotenv` в `telegram_server.py`). После смены конфига MCP — перезапуск Cursor.
+
+6. **Опционально:** `TELEGRAM_SESSION_PATH` — путь к файлу сессии без расширения; по умолчанию `VAULT_PATH/.claude/telegram/telegram`.
+
+**Usage examples:**
+- «Покажи мои чаты в Telegram» → `telegram_list_chats`
+- «Сколько чатов в папке Recruiting / выгрузи список» → `telegram_list_folder_chats` с `folder_title` (пустой `folder_title` — сводка по всем папкам и числу peer’ов в каждой)
+- «Достань последние 30 сообщений из канала @channelname» → `telegram_get_messages(chat="@channelname", limit=30)`
+- «Найди в чате @group сообщения про дедлайн» → `telegram_search_in_chat(chat="@group", query="дедлайн")`
 
 ---
 
@@ -310,7 +396,7 @@ Resume MCP workflow:
 8. `generate_linkedin()` → Creates LinkedIn content with enforced character limits
 9. `export_resume()` → Saves to `05-Areas/Career/Resume/2026-01-28 - Resume.md`
 
-Sessions auto-save after each step. You can resume later with `load_session()`.
+Sessions auto-save after each step. You can resume later with `load_session()`. Session JSON files are stored under `05-Areas/Career/Sessions/` (vault-relative `SESSIONS_DIR` in `core/paths.py`).
 
 **Tools:** `start_session`, `list_sessions`, `load_session`, `add_role`, `extract_achievements`, `pull_career_evidence`, `generate_role_writeup`, `compile_resume`, `generate_linkedin`, `validate_metrics`, `export_resume`
 
@@ -402,11 +488,246 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 2. Добавить в MCP конфиг сервер `user-ai-updates` (файл `.claude/mcp/user-ai-updates.json`).
 
 **Tools:**  
-- `get_openai_updates`, `get_google_cloud_updates`, `get_grok_updates`, `get_manus_updates`, `get_gemini_updates` — последние посты/обновления по каждой платформе  
-- `get_daily_ai_summary` — дайджест AI за последние N часов (OpenAI, Google Cloud, Gemini)  
-- `get_all_ai_updates` — сводка по всем платформам за период  
+- `get_openai_updates`, `get_google_cloud_updates`, `get_grok_updates`, `get_manus_updates`, `get_gemini_updates`, `get_anthropic_updates` — последние посты/обновления по каждой платформе
+- `get_daily_ai_summary` — дайджест AI за последние N часов (OpenAI, Google Cloud, Gemini, Anthropic)
+- `get_all_ai_updates` — сводка по всем платформам за период
 
 **Note:** У xAI и Manus может не быть публичного RSS; в этом случае инструменты возвращают ссылку на блог для ручной проверки.
+
+---
+
+### Linear (Plugin Linear)
+
+**What it does:**  
+Работа с Linear через установленный Plugin Linear (Cursor Marketplace): задачи, проекты, статусы, комментарии, документы и метки.
+
+**Основные tools плагина:**  
+- `list_issues`, `get_issue`, `save_issue`  
+- `list_teams`, `list_projects`, `save_project`  
+- `list_issue_statuses`, `list_comments`, `save_comment`  
+- `get_user`  
+- `list_documents`, `create_document`, `update_document`
+
+**Рекомендуемый flow для Dex sync:**  
+- **Dex -> Linear при создании задачи:** Plugin Linear `list_teams` + `save_issue(...)` -> Work MCP `add_linear_sync_link(...)`.  
+- **Dex -> Linear при закрытии задачи:** Work MCP `get_task_linear_link(task_id)` -> Plugin Linear `save_issue(id=<linear_identifier|linear_id>, state="completed")`.  
+- **Linear -> Dex:**  
+ - периодический pull без вебхука: `./.scripts/install-linear-sync-launchd.sh` (каждые 10 минут запускает `.scripts/sync_linear_to_dex.py`);  
+ - либо webhook-listener: `core/mcp/linear_webhook_listener.py` + публичный URL (ngrok) в настройках Webhooks Linear;  
+ - либо вручную: Plugin Linear `list_issues(assignee="me")` -> Work MCP `sync_linear_issues_to_dex(...)`.
+
+**Экспорт задач из Dex в Linear:**  
+`.scripts/export_tasks_to_linear.py` создаёт проект «Dex / Cursor tasks», выгружает открытые задачи из `03-Tasks/Tasks.md` и пишет привязки в `03-Tasks/linear_sync.json`. Нужен `LINEAR_API_KEY` в `.env`.
+
+---
+
+### Wise MCP (`wise_server.py`)
+
+**What it does:**  
+Подключение к Wise API по персональному токену: список профилей, балансов и выгрузка транзакций (balance statement) за период для сверок и отчётов.
+
+**Setup:**  
+1. Wise.com → Your Account → Integrations and Tools → API tokens → Add new Token.  
+2. В `.env` в корне vault добавить `WISE_API_TOKEN=...` (токен подхватывается при старте сервера из `VAULT_PATH/.env`).  
+3. Сервер `wise-mcp` уже добавлен в `.cursor/mcp.json.source`; после `python3 .scripts/cursor-sync-mcp.py` и перезапуска Cursor инструменты доступны.
+
+**Tools:**  
+- `wise_list_profiles` — список всех профилей (personal/business) аккаунта  
+- `wise_list_balances` — список балансов по `profile_id` (валюта, тип STANDARD/SAVINGS, суммы)  
+- `wise_get_statement` — выписка по балансу за период (JSON или CSV); параметры: `profile_id`, `balance_id`, `interval_start`, `interval_end`, `format`  
+- `wise_list_transactions` — транзакции за период (по умолчанию последние 90 дней) в JSON
+
+**Ограничение (документация Wise):** для аккаунтов EU/UK с персональным токеном просмотр balance statements через API недоступен (PSD2). В остальных регионах персональный токен работает.
+
+---
+
+### Nano Banana MCP (`nanobanana_server.py`)
+
+**What it does:**
+Генерация изображений: основной провайдер **Gemini Create Image** (Nano Banana), при 429/quota — **fallback на OpenAI GPT Image 1.5**.
+
+**Why it's an MCP:**
+Единый интерфейс для генерации картинок и сохранения в vault; путь к файлу можно передать в контекст для Figma или постов.
+
+**Power:**
+- **nanobanana_generate** — text-to-image: промпт, модель, соотношение сторон, число картинок (1–4). Сначала Gemini; при 429/quota — fallback GPT Image 1.5. Сохраняет PNG в указанную папку. В ответе `provider`: `gemini` или `openai`.
+- **nanobanana_edit** — не реализован (только generate).
+
+**Setup:**  
+1. В `.env`: `GEMINI_API_KEY` (основной) и/или `OPENAI_API_KEY` (fallback при 429). Ключи: [Google AI Studio](https://aistudio.google.com/apikey), [OpenAI API Keys](https://platform.openai.com/api-keys).  
+2. `pip install -r core/mcp/requirements-nanobanana.txt` (google-genai, openai).  
+3. Сервер уже в `.cursor/mcp.json.source`. После правок: `python3 .scripts/cursor-sync-mcp.py` и перезапуск Cursor.
+
+**Workflow с Figma:**  
+Сгенерировать картинку через `nanobanana_generate` с `save_dir` → файлы в vault. В Figma: перетащить файл на канвас или вставить изображение. Редактирование — AI-подсказки в Figma или другой инструмент.
+
+**Docs:** `.claude/reference/nanobanana-figma-mcp.md`
+
+---
+
+### Reminders MCP (`reminders_server.py`)
+
+**What it does:**  
+Управление приложением «Напоминания» (Apple Reminders) на macOS через AppleScript. Создание списков, добавление напоминаний (в т.ч. пачкой для чек-листов покупок), отметка выполненного.
+
+**Why it's an MCP:**  
+Единый интерфейс из Cursor: можно добавлять пункты в Reminders без переключения в приложение; удобно для списков покупок, быстрых напоминаний и синхронизации с бытовыми чек-листами (например из summary по быту с Мией).
+
+**Power:**
+- **reminders_list_lists** — список всех списков напоминаний.
+- **reminders_list_reminders** — напоминания в указанном списке (только активные или с выполненными).
+- **reminders_add_reminder** — одно напоминание (опционально body, due_date_iso).
+- **reminders_add_reminders_batch** — несколько напоминаний в список одним вызовом (список покупок, чек-лист).
+- **reminders_complete_reminder** — отметить по точному названию как выполненное.
+- **reminders_create_list** — создать новый список, если его нет.
+
+**Требования:** macOS; разрешение для терминала/Cursor на доступ к Reminders (Системные настройки → Конфиденциальность и безопасность → Автоматизация или Напоминания).
+
+**Setup:**  
+Сервер добавлен в `System/.mcp.json.example` как `reminders-mcp`. После обновления конфига (например `python3 .scripts/cursor-sync-mcp.py` при использовании `.cursor/mcp.json.source`) перезапустить Cursor.
+
+---
+
+### Figma MCP (remote, official)
+
+**What it does:**  
+Официальный Figma MCP от Figma: контекст дизайна (переменные, компоненты, layout), генерация кода из выбранных фреймов, Code Connect, Make resources. Не умеет добавлять изображения в файл.
+
+**Why it's an MCP:**  
+Связка «дизайн в Figma + код/контекст в Cursor» без ручного экспорта. Удобно для design-to-code и проверки соответствия макетам.
+
+**Power:**
+- Извлечение контекста по ссылке на frame/layer (link-based).
+- Генерация кода из выбранного фрейма.
+- Переменные, компоненты, layout.
+
+**Setup:**  
+- **Remote (рекомендуется):** без десктопного приложения. В Cursor: Install MCP Server → Figma ([инструкция](https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/)). При первом использовании: Connect → OAuth.  
+- В конфиг можно добавить вручную: `"figma": { "url": "https://mcp.figma.com/mcp" }` (формат зависит от клиента; для Cursor см. документацию Figma).
+
+**Ограничение:** REST API Figma не создаёт узлы-изображения в файле. Добавление картинок в макет — только через приложение (перетаскивание, вставка) или плагин Figma. Связка с Nano Banana: генерируем изображение → сохраняем в папку → пользователь добавляет в Figma вручную и редактирует через AI в Figma.
+
+**Альтернатива без OAuth:** скрипт `.scripts/figma_fetch_design.py` + Personal Access Token (`FIGMA_ACCESS_TOKEN` в `.env`) забирает по ссылке структуру, текст и PNG узлов. См. `.claude/reference/figma-design-fetch.md`.
+
+---
+
+### Notion MCP (Cursor Plugin)
+
+**What it does:**  
+Notion через Cursor Plugin `notion-workspace`: чтение/запись в workspace (Spaces, страницы, базы, comments, views) + готовые workflow-skills.
+
+**Why it's an MCP:**  
+Doc-hub для PRD, заметок и баз. В Dex используем plugin-вариант как единый источник (без отдельной custom-записи `notion` в `.cursor/mcp.json.source`).
+
+**Power:**
+- **Подключение и авторизация** — OAuth при первом использовании.
+- **Чтение и поиск** — страницы, базы, блоки через `notion-fetch` / `notion-search`.
+- **CRUD-операции** — страницы, базы, comments, views.
+- **Готовые skills** — `create-task`, `database-query`, `meeting-intelligence` и др.
+
+**Setup:**
+
+1. Убедиться, что включён Cursor Plugin `notion-workspace`.
+2. Полностью перезапустить Cursor (если плагин только что установлен/обновлён).
+3. При первом вызове Notion-инструмента плагина пройти OAuth в браузере.
+
+**Reference:** [Notion MCP — Get started](https://developers.notion.com/guides/mcp/get-started-with-mcp).
+
+**Note:** Единый flow «PRD → push в Notion» пока не делаем; фокус — подключить, авторизовать, читать Spaces и создавать страницы.
+
+---
+
+### Confluence / Atlassian Rovo MCP (remote, official)
+
+**What it does:**  
+Официальный Atlassian Rovo MCP: Jira, Confluence, Compass. Поиск, саммари, создание/обновление страниц и тикетов. OAuth 2.1.
+
+**Why it's an MCP:**  
+Confluence как doc-hub. Пока **не прошит** в один flow с «push PRD» — подключаем, авторизуем, читаем Spaces и создаём страницы.
+
+**Power:**
+- **Подключение** — OAuth в браузере при первом использовании (Atlassian Cloud).
+- **Confluence:** читать Spaces, саммари страниц, создавать новые страницы.
+- **Jira:** поиск, создание/обновление issues (при необходимости).
+- Доступ только к данным, на которые у пользователя уже есть права в Atlassian.
+
+**Setup:**
+
+1. Добавить в `.cursor/mcp.json.source` одну или несколько записей (каждая запись — отдельный сайт Confluence, своя OAuth-сессия):
+   ```json
+   "atlassian": {
+     "url": "https://mcp.atlassian.com/v1/mcp"
+   },
+   "atlassian-connellsgroup": {
+     "url": "https://mcp.atlassian.com/v1/mcp"
+   }
+   ```
+2. Выполнить `python3 .scripts/cursor-sync-mcp.py` и перезапустить Cursor.
+3. Для каждой записи при первом использовании — отдельный OAuth в браузере; в окне согласия выбрать нужный Atlassian site (например mindera-connells-team для `atlassian`, connellsgroup для `atlassian-connellsgroup`).
+
+**Несколько Confluence-сайтов:** OAuth-токен привязан к одному сайту. Чтобы работать с двумя и более сайтами (например mindera-connells-team и connellsgroup.atlassian.net), добавь несколько записей с одним и тем же URL и разными ключами; каждую запись авторизуй отдельно (mcp_auth для соответствующего MCP).
+
+**Reference:** `.claude/mcp/confluence.json`, [Atlassian Rovo MCP — Getting started](https://support.atlassian.com/rovo/docs/getting-started-with-the-atlassian-remote-mcp-server).
+
+**Note:** PRD-push flow в Confluence пока не делаем; фокус — подключение, авторизация, чтение Spaces и создание страниц.
+
+---
+
+### Confluence Multi (local) — несколько сайтов параллельно
+
+**Что делает:**  
+Локальный MCP для работы с **несколькими Confluence Cloud-сайтами одновременно**. Одна авторизация не блокирует другую: у каждого сайта свои учётные данные (email + API token).
+
+**Зачем:**  
+Официальный Atlassian Rovo MCP привязан к одному OAuth-контексту на запись; для стабильной работы с разными сайтами (например mindera-connells-team и connellsgroup) удобнее локальный сервер с Basic Auth (API token) по одному подключению на сайт.
+
+**Возможности:**
+- Список подключений (`confluence_list_connections`) — какие сайты настроены и готовы к запросам.
+- Spaces: список пространств по `connection_id` с фильтрами по типу и статусу.
+- Страницы: получить страницу по ID, список страниц в пространстве.
+
+**Настройка:**
+
+1. **Конфиг подключений** — в vault создать `System/confluence_connections.yaml` (можно скопировать из `System/confluence_connections.yaml.example`):
+   - Список `connections` с полями `id` и `site` (subdomain, например `mindera-connells-team`, `connellsgroup`).
+2. **Учётные данные** — в `.env` для каждого `id` задать (ID в UPPERCASE):
+   - `CONFLUENCE_<ID>_EMAIL` — email в Atlassian.
+   - `CONFLUENCE_<ID>_TOKEN` — [API token](https://id.atlassian.com/manage-profile/security/api-tokens).
+3. **MCP** — в `.cursor/mcp.json.source` уже добавлена запись `confluence-multi` (stdio, `core/mcp/confluence_multi_server.py`). Выполнить `python3 .scripts/cursor-sync-mcp.py` и перезапустить Cursor.
+4. **Зависимости:** `pip install -r core/mcp/requirements-confluence-multi.txt` (из корня репо).
+
+**Инструменты:** `confluence_list_connections`, `confluence_get_spaces`, `confluence_get_page`, `confluence_get_pages_in_space`.
+
+---
+
+### Slack MCP (remote, official)
+
+**What it does:**  
+Официальный Slack MCP: список каналов/чатов, история каналов и тредов, поиск, отправка сообщений. OAuth.
+
+**Why it's an MCP:**  
+Анализ контекста из Slack Space (каналов, к которым дан доступ): список чатов и разбор информации в них без выхода из Cursor.
+
+**Power:**
+- **Список чатов** — каналы (публичные/приватные), к которым у пользователя есть доступ.
+- **Чтение** — история канала, треды, поиск по сообщениям и файлам.
+- **Анализ** — на основе выданного доступа к Space/каналу можно анализировать обсуждения, решения, контекст.
+- **Отправка** (опционально) — сообщения в канал или ответ в тред.
+
+**Setup:**
+
+1. Slack MCP доступен в Cursor как партнёрский клиент. Добавить в `.cursor/mcp.json.source`:
+   ```json
+   "slack": {
+     "url": "https://mcp.slack.com/mcp"
+   }
+   ```
+2. Выполнить `python3 .scripts/cursor-sync-mcp.py` и перезапустить Cursor.
+3. При первом использовании — подключить Slack workspace (OAuth). Для полного доступа к истории и поиску нужен Slack-апп (internal или из каталога) с включённым MCP и скоупами (например `channels:history`, `groups:history`, `search:read.*`, `users:read`). В Cursor часто достаточно встроенного OAuth без своего аппа.
+
+**Reference:** `.claude/mcp/slack.json`, [Slack MCP Server](https://docs.slack.dev/ai/mcp-server).
+
+**Use case:** Получить список чатов → выбрать Space/канал, к которому дан доступ → проанализировать информацию из этого канала (обсуждения, решения, контекст).
 
 ---
 
@@ -425,6 +746,13 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 | Dex Improvements | `dex_improvements_server.py` | Built-in |
 | Google Drive | `google_drive_server.py` | Built-in |
 | LinkedIn | `linkedin_server.py` | Built-in (⚠️ browser automation, use at risk) |
+| Linear | Plugin Linear (Cursor) | External plugin |
+| Nano Banana | `nanobanana_server.py` | Built-in (optional, requires API key) |
+| Figma | Remote (https://mcp.figma.com/mcp) | External (OAuth, optional) |
+| Notion | Cursor Plugin `notion-workspace` | External plugin (OAuth); tools + workflow skills for pages/databases/comments/views |
+| Confluence / Atlassian | Remote (https://mcp.atlassian.com/v1/mcp) | External (OAuth, optional); Jira, Confluence, Compass; multiple sites = multiple entries + separate OAuth each; not yet in PRD-push flow |
+| Confluence Multi | `confluence_multi_server.py` | Local; several Confluence Cloud sites in parallel (API token per site); list connections, spaces, pages |
+| Slack | Remote (https://mcp.slack.com/mcp) | External (OAuth, optional); list chats, analyze channel content |
 | Pendo | Hosted (OAuth) | External (optional) |
 
 ### Setting Up Integrations
@@ -589,3 +917,9 @@ These background scripts follow the same pattern as Granola automation (`.script
 - Write alert files that session hooks detect
 - Extensive logging for debugging
 - Safe: Only reads/writes within vault, no external side effects
+
+---
+
+## See also
+
+- **Claude GitHub App и MCP-профили по сценариям** — `.claude/reference/claude-github-app-and-mcp-profiles.md`: что такое Claude как GitHub App (issue с телефона, @Claude), и как могут работать профили MCP по сценариям (PM, job search, meetings). Рекомендации по наборам MCP: скилл `/mcp-profiles`.

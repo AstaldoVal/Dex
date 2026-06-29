@@ -1,0 +1,9 @@
+{
+  "name": "atlassian",
+  "description": "Atlassian Rovo MCP: Jira, Confluence, Compass. Search, summarize, create/update issues and pages. Remote server, OAuth 2.1.",
+  "server": {
+    "url": "https://mcp.atlassian.com/v1/mcp",
+    "type": "http"
+  },
+  "notes": "Add to .cursor/mcp.json.source: \"atlassian\": { \"url\": \"https://mcp.atlassian.com/v1/mcp\" }. Run python3 .scripts/cursor-sync-mcp.py and restart Cursor. For multiple Confluence sites add a second entry (e.g. atlassian-connellsgroup) with same URL; authorize each entry separately (OAuth per site). Use for Confluence: read Spaces, create new pages. Not yet wired into PRD-push flow."
+}

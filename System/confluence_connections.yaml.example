@@ -1,0 +1,11 @@
+# Confluence Multi-Site MCP: list of connections (one per site).
+# Copy to confluence_connections.yaml and set credentials in .env:
+#   CONFLUENCE_<ID>_EMAIL=your@email.com
+#   CONFLUENCE_<ID>_TOKEN=<API token from https://id.atlassian.com/manage-profile/security/api-tokens>
+# Connection id is uppercased for env (e.g. connellsgroup -> CONFLUENCE_CONNELLSGROUP_EMAIL).
+
+connections:
+  - id: mindera
+    site: mindera-connells-team
+  - id: connellsgroup
+    site: connellsgroup

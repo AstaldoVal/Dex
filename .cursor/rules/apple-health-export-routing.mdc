@@ -1,0 +1,14 @@
+---
+description: Correct lookup order for Apple Health exports
+alwaysApply: true
+---
+
+# Apple Health Export Lookup
+
+When the user says they saved or uploaded a fresh Apple Health export:
+
+1. First list `~/Library/Mobile Documents/com~apple~CloudDocs/Health data` by modification time.
+2. Pick the newest `export*.zip` file, for example `export 4.zip`.
+3. Then inspect or extract `export.xml` from that archive.
+
+Do not start with only `export.xml`, `HealthAutoExport*.json`, or filename patterns containing `health`. The standard Apple Health archive can have a neutral name such as `export 4.zip`.

@@ -61,8 +61,8 @@ pillars: []
 # Meeting Processing Configuration
 # How Dex processes meetings from Granola
 meeting_processing:
-  # Mode: "manual" (run /process-meetings) or "automatic" (background sync)
-  mode: manual
+  # Mode: "automatic" (notes appear in your vault within 30min) or "manual" (run /process-meetings)
+  mode: automatic
   
   # API provider for automatic mode: gemini, anthropic, or openai
   api_provider: gemini

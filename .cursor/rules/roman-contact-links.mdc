@@ -1,0 +1,32 @@
+---
+description: Roman Matsukatov contact header and links for all Teal resumes and job-search automation
+alwaysApply: true
+---
+
+# Roman — contact header (canonical)
+
+Use this exact header block on Teal resumes unless the user specifies otherwise:
+
+```
+Lisbon
++351919191596
+r.matsukatov@gmail.com
+linkedin.com/in/roman-matsukatov
+https://1percentaibetter.substack.com
+https://github.com/AstaldoVal
+```
+
+Teal Contact Information field mapping:
+
+| Field | Value |
+|-------|-------|
+| City | Lisbon |
+| Phone Number | +351919191596 |
+| Email | r.matsukatov@gmail.com |
+| LinkedIn | roman-matsukatov |
+| Twitter / X | https://1percentaibetter.substack.com |
+| Website | https://github.com/AstaldoVal |
+
+Source of truth: `00-Inbox/Job_Search/teal/roman-contact-profile.json`
+
+Automation: `npm run job-search:teal-set-contact-links` before PDF export on any resume edit.

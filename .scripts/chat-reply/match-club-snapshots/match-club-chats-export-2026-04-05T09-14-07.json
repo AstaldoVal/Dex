@@ -1,0 +1,919 @@
+{
+  "schemaVersion": 4,
+  "messageRoleSemantics": "Per message: role is sender direction (me = your account, them = peer, unknown = could not infer from DOM). Peer name is peerTitle / peerDisplayName on the chat object, not in role.",
+  "ok": true,
+  "capturedAt": "2026-04-05T09:12:05.491Z",
+  "sourceUrl": "https://match-club.club/chats/48546003/messages",
+  "chatListTotal": 24,
+  "chatListPassesUsed": 5,
+  "chatListExported": 24,
+  "chats": [
+    {
+      "href": "/chats/-94302862/messages",
+      "chatUrl": "https://match-club.club/chats/-94302862/messages",
+      "peerTitle": "tuffydog61663, 64",
+      "peerDisplayName": "tuffydog61663",
+      "peerAge": 64,
+      "peerTitleNormalized": "tuffydog61663",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "I almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nBruce Kincaid, 68 Hey, I’ve got a great sense of humor😄, want to laugh together? 17:02 yesterday\nBruce Kincaid, 68 Hey, I’ve got a great sense of humor😄, want to laugh together? 17:02 yesterday\nBruce Kincaid, 68\nHey, I’ve got a great sense of humor😄, want to laugh together?\n17:02 yesterday\n17:02 yesterday\ntuffydog61663 , 64 Online Add to favorites\ntuffydog61663 , 64 Online Add to favorites\ntuffydog61663 , 64 Online\ntuffydog61663 , 64\nAdd to favorites\nAdd to favorites\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11\nLove your vibe - how about sharing some laughs? 😊 10:11\nLove your vibe - how about sharing some laughs? 😊\nLove your vibe - how about sharing some laughs? 😊",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/-94302862/messages"
+    },
+    {
+      "href": "/chats/-94298475/messages",
+      "chatUrl": "https://match-club.club/chats/-94298475/messages",
+      "peerTitle": "Billy Melton, 64",
+      "peerDisplayName": "Billy Melton",
+      "peerAge": 64,
+      "peerTitleNormalized": "Billy Melton",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Eddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\ntuffydog61663 , 64 Online Add to favorites\ntuffydog61663 , 64 Online Add to favorites\ntuffydog61663 , 64 Online\ntuffydog61663 , 64\nAdd to favorites\nAdd to favorites\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:12\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:12\n05.04.2026 Love your vibe - how about sharing some laughs? 😊 10:11 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:12\nLove your vibe - how about sharing some laughs? 😊 10:11\nLove your vibe - how about sharing some laughs? 😊\nLove your vibe - how about sharing some laughs? 😊\nI almost texted you something boring, then deleted it. What are you up to right this minute? 10:12\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545951/messages"
+    },
+    {
+      "href": "/chats/-94298471/messages",
+      "chatUrl": "https://match-club.club/chats/-94298471/messages",
+      "peerTitle": "Gregorio, 66",
+      "peerDisplayName": "Gregorio",
+      "peerAge": 66,
+      "peerTitleNormalized": "Gregorio",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nGregorio , 66 Online Add to favorites\nGregorio , 66 Online Add to favorites\nGregorio , 66 Online\nGregorio , 66\nAdd to favorites\nAdd to favorites\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:05\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:05\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:05\nHey, I’ve got a great sense of humor😄, want to laugh together? 08:05\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545958/messages"
+    },
+    {
+      "href": "/chats/-94298445/messages",
+      "chatUrl": "https://match-club.club/chats/-94298445/messages",
+      "peerTitle": "Joseph Calcagno, 68",
+      "peerDisplayName": "Joseph Calcagno",
+      "peerAge": 68,
+      "peerTitleNormalized": "Joseph Calcagno",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nJoseph Calcagno , 68 Online Add to favorites\nJoseph Calcagno , 68 Online Add to favorites\nJoseph Calcagno , 68 Online\nJoseph Calcagno , 68\nAdd to favorites\nAdd to favorites\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:04\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:04\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:04\nHey, I’ve got a great sense of humor😄, want to laugh together? 08:04\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545961/messages"
+    },
+    {
+      "href": "/chats/48498819/messages",
+      "chatUrl": "https://match-club.club/chats/48498819/messages",
+      "peerTitle": "dpp9475525, 67",
+      "peerDisplayName": "dpp9475525",
+      "peerAge": 67,
+      "peerTitleNormalized": "dpp9475525",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\ndpp9475525 , 67 Online Add to favorites\ndpp9475525 , 67 Online Add to favorites\ndpp9475525 , 67 Online\ndpp9475525 , 67\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I'm Bristol. Ready for some laughs together? 😊 13:20 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24\n04.04.2026 Hey, I'm Bristol. Ready for some laughs together? 😊 13:20 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24\n04.04.2026 Hey, I'm Bristol. Ready for some laughs together? 😊 13:20 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24\nHey, I'm Bristol. Ready for some laughs together? 😊 13:20\nHey, I'm Bristol. Ready for some laughs together? 😊\nHey, I'm Bristol. Ready for some laughs together? 😊\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nI almost texted you something boring, then deleted it. What are you up to right this minute? 17:24\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48498819/messages"
+    },
+    {
+      "href": "/chats/48508459/messages",
+      "chatUrl": "https://match-club.club/chats/48508459/messages",
+      "peerTitle": "Eddy, 58",
+      "peerDisplayName": "Eddy",
+      "peerAge": 58,
+      "peerTitleNormalized": "Eddy",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nEddy , 58 Online Add to favorites\nEddy , 58 Online Add to favorites\nEddy , 58 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey there! Got a killer sense of humor 😄-up for some laughs together? 13:29 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23\n04.04.2026 Hey there! Got a killer sense of humor 😄-up for some laughs together? 13:29 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23\n04.04.2026 Hey there! Got a killer sense of humor 😄-up for some laughs together? 13:29 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23\nHey there! Got a killer sense of humor 😄-up for some laughs together? 13:29\nHey there! Got a killer sense of humor 😄-up for some laughs together?\nHey there! Got a killer sense of humor 😄-up for some laughs together?\nI almost texted you something boring, then deleted it. What are you up to right this minute? 17:23\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48508459/messages"
+    },
+    {
+      "href": "/chats/48508365/messages",
+      "chatUrl": "https://match-club.club/chats/48508365/messages",
+      "peerTitle": "Richard, 64",
+      "peerDisplayName": "Richard",
+      "peerAge": 64,
+      "peerTitleNormalized": "Richard",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nRichard , 64 Online Add to favorites\nRichard , 64 Online Add to favorites\nRichard , 64 Online\nRichard , 64\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I think we could have a fun laugh together! 😄 Up for it? 15:50 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22\n04.04.2026 Hey, I think we could have a fun laugh together! 😄 Up for it? 15:50 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22\n04.04.2026 Hey, I think we could have a fun laugh together! 😄 Up for it? 15:50 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22\nHey, I think we could have a fun laugh together! 😄 Up for it? 15:50\nHey, I think we could have a fun laugh together! 😄 Up for it?\nHey, I think we could have a fun laugh together! 😄 Up for it?\nI almost texted you something boring, then deleted it. What are you up to right this minute? 17:22\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48508365/messages"
+    },
+    {
+      "href": "/chats/-94244663/messages",
+      "chatUrl": "https://match-club.club/chats/-94244663/messages",
+      "peerTitle": "Steve, 64",
+      "peerDisplayName": "Steve",
+      "peerAge": 64,
+      "peerTitleNormalized": "Steve",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Billy Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nSteve, 64 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 yesterday\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\n17:20 yesterday\n17:20 yesterday\nSteve , 64 Online Add to favorites\nSteve , 64 Online Add to favorites\nSteve , 64 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20\nHey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/-94244663/messages"
+    },
+    {
+      "href": "/chats/-94243873/messages",
+      "chatUrl": "https://match-club.club/chats/-94243873/messages",
+      "peerTitle": "Dan, 66",
+      "peerDisplayName": "Dan",
+      "peerAge": 66,
+      "peerTitleNormalized": "Dan",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Hey, I’ve got a great sense of humor😄, want to laugh together?\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nSteve , 64 Online Add to favorites\nSteve , 64 Online Add to favorites\nSteve , 64 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 05.04.2026 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:13\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 05.04.2026 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:13\n04.04.2026 Hey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20 05.04.2026 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:13\nHey Steve, I've got a fun sense of humor 😄-think you can keep up? 17:20\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\nHey Steve, I've got a fun sense of humor 😄-think you can keep up?\nI almost texted you something boring, then deleted it. What are you up to right this minute? 10:13\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545968/messages"
+    },
+    {
+      "href": "/chats/-94243326/messages",
+      "chatUrl": "https://match-club.club/chats/-94243326/messages",
+      "peerTitle": "Bruce Kincaid, 68",
+      "peerDisplayName": "Bruce Kincaid",
+      "peerAge": 68,
+      "peerTitleNormalized": "Bruce Kincaid",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Howard, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHey, I’ve got a great sense of humor😄, want to laugh together?\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\nBruce Kincaid , 68 Online Add to favorites\nBruce Kincaid , 68 Online Add to favorites\nBruce Kincaid , 68 Online\nBruce Kincaid , 68\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 17:02\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 17:02\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 17:02\nHey, I’ve got a great sense of humor😄, want to laugh together? 17:02\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545974/messages"
+    },
+    {
+      "href": "/chats/-94239554/messages",
+      "chatUrl": "https://match-club.club/chats/-94239554/messages",
+      "peerTitle": "Scott, 54",
+      "peerDisplayName": "Scott",
+      "peerAge": 54,
+      "peerTitleNormalized": "Scott",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Hey, I’ve got a great sense of humor😄, want to laugh together?\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHey, I’ve got a great sense of humor😄, want to laugh together?\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nScott , 54 Online Add to favorites\nScott , 54 Online Add to favorites\nScott , 54 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey there, I've got a knack for finding the fun side of things-wanna join me? 😉 16:02\n04.04.2026 Hey there, I've got a knack for finding the fun side of things-wanna join me? 😉 16:02\n04.04.2026 Hey there, I've got a knack for finding the fun side of things-wanna join me? 😉 16:02\nHey there, I've got a knack for finding the fun side of things-wanna join me? 😉 16:02\nHey there, I've got a knack for finding the fun side of things-wanna join me? 😉\nHey there, I've got a knack for finding the fun side of things-wanna join me? 😉\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545977/messages"
+    },
+    {
+      "href": "/chats/-94238677/messages",
+      "chatUrl": "https://match-club.club/chats/-94238677/messages",
+      "peerTitle": "Doug, 71",
+      "peerDisplayName": "Doug",
+      "peerAge": 71,
+      "peerTitleNormalized": "Doug",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Billy Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nDoug , 71 Online Add to favorites\nDoug , 71 Online Add to favorites\nDoug , 71 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄 15:49\n04.04.2026 Hey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄 15:49\n04.04.2026 Hey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄 15:49\nHey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄 15:49\nHey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄\nHey Doug, I’ve got a pretty fun sense of humor! Wanna share some laughs together? 😄\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545980/messages"
+    },
+    {
+      "href": "/chats/-94238515/messages",
+      "chatUrl": "https://match-club.club/chats/-94238515/messages",
+      "peerTitle": "Simin, 42",
+      "peerDisplayName": "Simin",
+      "peerAge": 42,
+      "peerTitleNormalized": "Simin",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "tuffydog61663, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 10:12 today\ntuffydog61663, 64\nI almost texted you something boring, then deleted it. What are you up to right this minute?\nmatt, 50 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nmatt, 50 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nmatt, 50 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHoward, 70 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12 today\nHey, I’ve got a great sense of humor😄, want to laugh together?\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDoug , 71 Online Add to favorites\nDoug , 71 Online Add to favorites\nDoug , 71 Online\nAdd to favorites\nAdd to favorites\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545980/messages"
+    },
+    {
+      "href": "/chats/-94237084/messages",
+      "chatUrl": "https://match-club.club/chats/-94237084/messages",
+      "peerTitle": "JOHN, 66",
+      "peerDisplayName": "JOHN",
+      "peerAge": 66,
+      "peerTitleNormalized": "JOHN",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Billy Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64 Hey, I’ve got a great sense of humor😄, want to laugh together? 08:06 today\nBilly Melton, 64\nHey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nJOHN , 66 Online Add to favorites\nJOHN , 66 Online Add to favorites\nJOHN , 66 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄 15:23\n04.04.2026 Hey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄 15:23\n04.04.2026 Hey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄 15:23\nHey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄 15:23\nHey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄\nHey, with your friendly smile, I bet we’d have a fun time sharing some laughs! 😄\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545983/messages"
+    },
+    {
+      "href": "/chats/-94231566/messages",
+      "chatUrl": "https://match-club.club/chats/-94231566/messages",
+      "peerTitle": "Peter macdonald, 52",
+      "peerDisplayName": "Peter macdonald",
+      "peerAge": 52,
+      "peerTitleNormalized": "Peter macdonald",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nPeter macdonald , 52 Online Add to favorites\nPeter macdonald , 52 Online Add to favorites\nPeter macdonald , 52 Online\nPeter macdonald , 52\nAdd to favorites\nAdd to favorites\n04.04.2026 Got a playful side and love a good laugh-fancy joking around with me? 😄 13:38\n04.04.2026 Got a playful side and love a good laugh-fancy joking around with me? 😄 13:38\n04.04.2026 Got a playful side and love a good laugh-fancy joking around with me? 😄 13:38\nGot a playful side and love a good laugh-fancy joking around with me? 😄 13:38\nGot a playful side and love a good laugh-fancy joking around with me? 😄\nGot a playful side and love a good laugh-fancy joking around with me? 😄\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/-94231566/messages"
+    },
+    {
+      "href": "/chats/48498814/messages",
+      "chatUrl": "https://match-club.club/chats/48498814/messages",
+      "peerTitle": "Ronnie, 63",
+      "peerDisplayName": "Ronnie",
+      "peerAge": 63,
+      "peerTitleNormalized": "Ronnie",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nHey, I’ve got a great sense of humor😄, want to laugh together?\nRonnie , 63 Online Add to favorites\nRonnie , 63 Online Add to favorites\nRonnie , 63 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I've got a fun sense of humor 😄. Wanna share some laughs together? 13:16 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\n04.04.2026 Hey, I've got a fun sense of humor 😄. Wanna share some laughs together? 13:16 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\n04.04.2026 Hey, I've got a fun sense of humor 😄. Wanna share some laughs together? 13:16 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\nHey, I've got a fun sense of humor 😄. Wanna share some laughs together? 13:16\nHey, I've got a fun sense of humor 😄. Wanna share some laughs together?\nHey, I've got a fun sense of humor 😄. Wanna share some laughs together?\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48498814/messages"
+    },
+    {
+      "href": "/chats/48498806/messages",
+      "chatUrl": "https://match-club.club/chats/48498806/messages",
+      "peerTitle": "Curt, 71",
+      "peerDisplayName": "Curt",
+      "peerAge": 71,
+      "peerTitleNormalized": "Curt",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nHey, I’ve got a great sense of humor😄, want to laugh together?\n15:46 yesterday\n15:46 yesterday\nCurt , 71 Online Add to favorites\nCurt , 71 Online Add to favorites\nCurt , 71 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄 13:07 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\n04.04.2026 Hey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄 13:07 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\n04.04.2026 Hey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄 13:07 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\nHey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄 13:07\nHey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄\nHey Curt, I bet we’d have a blast laughing and jamming together! 🎸😄\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:28\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48498806/messages"
+    },
+    {
+      "href": "/chats/-94230747/messages",
+      "chatUrl": "https://match-club.club/chats/-94230747/messages",
+      "peerTitle": "Ozzir53, 61",
+      "peerDisplayName": "Ozzir53",
+      "peerAge": 61,
+      "peerTitleNormalized": "Ozzir53",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nOzzir53 , 61 Online Add to favorites\nOzzir53 , 61 Online Add to favorites\nOzzir53 , 61 Online\nOzzir53 , 61\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 13:25\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 13:25\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 13:25\nHey, I’ve got a great sense of humor😄, want to laugh together? 13:25\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545991/messages"
+    },
+    {
+      "href": "/chats/-94230386/messages",
+      "chatUrl": "https://match-club.club/chats/-94230386/messages",
+      "peerTitle": "RUSSELL, 62",
+      "peerDisplayName": "RUSSELL",
+      "peerAge": 62,
+      "peerTitleNormalized": "RUSSELL",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "dpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nHey, I’ve got a great sense of humor😄, want to laugh together?\nRUSSELL , 62 Online Add to favorites\nRUSSELL , 62 Online Add to favorites\nRUSSELL , 62 Online\nRUSSELL , 62\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey Russell, bet I can make u laugh even while you're rocking that guitar ;) 13:19\n04.04.2026 Hey Russell, bet I can make u laugh even while you're rocking that guitar ;) 13:19\n04.04.2026 Hey Russell, bet I can make u laugh even while you're rocking that guitar ;) 13:19\nHey Russell, bet I can make u laugh even while you're rocking that guitar ;) 13:19\nHey Russell, bet I can make u laugh even while you're rocking that guitar ;)\nHey Russell, bet I can make u laugh even while you're rocking that guitar ;)\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48545993/messages"
+    },
+    {
+      "href": "/chats/48497744/messages",
+      "chatUrl": "https://match-club.club/chats/48497744/messages",
+      "peerTitle": "Jack, 70",
+      "peerDisplayName": "Jack",
+      "peerAge": 70,
+      "peerTitleNormalized": "Jack",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "Hey, I’ve got a great sense of humor😄, want to laugh together?\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:24 yesterday\ndpp9475525, 67\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nJack , 70 Online Add to favorites\nJack , 70 Online Add to favorites\nJack , 70 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey there! How about sharing a laugh with someone who loves a good chuckle? 😊 12:51 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\n04.04.2026 Hey there! How about sharing a laugh with someone who loves a good chuckle? 😊 12:51 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\n04.04.2026 Hey there! How about sharing a laugh with someone who loves a good chuckle? 😊 12:51 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\nHey there! How about sharing a laugh with someone who loves a good chuckle? 😊 12:51\nHey there! How about sharing a laugh with someone who loves a good chuckle? 😊\nHey there! How about sharing a laugh with someone who loves a good chuckle? 😊\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nHoward Just visited your profile Howard Exploring your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48497744/messages"
+    },
+    {
+      "href": "/chats/48497736/messages",
+      "chatUrl": "https://match-club.club/chats/48497736/messages",
+      "peerTitle": "Dave, 66",
+      "peerDisplayName": "Dave",
+      "peerAge": 66,
+      "peerTitleNormalized": "Dave",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "I almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nHey, I’ve got a great sense of humor😄, want to laugh together?\nDave , 66 Online Add to favorites\nDave , 66 Online Add to favorites\nDave , 66 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 12:47 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 12:47 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 12:47 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\nHey, I’ve got a great sense of humor😄, want to laugh together? 12:47\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 13:03\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nJOHN Just visited your profile Howard Just visited your profile Howard Exploring your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJust visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48497736/messages"
+    },
+    {
+      "href": "/chats/48497431/messages",
+      "chatUrl": "https://match-club.club/chats/48497431/messages",
+      "peerTitle": "John Grace, 36",
+      "peerDisplayName": "John Grace",
+      "peerAge": 36,
+      "peerTitleNormalized": "John Grace",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "I almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nJohn Grace , 36 Online Add to favorites\nJohn Grace , 36 Online Add to favorites\nJohn Grace , 36 Online\nJohn Grace , 36\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 11:38 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 12:53\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 11:38 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 12:53\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 11:38 Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 12:53\nHey, I’ve got a great sense of humor😄, want to laugh together? 11:38\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke. 12:53\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nOkay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.\nJOHN Just visited your profile Howard Just visited your profile Howard Exploring your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJust visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48497431/messages"
+    },
+    {
+      "href": "/chats/-94223133/messages",
+      "chatUrl": "https://match-club.club/chats/-94223133/messages",
+      "peerTitle": "Cory, 56",
+      "peerDisplayName": "Cory",
+      "peerAge": 56,
+      "peerTitleNormalized": "Cory",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "I almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nSimin, 42 Hey, I’ve got a great sense of humor😄, want to laugh together? 15:46 yesterday\nHey, I’ve got a great sense of humor😄, want to laugh together?\n15:46 yesterday\n15:46 yesterday\nCory , 56 Online Add to favorites\nCory , 56 Online Add to favorites\nCory , 56 Online\nAdd to favorites\nAdd to favorites\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:34\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:34\n04.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:34\nHey, I’ve got a great sense of humor😄, want to laugh together? 10:34\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nJOHN Just visited your profile Howard Just visited your profile Howard Exploring your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJust visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48546000/messages"
+    },
+    {
+      "href": "/chats/-94302899/messages",
+      "chatUrl": "https://match-club.club/chats/-94302899/messages",
+      "peerTitle": "Howard, 70",
+      "peerDisplayName": "Howard",
+      "peerAge": 70,
+      "peerTitleNormalized": "Howard",
+      "isFirstSms": false,
+      "isPeerOnline": true,
+      "peerTitleFromThread": null,
+      "messages": [],
+      "threadPlain": "I almost texted you something boring, then deleted it. What are you up to right this minute?\n17:24 yesterday\n17:24 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nEddy, 58 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:23 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:23 yesterday\n17:23 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nRichard, 64 I almost texted you something boring, then deleted it. What are you up to right this minute? 17:22 yesterday\nI almost texted you something boring, then deleted it. What are you up to right this minute?\n17:22 yesterday\n17:22 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nDan, 66 Hey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up? 17:08 yesterday\nHey Dan, I love a good laugh 😄 Think we’d have fun cracking each other up?\n17:08 yesterday\n17:08 yesterday\nHoward , 70 Online Add to favorites\nHoward , 70 Online Add to favorites\nHoward , 70 Online\nAdd to favorites\nAdd to favorites\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12\n05.04.2026 Hey, I’ve got a great sense of humor😄, want to laugh together? 10:12\nHey, I’ve got a great sense of humor😄, want to laugh together? 10:12\nHey, I’ve got a great sense of humor😄, want to laugh together?\nHey, I’ve got a great sense of humor😄, want to laugh together?\nJOHN Just visited your profile Howard Just visited your profile Howard Exploring your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJOHN Just visited your profile\nJust visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nHoward Just visited your profile\nJust visited your profile\nHoward Exploring your profile\nHoward Exploring your profile\nHoward Exploring your profile\nExploring your profile",
+      "extractMethod": "no_region",
+      "threadColumnFound": true,
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      },
+      "url": "https://match-club.club/chats/48546003/messages"
+    }
+  ],
+  "errors": [],
+  "outboundRun": {
+    "enabled": true,
+    "queueLength": 9,
+    "queueSource": "approved_followup",
+    "queueSourceFile": ".scripts/chat-reply/chat-followup-phrases-approved-en.md",
+    "insertOnly": true,
+    "manualSendTimeoutMs": 600000,
+    "stats": {
+      "sent": 24,
+      "skipped": 0,
+      "failed": 0,
+      "byReason": {
+        "user_confirmed_send": 24
+      }
+    },
+    "perChat": [
+      {
+        "peerTitle": "tuffydog61663, 64",
+        "peerTitleNormalized": "tuffydog61663",
+        "chatUrl": "https://match-club.club/chats/-94302862/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Billy Melton, 64",
+        "peerTitleNormalized": "Billy Melton",
+        "chatUrl": "https://match-club.club/chats/-94298475/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Gregorio, 66",
+        "peerTitleNormalized": "Gregorio",
+        "chatUrl": "https://match-club.club/chats/-94298471/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Joseph Calcagno, 68",
+        "peerTitleNormalized": "Joseph Calcagno",
+        "chatUrl": "https://match-club.club/chats/-94298445/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "dpp9475525, 67",
+        "peerTitleNormalized": "dpp9475525",
+        "chatUrl": "https://match-club.club/chats/48498819/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Eddy, 58",
+        "peerTitleNormalized": "Eddy",
+        "chatUrl": "https://match-club.club/chats/48508459/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Richard, 64",
+        "peerTitleNormalized": "Richard",
+        "chatUrl": "https://match-club.club/chats/48508365/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Steve, 64",
+        "peerTitleNormalized": "Steve",
+        "chatUrl": "https://match-club.club/chats/-94244663/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Dan, 66",
+        "peerTitleNormalized": "Dan",
+        "chatUrl": "https://match-club.club/chats/-94243873/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Bruce Kincaid, 68",
+        "peerTitleNormalized": "Bruce Kincaid",
+        "chatUrl": "https://match-club.club/chats/-94243326/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Scott, 54",
+        "peerTitleNormalized": "Scott",
+        "chatUrl": "https://match-club.club/chats/-94239554/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Doug, 71",
+        "peerTitleNormalized": "Doug",
+        "chatUrl": "https://match-club.club/chats/-94238677/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Simin, 42",
+        "peerTitleNormalized": "Simin",
+        "chatUrl": "https://match-club.club/chats/-94238515/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "JOHN, 66",
+        "peerTitleNormalized": "JOHN",
+        "chatUrl": "https://match-club.club/chats/-94237084/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Peter macdonald, 52",
+        "peerTitleNormalized": "Peter macdonald",
+        "chatUrl": "https://match-club.club/chats/-94231566/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Ronnie, 63",
+        "peerTitleNormalized": "Ronnie",
+        "chatUrl": "https://match-club.club/chats/48498814/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Curt, 71",
+        "peerTitleNormalized": "Curt",
+        "chatUrl": "https://match-club.club/chats/48498806/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Ozzir53, 61",
+        "peerTitleNormalized": "Ozzir53",
+        "chatUrl": "https://match-club.club/chats/-94230747/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "RUSSELL, 62",
+        "peerTitleNormalized": "RUSSELL",
+        "chatUrl": "https://match-club.club/chats/-94230386/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Jack, 70",
+        "peerTitleNormalized": "Jack",
+        "chatUrl": "https://match-club.club/chats/48497744/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Dave, 66",
+        "peerTitleNormalized": "Dave",
+        "chatUrl": "https://match-club.club/chats/48497736/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "John Grace, 36",
+        "peerTitleNormalized": "John Grace",
+        "chatUrl": "https://match-club.club/chats/48497431/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Cory, 56",
+        "peerTitleNormalized": "Cory",
+        "chatUrl": "https://match-club.club/chats/-94223133/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      },
+      {
+        "peerTitle": "Howard, 70",
+        "peerTitleNormalized": "Howard",
+        "chatUrl": "https://match-club.club/chats/-94302899/messages",
+        "outbound": {
+          "action": "user_confirmed_send",
+          "insertOnly": true,
+          "decisionReason": "empty_thread_send_first",
+          "queueIndex": 0,
+          "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+          "waitReason": "composer_empty_after_draft"
+        }
+      }
+    ]
+  }
+}

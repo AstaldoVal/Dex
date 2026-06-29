@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "node .cursor/hooks/session-bootstrap-context.cjs"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/stop-chat-response-eval.cjs",
+        "loop_limit": 4
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/day-sprint-phase-eval.cjs",
+        "matcher": "day-sprint"
+      }
+    ]
+  }
+}

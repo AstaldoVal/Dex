@@ -32,6 +32,7 @@ const SOURCES = {
   LINKEDIN_EMAIL: 'linkedin_email',
   LINKEDIN_RSS: 'linkedin_rss',
   JOBSCOLLIDER: 'jobscollider',
+  BETTINGJOBS: 'bettingjobs',
   REFERRAL: 'referral',
   COMPANY_SITE: 'company_site',
   OTHER: 'other'

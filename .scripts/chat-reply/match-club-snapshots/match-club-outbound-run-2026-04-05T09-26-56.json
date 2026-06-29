@@ -1,0 +1,351 @@
+{
+  "enabled": true,
+  "queueLength": 9,
+  "queueSource": "approved_followup",
+  "queueSourceFile": ".scripts/chat-reply/chat-followup-phrases-approved-en.md",
+  "insertOnly": true,
+  "manualSendTimeoutMs": 600000,
+  "stats": {
+    "sent": 0,
+    "skipped": 37,
+    "failed": 0,
+    "byReason": {
+      "thread_plain_nonempty_but_messages_not_extracted": 37
+    }
+  },
+  "perChat": [
+    {
+      "peerTitle": "Michael, 67",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/-94303475/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "thedanceman, 77",
+      "peerTitleNormalized": "thedanceman",
+      "chatUrl": "https://match-club.club/chats/-94303429/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Cody T, 41",
+      "peerTitleNormalized": "Cody T",
+      "chatUrl": "https://match-club.club/chats/-94303425/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Sandy, 64",
+      "peerTitleNormalized": "Sandy",
+      "chatUrl": "https://match-club.club/chats/-94303394/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Terrence, 68",
+      "peerTitleNormalized": "Terrence",
+      "chatUrl": "https://match-club.club/chats/-94303312/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "kevinbobir6933, 53",
+      "peerTitleNormalized": "kevinbobir6933",
+      "chatUrl": "https://match-club.club/chats/-94303275/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Steve, 75",
+      "peerTitleNormalized": "Steve",
+      "chatUrl": "https://match-club.club/chats/48546225/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "TerrySnyder, 69",
+      "peerTitleNormalized": "TerrySnyder",
+      "chatUrl": "https://match-club.club/chats/-94303263/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Jamie, 55",
+      "peerTitleNormalized": "Jamie",
+      "chatUrl": "https://match-club.club/chats/-94303115/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "John, 67",
+      "peerTitleNormalized": "John",
+      "chatUrl": "https://match-club.club/chats/-94303073/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Mark, 63",
+      "peerTitleNormalized": "Mark",
+      "chatUrl": "https://match-club.club/chats/-94303059/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Cory, 56",
+      "peerTitleNormalized": "Cory",
+      "chatUrl": "https://match-club.club/chats/48546000/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "John Grace, 36",
+      "peerTitleNormalized": "John Grace",
+      "chatUrl": "https://match-club.club/chats/48497431/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Jack, 70",
+      "peerTitleNormalized": "Jack",
+      "chatUrl": "https://match-club.club/chats/48497744/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Darktemptation, 72",
+      "peerTitleNormalized": "Darktemptation",
+      "chatUrl": "https://match-club.club/chats/-94302925/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Ozzir53, 61",
+      "peerTitleNormalized": "Ozzir53",
+      "chatUrl": "https://match-club.club/chats/48545991/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Curt, 71",
+      "peerTitleNormalized": "Curt",
+      "chatUrl": "https://match-club.club/chats/48498806/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Ronnie, 63",
+      "peerTitleNormalized": "Ronnie",
+      "chatUrl": "https://match-club.club/chats/48498814/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Peter macdonald, 52",
+      "peerTitleNormalized": "Peter macdonald",
+      "chatUrl": "https://match-club.club/chats/48545986/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Bruce, 67",
+      "peerTitleNormalized": "Bruce",
+      "chatUrl": "https://match-club.club/chats/-94302921/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Doug, 71",
+      "peerTitleNormalized": "Doug",
+      "chatUrl": "https://match-club.club/chats/48545980/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Bruce Kincaid, 68",
+      "peerTitleNormalized": "Bruce Kincaid",
+      "chatUrl": "https://match-club.club/chats/48545974/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Steve, 64",
+      "peerTitleNormalized": "Steve",
+      "chatUrl": "https://match-club.club/chats/48545968/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Joseph Calcagno, 68",
+      "peerTitleNormalized": "Joseph Calcagno",
+      "chatUrl": "https://match-club.club/chats/48545961/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Gregorio, 66",
+      "peerTitleNormalized": "Gregorio",
+      "chatUrl": "https://match-club.club/chats/48545958/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "tuffydog61663, 64",
+      "peerTitleNormalized": "tuffydog61663",
+      "chatUrl": "https://match-club.club/chats/48545951/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "matt, 50",
+      "peerTitleNormalized": "matt",
+      "chatUrl": "https://match-club.club/chats/-94302904/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "martinpier1857, 59",
+      "peerTitleNormalized": "martinpier1857",
+      "chatUrl": "https://match-club.club/chats/-94248671/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Michael, 50",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/48508565/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Eddy, 58",
+      "peerTitleNormalized": "Eddy",
+      "chatUrl": "https://match-club.club/chats/48508459/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Allen, 69",
+      "peerTitleNormalized": "Allen",
+      "chatUrl": "https://match-club.club/chats/-94238739/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Vincent, 61",
+      "peerTitleNormalized": "Vincent",
+      "chatUrl": "https://match-club.club/chats/-94238594/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "mickey55, 69",
+      "peerTitleNormalized": "mickey55",
+      "chatUrl": "https://match-club.club/chats/-94238421/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Bill, 70",
+      "peerTitleNormalized": "Bill",
+      "chatUrl": "https://match-club.club/chats/48498821/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "John dee, 70",
+      "peerTitleNormalized": "John dee",
+      "chatUrl": "https://match-club.club/chats/48498816/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Chris De Leo, 62",
+      "peerTitleNormalized": "Chris De Leo",
+      "chatUrl": "https://match-club.club/chats/48497672/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    },
+    {
+      "peerTitle": "Charlie, 70",
+      "peerTitleNormalized": "Charlie",
+      "chatUrl": "https://match-club.club/chats/-94225567/messages",
+      "outbound": {
+        "action": "skipped",
+        "reason": "thread_plain_nonempty_but_messages_not_extracted"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+SOURCE: https://www.aha.io/roadmapping/guide/templates/create/prd
+TYPE: PRD Presentation (for executives, partners, stakeholders)
+COLLECTION: Second of three Aha PRD templates
+ORIGINAL_FORMAT: .pptx (also in this folder)
+USE_CASE: New offering, major update, broad impact — showcase vision, assumptions, plans
+Added: 2025-03-04
+
+---
+PRD Presentation template
+
+Context
+There are times when you need a comprehensive overview so that everyone can understand what that product will do. You might be releasing a new offering or shipping a major update to an existing one. Because of the broad impact of the work ahead, product development teams typically need to present critical details to executives, partners, or other stakeholders. You want to showcase your product vision, your assumptions, and your plans to deliver value.
+
+The presentation template includes a wide range of product information. You can add more or less as needed. If your organization has a branded theme, use the table of PRD elements to build your own deck.
+
+---
+Structure (PRD elements for slides)
+
+1. Product name
+   - This one should be obvious
+
+2. Vision
+   - Where you want your product to be in the future
+
+3. Description
+   - Brief overview of what your product does and for whom
+
+4. Team
+   - Product manager, development team, designers, QA, etc.
+
+5. Timing
+   - Target release date
+
+6. Status
+   - Current progress: "on track", "at risk", etc.
+
+7. Background
+   - Competitive landscape, user interviews, and other research
+
+8. Strategic imperatives
+   - Business case, goals for your product, supporting initiatives
+
+9. Metrics
+   - How product performance will be measured
+
+10. Personas
+    - Semi-fictional archetypes representing traits and behaviors of prospective customers
+
+11. Use cases
+    - Step-by-step scenarios in which a user uses your product to solve a specific challenge
+
+12. Assumptions
+    - Hypothesis behind how your solutions solve the customer's problem
+    - Technical feasibility
+
+13. Investment required
+    - Budget, headcount, and other resources
+
+14. Product architecture and components
+    - Functional elements and how they relate to one another
+
+15. Core features
+    - Discrete areas of functionality that deliver value
+
+16. User experience (UX) and user interface (UI)
+    - How the user interacts with the product
+    - How interfaces look and behave
+
+17. Acceptance criteria
+    - Conditions that must be met for the product to be accepted
+
+18. Scope
+    - What will not be built at this time
+    - Ideas for future releases
+
+19. Open questions
+    - Questions the team has — whether answers exist or not
+
+---
+Files in this folder
+- 02_Aha_PRD_Presentation_Template.pptx — PowerPoint format

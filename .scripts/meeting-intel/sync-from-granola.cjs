@@ -55,9 +55,8 @@ function getGranolaCachePath() {
   }
 }
 
-const GRANOLA_CACHE = getGranolaCachePath();
 const STATE_FILE = path.join(__dirname, 'processed-meetings.json');
-const MEETINGS_DIR = path.join(VAULT_ROOT, 'Inbox', 'Meetings');
+const MEETINGS_DIR = path.join(VAULT_ROOT, '00-Inbox', 'Meetings');
 const QUEUE_FILE = path.join(MEETINGS_DIR, 'queue.md');
 const LOG_DIR = path.join(VAULT_ROOT, '.scripts', 'logs');
 const PILLARS_FILE = path.join(VAULT_ROOT, 'System', 'pillars.yaml');
@@ -108,6 +107,10 @@ function loadUserProfile() {
     name: 'User',
     role: 'Professional',
     company: '',
+    meeting_processing: {
+      mode: 'automatic',
+      api_provider: 'gemini'
+    },
     meeting_intelligence: {
       extract_customer_intel: true,
       extract_competitive_intel: true,
@@ -156,15 +159,30 @@ function saveState(state) {
 // ============================================================================
 
 function readGranolaCache() {
-  if (!fs.existsSync(GRANOLA_CACHE)) {
-    throw new Error(`Granola cache not found at ${GRANOLA_CACHE}`);
+  // Granola has evolved cache formats over time (v3, v4, v6, ...).
+  // Prefer the newest known cache file that actually exists on disk.
+  const defaultPath = getGranolaCachePath();
+  const homedir = os.homedir();
+  const candidates = [
+    defaultPath,
+    path.join(homedir, 'Library/Application Support/Granola/cache-v6.json'),
+    path.join(homedir, 'Library/Application Support/Granola/cache-v4.json'),
+  ];
+
+  const existingPath = candidates.find(p => fs.existsSync(p));
+  if (!existingPath) {
+    throw new Error(`Granola cache not found. Tried: ${candidates.join(', ')}`);
   }
-  
-  const rawData = fs.readFileSync(GRANOLA_CACHE, 'utf-8');
+
+  const rawData = fs.readFileSync(existingPath, 'utf-8');
   const cacheWrapper = JSON.parse(rawData);
-  
-  // The cache has a nested structure: { cache: JSON_STRING }
-  const cacheData = JSON.parse(cacheWrapper.cache);
+
+  // The cache has a nested structure: { cache: JSON_STRING } or { cache: OBJECT }
+  // Newer Granola versions store cache as a pre-parsed object, not a JSON string.
+  const cacheData =
+    typeof cacheWrapper.cache === 'string'
+      ? JSON.parse(cacheWrapper.cache)
+      : cacheWrapper.cache;
   
   return {
     documents: cacheData.state?.documents || {},
@@ -503,6 +521,105 @@ ${meeting.transcript.slice(0, 5000)}${meeting.transcript.length > 5000 ? '\n\n[T
 }
 
 // ============================================================================
+// BASIC NOTE (no LLM — fallback for automatic mode when API key not configured)
+// ============================================================================
+
+function createBasicMeetingNote(meeting, profile) {
+  const date = meeting.createdAt.split('T')[0];
+  const time = meeting.createdAt.split('T')[1]?.slice(0, 5) || '00:00';
+
+  const outputDir = path.join(MEETINGS_DIR, date);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const slug = slugify(meeting.title);
+  const filename = `${slug}.md`;
+  const filepath = path.join(outputDir, filename);
+
+  const ownerName = profile.name || '';
+  const filteredParticipants = meeting.participants.filter(p =>
+    p.toLowerCase() !== ownerName.toLowerCase() &&
+    !p.toLowerCase().includes(ownerName.toLowerCase().split(' ')[0])
+  );
+
+  const notesSection = meeting.notes
+    ? `## Notes\n\n${meeting.notes}\n`
+    : '';
+
+  const transcriptSection = meeting.transcript
+    ? `## Transcript\n\n${meeting.transcript.slice(0, 5000)}${meeting.transcript.length > 5000 ? '\n\n[Truncated...]' : ''}\n`
+    : '';
+
+  const content = `---
+date: ${date}
+time: ${time}
+type: meeting-note
+source: granola
+title: "${meeting.title.replace(/"/g, '\\"')}"
+participants: [${filteredParticipants.map(p => `"${p}"`).join(', ')}]
+company: "${meeting.company || ''}"
+granola_id: ${meeting.id}
+processed: ${new Date().toISOString()}
+ai_analyzed: false
+---
+
+# ${meeting.title}
+
+**Date:** ${date} ${time}
+**Participants:** ${filteredParticipants.join(', ') || 'Unknown'}
+${meeting.company ? `**Company:** ${meeting.company}` : ''}
+
+---
+
+${notesSection}
+${transcriptSection}
+
+---
+*Auto-synced by Dex. Run \`/process-meetings\` to add AI analysis, or set up an LLM key via \`/ai-setup\`.*
+`;
+
+  fs.writeFileSync(filepath, content);
+  log(`  Created basic note (no LLM): ${filepath}`);
+
+  return {
+    filepath,
+    wikilink: `00-Inbox/Meetings/${date}/${slug}.md`
+  };
+}
+
+// ============================================================================
+// MANUAL MODE — queue meeting as JSON for later /process-meetings
+// ============================================================================
+
+function queueMeetingAsJson(meeting, state) {
+  const QUEUE_DIR = path.join(MEETINGS_DIR, 'queue');
+  if (!fs.existsSync(QUEUE_DIR)) {
+    fs.mkdirSync(QUEUE_DIR, { recursive: true });
+  }
+
+  const date = meeting.createdAt.split('T')[0];
+  const slug = slugify(meeting.title);
+  const shortId = meeting.id.slice(0, 8);
+  const filename = `${date}-${slug}-${shortId}.json`;
+  const filepath = path.join(QUEUE_DIR, filename);
+
+  fs.writeFileSync(filepath, JSON.stringify(meeting, null, 2));
+  log(`  Queued for manual processing: ${filename}`);
+
+  // Track in state
+  if (!state.queuedMeetings) state.queuedMeetings = {};
+  state.queuedMeetings[meeting.id] = {
+    queuedAt: new Date().toISOString(),
+    queueFile: filename
+  };
+  if (!state.lastQueuedAt) {
+    state.lastQueuedAt = new Date().toISOString();
+  }
+  state.lastQueuedAt = new Date().toISOString();
+}
+
+// ============================================================================
 // QUEUE MANAGEMENT
 // ============================================================================
 
@@ -631,8 +748,32 @@ async function main() {
     }
     return;
   }
-  
-  // Process each meeting
+
+  // Determine processing mode
+  // "automatic" = write meeting notes now (default for new users)
+  // "manual"    = queue JSON files for /process-meetings command
+  const processingMode = profile.meeting_processing?.mode || 'automatic';
+  log(`\nProcessing mode: ${processingMode}`);
+
+  const dataSource = 'granola-cache';
+
+  if (processingMode === 'manual') {
+    // Queue mode — write JSON files, user runs /process-meetings to analyse
+    log(`Queuing ${newMeetings.length} meeting(s) for manual processing...`);
+    for (const meeting of newMeetings) {
+      log(`\nQueuing: ${meeting.title}`);
+      queueMeetingAsJson(meeting, state);
+    }
+    saveState(state);
+    log('\n' + '='.repeat(60));
+    log(`SYNC COMPLETE (source: ${dataSource})`);
+    log(`Queued: ${newMeetings.length} meetings`);
+    log('Run /process-meetings in your Dex session to analyse them.');
+    log('='.repeat(60));
+    return;
+  }
+
+  // Automatic mode — process and write notes immediately
   const processedResults = [];
   
   for (const meeting of newMeetings) {
@@ -640,46 +781,48 @@ async function main() {
     log(`  Date: ${meeting.createdAt.split('T')[0]}`);
     log(`  Participants: ${meeting.participants.join(', ') || 'Unknown'}`);
     
+    let result;
     try {
-      // Analyze with LLM
+      // Try LLM analysis first
       log('  Calling LLM for analysis...');
       const analysis = await analyzeWithLLM(meeting, profile, pillars);
       
       // Create meeting note
-      log('  Creating meeting note...');
-      const result = createMeetingNote(meeting, analysis, profile, pillars);
-      
-      // Mark as processed
-      state.processedMeetings[meeting.id] = {
-        title: meeting.title,
-        processedAt: new Date().toISOString(),
-        filepath: result.filepath
-      };
-      
-      processedResults.push({
-        meeting,
-        ...result
-      });
-      
-      log(`  ✓ Done: ${result.wikilink}`);
-      
-      // Small delay between API calls
-      await new Promise(r => setTimeout(r, 1000));
-      
+      log('  Creating meeting note with AI analysis...');
+      result = createMeetingNote(meeting, analysis, profile, pillars);
     } catch (err) {
-      log(`  ✗ Failed: ${err.message}`);
+      if (err.message.includes('No LLM API key') || err.message.includes('not configured')) {
+        // No LLM configured — create a basic structured note instead
+        log(`  No LLM available — creating basic note (run /ai-setup to enable AI analysis)`);
+        result = createBasicMeetingNote(meeting, profile);
+      } else {
+        log(`  Failed: ${err.message}`);
+        continue;
+      }
     }
+
+    // Mark as processed
+    state.processedMeetings[meeting.id] = {
+      title: meeting.title,
+      processedAt: new Date().toISOString(),
+      filepath: result.filepath,
+      source: meeting.source || dataSource
+    };
+
+    processedResults.push({ meeting, ...result });
+    log(`  Done: ${result.wikilink}`);
+
+    // Small delay between LLM calls
+    await new Promise(r => setTimeout(r, 500));
   }
   
   // Save state
   saveState(state);
-  
-  // Update queue
+
+  // Update queue log
   if (processedResults.length > 0) {
-    log('\nUpdating queue...');
+    log('\nUpdating queue log...');
     updateQueue(processedResults);
-    
-    // Run post-processing
     log('\nRunning post-processing...');
     runPostProcessing();
   }

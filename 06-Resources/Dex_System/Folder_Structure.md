@@ -122,7 +122,8 @@ Project = has an end ("Onboard Acme Corp")
 ├── Dex_System/           # Documentation about how Dex works
 │   ├── Dex_Jobs_to_Be_Done.md
 │   ├── Dex_System_Guide.md
-│   └── Folder_Structure.md (this file)
+│   ├── Folder_Structure.md (this file)
+│   └── Skills_Publish/   # Skills prepared for separate repos (e.g. scan-skill-injection)
 ├── Learnings/            # Compound knowledge (frameworks, lessons learned)
 └── Quarterly_Reviews/    # Quarterly reflection and strategic reviews
 ```

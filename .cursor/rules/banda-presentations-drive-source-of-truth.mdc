@@ -1,0 +1,19 @@
+---
+description: Banda «2. Banda Presentations Bundle» — Google Drive mirrors local for content; Drive is source of truth for cloud-facing files; no system files on Drive (see banda-google-drive-content-only)
+globs:
+alwaysApply: true
+---
+
+# Banda presentations bundle: Google Drive as source of truth
+
+Для дерева **`04-Projects/Banda/banda-drive-import/2. Banda Presentations Bundle/`** (і відповідного кореня на Google Drive):
+
+- **Перед будь-яким синком або порадою щодо Drive** прочитати актуальний **`04-Projects/Banda/banda-drive-import/2. Banda Presentations Bundle/README.md`**: там канонічні **назви тек і folder ID**. Працювати **тільки** з цією структурою; **не вигадувати** нові назви папок на Drive і **не створювати** додаткові теки в корені bundle, якщо користувач явно не попросив змінити структуру.
+- **Локально** дочірні теки в корені bundle з контентом мають називатися **один в один**, як на Drive (три гілки «… (Drafts)» для office і pitch). Додатковий **технічний** вміст лише в корені репо (наприклад `.obsidian/`, `00-Index.md`, `README.md`), без паралельних «логічних» тек з іншими іменами замість канонічних.
+- **Google Drive — джерело істини** для актуального стану **контентних** файлів у хмарі. Після зміни локальної архітектури Drive **має відповідати** репо: скрипт презентаційного bundle перед заливкою відправляє в кошик **дублікати** `*.md` поруч з **`Obsidian/`** (як Board) і **застарілу** пряму дочірню теку **`Obsidian/`** у корені bundle на Drive, якщо локально в корені bundle її вже немає (звіти: `drive_duplicate_root_md_trashed`, `drive_stale_root_obsidian_folder_trashed`). Жорстка політика **без системних файлів** на Drive для трьох дерев Banda: `.cursor/rules/banda-google-drive-content-only.mdc`.
+- Після **додавання, видалення або перейменування** контентних файлів у цьому пакеті (зокрема `Municipal pitch decks (Drafts)/`, docx/xlsx sync, **структура або `.md` у `Obsidian/`**): **в тому ж ході** віддзеркалити зміни на Drive — **`python3 .scripts/banda/presentations_bundle_index_and_drive_upload.py`** **без** `--dry-run` (або `npm run banda:presentations-bundle-drive-sync` / варіанти з `package.json`) з правильними **`BANDA_PRESENTATIONS_*`**, **`--skip-docx-xlsx`**, **`--skip-media-decks`**, **`--skip-obsidian-notes-drive`** (лише якщо треба **не** чіпати ноти на Drive), **`--legacy-auto-office-folders`** (лише якщо користувач явно хоче стару схему `_synced-office-from-repo`), поки результат не підтверджений (успішний API / звіт скрипта). **`--dry-run`** не вважати завершенням задачі після змін структури. Канонічне правило «Obsidian-структура → одразу Drive» для трьох пакетів: **`.cursor/rules/banda-obsidian-structure-drive-sync.mdc`**.
+- Vault-мета (`.obsidian/`, `README.md`, `00-Index.md`) на Drive **не** синхронізується за замовчуванням; рідкий legacy: **`--upload-vault-meta-to-drive`**.
+- Після **видалення** legacy-теки **`_synced-office-from-repo`** на Drive: **`npm run banda:presentations-bundle:eval-no-synced-folder`** (exit 0 — активної теки немає; див. README пакета).
+- Не відкладати «видаліть самі в UI» як основний вихід, якщо автоматизація вже доступна в репо.
+
+Канонічні ID кореня bundle і тек на Drive: `04-Projects/Banda/banda-drive-import/2. Banda Presentations Bundle/README.md`.

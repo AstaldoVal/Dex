@@ -1,0 +1,26 @@
+SOURCE: https://www.aha.io/roadmapping/guide/requirements-management/what-is-a-good-product-requirements-document-template
+SOURCE_TEMPLATE: https://www.aha.io/roadmapping/guide/templates/create/prd
+FETCHED: 2025-03-04
+ORIGINAL FORMAT: Aha! product management platform - note-style template
+
+---
+Aha! PRD Template
+
+Template includes sections for:
+- Product requirements
+- Release requirements
+- Epic requirements
+- Feature requirements
+
+Best practices:
+- Define what will be delivered (product, release, epic, or feature)
+- Choose format: product requirements, release requirements, epic requirements, or feature requirements
+- Outline high-level direction: objectives, assumptions, scope, ownership
+- Add timing, milestones, dependencies
+- Invite collaborators - goal is to inspire teammates, not prescribe exact functionality
+- Update PRD to track status as work gets underway
+
+Downloadable formats: Excel, PowerPoint, Word (via Aha! signup)
+
+10 steps to write a PRD (from Aha! guide):
+- Components: Overview, Objectives, User personas, Scope, Features, Design, Success metrics, Assumptions, Release plan, Analytics

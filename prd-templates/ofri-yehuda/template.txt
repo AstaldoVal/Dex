@@ -1,0 +1,23 @@
+SOURCE: https://medium.com/design-bootcamp/writing-a-prd-a-deep-dive-into-templates-and-best-practices-59e379698b9b
+AUTHOR: Ofri Yehuda (Design Bootcamp)
+ADDED: 2025-03-04
+LOCAL_FILE: 05_Medium_Ofri_Yehuda_PRD_Template.docx — "The Only PRD Template You Need" (Word format)
+
+---
+Ofri Yehuda - PRD Components (from Medium/Design Bootcamp)
+
+Sources examined: Product School, Aha!, Atlassian, Monday, Nira templates, lastartup.co.il
+
+Recurring components:
+- Requirements
+- Assumptions (key ideas that determine project direction)
+- Success criteria (goals and measurement system)
+- Project overview (connect team to purpose)
+
+Additional useful components:
+- Scoping (boundaries, limitations, prevent scope creep)
+- User flows and Wireframes
+- Data requirements
+- Milestones and Timeline (Gantt example)
+
+Note: Article references Google Doc template; we also have the Word version locally. No single correct PRD format; ideal fit depends on PM and product (product line vs new feature vs first product, technical vs consumer-facing).
