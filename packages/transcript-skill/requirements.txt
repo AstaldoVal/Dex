@@ -1,0 +1,6 @@
+# Shared dependencies for standalone transcript skill
+youtube-transcript-api>=1.0.0
+faster-whisper
+yt-dlp
+psutil>=5.9.0
+rich>=13.0.0

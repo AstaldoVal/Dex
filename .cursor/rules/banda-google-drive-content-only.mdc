@@ -1,0 +1,38 @@
+---
+description: Banda Google Drive (1. Board, 2. Banda Presentations Bundle, 3. External Audits) — only investor-facing content; no repo/system/process README or automation metadata
+globs:
+alwaysApply: true
+---
+
+# Banda Google Drive: content-only (three trees)
+
+Це стосується **трьох** основних дерев на Google Drive для проєкту «Банда»:
+
+1. **`1. Board`**
+2. **`2. Banda Presentations Bundle`**
+3. **`3. External_Audits`** (або еквівалентна назва папки на Drive)
+
+## Заборонено заливати або залишати в цих деревах
+
+- Файли та папки **репозиторію / автоматизації**: `.scripts/`, `.cursor/`, `node_modules/`, `.git/`, `package.json`, конфіги IDE тощо.
+- **README**, **CHANGELOG**, **AGENTS**, інші пояснення **як працює скрипт** або як влаштований репозиторій для цієї обробки.
+- **Obsidian-система** на Drive для цих дерев: **`.obsidian/`**, **`00-Index.md`** у корені bundle (якщо це лише навігація vault, а не контент для читачів Drive), **`README.md`** у корені bundle на Drive.
+- Будь-які артефакти, які **не** є матеріалами для інвесторів / аудиту / борду (docx, xlsx, pdf, pptx, контентні .md з нотатками тощо).
+
+Локально у репозиторії README та `.obsidian` у bundle **можуть** існувати для роботи в Obsidian; **не** синхронізувати їх на ці три Drive-корені без явного прохання користувача та окремого legacy-прапора скрипта.
+
+**Єдина назва теки для markdown-нот** у трьох пакетах репо (**Board**, **Presentations Bundle**, **External Audits**): **`Obsidian/`** (не `_Bundle-notes` тощо). Скрипт **`presentations_bundle_index_and_drive_upload.py`** за замовчуванням **заливає** контентні **`Obsidian/**/*.md`** на Drive під корінь bundle зі збереженням підпапок (пропуск README/CHANGELOG/AGENTS/00-Index за ім’ям файлу); вимкнути цей крок: **`--skip-obsidian-notes-drive`**. Метадані vault (`.obsidian/`, кореневі `README.md` / `00-Index.md` для vault) на Drive **не** заливаються без **`--upload-vault-meta-to-drive`**.
+
+Після змін структури або нот у цих трьох дереві: **`.cursor/rules/banda-obsidian-structure-drive-sync.mdc`** (одразу той самий turn — Board / bundle / External Audits команди).
+
+## Дозволено
+
+- Офісні та медіа-файли за призначенням кожного флоу (Board `.md` зі структурою, bundle docx/xlsx/media, External Audits docx/xlsx та контентні `.md` з `Obsidian/` тощо).
+
+## Інструменти
+
+- Перевірка прямих дітей трьох коренів: `python3 .scripts/banda/audit_banda_drive_meta_artifacts.py` (dry-run; `--apply` — у кошик збіги зі списку мета-імен).
+- Прибирання README / 00-Index / `.obsidian` **всередині** bundle на Drive: `python3 .scripts/banda/drive_my_drive_root_cleanup_bundle_mistakes.py --inside-presentations-bundle --apply`.
+- Синк презентаційного bundle: `presentations_bundle_index_and_drive_upload.py` заливає **контентні** `Obsidian/**/*.md` за замовчуванням; vault-мета на Drive **не** заливається; рідко: `--upload-vault-meta-to-drive`; лише без нот на Drive: `--skip-obsidian-notes-drive`.
+
+Канонічні ID і назви для bundle: `04-Projects/Banda/banda-drive-import/2. Banda Presentations Bundle/README.md`.

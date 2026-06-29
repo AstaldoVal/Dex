@@ -1,0 +1,7 @@
+{
+  "_comment": "Update from https://platform.openai.com/docs/pricing. Prices per 1M tokens (input, output) or per 1M characters (tts).",
+  "gpt-5.2": { "input_per_1m": 1.75, "output_per_1m": 14 },
+  "gpt-4o": { "input_per_1m": 2.50, "output_per_1m": 10 },
+  "gpt-4o-mini": { "input_per_1m": 0.15, "output_per_1m": 0.60 },
+  "tts-1-hd": { "chars_per_1m": 30 }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "slack",
+  "description": "Slack MCP: list channels/chats, read channel and thread history, search, send messages. Remote server, OAuth.",
+  "server": {
+    "url": "https://mcp.slack.com/mcp",
+    "type": "http"
+  },
+  "notes": "Add to .cursor/mcp.json.source: \"slack\": { \"url\": \"https://mcp.slack.com/mcp\" }. Cursor is a supported partner; first use: connect Slack workspace (OAuth). Use for: get list of chats, analyze information from the Space/channel you granted access to. Requires Slack app (directory or internal) with MCP enabled and scopes for channels:history, search, etc."
+}

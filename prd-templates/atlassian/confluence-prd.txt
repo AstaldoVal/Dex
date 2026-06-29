@@ -1,0 +1,49 @@
+SOURCE: https://www.atlassian.com/software/confluence/templates/product-requirements
+ORIGINAL_FORMAT: .doc (also in this folder), Confluence page template
+Added: 2025-03-04
+Updated: 2025-03-04 (usage instructions)
+
+---
+How to use the product requirements template
+
+1. Cover the basics
+   - Set the scene using the top table
+   - Target release date, current status, core team
+   - Shortcuts: /date for target date, /jira for Jira epics or issues, @mention team members
+
+2. Outline your objective and success metrics
+   - Objective: brief explanation of how this project supports organization goals
+   - Why should this feature or product exist?
+   - Success metrics table: product/feature goals + metrics to monitor
+   - Example: "Simplify UX" -> "CSAT increase by at least 15%"
+
+3. List your assumptions and options to address them
+   - Assumptions: users, technical constraints, business goals
+   - Example: "Most users will access this feature from a tablet"
+   - Options table maps requirements to assumptions
+   - Per requirement: requirement statement, user story (e.g. "John is a PM who wants to check his team's progress from the train station"), importance level, Jira issues, notes
+
+4. Add supporting documentation
+   - Mockups, diagrams, visual designs
+   - Single source of truth, consolidated for everyone
+
+5. Anticipate open questions and scope creep
+   - Open questions table: question, answer, date answered
+   - Track questions as they arise (e.g. "How will users be made aware of this new feature?")
+   - Out of scope: list what's NOT in scope, be specific
+   - Add to out-of-scope as you go to prevent scope creep
+
+---
+Template structure summary
+- Top table: release date, status, core team
+- Objective
+- Success metrics table
+- Assumptions
+- Options table (requirements + user story + importance + Jira + notes)
+- Supporting documentation (mockups, diagrams, visuals)
+- Open questions table (question, answer, date)
+- Out of scope
+
+---
+Files in this folder
+- 03_Atlassian_Confluence_Product_Requirements.doc — Word format (from Confluence export)

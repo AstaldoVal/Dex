@@ -12,7 +12,9 @@ const fs = require('fs');
 const path = require('path');
 
 const { VAULT, DATA_DIR, JOBS_DIR, ensureDirs } = require('./job-search-paths.cjs');
+const { looksLikeJobTitle } = require('./job-search-utils.cjs');
 
+/** Job title must come only from LinkedIn page HTML. Never overwrite a valid title with extension-scraped section headers (e.g. "What You'll Be Doing"). */
 function main() {
   const args = process.argv.slice(2).filter((a) => !a.startsWith('-'));
   let exportPath = args[0];
@@ -41,11 +43,26 @@ function main() {
   for (const [jobId, payload] of Object.entries(jobs)) {
     if (!payload.job_description || payload.job_description.length < 100) continue;
     const jobPath = path.join(JOBS_DIR, jobId + '.json');
+    const exportTitle = (payload.job_title || '').trim();
+    const exportCompany = (payload.company || '').trim();
+    let job_title = exportTitle || '—';
+    let company = exportCompany || '—';
+    if (fs.existsSync(jobPath)) {
+      try {
+        const existing = JSON.parse(fs.readFileSync(jobPath, 'utf8'));
+        const existingTitle = (existing.job_title || '').trim();
+        const existingCompany = (existing.company || '').trim();
+        if (existingTitle && looksLikeJobTitle(existingTitle) && !looksLikeJobTitle(exportTitle)) {
+          job_title = existingTitle;
+          if (existingCompany) company = existingCompany;
+        }
+      } catch (_) {}
+    }
     const out = {
       id: jobId,
       url: payload.url || `https://www.linkedin.com/comm/jobs/view/${jobId}`,
-      job_title: payload.job_title || '—',
-      company: payload.company || '—',
+      job_title,
+      company,
       work_type: payload.work_type || 'Remote',
       job_description: payload.job_description
     };

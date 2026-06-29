@@ -1,0 +1,14 @@
+## LinkedIn feed author allowlist (one profile URL per line)
+## Используется генератором: `.scripts/linkedin-feed/generate-linkedin-feed-digest.cjs`
+##
+## Формат:
+## - 1 строка = URL профиля LinkedIn (`https://www.linkedin.com/in/<slug>/`)
+## - Пустые строки игнорируются
+## - Строки, начинающиеся на `#`, игнорируются
+##
+## Примеры:
+## https://www.linkedin.com/in/some-slug/
+## https://www.linkedin.com/in/another-slug/
+
+https://www.linkedin.com/in/lennyrachitsky/
+https://www.linkedin.com/in/teresatorres/

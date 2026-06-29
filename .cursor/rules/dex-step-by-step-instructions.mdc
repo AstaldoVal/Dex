@@ -1,0 +1,44 @@
+---
+description: Инструкции Roman — только пошагово; запрет «сжатых» блоков без UI-пути
+alwaysApply: true
+---
+
+# Пошаговые инструкции для Roman (hard)
+
+Относится ко **всем** ответам и runbook’ам, где Roman должен **что-то сделать** (Dashboard, Credentials, терминал, OAuth).
+
+## Обязательный формат
+
+1. **Сначала одна фраза зачем** (что получится в конце).
+2. **Потом нумерованный список шагов** — каждый шаг = одно действие.
+3. **В каждом шаге** в той же строке или сразу под ней: **что увидишь, если шаг прошёл** (кнопка, экран, exit 0, файл появился).
+4. **Терминал** — полная команда с путём от корня Dex; не «запусти скрипт» без `cd` и имени файла.
+5. **Dashboard** — цепочка меню словами: «открой … → вкладка … → кнопка …», не абстрактное «создай token с правами DNS».
+
+## Запрещено (антипаттерн)
+
+- Один абзац с перечислением прав, env-переменных и скриптов без номеров шагов.
+- «Скопируй example → вставь token (права: X, Y, Z)» **без** пошагового создания token в UI.
+- «Wrangler OAuth не хватает» без альтернативы в виде шагов 1–N.
+- Ссылка на runbook вместо шагов **в чате**, если Roman просит «что сделать» — в чате минимум полный пошаговый блок; runbook — дубль для файла.
+
+## Эталон (хорошо)
+
+**Плохо:** «Заполни `CLOUDFLARE_API_TOKEN` с правами DNS и Access, потом `./scripts/foo.sh`.»
+
+**Хорошо:**
+
+1. Открой в браузере `https://dash.cloudflare.com/profile/api-tokens` → **Create Token** → **Create Custom Token**.
+2. Имя: `genufit-paperclip-automation`.
+3. Permissions → **Add** три раза: (1) Zone → DNS → Edit → зона `genufit.app`; (2) Account → Cloudflare One Connectors → Edit; (3) Account → Access: Apps and Policies → Edit.
+4. **Continue to summary** → **Create Token** → скопируй строку токена (показывается один раз).
+5. В терминале на Mac: `cp Credentials/.../cloudflare-genufit.env.example Credentials/.../cloudflare-genufit.env` → открой файл → вставь токен после `CLOUDFLARE_API_TOKEN=`.
+6. `cd 04-Projects/Applicator` → `./scripts/paperclip-named-tunnel-setup.sh` → в конце строка `Done. PAPERCLIP_API_URL=https://paperclip-ops.genufit.app`.
+
+## Eval и согласованность
+
+- `.cursor/rules/dex-plain-language-structure.mdc` — адресность и «что увидишь».
+- `.cursor/rules/dex-cognitive-load-budget.mdc` — слой 2 = действия пошагово.
+- `.cursor/rules/action-first-outcomes.mdc` — агент сам запускает скрипты, где возможно; шаги Roman только там, где нужен его браузер или секрет.
+
+При правке runbook’ов в `docs/engineering/*-roman-steps.md` и `Credentials/**/*.example` — тот же формат.

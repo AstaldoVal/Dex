@@ -1,0 +1,19 @@
+{
+  "_comment": "LinkedIn Trend Tracking Configuration. Statuses: active = include in weekly capture, testing = include but mark as experimental, paused = skip.",
+  "captureSettings": {
+    "maxPostsPerHashtag": 150,
+    "pauseBetweenHashtagsMs": 90000,
+    "lookbackDays": 30
+  },
+  "hashtags": [
+    { "tag": "#ai", "status": "active", "addedAt": "2026-03-24", "notes": "Broad AI — highest reach" },
+    { "tag": "#llm", "status": "active", "addedAt": "2026-03-24", "notes": "Large language models" },
+    { "tag": "#genai", "status": "active", "addedAt": "2026-03-24", "notes": "Generative AI" },
+    { "tag": "#artificialintelligence", "status": "active", "addedAt": "2026-03-24", "notes": "Full term — good reach" },
+    { "tag": "#chatgpt", "status": "active", "addedAt": "2026-03-24", "notes": "ChatGPT — very active community" },
+    { "tag": "#machinelearning", "status": "active", "addedAt": "2026-03-24", "notes": "ML broader audience" },
+    { "tag": "#aiagents", "status": "active", "addedAt": "2026-03-24", "notes": "AI agents trend" },
+    { "tag": "#promptengineering", "status": "testing", "addedAt": "2026-03-24", "notes": "Testing engagement level" }
+  ],
+  "discoveredHashtags": []
+}

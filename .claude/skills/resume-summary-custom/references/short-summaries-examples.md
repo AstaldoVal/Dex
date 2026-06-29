@@ -46,9 +46,15 @@ Use these examples only for **format and tone**. Do not copy sentences verbatim.
 
 - Long multi-paragraph blocks with generic "Key strengths" or emoji sections.
 - Em dashes (—) in summary or description text; use commas, periods, or separate sentences instead.
-- Any language other than English unless the user explicitly asks.
+- Any language other than English unless the user explicitly asks. No mixed languages (e.g. no German terms like "Priorisierung", "Weiterentwicklung").
+- Keyword stuffing: do not cram keywords at the cost of readability. Weave required phrases into natural, human prose.
 - Invented experience or metrics not in CV or confirmed-facts.
 - Stating fewer than 12 years of experience.
+
+## Paragraph breaks (Teal editor)
+
+- Between every paragraph use **exactly three line breaks** (three newlines) so that when pasted into Teal, spacing displays correctly. Use `\n\n\n` between paragraphs. Output format: `First paragraph.\n\n\nSecond paragraph.\n\n\nThird paragraph.`
+- The summary is pasted into Teal's React editor; three line breaks between paragraphs produce the intended one-line gap in Teal.
 
 ## Full examples (for reference only — tailor each summary to the job)
 

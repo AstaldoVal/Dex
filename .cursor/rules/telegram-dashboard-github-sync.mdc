@@ -1,0 +1,27 @@
+---
+description: Після змін у apps/telegram-news-dashboard — commit у Dex і push у github.com/AstaldoVal/telegram-dashboard (canonical для Vercel)
+globs: apps/telegram-news-dashboard/**
+alwaysApply: false
+---
+
+# Telegram dashboard — обов’язковий push у GitHub
+
+Канонічний репозиторій для production Vercel: **https://github.com/AstaldoVal/telegram-dashboard** (окремий репо, root = Next app).
+
+Після **будь-якої** зміни в `apps/telegram-news-dashboard/**`:
+
+1. За потреби оновити код і в Dex (звичайний workflow): `git add` / `git commit` у репозиторії Dex.
+2. **Синхронізувати в canonical репо** з кореня Dex (після commit):
+
+```bash
+git subtree split -P apps/telegram-news-dashboard -b tmp-tg-dashboard-split
+git push https://github.com/AstaldoVal/telegram-dashboard.git tmp-tg-dashboard-split:main
+git branch -D tmp-tg-dashboard-split
+```
+
+(за потреби `--force` на push — див. `apps/telegram-news-dashboard/docs/VERCEL_GITHUB.md`).
+3. Переконатися, що push пройшов — Vercel має автоматично стартувати deployment для гілки production (`main`), якщо проєкт у Vercel підключений до цього GitHub репо.
+
+**Не** закривати задачу «оновлено дашборд», поки зміни не відправлені в **AstaldoVal/telegram-dashboard** (або явно не домовлено інше).
+
+Додатково для тунелю/env: `npm run telegram-news:stack:status` і за потреби `npm run telegram-news:stack:restart` на Mac з bridge — див. `.cursor/rules/telegram-news-stack-ops.mdc`.

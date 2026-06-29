@@ -3,7 +3,7 @@
 ## Уже сделано автоматически
 
 - Установлены Python-зависимости (`pip install -r core/mcp/requirements-google-drive.txt`).
-- В твоём `.mcp.json` уже добавлены серверы **google-drive-mcp** (личный Drive) и **google-drive-work-mcp** (рабочий Drive, credentials из `.claude/google-work/`).
+- В твоём `.mcp.json` уже добавлены серверы **google-drive-mcp** (личный Drive) и **google-drive-work-mcp** (рабочий Drive, credentials из **`Credentials/google-work/`**, symlink **`.claude/google-work/`**).
 - Файл `google_drive_token.json` добавлен в `.gitignore` (не попадёт в git).
 
 Тебе остаётся только включить Drive API в Google Cloud и один раз войти в браузере.
@@ -52,7 +52,7 @@
    - Нажми **«Go to Dex (unsafe)»** / **«Перейти на Dex (небезопасно)»** (для личного приложения это нормально).
 6. На экране разрешений отметь доступ к **Google Drive** (просмотр и загрузка файлов) и нажми **«Allow»** / **«Разрешить»**.
 7. После успешного входа браузер может показать страницу «The authentication flow has completed» — можно закрыть вкладку.
-8. В корне проекта Dex появится файл **`google_drive_token.json`** (или он будет в той же папке, что и `credentials.json`, если задан путь в `.env`). Больше входить для личного Drive не нужно.
+8. В **`Credentials/personal/`** появится файл **`google_drive_token.json`** (или в каталоге, заданном `GOOGLE_DRIVE_TOKEN_PATH` / рядом с `credentials.json` по `.env`). Больше входить для личного Drive не нужно.
 
 ---
 
@@ -63,7 +63,7 @@
 1. В чате попроси что-то вроде: **«Покажи файлы в корне моего рабочего Google Drive»** (или явно укажи, что нужен рабочий Drive).
 2. Откроется браузер — войди в **рабочий** Google-аккаунт (например roman.matsukatov@mindera.com).
 3. Дай разрешение на доступ к Drive, как в шаге 2.
-4. Токен сохранится в **`.claude/google-work/google_drive_token.json`** (путь задан в `.mcp.json` для `google-drive-work-mcp`).
+4. Токен сохранится в **`Credentials/google-work/google_drive_token.json`** (путь задан в `.mcp.json` для `google-drive-work-mcp`; symlink **`.claude/google-work/`**).
 
 ---
 
@@ -83,7 +83,7 @@
 
 | Проблема | Что проверить |
 |----------|----------------|
-| «Credentials file not found» | Файл `credentials.json` должен лежать в **корне** Dex или путь к нему задан в `.env`: `GOOGLE_DRIVE_CREDENTIALS_PATH=...`. Для рабочего MCP путь задаётся в `.mcp.json` и файл должен быть в `.claude/google-work/credentials.json`. |
+| «Credentials file not found» | Личный Drive: **`Credentials/personal/credentials.json`** или `GOOGLE_DRIVE_CREDENTIALS_PATH` в `.env`. Рабочий MCP: **`Credentials/google-work/credentials.json`** (или symlink **`.claude/google-work/credentials.json`**). |
 | «API has not been used in project before» | В Google Cloud Console в **выбранном проекте** включи **Google Drive API** (шаг 1.3). |
 | Браузер не открывается при первом запросе | Убедись, что после добавления MCP в `.mcp.json` ты **полностью перезапустил Cursor** (не только перезагрузка окна). |
 | «Access blocked» / «This app isn’t verified» | На экране предупреждения нажми **Advanced** → **Go to [app name] (unsafe)** — для личного OAuth-клиента это ожидаемо. |
@@ -96,6 +96,6 @@
 - [ ] В этом проекте включён **Google Drive API** (APIs & Services → Library → Google Drive API → Enable).
 - [ ] Cursor перезапущен после добавления MCP.
 - [ ] Выполнен первый запрос к Drive в чате; в браузере выполнен вход и выдано разрешение.
-- [ ] Файл токена создан: `google_drive_token.json` (личный) и/или `.claude/google-work/google_drive_token.json` (рабочий).
+- [ ] Файл токена создан: **`Credentials/personal/google_drive_token.json`** (личный) и/или **`Credentials/google-work/google_drive_token.json`** (рабочий).
 
 После этого все операции с Drive (поиск, чтение, список папок) можно делать через запросы в чате — вручную больше ничего настраивать не нужно.

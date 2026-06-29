@@ -1,0 +1,154 @@
+{
+  "first_name": "Roman",
+  "last_name": "Matsukatov",
+  "full_name": "Roman Matsukatov",
+  "email": "r.matsukatov@gmail.com",
+  "phone": "+351919191596",
+  "phone_number": "919191596",
+  "phone_country_code": "PT",
+  "preferred_language": "English (UK)",
+  "preferred_communication": "Phone Call",
+  "agree_terms": "I agree",
+  "agree_terms_2": "I agree",
+  "location": "Oeiras, Lisbon, Portugal",
+  "linkedin_url": "https://www.linkedin.com/in/roman-matsukatov/",
+  "website": "",
+  "github_url": "https://github.com/AstaldoVal",
+  "twitter_url": "",
+  "right_to_work": "Yes",
+  "visa_sponsorship": "No",
+  "how_did_you_hear": "LinkedIn",
+  "family_at_company": "No",
+  "family_at_company_details": "",
+  "outside_business_activity": "No",
+  "outside_business_activity_details": "",
+  "worked_here_before": "No",
+  "label_variants": {
+    "first_name": [
+      "First Name",
+      "First name"
+    ],
+    "last_name": [
+      "Last Name",
+      "Last name",
+      "Surname"
+    ],
+    "full_name_single_field": [
+      "Name",
+      "Full name",
+      "Full Name"
+    ],
+    "email": [
+      "Email",
+      "E-mail",
+      "Email Address"
+    ],
+    "phone": [
+      "Phone",
+      "Phone number",
+      "Telephone"
+    ],
+    "phone_number": [
+      "Phone number",
+      "phone number",
+      "phone-numberphone"
+    ],
+    "phone_country_code": [
+      "country-codephone",
+      "Country code",
+      "country code (phone)"
+    ],
+    "preferred_language": [
+      "Preferred Language",
+      "Preferred language"
+    ],
+    "preferred_communication": [
+      "Preferred form of communication",
+      "Preferred form of communication?"
+    ],
+    "agree_terms": [
+      "Please agree",
+      "I agree"
+    ],
+    "agree_terms_2": [
+      "Please agree",
+      "I agree"
+    ],
+    "location": [
+      "Your Location (City, Country)",
+      "Location",
+      "City"
+    ],
+    "linkedin_url": [
+      "LinkedIn URL",
+      "LinkedIn Profile",
+      "LinkedIn"
+    ],
+    "website": [
+      "Website",
+      "Portfolio URL",
+      "Portfolio",
+      "Personal website"
+    ],
+    "github_url": [
+      "GitHub URL",
+      "GitHub"
+    ],
+    "twitter_url": [
+      "Twitter URL",
+      "Twitter",
+      "X"
+    ],
+    "right_to_work": [
+      "Do you currently have a right to work in the European Union? (Work permit, Blue Card, etc.)",
+      "Are you legally authorized to work in the country you reside?",
+      "Do you have a valid EU work permit?"
+    ],
+    "visa_sponsorship": [
+      "Will you now or in the future require Visa Sponsorship?",
+      "Do you require visa sponsorship?"
+    ],
+    "how_did_you_hear": [
+      "How did you hear about us?",
+      "Where did you hear about this job?",
+      "Source",
+      "Referral source",
+      "Where did you find our job post?"
+    ],
+    "family_at_company": [
+      "Do you have any family members / relatives or personal relationships at",
+      "Do you have a referral?"
+    ],
+    "outside_business_activity": [
+      "Do you have any outside business activity(ies)",
+      "advisory, consulting, board roles, or side businesses"
+    ],
+    "worked_here_before": [
+      "Have you worked for",
+      "in the past?",
+      "Previously employed at"
+    ],
+    "country": [
+      "Country",
+      "Country of residence",
+      "Are you based in one of the locations where we are currently hiring?"
+    ],
+    "city": [
+      "In which city are you located?",
+      "City"
+    ],
+    "earliest_start_date": [
+      "What is your earliest start date?",
+      "Earliest start date"
+    ],
+    "salary_expectations": [
+      "What are your salary expectations?",
+      "Salary expectations",
+      "Please state your gross annual salary expectations in euros."
+    ]
+  },
+  "country": "Portugal",
+  "city": "Lisbon",
+  "earliest_start_date": "Immediately",
+  "salary_expectations": "90 000 \u20ac gross per year"
+}

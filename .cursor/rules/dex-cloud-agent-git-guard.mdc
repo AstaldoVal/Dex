@@ -1,0 +1,39 @@
+---
+description: Cloud Agent and Cursor must not commit browser caches, credentials, or bulk local sync to public Dex
+globs:
+alwaysApply: true
+---
+
+# Cloud Agent / git push guard (secrets)
+
+## Root cause (2026-06-29 incident)
+
+Commit message `Cursor: Apply local changes for cloud agent` pushed **7071 files** under `undefined/` — a **Chromium user-data directory** sitting in the Dex repo root. Binary `Code Cache` / `Cache_Data` files contained **OpenAI**, **LangSmith**, and **Google API** key material. GitHub Secret Scanning flagged a **public leak** on branch `cursor/cloud-agent-*`.
+
+**Why it happened:** `undefined/` was not in `.gitignore`; cloud agent used a broad "apply all local changes" sync without `git status` review.
+
+## Hard rules before any `git add` / `git commit` / `git push`
+
+1. **Never** `git add undefined/` or `git add -A` / `git add .` without reviewing `git status` and rejecting browser caches, `Credentials/**`, `.env`, PARA vault folders, and `node_modules/`.
+2. **Never** commit symlinks that resolve into `Credentials/` (e.g. `.claude/google-work` → `../Credentials/...`). Keep tracked stubs as README-only on public branches.
+3. **Always** run from repo root before push:
+
+   ```bash
+   scripts/verify-distribution.sh
+   ```
+
+   Exit must be **0**. If errors mention `undefined/`, API keys, or tracked `Credentials/`, fix before push.
+
+4. **Do not** merge or push cloud-agent branches to `main` without human review when the diff includes more than the intended task files.
+
+## If secrets were pushed
+
+1. **Revoke/rotate** keys at OpenAI, LangSmith, Google Cloud — GitHub alert is not enough.
+2. Purge from git history: `git filter-repo --path undefined/ --invert-paths --force` (then force-push affected branches).
+3. Close GitHub Secret Scanning alerts as **revoked** after rotation.
+
+## Related
+
+- `.cursor/rules/dex-root-hygiene.mdc`
+- `scripts/verify-distribution.sh`
+- `Credentials/README.md`

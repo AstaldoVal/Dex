@@ -1,0 +1,14 @@
+---
+description: HARD REQUIREMENT for first reply in every new chat
+alwaysApply: true
+---
+
+# First Reply Bootstrap (Hard)
+
+**Priority:** This file is the short reminder. The full contract lives in **`.cursor/rules/session-bootstrap-enforcer.mdc`**.
+
+- In every NEW chat, the first assistant line must be exactly `Session bootstrap:`.
+- Nothing may appear before that line.
+- The visible Karpathy echo block is still mandatory on every first reply, including `ping`.
+- If pre-load is absent and the first user message already requests substantive code work, follow the fallback described in `.cursor/rules/session-bootstrap-enforcer.mdc`.
+- For later substantive coding turns, follow `.cursor/rules/dex-coding-skills-gate.mdc`.

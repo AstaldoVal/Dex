@@ -1,0 +1,28 @@
+name: Dex CI
+on: [push, pull_request]
+jobs:
+  quality:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Python dependencies
+        run: |
+          pip install pytest ruff
+          pip install mcp pyyaml python-dateutil requests
+      - run: npm ci
+      - name: Generate paths.json
+        run: python core/paths.py
+      - name: Path contract tests
+        run: pytest core/tests/ -v
+      - name: Ruff linting
+        run: ruff check core/
+      - name: Distribution safety check
+        run: bash scripts/verify-distribution.sh
+      - name: Path consistency check
+        run: bash scripts/check-path-consistency.sh

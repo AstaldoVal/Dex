@@ -1,0 +1,43 @@
+SOURCE: https://www.aha.io/roadmapping/guide/templates/create/prd
+TYPE: Agile PRD (streamlined, for incremental delivery)
+COLLECTION: First of three Aha PRD templates
+ORIGINAL_FORMATS: .docx, .pptx (also in this folder)
+Added: 2025-03-04
+
+---
+Agile PRD template
+
+Context
+The goal of agile development is to deliver value quickly while staying closely aligned with customer needs. Cross-functional teams work incrementally — refining requirements and priorities as they learn.
+
+This agile PRD template is a streamlined version of the traditional full document. It is designed to capture just what the development team needs to build and iterate effectively.
+
+---
+Structure
+
+1. Objective
+   - Description of what you want to build
+   - Include how this effort aligns to overall strategy
+
+2. Background and assumptions
+   - Background information for the team (personas, customer interviews, etc.)
+   - Assumptions behind your thinking
+
+3. Features / user stories
+   - List of planned features or user stories that will support the objective
+
+4. User experience (flow and design)
+   - Link to UX artifacts: user story map, wireframes, or other design explorations
+
+5. Constraints and dependencies
+   - Roadblocks the team has identified
+   - Timing of other work
+   - Impacted functionality
+
+6. Open questions
+   - Unknowns the team may run into but has not yet answered
+
+---
+Files in this folder
+- 02_Aha_Agile_PRD_Template.docx — Word format
+- 02_Aha_Agile_PRD_Template.pptx — PowerPoint format

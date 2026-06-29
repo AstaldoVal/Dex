@@ -1,0 +1,25 @@
+{
+  "markdown_docx_autosync": {
+    "roots": [
+      "00-Inbox",
+      "04-Projects"
+    ],
+    "ignore_dirs": [
+      "node_modules",
+      ".git",
+      ".cursor",
+      ".claude",
+      ".obsidian",
+      "__pycache__",
+      ".venv",
+      "venv"
+    ],
+    "ignore_files": [
+      "README.md",
+      "CHANGELOG.md",
+      "AGENTS.md"
+    ],
+    "follow_symlinks": false
+  }
+}
+

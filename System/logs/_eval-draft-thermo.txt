@@ -1,0 +1,9 @@
+**Вердикт:** для поведения интеграции cursor-team-kit — ок; для поддерживаемости — не проходит: stub могут разъехаться с каноном, resolveCanonical разрастается.
+
+**Действия**
+1. Добавить генератор stub после update.sh — описания slash совпадут с каноном.
+2. Заменить цепочку if в resolveCanonical на таблицу корней библиотек.
+
+**Детали**
+- sync-slash-autosuggest.cjs — writeWrapper не видит имена team-kit без commands.
+- 18 ручных файлов в .cursor/skills/.

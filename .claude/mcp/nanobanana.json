@@ -1,0 +1,12 @@
+{
+  "name": "nanobanana-mcp",
+  "description": "Nano Banana: AI image generation (text-to-image) and image editing via Gemini API",
+  "server": {
+    "command": "python",
+    "args": ["core/mcp/nanobanana_server.py"],
+    "env": {
+      "VAULT_PATH": "${workspaceFolder}"
+    }
+  },
+  "notes": "Gemini Create Image only. GEMINI_API_KEY in .env (Google AI Studio). pip install -r core/mcp/requirements-nanobanana.txt. Tool: nanobanana_generate. nanobanana_edit not implemented."
+}

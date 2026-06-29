@@ -1,4 +1,4 @@
-# Dex — Your AI Chief of Staff
+# Your AI Chief of Staff
 
 **A personal operating system powered by Claude.**
 
@@ -12,13 +12,11 @@ Companion to [Episode 8 of The Vibe PM Podcast](https://youtu.be/WaqgSvL-V10?si=
 
 ## Who This Is For
 
-Non-engineers.
-
-Product managers, marketers, sales leaders, designers, executives, HR leaders, consultants, coaches, analysts — anyone who wants the same leverage from AI that technical people have had access to.
+Product managers and product owners.
 
 **You don't need to know how to code.** Just follow the setup and talk to your AI assistant.
 
-**If you're an engineer:** Share this with your non-technical colleagues. Distribute Dex across your organization to accelerate AI fluency adoption. When teams build shared understanding of what AI can reliably do (not just chat interfaces, but actual operating systems), you compete far more effectively.
+**If you're an engineer:** Share this with your non-technical colleagues. Share this repo across your organization to accelerate AI fluency adoption. When teams build shared understanding of what AI can reliably do (not just chat interfaces, but actual operating systems), you compete far more effectively.
 
 ---
 
@@ -26,13 +24,13 @@ Product managers, marketers, sales leaders, designers, executives, HR leaders, c
 
 Most people in tech use AI as a chat interface - asking questions, getting answers, starting fresh every time. They've seen the demos but don't understand how to move beyond that. The gap between what's possible and what people actually use continues to widen.
 
-Dex addresses this by giving you a working system immediately. No learning curve, no setup burden.
+This pack of skills is aimed at making product managers' lives easier. A working system from day one, with no learning curve and no setup burden.
 
 The system automates cognitive overhead - you reclaim hours in your day. Meeting prep happens automatically. Commitments don't slip. Context is always available before calls. The time you save compounds: less administrative work means more focus on strategic work and career-advancing goals.
 
 The system teaches you as you go. Start shallow, go deep as you get curious. Two weeks of daily practice and you're in flow. By month one, you don't just have a working system - you understand how to build systems.
 
-**For teams and organizations:** One person adopts Dex, sees the value, shares it with colleagues. Technical leaders can distribute the repo (everyone gets the same foundation, adapted to their role) or share demo mode (let people explore without committing their own data). Teams develop common language around what AI can reliably do. Your organization moves from AI demos to AI operations.
+**For teams and organizations:** One person adopts the system, sees the value, shares it with colleagues. Technical leaders can distribute the repo (everyone gets the same foundation, adapted to their role) or share demo mode (let people explore without committing their own data). Teams develop common language around what AI can reliably do. Your organization moves from AI demos to AI operations.
 
 **Want to share this?** Point colleagues to the [companion blog post](https://www.linkedin.com/pulse/your-ai-chief-staff-building-personal-operating-system-dave-killeen-yxnqe/) for the full story with more detail and color about how everything comes together. At the bottom of this README, there's a ready-to-use message you can copy and paste to share with your team - makes it easy to accelerate AI fluency adoption across your organization.
 
@@ -40,20 +38,19 @@ The system teaches you as you go. Start shallow, go deep as you get curious. Two
 
 ## Getting Started
 
-<details>
-<summary><strong>Click to expand setup and installation guide</strong></summary>
+**Click to expand setup and installation guide**
 
 ### What You'll Need
 
 1. **[Cursor](https://cursor.com/)** - Download and install (free account works fine)
 2. **[Git](https://git-scm.com)** - Required for setup and updates
-   - **Mac:** Installs automatically when needed (you'll see a prompt)
-   - **Windows:** Download from [git-scm.com/download/win](https://git-scm.com/download/win)
+  - **Mac:** Installs automatically when needed (you'll see a prompt)
+  - **Windows:** Download from [git-scm.com/download/win](https://git-scm.com/download/win)
 3. **[Node.js](https://nodejs.org/)** - Download the "LTS" version and install (this enables the system's automation features)
 4. **[Python 3.10+](https://www.python.org/downloads/)** - Download and install (required for MCP servers and task sync)
-   - **Minimum version:** Python 3.10 or newer
-   - **Windows users:** ⚠️ During installation, check the box "Add Python to PATH" - this is critical
-   - **Mac users with old Python:** If you have Python 3.9 or older, download fresh from python.org
+  - **Minimum version:** Python 3.10 or newer
+  - **Windows users:** ⚠️ During installation, check the box "Add Python to PATH" - this is critical
+  - **Mac users with old Python:** If you have Python 3.9 or older, download fresh from python.org
 
 All installers walk you through setup with default options.
 
@@ -70,6 +67,7 @@ You'll use something called a "command line" (or "Terminal" on Mac, "PowerShell"
 ### Check Your Setup (Optional)
 
 Want to verify everything's ready? Open your command line:
+
 - **Mac:** Press `Cmd+Space`, type "Terminal", press Enter
 - **Windows:** Press `Win+R`, type "powershell", press Enter
 
@@ -108,10 +106,12 @@ python3 --version
 **You should see a response like:** `Python 3.10.x` or higher (3.11, 3.12, etc.)
 
 **If you see Python 3.9 or older:** The MCP SDK requires Python 3.10+. Download and install a newer version:
+
 - **Mac/Windows:** Download from [python.org](https://www.python.org/downloads/) (get the latest stable version)
 - After installing, restart your terminal and check the version again
 
 **If you see "command not found":**
+
 - **Windows:** Python likely isn't in your PATH. Reinstall from [python.org](https://www.python.org/downloads/) and check "Add Python to PATH" during installation. Restart your terminal after.
 - **Mac:** Download Python from [python.org](https://www.python.org/downloads/), install it, then restart your terminal.
 
@@ -127,13 +127,14 @@ python3 --version
 2. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows) - this opens a search bar at the top
 3. Type **"Git: Clone"** and press Enter
 4. Paste this URL and press Enter:
-   ```
+  ```
    https://github.com/davekilleen/dex.git
-   ```
+  ```
 5. Choose where to save it (your Documents folder works great)
 6. Click **Open** when Cursor asks if you want to open the folder
 
 **Can't get this working?** No problem:
+
 1. Go to [github.com/davekilleen/dex](https://github.com/davekilleen/dex)
 2. Click the green **Code** button → **Download ZIP**
 3. Unzip to your Documents folder (the folder will be named `dex-main`)
@@ -149,7 +150,7 @@ Copy and paste this command and press Enter:
 ./install.sh
 ```
 
-**What's happening:** This installs the automation that makes Dex work (task sync, career tracking, meeting intelligence). Takes 1-2 minutes. You'll see text scrolling - that's normal.
+**What's happening:** This installs the automation that makes the system work (task sync, career tracking, meeting intelligence). Takes 1-2 minutes. You'll see text scrolling - that's normal.
 
 **When it's done:** You'll see your cursor blinking again, ready for the next command.
 
@@ -161,15 +162,14 @@ Copy and paste this command and press Enter:
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 Then restart Cursor.
 
-⚠️ **IMPORTANT: Complete Step 3 now to configure your role - this is what makes Dex work.**
+⚠️ **IMPORTANT: Complete Step 3 now to configure your role - this is what makes the system work.**
 
-<details>
-<summary><strong>Troubleshooting: Common Setup Issues</strong></summary>
+**Troubleshooting: Common Setup Issues**
 
 ### Mac: "Command Line Developer Tools" prompt
 
@@ -228,14 +228,14 @@ The installer tries two methods automatically. If both fail, your pip version mi
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 **Windows:**
 
 ```bash
 python -m pip install --upgrade pip
-pip install --user mcp pyyaml
+pip install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 ---
@@ -250,7 +250,7 @@ This means the Python MCP servers can't start. Most common fix (upgrade pip firs
 
 ```bash
 python3 -m pip install --upgrade pip
-pip3 install --user mcp pyyaml
+pip3 install --user "mcp>=1.0.0,<2.0.0" pyyaml python-dateutil
 ```
 
 Then **restart Cursor completely** (Cmd+Q and reopen, or File → Quit).
@@ -280,14 +280,13 @@ Then restart Cursor.
 **Still not working?**
 
 Check the MCP server output:
+
 1. Click the error indicator in Cursor's MCP panel
 2. Click "Show Output"
 3. Look for the specific error message
 4. Common issues: missing Python packages, wrong file paths, Python version too old
 
-</details>
-
-### Step 3: Tell Dex About Your Role
+### Step 3: Configure Your Role
 
 In Cursor, look for a **chat panel** (usually on the right side of the screen). This is Claude - your AI assistant.
 
@@ -299,9 +298,9 @@ In Cursor, look for a **chat panel** (usually on the right side of the screen). 
 4. **Wait ~30 seconds** - First time setup needs to load everything (you'll see "Thinking..." while it works)
 5. **Press Enter again** - Claude will now start asking questions
 6. **Answer each question naturally:**
-   - What's your role? (e.g., "CFO", "VP Sales", "Product Manager")
-   - Company size?
-   - What are your main focus areas?
+  - What's your role? (e.g., "CFO", "VP Sales", "Product Manager")
+  - Company size?
+  - What are your main focus areas?
 
 Just type your answers like you're texting a colleague. Takes about 2 minutes total.
 
@@ -315,37 +314,44 @@ You just used **Cursor** to run setup. That works great for daily use.
 
 There's also **Claude Code** - a more powerful option available via command line or Desktop app. Both give you **guaranteed hooks** (automatic behaviors that run deterministically, unlike CLAUDE.md which Claude might skip).
 
-| Access Method | What You Get | Hooks? | Setup |
-|--------------|--------------|--------|-------|
-| **Cursor** | Easy, already working | No | Already done |
-| **Claude Code** (command line) | Guaranteed hooks, persistent learning | Yes | 5 min install |
-| **Claude Code** (Desktop app) | Guaranteed hooks, persistent learning | Yes | 5 min install |
+
+| Access Method                  | What You Get                          | Hooks? | Setup         |
+| ------------------------------ | ------------------------------------- | ------ | ------------- |
+| **Cursor**                     | Easy, already working                 | No     | Already done  |
+| **Claude Code** (command line) | Guaranteed hooks, persistent learning | Yes    | 5 min install |
+| **Claude Code** (Desktop app)  | Guaranteed hooks, persistent learning | Yes    | 5 min install |
+
 
 **What are hooks?** Automatic behaviors triggered by events (session start, file read, etc.). They're deterministic - they ALWAYS run. Context loads guaranteed, learnings surface guaranteed, person details inject guaranteed.
 
 **Which to use?**
+
 - **Start with Cursor** - you're already set up
 - **Add Claude Code later** if you want guaranteed automation
 
 ### What You Get With Each
 
 **Cursor:**
+
 - ✓ Full vault access
 - ✓ Multiple terminal windows for parallel work
 - ✓ Works immediately
 - ✗ No guaranteed hooks (context loading is probabilistic)
 
 **Claude Code (command line or Desktop):**
+
 - ✓ Everything Cursor does
 - ✓ PLUS guaranteed hooks for persistent learning and automatic context
 
-| Hook Example | What It Does |
-|--------------|--------------|
-| **Session start** | Loads Quarter Goals, Week Priorities, Strategic Pillars, Urgent Tasks automatically |
-| **Person context** | When Sarah is mentioned in a file, her person page context injects automatically |
-| **Company context** | When Acme Corp is referenced, company page details inject automatically |
-| **Mistake patterns** | Surfaces active patterns so Claude avoids repeating them |
-| **Learning reminders** | Prompts review when you have 5+ unreviewed learnings |
+
+| Hook Example           | What It Does                                                                        |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| **Session start**      | Loads Quarter Goals, Week Priorities, Strategic Pillars, Urgent Tasks automatically |
+| **Person context**     | When Sarah is mentioned in a file, her person page context injects automatically    |
+| **Company context**    | When Acme Corp is referenced, company page details inject automatically             |
+| **Mistake patterns**   | Surfaces active patterns so Claude avoids repeating them                            |
+| **Learning reminders** | Prompts review when you have 5+ unreviewed learnings                                |
+
 
 **Command line vs Desktop:** Same core capabilities, different interfaces. Command line is text-based terminal. Desktop is a GUI with visual session management and side-by-side diffs.
 
@@ -364,6 +370,7 @@ You're already set up with Cursor. If you want guaranteed hooks (automatic conte
 If you prefer visual interfaces over command line, use the Desktop app.
 
 **Requirements:**
+
 - Claude Pro ($20/month) or Max ($100-200/month, 5-20x higher usage limits) subscription - free Claude accounts don't have access to Claude Code
 
 **Setup (2 minutes):**
@@ -372,11 +379,12 @@ If you prefer visual interfaces over command line, use the Desktop app.
 2. Install and open the app
 3. Log in with your Claude Pro or Max account
 4. Click the **Code** tab (top left)
-5. Select your Dex folder to start a session
+5. Select your project folder to start a session
 
 **That's it.** Hooks run automatically - session start context loads, person details inject when mentioned, mistake patterns surface.
 
 **Desktop app benefits:**
+
 - **Visual interface** - See all sessions, review changes with side-by-side diffs
 - **Multiple parallel sessions** - Click "+ New session" to work on different tasks simultaneously
 - **Built-in integrations** - Connect Calendar, Slack, GitHub without manual configuration
@@ -389,6 +397,7 @@ If you prefer visual interfaces over command line, use the Desktop app.
 For those comfortable working in Terminal (Mac) or PowerShell (Windows), Claude Code runs from the command line.
 
 **Requirements:**
+
 - Claude Pro ($20/month) or Max ($100-200/month, 5-20x higher usage limits) subscription - free Claude accounts don't have access to Claude Code
 
 **Step 1: Install**
@@ -398,11 +407,13 @@ You can install from your system's native terminal or from within Cursor (easies
 **Option A: Native Terminal/PowerShell**
 
 **Mac - Terminal:**
+
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
 **Windows - PowerShell:**
+
 ```powershell
 irm https://claude.ai/install.ps1 | iex
 ```
@@ -413,11 +424,13 @@ irm https://claude.ai/install.ps1 | iex
 2. Copy and paste the command for your system:
 
 **Mac:**
+
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
 **Windows:**
+
 ```powershell
 irm https://claude.ai/install.ps1 | iex
 ```
@@ -436,19 +449,22 @@ This opens your browser. Log in with your Claude Pro or Max account.
 
 **Step 3: Start Claude Code**
 
-From your terminal, navigate to your Dex folder and run `claude`.
+From your terminal, navigate to your project folder and run `claude`.
 
 **Note:** Folder name depends on how you got the code:
+
 - If you **cloned via Git**: folder is named `dex`
 - If you **downloaded ZIP**: folder is named `dex-main`
 
 **Mac:**
+
 ```bash
 cd ~/Documents/dex        # or dex-main if you downloaded ZIP
 claude
 ```
 
 **Windows:**
+
 ```cmd
 cd %USERPROFILE%\Documents\dex        # or dex-main if you downloaded ZIP
 claude
@@ -460,26 +476,26 @@ claude
 
 **Which option?** Desktop app for visual interface. Command line for those comfortable in Terminal/PowerShell. Both give you the same guaranteed hooks capability.
 
-</details>
-
 ---
 
 ## What It Actually Does
 
 Eight jobs that happen reliably every day:
 
-| Job | What It Solves |
-|-----|----------------|
-| **Start Each Day Focused** | One command gives you three priorities. Heavy meeting day? Drops to two. Won't let you overcommit. |
-| **Never Miss a Commitment** | Promises made in meetings extracted automatically. Three days old? Flagged. You can't forget. |
-| **Track Relationships** | Before any call: what you discussed last time, open items, what they care about. Never walk in cold. |
-| **Accelerate Career Growth** | Captures evidence automatically. Feedback from 1:1s, achievements, skills growth. Review-ready when you need it. |
-| **Manage Tasks Reliably** | Work MCP syncs tasks with unique IDs across all files. Check off once, updates everywhere. Deduplication prevents doubles. Priority limits stop overcommit. Strategic alignment required. |
-| **Reflect & Improve** | Captures mistakes → rules. Learns preferences. Each session makes the next better. |
-| **Keep Projects Moving** | Auto-detects stalls (12+ days no update). Surfaces blockers. You know what needs attention. |
-| **Evolve Itself** | System suggests improvements based on usage patterns. Monitors Claude Code releases daily - when new capabilities drop, explains what they mean for YOUR system and suggests implementations. Captures your improvement ideas too. AI ranks all by impact. `/dex-improve` plans implementation. System adapts to you. |
 
-**Want deeper context?** See [Dex_Jobs_to_Be_Done.md](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) for the full framework.
+| Job                          | What It Solves                                                                                                                                                                                                                                                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Start Each Day Focused**   | One command gives you three priorities. Heavy meeting day? Drops to two. Won't let you overcommit.                                                                                                                                                                                                                    |
+| **Never Miss a Commitment**  | Promises made in meetings extracted automatically. Three days old? Flagged. You can't forget.                                                                                                                                                                                                                         |
+| **Track Relationships**      | Before any call: what you discussed last time, open items, what they care about. Never walk in cold.                                                                                                                                                                                                                  |
+| **Accelerate Career Growth** | Captures evidence automatically. Feedback from 1:1s, achievements, skills growth. Review-ready when you need it.                                                                                                                                                                                                      |
+| **Manage Tasks Reliably**    | Work MCP syncs tasks with unique IDs across all files. Check off once, updates everywhere. Deduplication prevents doubles. Priority limits stop overcommit. Strategic alignment required.                                                                                                                             |
+| **Reflect & Improve**        | Captures mistakes → rules. Learns preferences. Each session makes the next better.                                                                                                                                                                                                                                    |
+| **Keep Projects Moving**     | Auto-detects stalls (12+ days no update). Surfaces blockers. You know what needs attention.                                                                                                                                                                                                                           |
+| **Evolve Itself**            | System suggests improvements based on usage patterns. Monitors Claude Code releases daily - when new capabilities drop, explains what they mean for YOUR system and suggests implementations. Captures your improvement ideas too. AI ranks all by impact. `/dex-improve` plans implementation. System adapts to you. |
+
+
+**Want deeper context?** See [Jobs to Be Done](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) for the full framework.
 
 ---
 
@@ -517,7 +533,7 @@ Out of the box, working immediately:
 
 Ideas die between having them and recording them. Deciding where things belong kills momentum.
 
-Dex handles this through natural conversation. Just tell Claude things naturally:
+The system handles this through natural conversation. Just tell Claude things naturally:
 
 ```
 You: "Sarah seemed worried about timeline but interested in Q2 pilot"
@@ -532,6 +548,7 @@ You: "Yes"
 That's it. No special commands. No files to organize.
 
 **Strategic intelligence:**
+
 - Loads your Week Priorities and Quarterly Goals
 - Suggests routing based on what you're actually focused on
 - "Mobile app pricing" → sees "Mobile App Launch" in priorities → HIGH confidence
@@ -545,25 +562,29 @@ One decision instead of many. Immediate filing.
 
 Great work happens daily, but evidence disappears. Review time becomes a scramble to remember what you accomplished.
 
-Run `/career-setup` once (job description, career ladder, recent review, growth goals). From that point forward, Dex automatically captures career evidence:
+Run `/career-setup` once (job description, career ladder, recent review, growth goals). From that point forward, the system automatically captures career evidence:
 
-| When | What Gets Captured |
-|------|-------------------|
-| Daily reviews | Achievements worth saving for promotion discussions |
-| Manager 1:1s (via Granola) | Feedback and development context |
-| Project completions | Impact and skills demonstrated |
-| Weekly reviews | Work tagged with career skills |
+
+| When                       | What Gets Captured                                  |
+| -------------------------- | --------------------------------------------------- |
+| Daily reviews              | Achievements worth saving for promotion discussions |
+| Manager 1:1s (via Granola) | Feedback and development context                    |
+| Project completions        | Impact and skills demonstrated                      |
+| Weekly reviews             | Work tagged with career skills                      |
+
 
 ### Your Personal Career Coach
 
 Run `/career-coach` anytime for:
 
-| Mode | What It Does |
-|------|--------------|
-| **Weekly Report** | Generate professional update for your manager in 30 seconds |
-| **Monthly Reflection** | Spot patterns — what's working, where to focus |
-| **Self-Review** | Build annual review from accumulated evidence |
-| **Promotion Assessment** | Gap analysis with specific development plan |
+
+| Mode                     | What It Does                                                |
+| ------------------------ | ----------------------------------------------------------- |
+| **Weekly Report**        | Generate professional update for your manager in 30 seconds |
+| **Monthly Reflection**   | Spot patterns — what's working, where to focus              |
+| **Self-Review**          | Build annual review from accumulated evidence               |
+| **Promotion Assessment** | Gap analysis with specific development plan                 |
+
 
 The coach adapts to your career level. Evidence compounds. The longer you use it, the more powerful it becomes.
 
@@ -575,9 +596,10 @@ Your data stays on your laptop. It's yours.
 
 Tasks in multiple places (meeting notes, project files, person pages) don't sync in traditional systems. Check off one, others stay open.
 
-Dex handles this with the **Work MCP server** - a Python-based automation layer that syncs tasks with unique IDs across your entire vault. When you process a meeting, action items get IDs like `^task-20260128-001`. Tasks appear in both the meeting note and `03-Tasks/Tasks.md` with the same ID.
+The system handles this with the **Work MCP server** - a Python-based automation layer that syncs tasks with unique IDs across your entire vault. When you process a meeting, action items get IDs like `^task-20260128-001`. Tasks appear in both the meeting note and `03-Tasks/Tasks.md` with the same ID.
 
-Just tell Dex what you finished in natural language:
+Just tell the assistant what you finished in natural language:
+
 - "I finished following up with John"
 - "Mark the proposal done"  
 - "Completed the API docs"
@@ -613,11 +635,13 @@ flowchart TD
     style D fill:#fff5e1
 ```
 
+
+
 **Strategic Pillars** (your focus areas) → **Quarter Goals** (3-5 outcomes over 3 months) → **Week Priorities** (Top 3 this week) → **Daily Plan** (today's work) → **Tasks.md** (backlog tagged to goals).
 
 Work backwards from career impact: *What would make you incredibly happy you accomplished three months from now?* Quarterly goals become the north star connecting daily work to career-defining outcomes.
 
-See [Dex_System_Guide.md](06-Resources/Dex_System/Dex_System_Guide.md) for details.
+See [System Guide](06-Resources/Dex_System/Dex_System_Guide.md) for details.
 
 ---
 
@@ -645,6 +669,7 @@ Want to explore without adding your data? Want to show colleagues what's possibl
 Run `/dex-demo on` for pre-populated sample content that demonstrates **all 8 Jobs to Be Done**:
 
 **What's included:**
+
 - **Career Development System** - Role definition, career ladder (L4→L5), performance reviews, growth goals, evidence library
 - **Full Week of Planning** - Daily plans (Mon-Fri), weekly plan, morning/evening journals, weekly reflection  
 - **Learning & Reflection** - Working preferences, mistake patterns, session learnings, pattern recognition
@@ -657,6 +682,7 @@ Run `/dex-demo on` for pre-populated sample content that demonstrates **all 8 Jo
 Everything happens in `System/Demo/` - your real vault stays untouched. Run `/dex-demo off` to switch back. Reset demo content anytime with `/dex-demo reset`.
 
 Useful for:
+
 - Exploring features risk-free before adding real data (see all 8 Jobs in action)
 - Demoing to colleagues - show what AI systems can do beyond chat
 - Driving AI fluency across your team without setup friction
@@ -674,6 +700,7 @@ The system captures learnings and improves over time:
 - Run `/dex-whats-new` - surfaces learnings and new capabilities you can use
 
 What gets captured:
+
 - Mistake patterns become rules that prevent repetition
 - Working preferences (communication style, meeting habits, tool choices)
 - System improvements - AI suggests implementations based on your usage
@@ -688,8 +715,7 @@ Each session makes the next one better.
 
 31 role configurations. The scaffolding changes completely based on your answer.
 
-<details>
-<summary>View all roles</summary>
+View all roles
 
 **Core Functions:** Product Manager, Sales, Marketing, Engineering, Design
 
@@ -707,18 +733,18 @@ Each session makes the next one better.
 
 **Investment:** Venture Capital / Private Equity
 
-</details>
-
 ---
 
 ## What It Costs
 
-| Item | Cost |
-|------|------|
-| Cursor Pro | $20/month (Claude included) |
-| Cursor Free | $0 (limited usage, enough to try it) |
-| Time | 10 minutes to set up |
-| Coding skills | None required |
+
+| Item          | Cost                                 |
+| ------------- | ------------------------------------ |
+| Cursor Pro    | $20/month (Claude included)          |
+| Cursor Free   | $0 (limited usage, enough to try it) |
+| Time          | 10 minutes to set up                 |
+| Coding skills | None required                        |
+
 
 ---
 
@@ -726,11 +752,11 @@ Each session makes the next one better.
 
 Comprehensive guides included in the repo:
 
-- [Dex_System_Guide.md](06-Resources/Dex_System/Dex_System_Guide.md) - Complete feature reference and workflows
-- [Dex_Jobs_to_Be_Done.md](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) - Why each piece exists and how they connect
-- [Dex_Technical_Guide.md](06-Resources/Dex_System/Dex_Technical_Guide.md) - Technical deep dive for those who want it
-- [Folder_Structure.md](06-Resources/Dex_System/Folder_Structure.md) - PARA organization explained
-- [Updating_Dex.md](06-Resources/Dex_System/Updating_Dex.md) - How to safely update while preserving customizations
+- [System Guide](06-Resources/Dex_System/Dex_System_Guide.md) - Complete feature reference and workflows
+- [Jobs to Be Done](06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md) - Why each piece exists and how they connect
+- [Technical Guide](06-Resources/Dex_System/Dex_Technical_Guide.md) - Technical deep dive for those who want it
+- [Folder Structure](06-Resources/Dex_System/Folder_Structure.md) - PARA organization explained
+- [Updating](06-Resources/Dex_System/Updating_Dex.md) - How to safely update while preserving customizations
 
 Start with what you need. Go deeper if you're curious. No forced learning paths.
 
@@ -738,16 +764,16 @@ These guides live in your vault after setup.
 
 ---
 
-## Updating Dex
+## Updating
 
 **Get updates with one command - no technical knowledge needed.**
 
 ### Automatic Notifications
 
-Dex checks for updates every 7 days during `/daily-plan`:
+The system checks for updates every 7 days during `/daily-plan`:
 
 ```
-🎁 Dex v1.3.0 is available. Run /dex-update to see what's new and update.
+🎁 A new version is available. Run /dex-update to see what's new and update.
 ```
 
 ### Update in One Command
@@ -756,7 +782,8 @@ Dex checks for updates every 7 days during `/daily-plan`:
 /dex-update
 ```
 
-**That's it.** Dex shows you what's new, you confirm, and then it handles everything:
+**That's it.** The system shows you what's new, you confirm, and then it handles everything:
+
 - ✓ Downloads latest version
 - ✓ Protects your data (never touches notes/tasks/projects)
 - ✓ Handles conflicts automatically
@@ -778,20 +805,22 @@ Instantly restores the previous version.
 ### Your Data Is Protected
 
 Updates never touch:
+
 - Your notes, tasks, projects, people pages
 - Your configuration (pillars, user profile)
 - Your customizations
 - Your API keys
 
-**For detailed instructions:** See [Updating_Dex.md](06-Resources/Dex_System/Updating_Dex.md)
+**For detailed instructions:** See [Updating](06-Resources/Dex_System/Updating_Dex.md)
 
 ---
 
 ## Obsidian Integration (Optional)
 
-Dex works great with [Obsidian](https://obsidian.md) for visual graph navigation.
+The system works with [Obsidian](https://obsidian.md) for visual graph navigation.
 
 **Why Obsidian?**
+
 - See your entire knowledge system as connected nodes
 - Click any reference to jump instantly between people, projects, meetings
 - Bidirectional task sync (check boxes in Obsidian → syncs everywhere)
@@ -803,6 +832,7 @@ Dex works great with [Obsidian](https://obsidian.md) for visual graph navigation
 ```
 
 **What this does:**
+
 - Converts all references to clickable wiki links
 - Generates optimized Obsidian config (optional)
 - Enables bidirectional sync daemon (optional)
@@ -812,9 +842,9 @@ Dex works great with [Obsidian](https://obsidian.md) for visual graph navigation
 
 **New to Obsidian?** Watch this [beginner's guide (5 min)](https://www.youtube.com/watch?v=gafuqdKwD_U).
 
-Obsidian is completely optional - Dex works perfectly in Cursor/terminal alone. Some users love the graph visualization for navigating their knowledge, others prefer the speed of terminal/Cursor. Both are first-class experiences.
+Obsidian is completely optional — the system works in Cursor/terminal alone. Some users love the graph visualization for navigating their knowledge, others prefer the speed of terminal/Cursor. Both are first-class experiences.
 
-**Learn more:** See [Obsidian_Guide.md](06-Resources/Dex_System/Obsidian_Guide.md)
+**Learn more:** See [Obsidian Guide](06-Resources/Dex_System/Obsidian_Guide.md)
 
 ---
 

@@ -52,7 +52,7 @@ playwright install chromium
 
 - Откроется браузер (не headless, видимый).
 - **Вручную войди** в свой LinkedIn аккаунт в открывшемся окне.
-- После входа сессия (cookies) сохранится в `.claude/linkedin/context_state.json`.
+- После входа сессия (cookies) сохранится в **`Credentials/linkedin/context_state.json`** (для совместимости в репозитории есть symlink **`.claude/linkedin`** → `../Credentials/linkedin`).
 - Больше входить не нужно — сессия переиспользуется.
 
 ### Шаг 2. Подписаться на компании
@@ -108,11 +108,11 @@ playwright install chromium
 ## Файлы сессии
 
 Сессия LinkedIn сохраняется в:
-- `.claude/linkedin/context_state.json` — cookies и состояние браузера
+- **`Credentials/linkedin/context_state.json`** — cookies и состояние браузера (остальные JSON/логи дайджеста — тоже в этой папке; см. `Credentials/README.md`)
 
-Эти файлы уже в `.gitignore` — не попадут в git.
+Каталог **`Credentials/`** в `.gitignore` (кроме `Credentials/README.md`).
 
-Чтобы начать заново (новый вход), удали `.claude/linkedin/context_state.json`.
+Чтобы начать заново (новый вход), удали **`Credentials/linkedin/context_state.json`** (или только его через тот же путь через symlink **`.claude/linkedin/`**).
 
 ---
 
@@ -144,6 +144,6 @@ playwright install chromium
 - [ ] В настройках MCP Cursor добавлен сервер **linkedin** (из `.claude/mcp/linkedin.json`)
 - [ ] Cursor перезапущен
 - [ ] Выполнен `linkedin_login` и вход в LinkedIn вручную
-- [ ] Сессия сохранена (файл `.claude/linkedin/context_state.json` создан)
+- [ ] Сессия сохранена (файл **`Credentials/linkedin/context_state.json`** создан)
 
 **Помни:** Использование автоматизации LinkedIn — на твой риск. LinkedIn может заблокировать аккаунт.

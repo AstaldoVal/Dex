@@ -1,0 +1,16 @@
+---
+description: Keep the Dex repository root minimal; store secrets and ad-hoc data in structured folders
+globs:
+alwaysApply: true
+---
+
+# Dex repository root hygiene
+
+- **Do not** leave loose notes, exports, one-off JSON, credential files, or scratch artifacts in the **repository root**. The root should hold only project entrypoints and top-level structure (e.g. `package.json`, `README.md`, `CLAUDE.md`, `install.sh`, `env.example`, `.env` — the latter is gitignored).
+- **Secrets and machine-local files** belong under **`Credentials/`** (see `Credentials/README.md`): OAuth JSON, tokens, LinkedIn Playwright session, Vercel shell exports, etc. Use symlinks under `.claude/` only for backward compatibility with old paths.
+- **Never commit** Chromium/Electron profile trees (`undefined/`, `Code Cache/`, `Cache_Data/`, LevelDB logs). They are not vault content; binary caches can leak API keys (GitHub Secret Scanning). Cloud agents: run `scripts/verify-distribution.sh` before any `git push`; never `git add undefined/` or `git add -A` without reviewing `git status`.
+- **Vault / PARA content** stays under **`00-Inbox/`**, **`05-Areas/`**, etc., not in the root.
+- **Scripts and apps** live under **`.scripts/`**, **`apps/`**, **`core/`** — not one-off Python/shell files in the root unless they are documented project entrypoints.
+- When adding or moving files, prefer an existing folder; if nothing fits, create a **named subfolder** under the appropriate area (e.g. `06-Resources/`, `04-Projects/...`) rather than dumping into root.
+
+Agents should **relocate** stray root clutter into the right place when touching related work, and **not** introduce new unnecessary root files.

@@ -1,0 +1,23 @@
+SOURCE: pilot.io
+LINK: https://pilot.io/template/amazon-pr-faq-product-discovery-template
+TEMPLATE: 06_Amazon_Working_Backwards_PR_FAQ.docx (fillable, in this folder)
+FETCHED: 2025-03-04
+
+NOTE: Alternative to PRD. Use for vision and customer value alignment before detailed requirements.
+
+---
+Amazon Working Backwards - PR/FAQ (Press Release + FAQ)
+
+Press Release:
+- Heading: Product name in one sentence
+- Subheading: Customer segment and benefits
+- Summary: City, media outlet, launch date, product and benefit
+- Problem: From customer point of view
+- Solution: How product solves the problem
+- Quotes & Getting Started: Company quote, customer quote, how to start
+
+External FAQs: Price, How do I get it, How does it work
+
+Internal FAQs: TAM, consumer demand, use cases, engineering/UI challenges, risks, dependencies, regulatory issues, unit economics, competitors
+
+Origin: Jeff Bezos; used for Kindle, Alexa, Prime Video, AWS

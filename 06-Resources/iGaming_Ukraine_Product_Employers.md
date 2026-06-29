@@ -1,14 +1,14 @@
 # i-Gaming: кого отслеживать по продуктовым вакансиям (Украина / СНГ)
 
-Отслеживаем:
+**Обновлено:** 2026-02-09
+
+**Фокус:**
 - **Роли:** продукт (PM, PO, Growth PM) и **compliance** (Compliance, Regulatory, AML, Licensing, Legal/Compliance). Product Marketing не рассматриваем.
 - **Формат:** только **remote**. Гибрид и on-site отфильтровываем.
 
-**Обновлено:** 2026-02-07
-
 ---
 
-## Кого отслеживать в первую очередь
+## Приоритетные компании
 
 - [ ] **Favbet Tech** — оператор, регулярно открывают PM/PO
 - [ ] **VBET Ukraine** — оператор (смотреть только PM/PO, не PMM)
@@ -108,111 +108,24 @@
 
 ---
 
-## Все компании DOU (домен Gambling)
+## Мониторинг вакансий
 
-Полный список для отслеживания: [DOU → домен Gambling](https://jobs.dou.ua/companies/?domain=Gambling). На странице есть кнопка **«Більше компаній»** — в браузере нажимай её до конца, чтобы увидеть все компании. Скрипт без браузера: `node .scripts/job-search/fetch-dou-gambling-companies.cjs --out /tmp/dou-gambling.json` — только HTTP, парсит первую порцию (около 20). Остальные страницы — только через браузер: открой ссылку, дожми «Більше компаній» до конца и добавь недостающие компании в список ниже (формат: номер. **Название** — кратко, Смотреть: https://jobs.dou.ua/companies/SLUG/). Ниже — компании с первой страницы + из блока «Вакансії провідних».
+### DOU (домен Gambling)
 
-1. **Sigma Software**
-   - Крупный аутсорс/R&D, в т.ч. проекты в домене Gambling. Офисы: Киев, Харьков, Львов, Днипро, Одеса и др.
-   - Смотреть: https://jobs.dou.ua/companies/sigma-software/
+- **Список всех компаний:** [DOU → домен Gambling](https://jobs.dou.ua/companies/?domain=Gambling) (311 компаний)
+- **Актуальные вакансии продукт/комплаенс:** см. дайджест `00-Inbox/Job_Search/digests/dou-gambling-product-compliance-vacancies-*.md`
+- **Автоматический сбор:** 
+  ```bash
+  # Собрать список компаний
+  node .scripts/job-search/fetch-dou-gambling-all-pages.cjs --out /tmp/dou-gambling-all.json
+  
+  # Проверить вакансии
+  node .scripts/job-search/dou-gambling-check-vacancies.cjs --in /tmp/dou-gambling-all.json --out /tmp/dou-gambling-vacancies.json
+  ```
 
-2. **Delasport**
-   - White Label iGaming, 300+ сотрудников. Киев.
-   - Смотреть: https://jobs.dou.ua/companies/delasport/
+### LinkedIn
 
-3. **EveryMatrix LTD** — уже в приоритете выше
-   - Смотреть: https://jobs.dou.ua/companies/everymatrix-ltd/
-
-4. **Softsich**
-   - Software solutions для iGaming (compliance, рост). Киев, Варшава.
-   - Смотреть: https://jobs.dou.ua/companies/softsich/
-
-5. **UPSTARS**
-   - Продуктовая IT для iGaming, B2B. Киев, Варшава.
-   - Смотреть: https://jobs.dou.ua/companies/upstars/
-
-6. **SPRIBE**
-   - iGaming-продукты и казино-игры. Киев, Варшава, Тбилиси.
-   - Смотреть: https://jobs.dou.ua/companies/spribe/
-
-7. **Digicode**
-   - Custom software, платежи, back office; проекты в т.ч. для gambling. Киев, Братислава, Даллас, Полтава.
-   - Смотреть: https://jobs.dou.ua/companies/digicode/
-
-8. **Evoplay Entertainment** — уже в приоритете выше
-   - Смотреть: https://jobs.dou.ua/companies/evoplay-entertainment/
-
-9. **Gamzix**
-   - Слот-игры для iGaming, 120+ человек. Варшава.
-   - Смотреть: https://jobs.dou.ua/companies/gamzix/
-
-10. **ICONIC21**
-    - Live dealer и казино-игры. Киев, Бухарест.
-    - Смотреть: https://jobs.dou.ua/companies/iconic21/
-
-11. **FAVBET Tech** — уже в приоритете выше
-    - Смотреть: https://jobs.dou.ua/companies/favbet-tech/
-
-12. **Synergetica**
-    - R&D, софт для заказчиков (в т.ч. gambling). Киев, Днипро, Варшава, Вроцлав, Гданьск, Краков.
-    - Смотреть: https://jobs.dou.ua/companies/synergetica/
-
-13. **AMMAGAMMA**
-    - Украинская продуктовая IT (iGaming). Киев, Варшава, Лимассол.
-    - Смотреть: https://jobs.dou.ua/companies/ammagamma/
-
-14. **TrueGroup**
-    - В домене Gambling на DOU.
-    - Смотреть: https://jobs.dou.ua/companies/truegroup/
-
-15. **GR8 Tech** — уже в платформах выше
-    - Смотреть: https://jobs.dou.ua/companies/gr8-tech/
-
-16. **Playtech**
-    - Крупный B2B iGaming (платформы, контент). Вакансии на DOU в UA.
-    - Смотреть: https://jobs.dou.ua/companies/playtech/
-
-17. **Digital Hiring**
-    - Рекрутинг (Executive Search, Tech, Staff Augmentation), в т.ч. для iGaming. Киев, Львов, Днипро, Одеса.
-    - Смотреть: https://jobs.dou.ua/companies/digital-hiring/
-
-18. **Bykova Recruitment Agency**
-    - Рекрутинг. Киев, Винница.
-    - Смотреть: https://jobs.dou.ua/companies/bykova-recruitment-agency/
-
-19. **ITExpert (IT Recruitment agency)**
-    - IT-рекрутинг. Киев, Львов.
-    - Смотреть: https://jobs.dou.ua/companies/itexpert-recruitment-agency/
-
-20. **SYNCO**
-    - Рекрутинг. Киев, Львов, Варшава.
-    - Смотреть: https://jobs.dou.ua/companies/synco/
-
-21. **SpeedlineHub Recruiting**
-    - Рекрутинг под продукт и iGaming. Киев, Харьков, Львов, Днипро.
-    - Смотреть: https://jobs.dou.ua/companies/speedlinehub/
-
-22. **toogeza**
-    - Рекрутинг для стартапов/продуктов. Киев, Луцк.
-    - Смотреть: https://jobs.dou.ua/companies/toogeza/
-
-23. **EVOPLAY** (на DOU slug: evoplay; может дублировать Evoplay Entertainment)
-    - Смотреть: https://jobs.dou.ua/companies/evoplay/
-
-*Компании со 2-й и далее страниц DOU добавляй вручную после просмотра в браузере. Если slug на DOU отличается — искать по названию в [списке компаний домена Gambling](https://jobs.dou.ua/companies/?domain=Gambling).*
-
----
-
-## Где мониторить
-
-- [ ] **DOU (домен Gambling)** — все компании i-Gaming в UA: https://jobs.dou.ua/companies/?domain=Gambling
-- [ ] **DOU** — поиск по компаниям + фильтр «Product» / «iGaming» / «Gambling» / «Compliance» / «Regulatory»; только remote
-- [ ] **LinkedIn** — подписаться на компании (ссылки ниже), затем в разделе «Вакансии» фильтровать по компаниям
-- [ ] **Сайты карьеры** — см. блок «LinkedIn и карьерные сайты» ниже
-
-### LinkedIn: подписаться на компании
-
-Подпишись на каждую компанию (кнопка «Подписаться» на странице компании), чтобы видеть вакансии в ленте и в «Вакансии» по фильтру компании. Автоподписка через MCP недоступна — открывай ссылки и жми «Подписаться» вручную.
+Подписаться на компании (кнопка «Подписаться» на странице компании), чтобы видеть вакансии в ленте и в «Вакансии» по фильтру компании.
 
 1. Favbet — https://www.linkedin.com/company/favbet/
 2. VBET — https://www.linkedin.com/company/vbet/
@@ -225,6 +138,16 @@
 9. Intellias — https://www.linkedin.com/company/intellias/
 10. GR8 Tech — https://www.linkedin.com/company/gr8-tech/
 
+### Сайты карьеры
+
+- Favbet: https://favbet.careers/en
+- EveryMatrix: https://everymatrix.teamtailor.com/jobs (фильтр Lviv)
+- Evoplay: https://jobs.evoplay.com/
+- BetConstruct: https://www.betconstruct.com/ua → карьера
+- SOFTSWISS: https://careers.softswiss.com/
+- Gamingtec: https://gamingtec.com/careers
+- GR8 Tech: https://gr8.tech/career, https://gr8.tech/vacancies
+
 ---
 
-*Учёт: продукт (PM, PO, Growth PM) и compliance. Только remote; Hybrid и on-site не в scope. Данные по состоянию на 2024–2025.*
+*Учёт: продукт (PM, PO, Growth PM) и compliance. Только remote; Hybrid и on-site не в scope.*

@@ -11,7 +11,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const { VAULT, DIGESTS_DIR, DATA_DIR, ensureDirs } = require('./job-search-paths.cjs');
+const { VAULT, DIGESTS_DIR, LINKEDIN_DIGESTS_DIR, DATA_DIR, JOBS_DIR, ensureDirs } = require('./job-search-paths.cjs');
+const { deriveTitleFromDescription } = require('./job-search-utils.cjs');
 
 const JOB_LINE_RE = /^(- \[[ x\-]\] \[)([^\]]*)(\]\()(https?:[^)]+)(\))$/;
 const FILTER_STATE_FILE = path.join(DATA_DIR, 'digest-filter-state.json');
@@ -25,6 +26,25 @@ function loadExport(exportPath) {
   const raw = fs.readFileSync(exportPath, 'utf8');
   const data = JSON.parse(raw);
   return data.filter?.results || data.results || {};
+}
+
+function resolveTitleFromJobsDir(jobId) {
+  if (!JOBS_DIR || !fs.existsSync(JOBS_DIR)) return { title: '', description: '' };
+  const jobPath = path.join(JOBS_DIR, jobId + '.json');
+  if (!fs.existsSync(jobPath)) return { title: '', description: '' };
+  try {
+    const data = JSON.parse(fs.readFileSync(jobPath, 'utf8'));
+    const title = (data.job_title || '').trim();
+    const description = (data.job_description || '').trim();
+    return { title, description };
+  } catch (_) {
+    return { title: '', description: '' };
+  }
+}
+
+const PLACEHOLDER_TITLE = /^—\s*$|^Unknown\s*$/i;
+function isPlaceholderTitle(t) {
+  return !t || PLACEHOLDER_TITLE.test((t || '').trim());
 }
 
 function applyStateToDigest(lines, jobLineIndices, stateResults) {
@@ -47,9 +67,20 @@ function applyStateToDigest(lines, jobLineIndices, stateResults) {
       toRemove.add(lineIdx);
       if (lines[lineIdx + 1] === '') skipBlankAfter.add(lineIdx + 1);
     } else if (saved.title != null || saved.company != null || saved.workType != null) {
-      const title = saved.title || (m[2].includes(' · ') ? m[2].split(' · ')[0].trim() : m[2].trim());
+      let title = saved.title || (m[2].includes(' · ') ? m[2].split(' · ')[0].trim() : m[2].trim());
       const company = saved.company || '—';
       const typeDisplay = saved.workType || 'Unknown';
+      if (isPlaceholderTitle(title)) {
+        const { title: fromFile, description } = resolveTitleFromJobsDir(jobId);
+        if (fromFile) title = fromFile;
+        else if (description && description.length >= 20 && typeof deriveTitleFromDescription === 'function') {
+          const derived = (deriveTitleFromDescription(description) || '').trim();
+          if (derived) title = derived;
+        }
+        if (isPlaceholderTitle(title)) {
+          console.error('[CRITICAL] Digest line has no job title (jobId=' + jobId + ', url=' + url + '). Fix jobs/' + jobId + '.json or run backfill.');
+        }
+      }
       lineUpdates.set(lineIdx, `${prefix}${title} · ${company} · ${typeDisplay}${suffix}`);
     }
   }
@@ -105,11 +136,12 @@ function main() {
   const digestArg = args[0];
   const exportArg = args[1];
 
+  const linkedinDir = LINKEDIN_DIGESTS_DIR || DIGESTS_DIR;
   const digestPath = digestArg
     ? path.isAbsolute(digestArg)
       ? digestArg
-      : path.join(DIGESTS_DIR, digestArg)
-    : path.join(DIGESTS_DIR, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
+      : path.join(linkedinDir, digestArg.replace(/^linkedin\//, ''))
+    : path.join(linkedinDir, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
 
   if (!fs.existsSync(digestPath)) {
     console.error('Digest not found:', digestPath);
@@ -145,6 +177,13 @@ function main() {
 
   console.log('Applied export from', path.basename(exportPath));
   console.log('Removed', toRemove.size, 'jobs (hybrid/on-site/closed). Enriched', lineUpdates.size, 'lines.');
+  if (lineUpdates.size > 0) {
+    for (const [lineIdx, newLine] of lineUpdates) {
+      const m = newLine.match(/^\- \[[ x\-]\] \[([^\]]+)\]/);
+      const label = m ? m[1].trim() : `line ${lineIdx + 1}`;
+      console.log('  Enriched:', label);
+    }
+  }
   console.log('Digest has', total, 'jobs. Wrote', path.relative(VAULT, digestPath));
 }
 

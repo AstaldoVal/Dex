@@ -35,7 +35,12 @@ def get_granola_cache_path():
     home = Path.home()
     
     if system == "Darwin":  # macOS
-        return home / "Library" / "Application Support" / "Granola" / "cache-v3.json"
+        base = home / "Library" / "Application Support" / "Granola"
+        for name in ("cache-v6.json", "cache-v4.json", "cache-v3.json"):
+            p = base / name
+            if p.exists():
+                return p
+        return base / "cache-v3.json"
     elif system == "Windows":
         # Try AppData\Roaming first, then Local
         roaming = Path(os.environ.get('APPDATA', home / 'AppData' / 'Roaming'))

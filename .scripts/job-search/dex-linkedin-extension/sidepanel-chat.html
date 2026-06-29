@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dex — ответы в чатах</title>
+  <style>
+    :root {
+      --bg: #1a1b1e;
+      --surface: #25262b;
+      --text: #e9ecef;
+      --muted: #868e96;
+      --accent: #4dabf7;
+      --border: #373a40;
+      --error: #fa5252;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin: 0;
+      padding: 12px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .panel-header h1 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .panel-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    button.header-online-btn {
+      padding: 5px 11px;
+      min-height: 28px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--accent);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    button.header-online-btn:hover:not(:disabled),
+    button.header-online-btn:focus-visible:not(:disabled) {
+      border-color: var(--accent);
+      background: rgba(77, 171, 247, 0.14);
+      outline: none;
+    }
+    button.header-online-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+    .online-status-line {
+      margin: 0 0 10px 0;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--muted);
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      min-height: 0;
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .online-status-line:not(:empty) {
+      min-height: 1.35em;
+    }
+    button.info-btn {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      line-height: 22px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      font-style: italic;
+      font-family: Georgia, 'Times New Roman', serif;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    button.info-btn:hover,
+    button.info-btn:focus-visible {
+      color: var(--accent);
+      border-color: var(--accent);
+      outline: none;
+    }
+    dialog.rules-dialog {
+      margin: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      padding: 0;
+      max-width: min(420px, calc(100vw - 24px));
+      width: 100%;
+      max-height: min(85vh, 560px);
+    }
+    dialog.rules-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .rules-dialog-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .rules-dialog-toolbar strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+    button.rules-dialog-close {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      line-height: 1;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    button.rules-dialog-close:hover {
+      color: var(--text);
+      background: var(--surface);
+    }
+    .rules-dialog .rules-dialog-body {
+      display: block;
+      max-height: min(52vh, 420px);
+      margin: 0;
+      padding: 10px 12px 12px 12px;
+      overflow-y: auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      resize: vertical;
+      font: inherit;
+    }
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      margin-bottom: 10px;
+    }
+    button.primary {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #0d1117;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+    button.primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .variants {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .variant {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--surface);
+    }
+    .variant pre {
+      margin: 0 0 8px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font: inherit;
+    }
+    button.copy {
+      padding: 6px 10px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .err {
+      color: var(--error);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .server-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    details.rules-panel {
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 0 10px 8px 10px;
+    }
+    details.rules-panel > summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 4px 8px 4px;
+      list-style-position: outside;
+      color: var(--accent);
+    }
+    .rules-body {
+      margin: 0;
+      padding: 0 4px 6px 4px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--muted);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .rules-body.error {
+      color: var(--error);
+    }
+    .matchclub-hint {
+      display: block;
+      margin-bottom: 12px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #2b2a20;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.45;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .matchclub-hint.matchclub-off-site {
+      border-style: dashed;
+      opacity: 0.92;
+    }
+    #matchclub-site-banner {
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.4;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--muted);
+    }
+    .matchclub-hint.matchclub-on-site #matchclub-site-banner {
+      color: #a8e6a8;
+      background: rgba(40, 80, 40, 0.2);
+    }
+    .matchclub-hint strong {
+      color: var(--accent);
+    }
+    details.matchclub-details {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    details.matchclub-details > summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      list-style-position: outside;
+      color: var(--accent);
+      padding: 0 2px 2px 2px;
+    }
+    details.matchclub-details .matchclub-details-body {
+      padding-top: 8px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .matchclub-watch-intro {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin: 0 0 6px 0;
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .matchclub-reload-note {
+      margin: 8px 0 0 0;
+      font-size: 10px;
+      line-height: 1.35;
+      color: var(--muted);
+      opacity: 0.95;
+    }
+    .matchclub-watch-status-wrap {
+      margin-top: 10px;
+      padding: 10px 10px 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .matchclub-watch-status-main {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .mcw-status-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .mcw-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .mcw-badge-on {
+      background: rgba(46, 160, 67, 0.25);
+      color: #7dffb3;
+      border: 1px solid rgba(46, 160, 67, 0.45);
+    }
+    .mcw-badge-off {
+      background: var(--bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .mcw-status-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mcw-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .mcw-status-k {
+      color: var(--muted);
+      font-size: 11px;
+      flex: 1 1 55%;
+      min-width: 0;
+    }
+    .mcw-status-v {
+      font-weight: 600;
+      font-size: 12px;
+      text-align: right;
+      flex: 0 1 40%;
+    }
+    .mcw-status-v.mcw-ok {
+      color: #7dffb3;
+    }
+    .mcw-status-v.mcw-warn {
+      color: #ffb86b;
+    }
+    .mcw-status-hint {
+      margin: 10px 0 0 0;
+      padding: 8px 8px;
+      border-radius: 6px;
+      background: rgba(120, 120, 200, 0.12);
+      border-left: 3px solid var(--accent);
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--text);
+    }
+    .mcw-status-foot {
+      margin: 10px 0 0 0;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 10px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .mcw-status-extra {
+      margin: 8px 0 0 0;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #ffb86b;
+    }
+    .mcw-status-off-msg {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    #matchclub-export-status {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-top: 6px;
+      font-size: 11px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      color: var(--muted);
+    }
+    button.secondary {
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--accent);
+      cursor: pointer;
+    }
+    button.secondary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #matchclub-dom-status {
+      display: block;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .matchclub-debug-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .matchclub-debug-row input[type='checkbox'] {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .matchclub-option-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      min-width: 0;
+    }
+    .matchclub-option-row label.matchclub-debug-row {
+      flex: 1;
+      margin-top: 0;
+      cursor: pointer;
+    }
+    .matchclub-watch-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0 0 8px 0;
+    }
+    .matchclub-watch-bar .matchclub-watch-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    details.matchclub-details > summary.matchclub-summary-with-help {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      list-style: none;
+      cursor: pointer;
+    }
+    details.matchclub-details > summary.matchclub-summary-with-help::-webkit-details-marker {
+      display: none;
+    }
+    .compact-hint-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 8px 0 10px 0;
+      padding: 6px 0 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .compact-hint-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .panel-help-body {
+      margin: 0;
+      padding: 10px 12px 12px 12px;
+      max-height: min(60vh, 480px);
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .panel-help-body p {
+      margin: 0 0 10px 0;
+    }
+    .panel-help-body p:last-child {
+      margin-bottom: 0;
+    }
+    .panel-help-body code {
+      font-size: 11px;
+      word-break: break-word;
+    }
+    #matchclub-pull-status {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    button.insert-chat {
+      margin-left: 8px;
+    }
+    .chat-reply-port-row {
+      margin: 0 0 10px 0;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 12px;
+    }
+    .chat-reply-port-row label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+    .chat-reply-port-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chat-reply-port-controls input[type='number'] {
+      width: 88px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+    }
+    .chat-reply-port-controls button {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .chat-reply-port-controls button:hover {
+      border-color: var(--accent);
+    }
+    #chat-reply-port-status {
+      display: block;
+      margin: 6px 0 0 0;
+      font-size: 11px;
+      color: var(--muted);
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <header class="panel-header">
+    <h1>Ответы в чатах</h1>
+    <div class="panel-header-actions">
+      <button
+        type="button"
+        class="header-online-btn"
+        id="matchclub-online-only-btn"
+        title="Только онлайн: включает тоггл Online на странице списка чатов Match Club"
+        aria-label="Только онлайн, тоггл на странице Match Club"
+      >
+        Онлайн
+      </button>
+      <button
+        type="button"
+        class="info-btn"
+        id="rules-info-btn"
+        title="Правила проекта (обязательны): полный текст с сервера"
+        aria-label="Правила проекта"
+      >
+        i
+      </button>
+    </div>
+  </header>
+  <p id="matchclub-online-status" class="online-status-line" aria-live="polite"></p>
+  <div class="chat-reply-port-row" id="chat-reply-port-row">
+    <label for="chat-reply-port-input">Порт chat-reply-server (как CHAT_REPLY_PORT в .env)</label>
+    <div class="chat-reply-port-controls">
+      <input
+        type="number"
+        id="chat-reply-port-input"
+        min="1"
+        max="65535"
+        step="1"
+        value="8777"
+        title="Должен совпадать с портом npm run chat-reply:server"
+      />
+      <button type="button" id="chat-reply-port-save">Применить</button>
+    </div>
+    <span id="chat-reply-port-status" aria-live="polite"></span>
+  </div>
+  <dialog id="rules-dialog" class="rules-dialog">
+    <div class="rules-dialog-toolbar">
+      <strong>Правила проекта (обязательны)</strong>
+      <button type="button" class="rules-dialog-close" id="rules-dialog-close" aria-label="Закрыть">
+        ×
+      </button>
+    </div>
+    <pre class="rules-body rules-dialog-body" id="rules-body">Загрузка правил с сервера…</pre>
+  </dialog>
+  <dialog id="panel-help-dialog" class="rules-dialog">
+    <div class="rules-dialog-toolbar">
+      <strong id="panel-help-title">Справка</strong>
+      <button type="button" class="rules-dialog-close" id="panel-help-close" aria-label="Закрыть">×</button>
+    </div>
+    <div class="panel-help-body" id="panel-help-body"></div>
+  </dialog>
+  <div class="matchclub-hint matchclub-off-site" id="matchclub-hint">
+    <details class="matchclub-details" open>
+      <summary class="matchclub-summary-with-help">
+        <span>Match Club — инструменты</span>
+        <button
+          type="button"
+          class="info-btn"
+          id="matchclub-help-overview"
+          title="Обзор: правила, онлайн, .env"
+          aria-label="Справка по разделу Match Club"
+        >
+          i
+        </button>
+      </summary>
+      <div class="matchclub-details-body">
+        <p id="matchclub-site-banner">Проверка вкладки…</p>
+        <button type="button" class="secondary" id="matchclub-dom-btn">Снять структуру этой страницы (DOM в JSON)</button>
+        <span id="matchclub-dom-status"></span>
+        <div class="matchclub-option-row">
+          <label class="matchclub-debug-row"><input type="checkbox" id="matchclub-debug" /> Логи в консоли вкладки</label>
+          <button type="button" class="info-btn" id="matchclub-help-debug" title="Про debug" aria-label="Подробнее про логи в консоли">i</button>
+        </div>
+        <button type="button" class="secondary" id="matchclub-pull-context-btn">Забрать переписку со страницы в поле «Сообщение»</button>
+        <span id="matchclub-pull-status"></span>
+        <div class="matchclub-option-row">
+          <label class="matchclub-debug-row"
+            ><input type="checkbox" id="matchclub-outbound-insert-only" checked /> Очередь: вставка в поле, отправка вручную</label
+          >
+          <button type="button" class="info-btn" id="matchclub-help-queue" title="Про очередь и автоотправку" aria-label="Подробнее про очередь outbound">i</button>
+        </div>
+        <button type="button" class="secondary" id="matchclub-export-chats-btn" title="Прокручивает список, открывает каждый чат, сохраняет JSON. Очередь: вставка следующего сообщения по правилам; по умолчанию ждёт вашу отправку, затем следующий чат.">
+          Экспорт всех чатов в JSON (на диск)
+        </button>
+        <span id="matchclub-export-status"></span>
+        <div class="matchclub-watch-block" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+          <div class="matchclub-watch-bar">
+            <span class="matchclub-watch-label">Мониторинг списка чатов</span>
+            <button type="button" class="info-btn" id="matchclub-help-watch" title="Как работает мониторинг" aria-label="Справка по мониторингу списка">i</button>
+          </div>
+          <div class="matchclub-watch-row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;">
+            <button type="button" class="primary" id="matchclub-watch-start-btn" title="Включить мониторинг: сначала Paid/First SMS, затем бесплатные чаты.">
+              Запустить: Paid -> Free
+            </button>
+            <button type="button" class="secondary" id="matchclub-watch-start-free-btn" title="Включить мониторинг только бесплатных чатов (без Paid/First SMS).">
+              Запустить: только Free
+            </button>
+            <button type="button" class="secondary" id="matchclub-watch-start-paid-btn" title="Только платные чаты и First SMS: бесплатные не в очередь; на сайте включается фильтр Paid (если найден), снимается Online; черновик вставляется, следующий чат только после вашей отправки или если вы очистили поле ввода.">
+              Запустить: только Paid / 1st SMS
+            </button>
+            <button type="button" class="secondary" id="matchclub-watch-stop-btn" title="Остановить слежение: новые строки не обрабатываются, таймеры и наблюдатель отключаются до следующего запуска.">
+              Остановить мониторинг
+            </button>
+          </div>
+          <label class="matchclub-debug-row" for="matchclub-watch-delay-min">Задержка после появления чата (минуты, 3–10):</label>
+          <input type="number" id="matchclub-watch-delay-min" min="3" max="10" step="1" value="3" style="width:72px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit;" />
+          <button type="button" class="secondary" id="matchclub-watch-baseline-btn" title="Сбросить «известные» чаты: все текущие строки списка снова считаются базой; очередь отложенных добивов очищается.">
+            Заново: текущий список = известные чаты
+          </button>
+          <button type="button" class="secondary" id="matchclub-watch-abort-wait-btn" disabled title="Завершить ожидание отправки в текущем чате без подтверждения в треде: снимает блокировку, следующий отложенный чат сможет открыться. Если черновик уже ушёл, а счётчик «ждёт отправку» завис.">
+            Пропустить ожидание отправки
+          </button>
+          <button type="button" class="secondary" id="matchclub-activity-report-btn" title="Сформировать отчёт активности за сегодня и сохранить в Dex через chat-reply-server.">
+            Отчёт активности за сегодня
+          </button>
+          <span id="matchclub-activity-report-status" style="display:block;margin-top:6px;font-size:11px;color:var(--muted);white-space:pre-wrap;"></span>
+          <div id="matchclub-watch-status" class="matchclub-watch-status-wrap" aria-live="polite">
+            <div id="matchclub-watch-status-main" class="matchclub-watch-status-main"></div>
+            <p id="matchclub-watch-status-extra" class="mcw-status-extra" hidden></p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+  <details class="rules-panel" id="followup-approved-panel" open>
+    <summary>Добивы: утверждённые (9 фраз EN, в промпт генерации)</summary>
+    <pre class="rules-body" id="followup-approved-body">Загрузка утверждённых добивов…</pre>
+  </details>
+  <details class="rules-panel" id="followup-draft-panel">
+    <summary>Добивы: черновики (не в промпт)</summary>
+    <pre class="rules-body" id="followup-draft-body">Загрузка…</pre>
+  </details>
+  <div class="compact-hint-row">
+    <span class="compact-hint-label">Генерация и добивы</span>
+    <button type="button" class="info-btn" id="help-generate-flow" title="Куратор, стиль, правила" aria-label="Справка: генерация и добивы">i</button>
+  </div>
+  <label for="msg">Сообщение</label>
+  <textarea id="msg" placeholder="Текст сообщения…"></textarea>
+  <label for="style">Стиль ответа</label>
+  <select id="style">
+    <option value="neutral">Нейтральный, дружелюбный</option>
+    <option value="warm">Тёплый, вовлечённый</option>
+    <option value="playful">Игривый, лёгкий</option>
+    <option value="joke">С шуткой</option>
+    <option value="flirt">Лёгкий флирт (в рамках приличия)</option>
+    <option value="direct">Коротко и по делу</option>
+  </select>
+  <button type="button" class="primary" id="go">Сгенерировать</button>
+  <div id="err" class="err" hidden></div>
+  <div id="variants" class="variants"></div>
+  <p class="hint" id="chat-insert-status" hidden></p>
+  <div class="compact-hint-row server-hint-row">
+    <span class="compact-hint-label">Локальный сервер (npm, порт, host)</span>
+    <button type="button" class="info-btn" id="help-server" title="chat-reply-server и Native Messaging" aria-label="Справка по серверу">i</button>
+  </div>
+  <script src="sidepanel-chat.js"></script>
+</body>
+</html>

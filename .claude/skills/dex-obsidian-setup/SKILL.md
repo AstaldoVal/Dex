@@ -48,7 +48,7 @@ Ready to proceed?"
 Call the migration script using Shell tool:
 
 ```bash
-cd /Users/dave/Dex/Dex
+# Из корня репозитория Dex (папка, где лежат `core/` и `.claude/`)
 python core/obsidian/migrate_to_wikilinks.py
 ```
 
@@ -83,7 +83,7 @@ These are stored in `.obsidian/` and only affect Obsidian (not Cursor/terminal).
 Run the config generator:
 
 ```bash
-cd /Users/dave/Dex/Dex
+# Из корня репозитория Dex
 python core/obsidian/generate_obsidian_config.py
 ```
 
@@ -106,7 +106,7 @@ Runs in background, zero maintenance."
 Run the daemon installer (note: this will be created in Phase 4):
 
 ```bash
-cd /Users/dave/Dex/Dex
+# Из корня репозитория Dex
 bash core/obsidian/install_sync_daemon.sh
 ```
 
@@ -119,7 +119,7 @@ Say: "No problem! You can enable it later by running `bash core/obsidian/install
 Say: "✅ Obsidian mode enabled!
 
 **Next steps:**
-1. Open Obsidian: File → Open Folder → `/Users/dave/Dex/Dex` (or your Dex path)
+1. Open Obsidian: File → Open Folder → **корень того же репозитория Dex**, что открыт в Cursor
 2. Check the graph view: Ctrl/Cmd + G
 3. Click any wiki link to navigate
 

@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { VAULT, DIGESTS_DIR, DATA_DIR } = require('./job-search-paths.cjs');
+const { VAULT, DIGESTS_DIR, LINKEDIN_DIGESTS_DIR, DATA_DIR } = require('./job-search-paths.cjs');
 
 const JOB_LINE_RE = /^(- \[[ x\-]\] \[)([^\]]*)(\]\()(https?:[^)]+)(\))$/;
 const FILTER_STATE_FILE = path.join(DATA_DIR, 'digest-filter-state.json');
@@ -74,11 +74,12 @@ function writeDigestFromState(filePath, lines, toRemove, skipBlankAfter, lineUpd
 
 function main() {
   const args = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+  const linkedinDir = LINKEDIN_DIGESTS_DIR || DIGESTS_DIR;
   const digestPath = args[0]
     ? path.isAbsolute(args[0])
       ? args[0]
-      : path.join(DIGESTS_DIR, args[0])
-    : path.join(DIGESTS_DIR, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
+      : path.join(linkedinDir, args[0].replace(/^linkedin\//, ''))
+    : path.join(linkedinDir, `linkedin-jobs-${new Date().toISOString().slice(0, 10)}.md`);
 
   if (!fs.existsSync(digestPath) || !fs.existsSync(FILTER_STATE_FILE)) {
     console.log('Digest or filter state not found. Nothing to apply.');

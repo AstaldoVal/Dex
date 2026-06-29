@@ -1,0 +1,39 @@
+---
+description: Restart Telegram news stack (bridge + Cloudflare quick tunnel + Vercel env/redeploy) and refresh tunnel URL when it changes
+globs:
+  - "apps/telegram-news-bridge/**"
+  - "apps/telegram-news-dashboard/**"
+  - ".scripts/telegram-news-stack-restart.cjs"
+alwaysApply: false
+---
+
+# Telegram news stack (bridge + tunnel + Vercel)
+
+Коли користувач просить **перезапустити весь стек**, оновити **tunnel URL** на Vercel або **отримати свіжі дані** з bridge через tunnel:
+
+1. З **кореня репозиторію Dex** виконати (потрібні `cloudflared`, `uv`, `VERCEL_TOKEN` у середовищі для кроків Vercel):
+
+   ```bash
+   npm run telegram-news:stack:restart
+   ```
+
+   Перевірка без змін: `npm run telegram-news:stack:restart:dry`
+
+2. Скрипт `.scripts/telegram-news-stack-restart.cjs`:
+   - перезапускає **bridge** (`restart-bridge.sh --detach`), чекає `GET /health`;
+   - зупиняє попередній **cloudflared** за pidfile `/tmp/dex-telegram-news-cloudflared.pid`, піднімає quick tunnel, парсить `*.trycloudflare.com` / `*.cfargotunnel.com`;
+   - дописує origin tunnel у **`BRIDGE_CORS_ORIGINS`** у `apps/telegram-news-bridge/.env` (якщо не передано `--skip-cors-patch`) і знову перезапускає bridge;
+   - **upsert** на Vercel: `BRIDGE_URL` і `NEXT_PUBLIC_BRIDGE_PUBLIC_URL` (однакове значення tunnel), потім **redeploy production** (щоб клієнт підхопив `NEXT_PUBLIC_*`);
+   - перевіряє **`GET {tunnel}/feed`** з Bearer `BRIDGE_API_SECRET` з `.env`.
+
+3. Змінні середовища для агента (не комітити токени):
+   - **`VERCEL_TOKEN`** — обов’язково для оновлення env і redeploy;
+   - **`VERCEL_TEAM_ID`** — якщо проєкт у team;
+   - **`VERCEL_PROJECT_NAME`** — за замовчуванням `telegram-news-dashboard`;
+   - **`VERCEL_DEPLOY_HOOK_URL`** — опційно замість API redeploy.
+
+4. Прапорці: `--skip-bridge`, `--skip-tunnel`, `--skip-vercel`, `--skip-cors-patch`, `--dry-run`.
+
+5. Останній tunnel URL також у файлі `/tmp/dex-telegram-last-cloudflared-url.txt`.
+
+Якщо `VERCEL_TOKEN` немає в середовищі агента — виконати лише `npm run telegram-news:bridge:restart:bg` і повідомити користувача, що Vercel треба оновити вручну або передати токен.

@@ -1,0 +1,34 @@
+{
+  "exp_id": "002",
+  "area": "PUSH",
+  "short_name": "Opt-in SC Incentive",
+  "hypothesis": "Urgency-driven copy drives higher opt-in rate than neutral copy.",
+  "value_type": "json",
+  "hash_attribute": "userId",
+  "coverage": 1.0,
+  "variations": [
+    {
+      "name": "Control — Instant Reward",
+      "value": {
+        "gc_amount": 100000,
+        "sc_amount": 1,
+        "headline": "Instant Reward",
+        "body": "Subscribe for free: get GC 100,000 + SC 1 instantly. One tap, yours now."
+      }
+    },
+    {
+      "name": "Variant A — One-Time Offer",
+      "value": {
+        "gc_amount": 100000,
+        "sc_amount": 1,
+        "headline": "One-Time Offer",
+        "body": "One-time offer: subscribe now and get GC 100,000 + SC 1 dropped into your account"
+      }
+    }
+  ],
+  "metrics": {
+    "primary": ["push_optin_rate"],
+    "secondary": ["reward_claim_rate", "modal_cta_click_rate", "modal_close_rate"],
+    "guardrails": ["daily_bonus_claim_rate", "d1_retention", "d7_retention", "purchase_conversion_rate"]
+  }
+}

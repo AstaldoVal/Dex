@@ -1,7 +1,7 @@
 # Dex Technical Guide
 
 **Version:** 1.0  
-**Last Updated:** January 28, 2026
+**Last Updated:** April 16, 2026
 
 **Audience:** People who want to understand how Dex works under the hood - whether to customize it, contribute to it, or learn from its design patterns.
 
@@ -145,11 +145,15 @@ Claude reads this file when you type `/daily-plan`, follows the steps, and doesn
 
 ### Role-Specific Skills
 
-Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing, etc.) stored in `.claude/skills/_available/[role]/[skill-name]/`.
+Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing, etc.) stored in `Skills_library/_available/[role]/[skill-name]/`.
 
 **Why separate?** Not everyone needs `/pipeline-health` or `/board-prep`. Skills are discovered via `/dex-level-up` based on your role and installed on demand.
 
 **Implementation:** Skills in `_available/` aren't loaded into Cursor's context until you explicitly install them (by moving to `.claude/skills/`).
+
+### Publishing skills to separate repos
+
+Some skills are prepared for publication in **standalone repositories** (e.g. for AgentSkills marketplaces or community use). The publishable bundle lives in `06-Resources/Dex_System/Skills_Publish/`. Each subfolder (e.g. `scan-skill-injection/`) is self-contained: it includes the skill definition (SKILL.md), the script or assets, docs, test fixtures, and a package.json so the skill can be cloned or copied into a separate repo without Dex. The in-repo version of the skill (e.g. `.claude/skills/scan-skill-injection/`) points at Dex paths (`.scripts/skills/...`); the Skills_Publish copy uses paths suitable for the standalone package (`scripts/`, `docs/`, `fixtures/`).
 
 ---
 
@@ -1137,7 +1141,7 @@ Understanding these constraints explains why Dex is designed the way it is.
 ### Skills
 
 - `.claude/skills/[skill-name]/SKILL.md` - All skills follow this structure
-- `.claude/skills/_available/` - Role-specific skills (not loaded by default)
+- `Skills_library/_available/` - Role-specific skills (not loaded by default)
 
 ### Hooks
 

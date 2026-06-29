@@ -1,0 +1,3 @@
+# Cloudflare Pages — SPA-style path for unsubscribe form
+/unsubscribe    /unsubscribe/index.html   200
+/unsubscribe/   /unsubscribe/index.html   200

@@ -12,7 +12,6 @@ Tools:
 - timeline_analysis: Track evidence trends and growth velocity over time
 """
 
-import os
 import sys
 import json
 import logging
@@ -24,6 +23,17 @@ from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
 import mcp.server.stdio
 import mcp.types as types
+
+_repo_root = str(Path(__file__).resolve().parent.parent.parent)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+from core.paths import (  # noqa: E402
+    CAREER_DIR,
+    EVIDENCE_DIR,
+    QUARTER_GOALS_FILE,
+    TASKS_FILE,
+    VAULT_ROOT as BASE_DIR,
+)
 
 # Import parsing utilities
 from career_parser import (
@@ -49,10 +59,7 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
-# Configuration - Vault paths
-BASE_DIR = Path(os.environ.get('VAULT_PATH', Path.cwd()))
-CAREER_DIR = BASE_DIR / 'Active' / 'Career'
-EVIDENCE_DIR = BASE_DIR / 'Resources' / 'Career_Evidence'
+# Configuration - Vault paths (PARA: 05-Areas/Career, Evidence; see core/paths.py)
 LADDER_FILE = CAREER_DIR / 'Career_Ladder.md'
 
 # Initialize the MCP server
@@ -623,7 +630,7 @@ async def handle_scan_work_for_evidence(arguments: dict) -> list[types.TextConte
     
     # Scan quarterly goals
     if include_goals:
-        quarter_goals_file = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        quarter_goals_file = QUARTER_GOALS_FILE
         if quarter_goals_file.exists():
             content = quarter_goals_file.read_text()
             
@@ -738,7 +745,7 @@ async def handle_skills_gap_analysis(arguments: dict) -> list[types.TextContent]
     cutoff_date = datetime.now() - timedelta(days=lookback_days)
     
     # Scan quarterly goals for skills_developed
-    quarter_goals_file = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    quarter_goals_file = QUARTER_GOALS_FILE
     if quarter_goals_file.exists():
         content = quarter_goals_file.read_text()
         skills_match = re.findall(r'\*\*Skills developing:\*\*\s*(.+)', content)
@@ -752,7 +759,7 @@ async def handle_skills_gap_analysis(arguments: dict) -> list[types.TextContent]
                 active_skills[skill]['last_seen'] = datetime.now()  # Simplified - would check actual dates
     
     # Scan 03-Tasks/Tasks.md for # Career: tags
-    tasks_file = BASE_DIR / '03-Tasks/Tasks.md'
+    tasks_file = TASKS_FILE
     if tasks_file.exists():
         content = tasks_file.read_text()
         career_tags = re.findall(r'#\s*Career:\s*([^\n]+)', content)
@@ -828,7 +835,7 @@ async def handle_generate_evidence_from_work(arguments: dict) -> list[types.Text
     work_data = {}
     
     if work_type == 'quarterly_goal':
-        quarter_goals_file = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        quarter_goals_file = QUARTER_GOALS_FILE
         if quarter_goals_file.exists():
             content = quarter_goals_file.read_text()
             lines = content.split('\n')
@@ -982,7 +989,7 @@ async def handle_promotion_readiness_score(arguments: dict) -> list[types.TextCo
     # 2. Work Delivery (0-30 points)
     # Count completed high-impact quarterly goals
     high_impact_goals_completed = 0
-    quarter_goals_file = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    quarter_goals_file = QUARTER_GOALS_FILE
     if quarter_goals_file.exists():
         content = quarter_goals_file.read_text()
         # Count goals with impact_level: high and progress >= 80%

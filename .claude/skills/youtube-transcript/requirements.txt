@@ -1,0 +1,2 @@
+# Backward-compatible pointer to standalone transcript package deps.
+-r ../../../packages/transcript-skill/requirements.txt

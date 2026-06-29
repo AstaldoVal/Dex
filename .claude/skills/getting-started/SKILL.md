@@ -386,36 +386,45 @@ Map responses to days:
 **Map strategy to time ranges:**
 
 ```python
-def map_strategy_to_ranges(strategy: str, extent: dict) -> dict:
-    """Convert user strategy choice to specific time ranges"""
-    
+def map_strategy_to_ranges(strategy: str, extent: dict) -> dict | None:
+    """Convert user strategy choice to specific time ranges.
+
+    Returns None for ``skip``. For ``custom``, do not call this — map
+    ``people_range`` / ``notes_range`` / ``todos_range`` from AskUserQuestion
+    to days instead (see "Map responses to days" above).
+    """
     if strategy == "smart":
         return {
             'people_days': extent['days_back'],  # All history
             'notes_days': min(30, extent['days_back']),  # Last 30 days or all if less
             'todos_days': min(7, extent['days_back'])   # Last 7 days or all if less
         }
-    elif strategy == "recent":
+    if strategy == "recent":
         return {
             'people_days': 7,
             'notes_days': 7,
             'todos_days': 7
         }
-    elif strategy == "full":
+    if strategy == "full":
         return {
             'people_days': extent['days_back'],
             'notes_days': extent['days_back'],
             'todos_days': extent['days_back']
         }
-    elif strategy == "forward":
+    if strategy == "forward":
         return {
             'people_days': 0,
             'notes_days': 0,
             'todos_days': 0
         }
-    elif strategy == "skip":
+    if strategy == "skip":
         return None
-    # For "custom", ranges come from separate AskUserQuestion responses (or CLI fallback)
+    if strategy == "custom":
+        raise ValueError(
+            "map_strategy_to_ranges: strategy 'custom' is handled separately; "
+            "build people_days, notes_days, todos_days from custom-mode answers."
+        )
+    raise ValueError(f"unknown strategy: {strategy!r}")
 ```
 
 **Show confirmation before processing:**
@@ -1058,7 +1067,7 @@ else:
             "questions": [{
                 "id": "fetch_more",
                 "prompt": f"I found {extent['meetings_count']} meetings going back {extent['days_back']} days. There appears to be more data beyond that. Want me to check how much more?",
-                "allow_multiple": false,
+                "allow_multiple": False,
                 "options": [
                     {"id": "yes", "label": "Yes - show me the full extent"},
                     {"id": "no", "label": "No - 6 months is enough"}

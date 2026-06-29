@@ -1,0 +1,43 @@
+---
+description: Vegas Bonanza / GrowthBook — запрет автоматического stop/start/rollout экспериментов без явного подтверждения Roman и аппрува Ihor.
+globs:
+  - 04-Projects/Vegas_Bonanza/**
+alwaysApply: false
+---
+
+# Vegas Bonanza: выкатка экспериментов — только с аппрувом
+
+Применять при любой задаче про **остановку**, **старт**, **временный rollout (100%)**, **смену статуса** эксперимента в GrowthBook или при формулировке «ship winner / release to 100%» для Vegas Bonanza.
+
+## Запрещено без явного подтверждения Roman в текущем чате
+
+Агент **не вызывает** API GrowthBook, скрипты из `04-Projects/Vegas_Bonanza/growthbook-automation/` и **не даёт инструкцию «сделай сам»** как основной исход для:
+
+- `POST /v1/experiments/{id}/stop` (включая `enableTemporaryRollout: true`)
+- `POST /v1/experiments/{id}/modify-temporary-rollout`
+- `POST /v1/experiments/{id}/start`
+- `POST /v1/experiments/{id}` с изменением `status` (running / stopped / draft)
+- Любой иной шаг, который переводит production с **50/50** на **force winner** или обратно
+
+**Разрешено по умолчанию:** анализ Mixpanel/GrowthBook, черновики поста в Slack, расчёт выборки, обновление Notion-карточки **текстом**, рекомендация «что делать» — **без** изменения live-флагов.
+
+## Цепочка решения о выкатке
+
+1. **Ihor Herasymov** — обязательный аппрув перед ship / stop с rollout. Без его явного «ок» в Slack или от Roman «Ihor approved» — **не выкатывать**.
+2. **Roman** — явное подтверждение в чате, что агент **может выполнить** stop/start/rollout **сейчас** (одна реплика вроде «делай rollout» / «откати rollout»).
+
+Оба условия для **выкатки winner на 100%**. Для **отката** rollout достаточно явной команды Roman (как в «откати rollout»).
+
+## После преждевременной выкатки
+
+Если rollout уже сделан без аппрува Ihor:
+
+1. Отключить temporary rollout (`modify-temporary-rollout` → `enableTemporaryRollout: false`).
+2. Вернуть эксперимент в **running** с **50/50** (проверить production definition: `weights: [0.5, 0.5]`, без `force: true`).
+3. Кратко сообщить Roman статус и сослаться на тред, где Ihor попросил подождать.
+
+## Связанные правила
+
+- Отчёт по данным: `.cursor/rules/experiment-updates-relative-lift.mdc`
+- Выводы и закрытие: `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc`
+- Карточка EXP в Notion: `.cursor/rules/vegas-bonanza-notion-experiment-card.mdc`

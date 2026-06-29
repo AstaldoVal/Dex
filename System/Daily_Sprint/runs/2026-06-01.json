@@ -1,0 +1,140 @@
+{
+  "version": "1.0.0",
+  "date": "2026-06-01",
+  "timezone": "Europe/Lisbon",
+  "goal": "EXP-002: night-shift, phase-eval hook, session_end bind",
+  "created_at": "2026-06-01T06:23:02.740Z",
+  "updated_at": "2026-06-01T06:23:21.446Z",
+  "experiments": [
+    {
+      "id": "EXP-001",
+      "title": "EXP-002: night-shift runner, phase-eval, session bind",
+      "project_path": "System/Daily_Sprint",
+      "spec_path": ".claude/skills/day-sprint/SKILL.md",
+      "phase": "done",
+      "status": "complete",
+      "night_shift": true,
+      "peak_slot": 1,
+      "outcome": "Night-shift runner, phase-eval hook (beforeShellExecution), session_end bind via pomodoro:session-log; day-sprint:test pass",
+      "history": [
+        {
+          "ts": "2026-06-01T06:23:03.064Z",
+          "action": "created",
+          "phase": "queued"
+        },
+        {
+          "ts": "2026-06-01T06:23:03.397Z",
+          "action": "bind_peak",
+          "peak_slot": 1
+        },
+        {
+          "ts": "2026-06-01T06:23:03.738Z",
+          "action": "advance",
+          "from": "queued",
+          "to": "spec",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-06-01T06:23:04.078Z",
+          "action": "advance",
+          "from": "spec",
+          "to": "tasks",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-06-01T06:23:04.405Z",
+          "action": "advance",
+          "from": "tasks",
+          "to": "implement",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-06-01T06:23:04.733Z",
+          "action": "advance",
+          "from": "implement",
+          "to": "eval",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-06-01T06:23:05.058Z",
+          "action": "advance",
+          "from": "eval",
+          "to": "human_review",
+          "note": null,
+          "eval_pass": true
+        },
+        {
+          "ts": "2026-06-01T06:23:05.852Z",
+          "action": "outcome",
+          "text": "Night-shift runner, phase-eval hook (beforeShellExecution), session_end bind via pomodoro:session-log; day-sprint:test pass"
+        },
+        {
+          "ts": "2026-06-01T06:23:06.458Z",
+          "action": "advance",
+          "from": "human_review",
+          "to": "done",
+          "note": null,
+          "eval_pass": null
+        }
+      ]
+    },
+    {
+      "id": "EXP-002",
+      "title": "Night-shift queue (demo)",
+      "project_path": "System/Daily_Sprint",
+      "spec_path": null,
+      "phase": "tasks",
+      "status": "draft",
+      "night_shift": true,
+      "peak_slot": null,
+      "outcome": null,
+      "history": [
+        {
+          "ts": "2026-06-01T06:23:20.809Z",
+          "action": "created",
+          "phase": "queued"
+        },
+        {
+          "ts": "2026-06-01T06:23:21.125Z",
+          "action": "advance",
+          "from": "queued",
+          "to": "spec",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-06-01T06:23:21.445Z",
+          "action": "advance",
+          "from": "spec",
+          "to": "tasks",
+          "note": "night-shift:auto",
+          "eval_pass": null
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "cycles_started": 2,
+    "cycles_completed": 1,
+    "eval_pass_first_try": 1,
+    "eval_retries": 0,
+    "peaks_used": 1,
+    "night_shift_queued": 2
+  },
+  "night_shift_log": [
+    {
+      "ts": "2026-06-01T06:23:21.445Z",
+      "exp_id": "EXP-002",
+      "from": "spec",
+      "to": "tasks",
+      "eval_ok": true,
+      "eval_failures": [],
+      "dry_run": false,
+      "applied": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@ const path = require('path');
 const { PROFILE_EXTENSION, DEBUG_DIR } = require('./job-search-paths.cjs');
 
 async function debugPage(searchUrl) {
-  const context = await chromium.launchPersistentContext(PROFILE_EXTENSION, {
+  const context = await launchPersistentContextGuarded(chromium, PROFILE_EXTENSION, {
     headless: false,
     args: ['--no-sandbox']
   });
@@ -100,4 +100,5 @@ function sleep(ms) {
 }
 
 const searchUrl = process.argv[2] || 'https://www.linkedin.com/jobs/search/?currentJobId=4369495177&f_TPR=r86400&f_WT=2&geoId=91000007&keywords=Senior%20Product%20Manager&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true';
+const { launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 debugPage(searchUrl).catch(console.error);

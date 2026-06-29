@@ -10,7 +10,7 @@ const path = require('path');
 const { simpleParser } = require('mailparser');
 const { execSync } = require('child_process');
 
-const { VAULT, DIGESTS_DIR, DEBUG_DIR, ensureDirs } = require('./job-search-paths.cjs');
+const { VAULT, DIGESTS_DIR, LINKEDIN_DIGESTS_DIR, DEBUG_DIR, ensureDirs } = require('./job-search-paths.cjs');
 
 const RELEVANCE_KEYWORDS = [
   'igaming', 'i-gaming', 'casino', 'live casino', 'tv games', 'bingo',
@@ -216,9 +216,36 @@ function isRelevant(job) {
   return RELEVANCE_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
 }
 
-// Exclude on-site only; we want remote (or hybrid). Filter runs after relevance.
-const EXCLUDE_KEYWORDS = ['on-site', 'onsite', 'on site', 'in-office', 'in office', 'hybrid', 'relocation'];
+// Exclude on-site and hybrid; we want remote only. Filter runs after relevance.
+const EXCLUDE_KEYWORDS = ['on-site', 'onsite', 'on site', 'in-office', 'in office', 'hybrid', 'relocation', 'relocate to'];
+
+function loadUserProfile() {
+  try {
+    const yamlPath = path.join(VAULT, 'System', 'user-profile.yaml');
+    if (!fs.existsSync(yamlPath)) return { consider_only_remote: false };
+    const content = fs.readFileSync(yamlPath, 'utf8');
+    const considerOnlyRemote = /consider_only_remote:\s*true/i.test(content);
+    return { consider_only_remote: considerOnlyRemote };
+  } catch (e) {
+    return { consider_only_remote: false };
+  }
+}
+
+const userProfile = loadUserProfile();
+
 function isExcluded(job) {
+  // Check workType first (extracted from email metadata)
+  if (job.workType === 'hybrid' || job.workType === 'on-site') {
+    return true;
+  }
+  // If user wants only remote and workType is unknown, exclude unless "remote" is mentioned
+  if (userProfile.consider_only_remote && job.workType === 'unknown') {
+    const text = `${(job.title || '')} ${job.url}`.toLowerCase();
+    if (!text.includes('remote')) {
+      return true; // Exclude unknown workType if no "remote" mentioned and user wants only remote
+    }
+  }
+  // Fallback: check keywords in title/URL
   const text = `${(job.title || '')} ${job.url}`.toLowerCase();
   return EXCLUDE_KEYWORDS.some(kw => text.includes(kw));
 }
@@ -227,6 +254,9 @@ function isExcluded(job) {
 function isNonPmRole(job) {
   const title = (job.title || '').toLowerCase();
   if (/product manager|product owner|head of product|cpo\b|chief product|compliance manager/.test(title)) return false;
+  if (/\bproduct\s+category\s+manager\b/i.test(title)) return true;  // Category/retail, not software PM
+  if (/\bproduct\s+line\s+manager\b/i.test(title)) return true;  // Product line (P&L/hardware), not software PM
+  if (/\b(?:technical\s+)?sales\s*(?:&|and|\s*[-–—])\s*product\s+manager\b/i.test(title)) return true;  // Sales-heavy hybrid
   if (/\b(software engineer|c# engineer|\.net engineer|java engineer|r&d engineer|backend engineer|frontend engineer|fullstack?\s+engineer|devops engineer|qa engineer|data engineer|ml engineer|game engineer)\b/i.test(title)) return true;
   if (/\b(backend developer|frontend developer|fullstack?\s+developer|\.net developer|java developer|c# developer)\b/i.test(title)) return true;
   if (/\bdeveloper\b/i.test(title) && !/product/i.test(title)) return true;
@@ -239,19 +269,22 @@ function getJobId(url) {
   return m ? m[1] : null;
 }
 
-// Collect job IDs that were marked as applied [x] or rejected [-] in previous LinkedIn digest files
+// Collect ALL job IDs from previous LinkedIn digest files (to avoid duplicates)
+// Checks all jobs regardless of checkbox status ([ ], [x], or [-])
 function getExcludedJobIdsFromPreviousDigests() {
   const excluded = new Set();
-  if (!fs.existsSync(DIGESTS_DIR)) return excluded;
-  const files = fs.readdirSync(DIGESTS_DIR).filter(f => f.startsWith('linkedin-jobs-') && f.endsWith('.md'));
-  const re = /^- \[(x|-)\] \[[^\]]*\]\((https?:[^)]+)\)/gm;
+  const dir = LINKEDIN_DIGESTS_DIR || DIGESTS_DIR;
+  if (!fs.existsSync(dir)) return excluded;
+  const files = fs.readdirSync(dir).filter(f => f.startsWith('linkedin-jobs-') && f.endsWith('.md'));
+  // Match any checkbox status: [ ], [x], or [-]
+  const re = /^- \[[ x\-]\] \[[^\]]*\]\((https?:[^)]+)\)/gm;
   for (const file of files) {
     try {
-      const content = fs.readFileSync(path.join(DIGESTS_DIR, file), 'utf8');
+      const content = fs.readFileSync(path.join(dir, file), 'utf8');
       let m;
       re.lastIndex = 0;
       while ((m = re.exec(content)) !== null) {
-        const id = getJobId(m[2]);
+        const id = getJobId(m[1]);
         if (id) excluded.add(id);
       }
     } catch (e) {
@@ -402,7 +435,9 @@ async function main() {
   const dryRun = process.argv.includes('--dry-run');
   const verbose = process.argv.includes('--verbose') || process.env.JOBSEARCH_DEBUG === '1';
   const today = new Date().toISOString().slice(0, 10);
-  const outPath = path.join(DIGESTS_DIR, `linkedin-jobs-${today}.md`);
+  const outDir = LINKEDIN_DIGESTS_DIR || DIGESTS_DIR;
+  ensureDirs();
+  const outPath = path.join(outDir, `linkedin-jobs-${today}.md`);
 
   const { ImapFlow } = require('imapflow');
   const client = new ImapFlow({
@@ -479,7 +514,7 @@ async function main() {
     .map(j => ({ ...j, score: scoreJob(j) }))
     .sort((a, b) => b.score - a.score);
 
-  // Exclude jobs marked as applied [x] or rejected [-] in previous digest files
+  // Exclude ALL jobs from previous digest files (to avoid duplicates)
   const excludedIds = getExcludedJobIdsFromPreviousDigests();
   const excludedCount = withScore.filter(j => excludedIds.has(getJobId(j.url))).length;
   withScore = withScore.filter(j => !excludedIds.has(getJobId(j.url)));
@@ -494,7 +529,7 @@ async function main() {
     `# LinkedIn jobs (from your Job Alert emails) — ${today}`,
     '',
     '*Parsed from inbox (last 7 days). Sorted by relevance to iGaming + Senior PM / Head of Product / CPO / Compliance.*',
-    '*`[ ]` to process · `[x]` applied · `[-]` rejected. See `data/Applied.md` for applications. Applied/rejected (from previous digests) are excluded below.*',
+    '*`[ ]` to process · `[x]` applied · `[-]` rejected. See `data/Applied.md` for applications. Jobs already in previous digests are excluded below.*',
     '',
     `**Best match: ${best.length}** | Other: ${other.length}`,
     '',
@@ -543,7 +578,7 @@ async function main() {
     return;
   }
   fs.writeFileSync(outPath, content, 'utf8');
-  const exclNote = excludedCount > 0 ? ` (${excludedCount} applied/rejected, excluded)` : '';
+  const exclNote = excludedCount > 0 ? ` (${excludedCount} duplicates from previous digests, excluded)` : '';
   const companiesFound = withScore.filter(j => j.company && j.company !== '—').length;
   const companyNote = companiesFound > 0 ? ` | Companies extracted: ${companiesFound}/${withScore.length}` : '';
   console.log(`Wrote ${withScore.length} LinkedIn jobs (${best.length} best match) to ${path.relative(VAULT, outPath)}${exclNote}${companyNote}`);

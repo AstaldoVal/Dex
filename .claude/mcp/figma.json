@@ -1,0 +1,9 @@
+{
+  "name": "figma",
+  "description": "Figma MCP: design context, variables, components, generate code from frames. Remote server (OAuth).",
+  "server": {
+    "url": "https://mcp.figma.com/mcp",
+    "type": "http"
+  },
+  "notes": "Add via Cursor: Install MCP Server → Figma (cursor://anysphere.cursor-deeplink/mcp/install?name=Figma&config=...) or add to .cursor/mcp.json.source: \"figma\": { \"url\": \"https://mcp.figma.com/mcp\" }. First use: Connect → OAuth. Does not support adding images to files; use generated images from Nano Banana by saving to disk and dragging into Figma or pasting."
+}

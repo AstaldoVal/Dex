@@ -1,0 +1,52 @@
+SOURCE: https://www.chatprd.ai/templates/prd-product-requirement-document-template
+FETCHED: 2025-03-04
+ORIGINAL FORMAT: ChatPRD (copy-paste or generate with AI)
+
+---
+ChatPRD: PRD (Product Requirement Document) Template
+
+01 - Background
+- Problem Statement (core problem, secondary issues, quantitative/qualitative data)
+- Market Opportunity (competitor landscape, differentiation, statistics, market trends)
+- User Personas (target segments, needs, challenges, current solutions, pain points)
+- Vision Statement (company alignment, industry trends)
+- Product Origin (idea origin, pilot studies, pivotal moments)
+
+02 - Objectives
+- SMART Goals (Specific, Measurable, Achievable, Relevant, Time-bound)
+- Key Performance Indicators (KPIs)
+- Qualitative Objectives (user experience goals)
+- Strategic Alignment (company vision, synergies)
+- Risk Mitigation (risks, mitigation strategies, contingency plans)
+
+03 - Features
+- Core Features (primary features, user pain points, unique aspects)
+- User Benefits (use cases, scenarios)
+- Technical Specifications (dependencies, integrations, scalability)
+- Feature Prioritization (MoSCoW: Must/Should/Could/Won't have)
+- Future Enhancements
+
+04 - User Experience
+- User Interface (UI) Design (visual style, design principles, wireframes)
+- User Journey (touchpoints, flow, path to goal)
+- Usability Testing (A/B testing, user testing, heatmaps)
+- Accessibility (WCAG)
+- Feedback Loops
+
+05 - Milestones
+- Development Phases (discovery, design, development, testing, launch)
+- Critical Path (bottlenecks, dependencies)
+- Review Points (stakeholder engagement, checkpoints)
+- Launch Plan (marketing, training, support)
+- Post-Launch Evaluation
+
+06 - Technical Requirements
+- Tech Stack
+- System Architecture
+- Security Measures
+- Performance Metrics
+- Integration Requirements
+
+---
+Example: SoundBubble PRD (music streaming app for emerging artists)
+Full template and example available at chatprd.ai

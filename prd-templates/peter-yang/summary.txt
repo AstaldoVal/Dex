@@ -1,0 +1,50 @@
+SOURCE: https://creatoreconomy.so/p/my-prd-template-how-to-write-with-ai (Peter Yang, Substack)
+GOOGLE_DOC: https://docs.google.com/document/d/1qRoGciAm80A8DPPd0wzhcHJ09kZqTOi98IFNC5aA_Ks/edit (File > Make a Copy)
+CHATPRD: Community template "Peter's PRD" (storytelling, user-centric)
+FETCHED: 2025-03-04
+NOTE: Author is Peter Yang (Product Lead at Roblox), not Peter Young
+
+---
+Peter Yang's PRD Template – 7 Sections
+
+Principles: Short and to the point; living document; seven key sections
+
+1. Header
+   - Links to designs and other artifacts
+   - Team names
+   - Last updated date
+
+2. Problem
+   - Who is the customer?
+   - What is the customer problem?
+   - How do we know this is a problem?
+   (Few sentences)
+
+3. Goals
+   - One output goal for the feature
+   - 2-3 input metrics to drive output
+   - Non-goals and guardrail metrics when relevant
+
+4. Solution
+   - High-level solution and key milestones
+   - Per milestone: user stories, P0/P1 marking, open topics for async discussion
+   - Wireframes/design optional
+
+5. Launch plan
+   - Staged rollout or experiment
+   - For experiments: success criteria, eligibility, test, control, ramp plan
+
+6. Meeting Notes
+   - Take meeting notes directly in PRD
+   - Capture latest discussions and decisions in single document
+
+7. Appendix
+   - Keep PRD short
+   - Link to: customer interviews, competitive research, supporting data
+
+---
+AI workflow (Peter Yang):
+1. Draft bullets (problem, goal, solution)
+2. Discuss async with stakeholders and customers
+3. Use AI to fill template from raw chat logs
+4. Result: PRD with customer/stakeholder validation, no meetings

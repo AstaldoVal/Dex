@@ -1,0 +1,64 @@
+---
+description: A/B и эксперименты — в апдейтах Roman и черновиках постов в тред lead с относительным lift (%), не с абсолютными п.п. в слоях 1–2.
+alwaysApply: true
+---
+
+# Отчёты по экспериментам: относительное изменение (relative lift)
+
+Применять при **статусе эксперимента**, **итоге A/B**, **черновике поста в Slack-тред**, **решении ship/stop** и любом **апдейте Roman** по Vegas Bonanza или другому A/B-тесту.
+
+**Не заменяет** планирование выборки (калькулятор MDE, §7 decision rule в Notion-карточке до старта) — там по-прежнему можно **absolute** в процентах и п.п., если инструмент или §7 так заданы. См. `.cursor/rules/vegas-bonanza-notion-experiment-card.mdc` §7.
+
+**Источник в Mixpanel:** на каждой EXP-доске команда включает **Relative uplifts** (baseline = **control**) и **Stat. sig.** — канон: `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md`. В апдейтах **сначала** цифры с доски; ручной пересчёт — только если доски нет.
+
+---
+
+## Слои 1–2 (вердикт и действия)
+
+**Главная формулировка lift — относительная**, в процентах от baseline контроля:
+
+`relative lift % = (variant_rate − control_rate) / control_rate × 100`
+
+**Обязательно в той же фразе или соседнем предложении:** сами ставки контроля и варианта (например 52% → 54%).
+
+**Baseline всегда control:** относительный прирост variant B (и C/D при A/B/C) считается **только** относительно контрольной руки, не относительно другого варианта и не относительно прошлого периода. В Mixpanel — настройка **Relative uplifts** на EXP-доске (см. board standard).
+
+**Эталон (хорошо):** «Конверсия в регистрацию выросла на **+3,8%** относительно контроля (**52% → 54%**).»
+
+**Запрещено в слоях 1–2** открывать апдейт только абсолютным lift без относительного: «+2 п.п.», «+2 percentage points», «прирост на 2 пункта» **без** relative % в той же фразе.
+
+**Допустимо в слое 3** или по «разверни»: п.п., размер выборки, MDE absolute, дни до readout, ссылка на калькулятор.
+
+---
+
+## Черновики для команды (English Slack / Notion comment)
+
+Тот же порядок: **relative % first**, then rates.
+
+Пример: `Signup CR **+3.8% relative** (52% control → 54% Gift Box).`
+
+Не: `+2 pp lift` без relative в lead-строке.
+
+---
+
+## Несколько метрик
+
+- **Primary** — relative + ставки в lead.
+- Secondary / guardrails — relative, если метрика долевая; для счётчиков и revenue — явная формула в слое 3.
+
+---
+
+## Исключения
+
+- Roman явно просит **только п.п.** или **только absolute MDE** для калькулятора.
+- Цитата поля JSON / Mixpanel / GrowthBook **дословно** в слое 3.
+- Метрика уже **не доля** (ARPU, время в секундах) — relative по смыслу метрики или без % lift в lead; написать словами, что сравниваем.
+
+---
+
+## Согласованность
+
+- `.cursor/rules/dex-cognitive-load-budget.mdc` — слои 1–2 без английских вставок смысла; **relative lift** → по-русски **относительный прирост** / **на X% относительно контроля**.
+- `.cursor/rules/dex-flow-results-format.mdc` — таблицы full-flow не затрагивает; это правило про **эксперименты и A/B-апдейты**.
+- `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc` — когда закрывать, 2–3 дня тренда, purchase guardrails, аппрув Ihor перед prod.
+- `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md` — Relative uplifts + Stat. sig. на каждой EXP-доске; baseline = control.

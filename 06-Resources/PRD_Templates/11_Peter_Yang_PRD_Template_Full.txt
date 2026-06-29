@@ -1,0 +1,103 @@
+SOURCE: Peter's PRD template (Peter Yang)
+DOCX: User's copy from Downloads
+FETCHED: 2025-03-04
+NOTE: Full template with examples (Pinterest topic selector). See also 11_Peter_Yang_Peters_PRD.txt for 7-section summary.
+
+---
+Peter's PRD template
+Made by Peter
+
+Links
+- Design
+- Analytics
+- Meeting Notes
+- Team
+  PM: TBD | Design: TBD | EM: TBD | Analytics: TBD | Marketing: TBD
+Last updated: 5/10/24
+
+---
+1. Problem
+Describe the problem that you're trying to solve in a few sentences. Answer these questions:
+- Who is the customer?
+- What is the customer problem?
+- How do we know that this is a problem? (e.g., link to customer research and data)
+
+Example: Topic selector during Pinterest new user onboarding
+New users want to view topics that they're interested in when they first sign up for Pinterest.
+Today, all new users see the same feed of the most popular content. This content is dominated by a few categories like women's fashion and decor that don't align with the diverse interests of all new users (see appendix for research).
+We want to test letting new users select topics during onboarding to personalize their feed.
+
+---
+2. Goals
+List one output goal and 2-3 input metrics that'll drive the goal. (Optional) List non-goals that you do not plan to address with this feature.
+
+Example:
+Output: Grow activation rate by 20% (% of sign ups who visit again in 7 days)
+Inputs:
+- # users who visit topic selector screen
+- # who select a topic, # of topics selected
+- # who pin during their first session
+
+---
+3. Requirements
+Describe what the solution is at a high level first. If there are multiple milestones, list them clearly.
+
+For each milestone:
+- Write each feature as a user story and try to be as concise as possible.
+- Mark clearly which features are P0 and P1.
+- Highlight any open questions for discussion async.
+Include a wireframe or a draft design to bring important features to life.
+
+Example:
+We want to test this topic selector in two milestones:
+- M1: Test topic selector in onboarding and personalize feed based on topics
+- M2: Test using age, gender, and language signals to personalize the topic selector
+
+M1: Test topic selector in onboarding flow and personalized feed based on topics
+Link to design
+
+P0 | See topic selector during onboarding
+As a new user, when I am signing up to Pinterest,
+then I see a "Pick 5 or more topics to personalize your feed" screen
+after signing up with my email or phone number.
+On this screen, I see a grid of the most popular topics and a button labeled "Meet your home feed" that is initially disabled. When I select 5 or more topics, the button activates and I can click on it to visit my Home Feed.
+Discussion: Peter: How should we rank the topics?
+
+P0 | Home feed with content from topics that I selected
+When I visit the home feed for the first time,
+I see popular and recent content from the topics that I've selected.
+
+M2: Test using age, gender, and language signals to personalize the topic selector
+TBD
+
+---
+4. Meeting notes
+Take meeting notes in a dedicated section directly in the PRD. This ensures that the latest discussions and decisions are captured in a single document.
+
+Example:
+Team sync - 5/10
+- Peter: Why are we forcing users to select 5+ topics?
+- Wendy: Data science has research showing that users who select at least 5 topics tend to retain better.
+- Bob: Suggest A/B the minimum number of topics in a subsequent experiment.
+
+---
+5. Launch plan
+Define your launch plan whether it's a staged rollout or an experiment. For experiments, define the success criteria, eligibility, test, control, and ramp plan.
+
+Example: Staged rollout
+| Target date | Milestone | Description | Notes |
+|-------------|-----------|-------------|-------|
+| YY-MM-DD    | Alpha     | Internal team testing | On track |
+| YY-MM-DD    | Beta      | First 100 customers   | On track |
+| YY-MM-DD    | Launch    | General availability  | On track |
+
+Example: Topic selector experiment
+- Success criteria: Grow activation rate by 20% (% of sign ups who visit again in 7 days)
+- Eligibility: People who sign up for Pinterest on web and mweb.
+- Test: Experience described above.
+- Control: Existing onboarding experience without "topic selector" screen.
+- Ramp plan: 50/50 experiment.
+
+---
+6. Appendix
+Include relevant info like customer interviews, competitive research, supporting data, and more. Keep the main spec short but the appendix can be as long as you want.

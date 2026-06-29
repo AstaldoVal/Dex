@@ -3,7 +3,9 @@
 
 set -e
 
-SKILLS_DIR="/Users/dave/Dex/Dex/.claude/skills"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SKILLS_DIR="$REPO_ROOT/.claude/skills"
 
 fix_skill() {
   local skill_name=$1

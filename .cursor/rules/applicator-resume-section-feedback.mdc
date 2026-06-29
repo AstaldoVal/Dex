@@ -1,0 +1,38 @@
+---
+description: Applicator full-flow-v2 Step 9 — per-block section_reviews + skills_detail contract for Claude feedback
+globs:
+  - .scripts/job-search/full-flow-v2/**
+  - .claude/reference/applicator-resume-*
+  - 00-Inbox/Job_Search/teal/full-flow-v2/**
+alwaysApply: false
+---
+
+# Applicator Step 9: feedback по каждому блоку резюме
+
+При **Applicator full-flow-v2**, шаг 9 (Claude review) и правках промпта/гейта:
+
+## Обязательное поведение
+
+1. Claude возвращает **`section_reviews[]`** — **все 9** секций Applicator: `contact_info`, `target_title`, `professional_summary`, `skills`, `work_experience`, `education`, `certifications`, `projects`, `interests`.
+2. По **каждой** секции — либо **`status: ok`** (короткий `verdict`, `changes: []`), либо **`status: needs_changes`** (**`verdict` ≤100 символов — только контекст**, каждая правка — отдельная строка в **`changes[]`**).
+3. **Skills** при `needs_changes`: **`skills_detail`** (block_order, keep, remove_or_merge, layout_notes) **и** зеркало каждой layout-правки в **`changes[]`** (`action: layout`). Rollup-абзацы в `verdict` **запрещены** — gate fail.
+4. **Work Experience**: **`work_experience_detail`** (companies → roles → **полные** строки `bullets[]`) обязателен всегда; **по умолчанию ≤3 буллета на роль** (>3 только с `bullets_max` или `keep_bullets: N canonical bullets` от Claude); зеркало в `apply.work_experience.merge_bullets`; step 10 whitelist + eval parity.
+5. Не завершать шаг 9 без прохождения **`validateSectionReviews`** в `qualityGate` (`.scripts/job-search/full-flow-v2/applicator-resume-section-reviews.cjs`).
+6. **`feedback.md`** в package должен содержать рендер **Section reviews** (не только счётчик skills categories).
+7. После step 10 apply в package пишется **`feedback-apply-traceability.md`**: только **actionable** строки (`changes[]`, skills keep/remove, layout) — **без** rollup-`verdict` для `needs_changes` (строки вида R006 больше не генерируются).
+
+## Канон
+
+- Контракт: `.claude/reference/applicator-resume-section-feedback-contract.md`
+- Промпт: `.claude/reference/applicator-resume-review-prompt.md`
+- Валидатор/рендер: `.scripts/job-search/full-flow-v2/applicator-resume-section-reviews.cjs`
+- Work Experience whitelist: `.scripts/job-search/full-flow-v2/applicator-work-experience-detail.cjs`
+- Оркестратор: `.scripts/job-search/full-flow-v2/applicator-resume-review.cjs`
+- Параллельный step 9 (default): `applicator-parallel-resume-review.cjs` + `applicator-claude-section-subagent.cjs` + `applicator-claude-orchestrator-brief.cjs`; промпт саб-агента: `.claude/reference/applicator-section-subagent-prompt.md`
+- Legacy monolithic CLI: `.scripts/job-search/full-flow-v2/applicator-claude-resume-review.cjs`
+
+## Запрещено
+
+- Отчитывать Roman только `apply` без вердикта по блокам.
+- Пропускать секцию в `section_reviews` («не трогали» без явного `ok`).
+- Для skills — только flat merge без block order / keep-remove.

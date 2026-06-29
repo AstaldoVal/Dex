@@ -1,0 +1,4 @@
+# Local / development
+.DS_Store
+*.local
+External/

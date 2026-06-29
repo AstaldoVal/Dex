@@ -1,0 +1,30 @@
+---
+description: После изменения dex-меню, slash-команд или скиллов с вызовом через / — синхронизировать .cursor/skills для autosuggest в Cursor.
+globs:
+  - .claude/cursor-commands/**
+  - .cursor/commands/**
+  - .claude/commands/**
+  - .claude/skills/**/SKILL.md
+alwaysApply: false
+---
+
+# Slash autosuggest (Cursor)
+
+Cursor 2.4+ показывает **`/` autosuggest** надёжнее для записей в **`.cursor/skills/<name>/SKILL.md`** с `disable-model-invocation: true`, чем только для legacy **`.cursor/commands/*.md`**.
+
+## Обязательно после правок
+
+Если ты менял любой из путей из `globs` выше (новый пункт в `dex-career.md`, новая команда в `.cursor/commands/`, новый skill с вызовом `/имя`):
+
+1. Из корня репозитория DEX: **`npm run cursor:sync-slash`**
+2. Кратко сообщи пользователю: перезагрузить окно Cursor (**Developer: Reload Window**), затем в **новом Agent-чате** набрать `/` и фильтр по имени (например `/full`).
+
+## Не делать
+
+- Не полагаться только на `.claude/skills/` для появления в slash-меню новых чатов — для Dex slash-каталога канон синка: **`.cursor/slash-manifest.json`** и обёртки в **`.cursor/skills/`**.
+- Не дублировать полные тела skill в обёртках — только тонкий SKILL.md; канон остаётся в `.claude/skills/` или `.claude/commands/`.
+
+## Проверка
+
+- `npm run cursor:sync-slash:check` — exit 0, если manifest актуален.
+- Settings → Plugins → Rules, Skills, Subagents → **Skills**: должны быть `full-flow`, `job-digest`, … с путём под `.cursor/skills/`.

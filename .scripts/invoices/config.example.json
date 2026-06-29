@@ -1,0 +1,25 @@
+{
+  "vaultPath": "",
+  "outDir": "00-Inbox/Invoices",
+  "providers": {
+    "simas": {
+      "name": "Simas",
+      "loginUrl": "https://portal.ucloud.cgi.com/uPortal2/oeiras/index.html#/login",
+      "notes": "SIMAS Oeiras – ucloud CGI portal"
+    },
+    "lisboagas": {
+      "name": "Lisboagas",
+      "loginUrl": "https://gn.galpenergia.com/BalcaoDigitalGnCurr/",
+      "notes": "Galp Balcão Digital"
+    },
+    "ibelectra": {
+      "name": "Ibelectra",
+      "loginUrl": "https://clientes.ibelectra.com/",
+      "notes": "Area de cliente Ibelectra"
+    }
+  },
+  "browser": {
+    "headless": false,
+    "slowMo": 100
+  }
+}

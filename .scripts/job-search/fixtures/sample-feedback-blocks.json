@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "resume_id": "608d280d-0f27-4340-968a-19786d23ee3a",
+    "job_title": "AI Innovation Lead",
+    "company": "iGaming Operator",
+    "review_round": 1,
+    "jd_themes": ["ai", "automation", "llm", "igaming", "transformation"]
+  },
+  "blocks": [
+    {
+      "block_id": "preview.targetTitles",
+      "actions": [{ "op": "addTitle", "value": "AI Innovation Lead" }]
+    },
+    {
+      "block_id": "preview.professionalSummary",
+      "actions": [
+        {
+          "op": "replace",
+          "text": "AI and product leader with 12+ years building automation, LLM workflows, and cross-functional delivery in iGaming and SaaS. I design AI-first operating models that replace manual processes with measurable business impact."
+        }
+      ]
+    },
+    {
+      "block_id": "preview.workExperience",
+      "actions": [
+        {
+          "op": "patchBullets",
+          "company": "Roman",
+          "role": "Consultoria",
+          "bullets": [
+            {
+              "text_match_prefix": "Designed and deployed AI agents",
+              "included": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "block_id": "preview.skills",
+      "actions": [
+        { "op": "addSkill", "skill": "LLM orchestration" },
+        { "op": "addSkill", "skill": "multi-agent systems" },
+        { "op": "addSkill", "skill": "n8n" }
+      ]
+    },
+    {
+      "block_id": "preview.workExperience.bullets",
+      "actions": [
+        {
+          "op": "addBullet",
+          "company": "Pin-Up",
+          "role": "Compliance",
+          "text": "Led AI automation pilot for compliance evidence collection."
+        }
+      ]
+    },
+    {
+      "block_id": "manual.deferred",
+      "actions": [
+        {
+          "op": "newSection",
+          "title": "AI Projects — dedicated section after experience",
+          "reason": "New Teal section not automated"
+        },
+        {
+          "op": "other",
+          "category": "structure",
+          "suggestion": "Reorder skill categories: drag Product Management above Analytics in Teal UI.",
+          "reason": "Use preview.skills reorderCategoryFirst/After when automatable; this note is manual fallback"
+        }
+      ]
+    }
+  ],
+  "apply": {},
+  "deferred_v1": {
+    "new_sections": [],
+    "other": []
+  }
+}

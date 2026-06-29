@@ -603,10 +603,11 @@ These aren't installed by default because not everyone needs them. When you're r
 
 ### Available by Role
 
-**Product (3 skills):**
+**Product (4 skills):**
 - `/roadmap` — Review roadmap, surface blockers, check alignment
 - `/customer-intel` — Synthesize recent customer feedback and pain points
 - `/feature-decision` — Framework for feature prioritization decisions
+- `/prioritization` — Choose and apply a prioritization method (RICE, MoSCoW, Value vs Effort, ICE, etc.) with documented outcome
 
 **Sales (4 skills):**
 - `/deal-review` — Review active deals and surface risks
@@ -684,6 +685,7 @@ Skills are reusable AI workflows invoked with `/skill-name`. All skills follow t
 **Projects:**
 - `/project-health` — Review project status, blockers, and next steps
 - `/product-brief` — Extract product ideas through guided questions and generate PRD
+- `/prioritization` — Prioritize lists (features, initiatives, tasks) with RICE, MoSCoW, Value vs Effort, ICE, and other methods
 - `/triage` — Process inbox intelligently with entity matching
 
 **Career Development:**

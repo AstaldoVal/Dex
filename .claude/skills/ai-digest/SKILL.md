@@ -5,13 +5,17 @@ description: Ежедневный дайджест новостей AI — вс�
 
 ## Purpose
 
-Получить сводку всех заметных новостей и обновлений в сфере AI за выбранный период. Агрегирует посты из OpenAI, Google Cloud, Google (Gemini/AI). Удобно для ежедневного утреннего обзора или по запросу.
+Получить сводку всех заметных новостей и обновлений в сфере AI за выбранный период. Агрегирует посты из OpenAI, Google Cloud, Google (Gemini/AI) и Anthropic. Удобно для ежедневного утреннего обзора или по запросу.
 
 ## Usage
 
-- `/ai-digest` — дайджест за последние 24 часа (все новости)
+- `/ai-digest` — дайджест за последние 24 часа (все вендоры)
 - `/ai-digest 48` — за последние 48 часов
-- `/ai-digest 12` — за последние 12 часов
+- `/ai-digest anthropic` — только Anthropic за 24 ч
+- `/ai-digest openai` — только OpenAI за 24 ч
+- `/ai-digest google_cloud` — только Google Cloud за 24 ч
+- `/ai-digest gemini` — только Google (Gemini/AI) за 24 ч
+- `/ai-digest anthropic 72` — только Anthropic за 72 часа (вендор и часы в любом порядке: `48 anthropic` тоже допустимо)
 
 ## MCP Dependency
 
@@ -25,18 +29,20 @@ description: Ежедневный дайджест новостей AI — вс�
 
 ### Step 1: Parse Arguments
 
-- По умолчанию `hours = 24`.
-- Если пользователь указал число после команды (например `/ai-digest 48`) — использовать его как `hours` (ограничить разумным диапазоном, например 1–168).
+- По умолчанию `hours = 24`, `vendor = None` (все вендоры).
+- Допустимые вендоры: `anthropic`, `openai`, `google_cloud`, `gemini`.
+- Токены после команды разбирать так: число (1–168) → `hours`, слово из списка вендоров → `vendor`. Порядок не важен: `/ai-digest 48 anthropic` и `/ai-digest anthropic 48` — оба дают vendor=anthropic, hours=48.
 
 ### Step 2: Fetch Digest
 
 Вызвать MCP:
 
 ```
-get_daily_ai_summary(hours=<hours>, max_items_per_feed=30)
+get_daily_ai_summary(hours=<hours>, max_items_per_feed=30, vendor=<vendor или None>)
 ```
 
-`max_items_per_feed=30` — чтобы получить по возможности все новости за период, а не только топ.
+- `max_items_per_feed=30` — по возможности все новости за период.
+- Если пользователь указал вендора (anthropic, openai, google_cloud, gemini) — передать его в `vendor`; иначе `vendor` не передавать или передать `None`.
 
 ### Step 3: Present Result
 
@@ -50,7 +56,7 @@ get_daily_ai_summary(hours=<hours>, max_items_per_feed=30)
 **Формат вывода:**
 
 ```
-🤖 AI ДАЙДЖЕСТ — последние <hours> ч (до <cutoff_utc> UTC)
+🤖 AI ДАЙДЖЕСТ — последние <hours> ч (до <cutoff_utc> UTC) [— только <vendor> если задан]
 
 Всего записей: <total_items>
 
@@ -74,5 +80,5 @@ get_daily_ai_summary(hours=<hours>, max_items_per_feed=30)
 
 ## Related
 
-- Отдельные обновления по платформам: инструменты `get_openai_updates`, `get_gemini_updates`, `get_all_ai_updates` (через MCP).
-- Еженедельный обзор: можно вызвать `get_all_ai_updates(since_days=7)` вручную или оформить отдельной командой при необходимости.
+- Отдельные обновления по платформам: `get_openai_updates`, `get_gemini_updates`, `get_anthropic_updates`, `get_all_ai_updates` (через MCP).
+- Чтобы получить новости только по одному вендору — использовать параметр вендора в `/ai-digest` (например `/ai-digest anthropic`).

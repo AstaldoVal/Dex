@@ -1,4 +1,252 @@
 {
-  "processedMeetings": {},
-  "lastSync": "2026-02-08T22:33:35.504Z"
+  "processedMeetings": {
+    "370ef636-9930-4faf-bc7e-8af540a37c18": {
+      "title": "Connells Product Virtual Coffee",
+      "processedAt": "2026-02-09T12:23:47.027Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-06/connells-product-virtual-coffee.md"
+    },
+    "a89745b2-2bee-494e-88da-19afe8b5d0b1": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-10T14:33:42.498Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-10/untitled-meeting.md"
+    },
+    "97e230d1-34da-4b24-87e2-3d3de48b181c": {
+      "title": "AI Open Hours",
+      "processedAt": "2026-02-11T11:17:23.104Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-11/ai-open-hours.md"
+    },
+    "58f5dd6b-19ba-4f1a-8c19-591f954e764b": {
+      "title": "Product manager interview with Karina from recruiting agency",
+      "processedAt": "2026-02-12T11:47:58.447Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-12/product-manager-interview-with-karina-from-recruiting-agency.md"
+    },
+    "bb89d39d-0e9d-4420-b891-b07d44f8c10e": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-12T15:18:14.628Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-12/untitled-meeting.md"
+    },
+    "26e8bb8c-1c77-4dc9-a8b1-cc7b465da026": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-16T13:22:44.261Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-16/untitled-meeting.md"
+    },
+    "f10c81fb-0b94-4157-bc33-59906c6d151a": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-16T14:22:54.749Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-16/untitled-meeting.md"
+    },
+    "e8cbc4da-7e81-468d-a646-71855d2861be": {
+      "title": "Собеседование о позиции бизнес-аналитика с Миндерой",
+      "processedAt": "2026-02-16T16:23:12.020Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-16/.md"
+    },
+    "05874d60-d06a-42b4-8e2c-0217ce8ee494": {
+      "title": "Training | Let’s Dig Into Our Culture 🌱 (How We Work, Decide, and Grow Together) ",
+      "processedAt": "2026-02-19T14:13:00.453Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-19/training-let-s-dig-into-our-culture-how-we-work-decide-and-g.md"
+    },
+    "a0db2406-fd77-477b-818e-118a9c09c1d6": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-02-20T17:02:44.117Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-02-20/untitled-meeting.md"
+    },
+    "c5cdee17-6c57-45fe-9cdc-6bba40e946a1": {
+      "title": "Job Interview with Upreneurity Outsource for SoundHound Product Manager Role",
+      "processedAt": "2026-03-17T11:17:41.886Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-16/job-interview-with-upreneurity-outsource-for-soundhound-prod.md"
+    },
+    "a57640a5-144f-4437-8f4c-cdc59c1319cc": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-17T11:17:48.295Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-16/untitled-meeting.md"
+    },
+    "0a50f523-e762-493c-9049-e886005099e0": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-17T13:58:14.061Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-17/untitled-meeting.md"
+    },
+    "42af0992-7806-4aea-8bc1-5ea3d0085fcb": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-19T12:17:55.107Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-19/untitled-meeting.md"
+    },
+    "7246c6bb-4f57-4379-97f1-5ca55829b1f0": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-20T13:55:10.638Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-20/untitled-meeting.md"
+    },
+    "8a749408-e070-4b45-9469-d2dec204ca14": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T12:20:55.708Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "1ce11e56-1ce0-4f29-81b8-66f516f6d10e": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T15:21:08.938Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "8d110259-191c-4e59-bc98-0e6488c390d1": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-23T20:10:26.545Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-23/untitled-meeting.md"
+    },
+    "6710269a-55c0-47bc-a24f-215e19cad3ea": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-25T13:10:10.587Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-25/untitled-meeting.md"
+    },
+    "ce594bc4-e2fb-426f-9f01-91ab668ff858": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-27T12:46:56.220Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-27/untitled-meeting.md"
+    },
+    "e330d625-0fc9-42c8-946a-b0604ab23a88": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T11:15:14.341Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    },
+    "3fcdca87-6249-425e-a4eb-176ecea4bdfa": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T13:45:25.872Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    },
+    "2710bf86-d322-4782-9ee0-43fbf5f1a541": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-03-30T13:45:33.607Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-03-30/untitled-meeting.md"
+    },
+    "3b0aedcf-048f-4db2-8bd5-6bad62539b0d": {
+      "title": "Interview with Company",
+      "processedAt": "2026-04-22T08:04:31.590Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-21/interview-with-company.md",
+      "source": "granola-cache"
+    },
+    "6eff72a5-fa9e-43d8-99e2-7edebd2821ab": {
+      "title": "Роман Мацукатов та Гліб Тутов",
+      "processedAt": "2026-04-22T08:04:36.709Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-19/.md",
+      "source": "granola-cache"
+    },
+    "64ca00a5-a226-4ce9-8da9-f1e22f82a366": {
+      "title": "Interview w/ Roman Matsukatov (Sr PM) Med Travel",
+      "processedAt": "2026-04-22T10:04:42.337Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-22/interview-w-roman-matsukatov-sr-pm-med-travel.md",
+      "source": "granola-cache"
+    },
+    "ac3c2a6e-93b2-49d6-b03e-538eaa62a301": {
+      "title": "2 Interview — Roman Matsukatov — Product Manager",
+      "processedAt": "2026-04-22T13:04:51.298Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-22/2-interview-roman-matsukatov-product-manager.md",
+      "source": "granola-cache"
+    },
+    "04f9ebd3-5114-48ba-b5ba-cd0828546ea1": {
+      "title": "Identity graph and user resolution strategies in digital advertising",
+      "processedAt": "2026-04-22T21:43:37.094Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-22/identity-graph-and-user-resolution-strategies-in-digital-adv.md",
+      "source": "granola-cache"
+    },
+    "50ad923f-7d2b-4ff4-a8f8-be72aa5581bb": {
+      "title": "Roman Matsukatov // Product Lead // HR screen",
+      "processedAt": "2026-04-24T11:13:35.339Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-24/roman-matsukatov-product-lead-hr-screen.md",
+      "source": "granola-cache"
+    },
+    "2e592da1-f5af-40fa-adc7-a2247d0df0a3": {
+      "title": "Interview with Company",
+      "processedAt": "2026-04-24T12:43:42.839Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-24/interview-with-company.md",
+      "source": "granola-cache"
+    },
+    "3078289d-e00e-4bc8-8d40-a7b8faae9536": {
+      "title": "Короткая прогулка или зарядка",
+      "processedAt": "2026-04-28T12:27:06.135Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-28/.md",
+      "source": "granola-cache"
+    },
+    "8df88185-05f8-4f42-a820-f2d2df56e7db": {
+      "title": "Interview with Ruby Labs",
+      "processedAt": "2026-04-28T13:27:12.833Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-28/interview-with-ruby-labs.md",
+      "source": "granola-cache"
+    },
+    "7f2d946b-1456-4124-9ea1-3ae5c4649d18": {
+      "title": "Interview_Roman Matsukatov_Product Owner/CPO",
+      "processedAt": "2026-04-29T11:39:20.019Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-29/interview-roman-matsukatov-product-owner-cpo.md",
+      "source": "granola-cache"
+    },
+    "79fc7ea5-376d-488f-8502-d5859aa10b2c": {
+      "title": "Project Cases - Product Manager (Roman Matsukatov)",
+      "processedAt": "2026-04-29T14:09:29.377Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-29/project-cases-product-manager-roman-matsukatov.md",
+      "source": "granola-cache"
+    },
+    "dc8f9f6f-6e1b-451b-9f70-c3372181caca": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-04-29T18:09:36.758Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-29/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "d106e909-1d94-4391-ad62-5a01c335483b": {
+      "title": "Offer Call",
+      "processedAt": "2026-04-30T10:32:21.903Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-30/offer-call.md",
+      "source": "granola-cache"
+    },
+    "1a651b6b-110a-4d75-b079-057740a65ade": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-04-30T13:28:19.803Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-30/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "218197df-c4ac-4a49-b109-4feb3d5d1b81": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-04-30T14:28:26.363Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-04-30/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "13a46889-65cb-4b89-a6bf-b6fa011fa203": {
+      "title": "MODUS X | pre-screening, Head of Product, Roman Matsukatov",
+      "processedAt": "2026-05-04T10:14:09.306Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-04/modus-x-pre-screening-head-of-product-roman-matsukatov.md",
+      "source": "granola-cache"
+    },
+    "10f528a9-9ee6-424c-86f6-964cfedbdb27": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-05-04T13:44:30.474Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-04/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "8dbc6bd3-3cf5-4116-a51d-2fa972b61649": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-05-04T19:14:38.158Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-04/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "1071bc33-1e28-4dde-b0b3-bde00c77282c": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-05-05T13:13:45.520Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-05/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "69768c92-0938-4f1b-a5a7-689dd8189aca": {
+      "title": "Roman Matsukatov (Product) with Unimatch",
+      "processedAt": "2026-05-06T14:13:31.084Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-06/roman-matsukatov-product-with-unimatch.md",
+      "source": "granola-cache"
+    },
+    "6cdf6cb4-9894-4ab6-8c66-3bafa987a822": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-05-06T18:17:25.586Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-06/untitled-meeting.md",
+      "source": "granola-cache"
+    },
+    "67d04c92-6d46-4dc1-9826-a06b216d55fc": {
+      "title": "Untitled Meeting",
+      "processedAt": "2026-05-07T11:05:49.527Z",
+      "filepath": "/Users/admin.roman.matsukatov/Development/DEX/00-Inbox/Meetings/2026-05-07/untitled-meeting.md",
+      "source": "granola-cache"
+    }
+  },
+  "lastSync": "2026-06-29T19:44:33.105Z"
 }

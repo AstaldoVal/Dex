@@ -12,7 +12,6 @@ Provides deterministic operations through structured tools with:
 - Progress tracking and rollup across planning levels
 """
 
-import os
 import sys
 import json
 import logging
@@ -36,6 +35,22 @@ import mcp.types as types
 # Add repo root to path so "from core.xxx" works when Cursor runs this script directly
 _repo_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_repo_root))
+
+from core.paths import (  # noqa: E402
+    COMPANIES_DIR,
+    DEMO_DIR,
+    GOALS_FILE,
+    INBOX_DIR,
+    MEETINGS_DIR,
+    PEOPLE_DIR,
+    PILLARS_FILE,
+    QUARTER_GOALS_FILE,
+    TASKS_DIR,
+    TASKS_FILE,
+    USER_PROFILE_FILE,
+    VAULT_ROOT as BASE_DIR,
+    WEEK_PRIORITIES_FILE,
+)
 
 # Set up logging before any code that may log
 logging.basicConfig(level=logging.INFO)
@@ -63,24 +78,11 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
-# Configuration - Vault paths
-BASE_DIR = Path(os.environ.get('VAULT_PATH', Path.cwd()))
-TASKS_FILE = BASE_DIR / '03-Tasks/Tasks.md'
-WEEK_PRIORITIES_FILE = BASE_DIR / 'Inbox' / 'Week Priorities.md'
-QUARTER_GOALS_FILE = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
-GOALS_FILE = BASE_DIR / 'GOALS.md'  # Legacy, kept for compatibility
-INBOX_DIR = BASE_DIR / 'Inbox'
-PILLARS_FILE = BASE_DIR / 'System' / 'pillars.yaml'
-COMPANIES_DIR = BASE_DIR / 'Active' / 'Relationships' / 'Companies'
-PEOPLE_DIR = BASE_DIR / 'People'
-MEETINGS_DIR = BASE_DIR / 'Inbox' / 'Meetings'
+# Configuration - Vault paths (PARA: core/paths.py)
+LINEAR_SYNC_FILE = TASKS_DIR / 'linear_sync.json'
 # Job search tracking (applications and feedback)
-JOB_APPLICATIONS_TRACKER_FILE = BASE_DIR / '00-Inbox' / 'Job_Search' / 'data' / 'applications-tracker.json'
-JOB_COVER_LETTERS_DIR = BASE_DIR / '00-Inbox' / 'Job_Search' / 'cover_letters'
-
-# Demo Mode Configuration
-USER_PROFILE_FILE = BASE_DIR / 'System' / 'user-profile.yaml'
-DEMO_DIR = BASE_DIR / 'System' / 'Demo'
+JOB_APPLICATIONS_TRACKER_FILE = INBOX_DIR / 'Job_Search' / 'data' / 'applications-tracker.json'
+JOB_COVER_LETTERS_DIR = INBOX_DIR / 'Job_Search' / 'cover_letters'
 
 def is_demo_mode() -> bool:
     """Check if demo mode is enabled in user-profile.yaml"""
@@ -98,7 +100,9 @@ def is_demo_mode() -> bool:
 def get_tasks_file() -> Path:
     """Get the appropriate 03-Tasks/Tasks.md file based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / '03-Tasks/Tasks.md'
+        demo_tasks = DEMO_DIR / '03-Tasks' / 'Tasks.md'
+        if demo_tasks.exists():
+            return demo_tasks
     return TASKS_FILE
 
 def get_pillars_file() -> Path:
@@ -112,20 +116,62 @@ def get_pillars_file() -> Path:
 def get_week_priorities_file() -> Path:
     """Get the appropriate Week Priorities file based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'Inbox' / 'Week Priorities.md'
+        demo_para = DEMO_DIR / '02-Week_Priorities' / 'Week_Priorities.md'
+        if demo_para.exists():
+            return demo_para
+        demo_legacy = DEMO_DIR / 'Inbox' / 'Week Priorities.md'
+        if demo_legacy.exists():
+            return demo_legacy
     return WEEK_PRIORITIES_FILE
 
 def get_people_dir() -> Path:
     """Get the appropriate People directory based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'People'
+        for candidate in (
+            DEMO_DIR / '05-Areas' / 'People',
+            DEMO_DIR / 'Areas' / 'People',
+            DEMO_DIR / 'People',
+        ):
+            if candidate.exists():
+                return candidate
     return PEOPLE_DIR
 
 def get_meetings_dir() -> Path:
     """Get the appropriate Meetings directory based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'Inbox' / 'Meetings'
+        demo_para = DEMO_DIR / '00-Inbox' / 'Meetings'
+        if demo_para.exists():
+            return demo_para
+        demo_legacy = DEMO_DIR / 'Inbox' / 'Meetings'
+        if demo_legacy.exists():
+            return demo_legacy
     return MEETINGS_DIR
+
+
+def get_quarter_goals_file() -> Path:
+    """Quarter goals file: PARA path, or demo copy when present."""
+    if is_demo_mode():
+        demo_qg = DEMO_DIR / '01-Quarter_Goals' / 'Quarter_Goals.md'
+        if demo_qg.exists():
+            return demo_qg
+    return QUARTER_GOALS_FILE
+
+
+def resolve_company_filepath(company_path: str) -> Path:
+    """Resolve company page: 05-Areas/Companies, legacy Active/Relationships/Companies, or filename."""
+    raw = company_path.strip().replace('\\', '/')
+    if not raw.endswith('.md'):
+        raw += '.md'
+    direct = (BASE_DIR / raw).resolve()
+    if direct.is_file():
+        return direct
+    name = Path(raw).name
+    legacy_companies = BASE_DIR / 'Active' / 'Relationships' / 'Companies'
+    for folder in (COMPANIES_DIR, legacy_companies):
+        cand = (folder / name).resolve()
+        if cand.is_file():
+            return cand
+    return direct
 
 
 # Default pillars (used if pillars.yaml doesn't exist or can't be loaded)
@@ -405,6 +451,108 @@ def update_task_status_everywhere(task_id: str, completed: bool) -> Dict[str, An
         'instances_found': len(instances)
     }
 
+
+def get_task_linear_link(task_id: str) -> Dict[str, Any]:
+    """Get Linear issue id/identifier for a Dex task if linked (03-Tasks/linear_sync.json)."""
+    sync_path = Path(LINEAR_SYNC_FILE)
+    if not sync_path.exists():
+        return {"task_id": task_id, "linear_identifier": None, "linear_id": None, "linked": False}
+    try:
+        data = json.loads(sync_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        logger.warning(f"Failed to read linear_sync.json: {e}")
+        return {"task_id": task_id, "linear_identifier": None, "linear_id": None, "linked": False, "error": str(e)}
+    task_to_linear = data.get("task_to_linear") or {}
+    task_to_linear_id = data.get("task_to_linear_id") or {}
+    linear_identifier = task_to_linear.get(task_id)
+    linear_id = task_to_linear_id.get(task_id)
+    return {
+        "task_id": task_id,
+        "linear_identifier": linear_identifier,
+        "linear_id": linear_id,
+        "linked": bool(linear_identifier or linear_id),
+    }
+
+
+def add_linear_sync_link(task_id: str, linear_identifier: str, linear_id: str) -> Dict[str, Any]:
+    """Store link between Dex task and Linear issue (03-Tasks/linear_sync.json)."""
+    sync_path = Path(LINEAR_SYNC_FILE)
+    sync_path.parent.mkdir(parents=True, exist_ok=True)
+    data = {}
+    if sync_path.exists():
+        try:
+            data = json.loads(sync_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    task_to_linear = data.get("task_to_linear") or {}
+    task_to_linear_id = data.get("task_to_linear_id") or {}
+    linear_id_to_task = data.get("linear_id_to_task") or {}
+    task_to_linear[task_id] = linear_identifier
+    task_to_linear_id[task_id] = linear_id
+    linear_id_to_task[linear_id] = task_id
+    data["task_to_linear"] = task_to_linear
+    data["task_to_linear_id"] = task_to_linear_id
+    data["linear_id_to_task"] = linear_id_to_task
+    sync_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return {"success": True, "task_id": task_id, "linear_identifier": linear_identifier, "linear_id": linear_id}
+
+
+def add_task_from_linear(issue_id: str, identifier: str, title: str, description: str = "") -> Dict[str, Any]:
+    """Create a Dex task from a Linear issue and add sync link. Used by sync_linear_issues_to_dex and webhook."""
+    task_id = generate_task_id()
+    task_line = f"- [ ] **{title}** ^{task_id}"
+    task_line += "\n\t- From Linear"
+    if identifier:
+        task_line += f" ({identifier})"
+    if description:
+        desc_short = (description[:500] + "...") if len(description) > 500 else description
+        task_line += f"\n\t- {desc_short}"
+    task_line += "\n\t- Priority: P2"
+
+    tasks_file = get_tasks_file()
+    section_header = "## Next Week"
+    if tasks_file.exists():
+        content = tasks_file.read_text()
+        if section_header in content:
+            parts = content.split(section_header, 1)
+            new_content = parts[0] + section_header + "\n" + task_line + "\n" + parts[1]
+        else:
+            new_content = content.rstrip() + "\n\n" + task_line + "\n"
+        tasks_file.write_text(new_content)
+    else:
+        tasks_file.parent.mkdir(parents=True, exist_ok=True)
+        tasks_file.write_text("# Tasks\n\n" + section_header + "\n" + task_line + "\n")
+
+    add_linear_sync_link(task_id, identifier or issue_id, issue_id)
+    return {"success": True, "task_id": task_id, "linear_identifier": identifier, "linear_id": issue_id}
+
+
+def sync_linear_issues_to_dex(issues: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Create Dex tasks for Linear issues that are not yet linked.
+    issues: list of {id, identifier, title, description (optional)} from Linear.
+    """
+    linked_ids = set()
+    if LINEAR_SYNC_FILE.exists():
+        try:
+            data = json.loads(LINEAR_SYNC_FILE.read_text(encoding="utf-8"))
+            linked_ids = set((data.get("linear_id_to_task") or {}).keys())
+        except Exception:
+            pass
+    created = []
+    for issue in issues:
+        issue_id = (issue.get("id") or "").strip()
+        if not issue_id or issue_id in linked_ids:
+            continue
+        identifier = (issue.get("identifier") or "").strip()
+        title = (issue.get("title") or "").strip() or "Untitled"
+        description = (issue.get("description") or "").strip()
+        result = add_task_from_linear(issue_id, identifier, title, description)
+        created.append({"task_id": result["task_id"], "linear_identifier": result["linear_identifier"]})
+        linked_ids.add(issue_id)
+    return {"success": True, "created": created, "count": len(created)}
+
+
 def get_pillar_ids() -> List[str]:
     """Get list of valid pillar IDs"""
     return list(PILLARS.keys())
@@ -470,14 +618,14 @@ def extract_file_refs_from_task(task_line: str) -> List[str]:
     """Extract file path references from a task line
     
     Detects:
-    - Direct file paths (People/External/John_Doe.md)
-    - Active/Relationships paths
+    - Direct file paths (People/..., 05-Areas/People/..., 05-Areas/Companies/...)
+    - Legacy Active/... paths
     - Any .md file references
     """
     refs = []
     
-    # Match file path patterns like People/External/John_Doe.md or Active/Relationships/...
-    path_pattern = r'(?:People|Active)/[A-Za-z0-9_/-]+(?:\.md)?'
+    # Match file path patterns: PARA (05-Areas), legacy People/, Active/
+    path_pattern = r'(?:05-Areas/(?:People|Companies)/|People/|Active/)[A-Za-z0-9_/-]+(?:\.md)?'
     refs.extend(re.findall(path_pattern, task_line))
     
     # Also match explicit markdown file references
@@ -532,7 +680,7 @@ def find_tasks_for_page(page_path: str) -> List[Dict[str, Any]]:
                 title = title_match.group(1).strip() if title_match else line.strip()[6:]
                 
                 # Clean title of file references for display
-                clean_title = re.sub(r'\s*\|\s*(?:People|Active)/[^\s]+', '', title)
+                clean_title = re.sub(r'\s*\|\s*(?:05-Areas/(?:People|Companies)/|People/|Active/)[^\s]+', '', title)
                 clean_title = re.sub(r'\s+\.md\b', '', clean_title)
                 clean_title = re.sub(r'\s*\|.*$', '', clean_title)  # Remove trailing | refs
                 
@@ -776,10 +924,7 @@ def refresh_company_page(company_path: str) -> Dict[str, Any]:
     if not company_path.endswith('.md'):
         company_path += '.md'
     
-    if company_path.startswith('Active/'):
-        filepath = BASE_DIR / company_path
-    else:
-        filepath = COMPANIES_DIR / Path(company_path).name
+    filepath = resolve_company_filepath(company_path)
     
     if not filepath.exists():
         return {
@@ -1189,9 +1334,7 @@ def parse_quarterly_goals(filepath: Path) -> List[Dict[str, Any]]:
 
 def get_goal_by_id(goal_id: str) -> Optional[Dict[str, Any]]:
     """Get a specific goal by its ID"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     goals = parse_quarterly_goals(goals_file)
     for goal in goals:
@@ -1259,9 +1402,7 @@ def calculate_goal_progress(goal_id: str) -> Dict[str, Any]:
 
 def update_goal_in_file(goal_id: str, updates: Dict[str, Any]) -> bool:
     """Update a goal's fields in 01-Quarter_Goals/Quarter_Goals.md"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     if not goals_file.exists():
         return False
@@ -1296,9 +1437,7 @@ def update_goal_in_file(goal_id: str, updates: Dict[str, Any]) -> bool:
 
 def create_quarterly_goal_in_file(goal_data: Dict[str, Any]) -> Dict[str, Any]:
     """Create a new quarterly goal in 01-Quarter_Goals/Quarter_Goals.md"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     # Ensure file exists
     if not goals_file.exists():
@@ -1649,9 +1788,7 @@ def find_similar_tasks(item: str, existing_tasks: List[Dict[str, Any]]) -> List[
 
 def migrate_quarterly_goals() -> Dict[str, Any]:
     """Add IDs to existing quarterly goals that don't have them"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     if not goals_file.exists():
         return {
@@ -2461,6 +2598,54 @@ async def handle_list_tools() -> list[types.Tool]:
             }
         ),
         types.Tool(
+            name="get_task_linear_link",
+            description="Get Linear issue link for a Dex task (03-Tasks/linear_sync.json). Returns linear_identifier (e.g. INA-5) and linear_id if linked. Use before updating issue state via Plugin Linear when user marks task done.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "task_id": {"type": "string", "description": "Dex task ID (e.g. task-20260210-357)"}
+                },
+                "required": ["task_id"]
+            }
+        ),
+        types.Tool(
+            name="add_linear_sync_link",
+            description="Store link between a Dex task and a Linear issue so status syncs both ways. Call after creating a Linear issue for a task.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "task_id": {"type": "string", "description": "Dex task ID"},
+                    "linear_identifier": {"type": "string", "description": "Linear issue identifier (e.g. INA-5)"},
+                    "linear_id": {"type": "string", "description": "Linear issue UUID (from issueCreate response)"}
+                },
+                "required": ["task_id", "linear_identifier", "linear_id"]
+            }
+        ),
+        types.Tool(
+            name="sync_linear_issues_to_dex",
+            description="Create Dex tasks for Linear issues that are not yet linked. Call after getting issues from Plugin Linear (e.g. list_issues with assignee='me'). Pass the list of issues; only unlinked ones will get a task in 03-Tasks/Tasks.md and a link in linear_sync.json.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "issues": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string", "description": "Linear issue UUID"},
+                                "identifier": {"type": "string", "description": "e.g. INA-5"},
+                                "title": {"type": "string"},
+                                "description": {"type": "string"}
+                            },
+                            "required": ["id", "title"]
+                        },
+                        "description": "List of issues from Linear (id, identifier, title, description)"
+                    }
+                },
+                "required": ["issues"]
+            }
+        ),
+        types.Tool(
             name="get_system_status",
             description="Get comprehensive system status: task counts, priority distribution, pillar balance, blocked items",
             inputSchema={"type": "object", "properties": {}}
@@ -2527,7 +2712,7 @@ async def handle_list_tools() -> list[types.Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "company_path": {"type": "string", "description": "Path to company page (e.g., 'Acme_Corp' or 'Active/Relationships/Companies/Acme_Corp.md')"}
+                    "company_path": {"type": "string", "description": "Company page: filename (e.g. Acme_Corp.md), or vault-relative path: 05-Areas/Companies/..., or legacy Active/Relationships/Companies/..."}
                 },
                 "required": ["company_path"]
             }
@@ -3003,6 +3188,29 @@ async def handle_call_tool(
                 "error": "Must provide either task_id or task_title"
             }, indent=2))]
     
+    elif name == "get_task_linear_link":
+        task_id = (arguments or {}).get("task_id")
+        if not task_id:
+            return [types.TextContent(type="text", text=json.dumps({"error": "task_id required"}, indent=2))]
+        result = get_task_linear_link(task_id)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+    
+    elif name == "add_linear_sync_link":
+        task_id = (arguments or {}).get("task_id")
+        linear_identifier = (arguments or {}).get("linear_identifier")
+        linear_id = (arguments or {}).get("linear_id")
+        if not task_id or not linear_identifier or not linear_id:
+            return [types.TextContent(type="text", text=json.dumps({"error": "task_id, linear_identifier, linear_id required"}, indent=2))]
+        result = add_linear_sync_link(task_id, linear_identifier, linear_id)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+
+    elif name == "sync_linear_issues_to_dex":
+        issues = (arguments or {}).get("issues") or []
+        if not isinstance(issues, list):
+            return [types.TextContent(type="text", text=json.dumps({"success": False, "error": "issues must be a list"}, indent=2))]
+        result = sync_linear_issues_to_dex(issues)
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+    
     elif name == "get_system_status":
         all_tasks = get_all_tasks()
         active_tasks = [t for t in all_tasks if not t.get('completed')]
@@ -3302,9 +3510,7 @@ async def handle_call_tool(
             quarter = quarter_info['quarter']
         
         # Read goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file)
         
@@ -3541,9 +3747,7 @@ async def handle_call_tool(
         quarter = quarter_info['quarter']
         
         # Get quarterly goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         
@@ -3595,9 +3799,7 @@ async def handle_call_tool(
     
     elif name == "check_goal_alignment":
         # Get all goals, priorities, and tasks
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         priorities_file = get_week_priorities_file()
@@ -3651,9 +3853,7 @@ async def handle_call_tool(
             quarter_info = get_quarter_info()  # Still get for weeks remaining
         
         # Get quarterly goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         

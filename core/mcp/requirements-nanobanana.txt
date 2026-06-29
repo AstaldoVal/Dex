@@ -1,0 +1,4 @@
+# Nano Banana MCP — Gemini Create Image + OpenAI GPT Image 1.5 fallback (nanobanana_server.py)
+mcp>=1.0.0
+google-genai>=1.0.0
+openai>=1.0.0
