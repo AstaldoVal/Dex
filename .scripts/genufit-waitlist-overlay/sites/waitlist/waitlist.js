@@ -23,7 +23,26 @@
     '.waitlist-success-dialog__hint{margin:0 0 1.25rem;font-size:.875rem;line-height:1.45;color:#64748b}' +
     '.waitlist-success-dialog__close{width:100%;justify-content:center}' +
     '.waitlist-success-dialog--existing .waitlist-success-dialog__eyebrow{color:#475569}' +
+    '.faq-item .faq-a{display:none}' +
+    '.faq-item.open .faq-a{display:block}' +
+    '.faq-q{cursor:pointer}' +
     '.form-message.success{font-weight:600;color:#166534}';
+
+  /** preview-people FAQ items ship without answer nodes for collapsed rows. */
+  var FAQ_ANSWERS = {
+    'What is GenuFit?':
+      'GenuFit tailors your existing CV to a specific job description in about 60 seconds, using only your real experience.',
+    'Is this a resume builder from scratch?':
+      'No. GenuFit starts from the resume you already have. It is for people who want a matched version for each application without rewriting it manually every time.',
+    'How is this different from ChatGPT?':
+      'ChatGPT gives generic text. GenuFit is built for job applications: it reads the job description, maps your real CV to it, and exports an ATS-friendly resume in one flow.',
+    "Will you invent experience I don't have?":
+      'No. GenuFit only rephrases and reorders what is already in your CV. It does not add skills, titles, or employers you did not list.',
+    'What do I get by joining the waitlist?':
+      'Early access when we open the beta, 10 free resume optimizations for life (lifetime cap), and the launch price locked in. No credit card required to join.',
+    'When will you launch?':
+      'We are finishing the beta now. Waitlist members get access first, in the order they signed up.',
+  };
 
   function ensureSuccessDialogStyles() {
     if (document.getElementById(SUCCESS_DIALOG_STYLE_ID)) return;
@@ -440,6 +459,74 @@
     }, 120);
   }
 
+  function faqQuestionText(item) {
+    var q = item.querySelector('.faq-q span:first-child');
+    return q && q.textContent ? q.textContent.trim() : '';
+  }
+
+  function faqToggleSign(item, open) {
+    var sign = item.querySelector('.faq-q span:last-child');
+    if (!sign) return;
+    sign.textContent = open ? '−' : '+';
+    sign.style.color = open ? '#1E6B58' : '#94A3B8';
+  }
+
+  function ensureFaqAnswer(item, question) {
+    var answerText = FAQ_ANSWERS[question];
+    if (!answerText) return item.querySelector('.faq-a');
+    var answer = item.querySelector('.faq-a');
+    if (!answer) {
+      answer = document.createElement('div');
+      answer.className = 'faq-a';
+      item.appendChild(answer);
+    }
+    if (!answer.textContent.trim()) {
+      answer.textContent = answerText;
+    }
+    return answer;
+  }
+
+  function bindFaqAccordion() {
+    var items = document.querySelectorAll('.faq-item');
+    if (!items.length) return;
+
+    items.forEach(function (item) {
+      var question = faqQuestionText(item);
+      ensureFaqAnswer(item, question);
+      faqToggleSign(item, item.classList.contains('open'));
+
+      var q = item.querySelector('.faq-q');
+      if (!q || q.dataset.faqBound === '1') return;
+      q.dataset.faqBound = '1';
+      q.setAttribute('role', 'button');
+      q.setAttribute('tabindex', '0');
+      q.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
+
+      function toggleItem() {
+        var wasOpen = item.classList.contains('open');
+        items.forEach(function (el) {
+          el.classList.remove('open');
+          faqToggleSign(el, false);
+          var head = el.querySelector('.faq-q');
+          if (head) head.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('open');
+          faqToggleSign(item, true);
+          q.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      q.addEventListener('click', toggleItem);
+      q.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleItem();
+        }
+      });
+    });
+  }
+
   function bootstrap() {
     ensureSuccessDialogStyles();
 
@@ -454,6 +541,7 @@
 
     document.querySelectorAll('[data-waitlist-form]').forEach(bindForm);
     bindJoinLinks();
+    bindFaqAccordion();
     handleJoinHashOnLoad();
   }
 

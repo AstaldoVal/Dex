@@ -74,6 +74,18 @@ try {
     process.exit(1);
   }
 
+  const previewHtml = path.join(workDir, 'preview-people', 'index.html');
+  if (fs.existsSync(previewHtml)) {
+    let html = fs.readFileSync(previewHtml, 'utf8');
+    const brokenFaqScript =
+      /<script src="\.\.\/waitlist\.js"><\/script>\s*document\.querySelectorAll\('\.faq-item'\)[\s\S]*?<\/script>/;
+    if (brokenFaqScript.test(html)) {
+      html = html.replace(brokenFaqScript, '<script src="../waitlist.js"></script>');
+      fs.writeFileSync(previewHtml, html);
+      console.log('→ patched preview-people/index.html (removed broken FAQ inline script)');
+    }
+  }
+
   console.log('→ wrangler pages deploy', projectName, '(account', process.env.CLOUDFLARE_ACCOUNT_ID + ')');
   run(
     `npx --yes wrangler@4 pages deploy "${workDir}" --project-name=${projectName} --branch=main --commit-dirty=true`,
