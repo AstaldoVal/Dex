@@ -74,10 +74,9 @@ try {
     process.exit(1);
   }
 
-  const accountFlag = ` --account-id=${process.env.CLOUDFLARE_ACCOUNT_ID}`;
-  console.log('→ wrangler pages deploy', projectName);
+  console.log('→ wrangler pages deploy', projectName, '(account', process.env.CLOUDFLARE_ACCOUNT_ID + ')');
   run(
-    `npx --yes wrangler@4 pages deploy "${workDir}" --project-name=${projectName} --branch=main --commit-dirty=true${accountFlag}`,
+    `npx --yes wrangler@4 pages deploy "${workDir}" --project-name=${projectName} --branch=main --commit-dirty=true`,
     { cwd: root, env: process.env }
   );
 
