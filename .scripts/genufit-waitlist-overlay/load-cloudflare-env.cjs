@@ -38,20 +38,48 @@ function ensureCloudflareAccountId() {
   if (process.env.CLOUDFLARE_ACCOUNT_ID) return process.env.CLOUDFLARE_ACCOUNT_ID;
   if (!process.env.CLOUDFLARE_API_TOKEN) return null;
 
+  const zoneName = process.env.GENUFIT_CLOUDFLARE_ZONE || 'genufit.app';
+
+  function cfGet(url) {
+    return execSync(`curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "${url}"`, {
+      encoding: 'utf8',
+      env: process.env,
+    });
+  }
+
+  // Zone-scoped tokens often cannot list accounts but can read zone → account.id
+  try {
+    const zoneRaw = cfGet(
+      `https://api.cloudflare.com/client/v4/zones?name=${encodeURIComponent(zoneName)}`
+    );
+    const zonePayload = JSON.parse(zoneRaw);
+    const zone = zonePayload.result && zonePayload.result[0];
+    if (zone && zone.account && zone.account.id) {
+      process.env.CLOUDFLARE_ACCOUNT_ID = zone.account.id;
+      console.log('→ Cloudflare account from zone', zoneName + ':', zone.account.id);
+      return zone.account.id;
+    }
+  } catch (_zoneErr) {
+    // fall through
+  }
+
   let raw;
   try {
-    raw = execSync(
-      'curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/accounts',
-      { encoding: 'utf8', env: process.env }
-    );
+    raw = cfGet('https://api.cloudflare.com/client/v4/accounts');
   } catch (err) {
-    console.error('Could not list Cloudflare accounts. Set CLOUDFLARE_ACCOUNT_ID in GitHub Secrets.');
+    console.error(
+      'Could not resolve Cloudflare account id. Add CLOUDFLARE_ACCOUNT_ID to GitHub Secrets ' +
+        '(Cloudflare dashboard → any zone → Overview → Account ID in the sidebar).'
+    );
     throw err;
   }
 
   const payload = JSON.parse(raw);
   if (!payload.success || !Array.isArray(payload.result) || payload.result.length === 0) {
-    throw new Error('Cloudflare accounts API returned no accounts for this token.');
+    throw new Error(
+      'Cloudflare token cannot list accounts. Add CLOUDFLARE_ACCOUNT_ID to GitHub Secrets ' +
+        '(same value as in Credentials/applicator-staging/cloudflare-genufit.env).'
+    );
   }
 
   const accounts = payload.result;
