@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Deploy patched waitlist.js/css to Cloudflare Pages (genufit-landing).
+ * Source: Applicator sites/waitlist when present, else overlay.
  * Requires CLOUDFLARE_API_TOKEN (+ optional CLOUDFLARE_ACCOUNT_ID).
  */
 const { execSync } = require('child_process');
