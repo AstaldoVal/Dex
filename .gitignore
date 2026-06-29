@@ -2,6 +2,16 @@
 .DS_Store
 Thumbs.db
 
+# Chromium / Electron browser profile caches (never commit — may embed API keys from extensions)
+undefined/
+**/Code Cache/
+**/Cache_Data/
+**/GPUCache/
+**/Service Worker/CacheStorage/
+**/Session Storage/
+**/Local Storage/
+**/shared_proto_db/
+
 # Editor / IDE
 .vscode/*
 !.vscode/extensions.json
