@@ -3,6 +3,11 @@
   var EU_HOST = 'https://eu.i.posthog.com';
   var DEFAULT_SUCCESS =
     "You're on the list. Check your inbox for a confirmation email from Genufit.";
+  var ALREADY_REGISTERED_BODY =
+    'This email is already on the Genufit waitlist.';
+  var ALREADY_REGISTERED_HINT =
+    'We did not send another confirmation email. Check your inbox or spam for the original message.';
+  var ALREADY_REGISTERED_INLINE = "You're already on the waitlist.";
 
   /** preview-people inlines page CSS and does not load waitlist.css — modal needs these rules in JS. */
   var SUCCESS_DIALOG_STYLE_ID = 'waitlist-success-dialog-styles';
@@ -17,6 +22,7 @@
     '.waitlist-success-dialog__body{margin:0 0 .75rem;font-size:1rem;line-height:1.5;color:#334155}' +
     '.waitlist-success-dialog__hint{margin:0 0 1.25rem;font-size:.875rem;line-height:1.45;color:#64748b}' +
     '.waitlist-success-dialog__close{width:100%;justify-content:center}' +
+    '.waitlist-success-dialog--existing .waitlist-success-dialog__eyebrow{color:#475569}' +
     '.form-message.success{font-weight:600;color:#166534}';
 
   function ensureSuccessDialogStyles() {
@@ -135,7 +141,7 @@
       '<p class="waitlist-success-dialog__eyebrow">Waitlist</p>' +
       '<h2 id="waitlist-success-title" class="waitlist-success-dialog__title">You\'re on the list</h2>' +
       '<p class="waitlist-success-dialog__body" data-waitlist-success-body></p>' +
-      '<p class="waitlist-success-dialog__hint">We sent a confirmation email. Check spam if you do not see it in a few minutes.</p>' +
+      '<p class="waitlist-success-dialog__hint" data-waitlist-success-hint></p>' +
       '<button type="button" class="waitlist-success-dialog__close btn btn--primary" data-waitlist-success-close>Got it</button>' +
       '</div>';
 
@@ -165,12 +171,31 @@
     return overlay;
   }
 
-  function showSuccessDialog(message) {
+  function showWaitlistDialog(variant, message) {
     var dialog = ensureSuccessDialog();
+    var isExisting = variant === 'already_registered';
+    var title = dialog.querySelector('#waitlist-success-title');
     var body = dialog.querySelector('[data-waitlist-success-body]');
-    if (body) {
-      body.textContent = message || DEFAULT_SUCCESS;
+    var hint = dialog.querySelector('[data-waitlist-success-hint]');
+    var panel = dialog.querySelector('.waitlist-success-dialog__panel');
+
+    if (title) {
+      title.textContent = isExisting ? "You're already on the list" : "You're on the list";
     }
+    if (body) {
+      body.textContent = isExisting
+        ? message || ALREADY_REGISTERED_BODY
+        : message || DEFAULT_SUCCESS;
+    }
+    if (hint) {
+      hint.textContent = isExisting
+        ? ALREADY_REGISTERED_HINT
+        : 'We sent a confirmation email. Check spam if you do not see it in a few minutes.';
+    }
+    if (panel) {
+      panel.classList.toggle('waitlist-success-dialog--existing', isExisting);
+    }
+
     successDialogLastFocus = document.activeElement;
     dialog.hidden = false;
     dialog.classList.add('is-open');
@@ -182,7 +207,16 @@
   function notifyWaitlistSuccess(form, message) {
     var text = message || DEFAULT_SUCCESS;
     showMessage(form, text, 'success');
-    showSuccessDialog(text);
+    showWaitlistDialog('created', text);
+  }
+
+  function notifyWaitlistAlreadyRegistered(form, message) {
+    showMessage(form, ALREADY_REGISTERED_INLINE, 'success');
+    showWaitlistDialog('already_registered', message);
+  }
+
+  function isWaitlistDuplicateSignup(data) {
+    return Boolean(data && data.created === false);
   }
 
   function isWaitlistApiEndpoint(endpoint) {
@@ -224,10 +258,18 @@
           var detail = (result.data && (result.data.detail || result.data.message)) || '';
           throw new Error(detail || 'request_failed');
         }
-        var successText =
-          (result.data && result.data.message) || DEFAULT_SUCCESS;
-        notifyWaitlistSuccess(form, successText);
-        capture('waitlist_submit', Object.assign({ result: 'success', mode: 'api' }, utm));
+        var data = result.data || {};
+        if (isWaitlistDuplicateSignup(data)) {
+          notifyWaitlistAlreadyRegistered(form, data.message);
+          capture(
+            'waitlist_submit',
+            Object.assign({ result: 'already_registered', mode: 'api' }, utm)
+          );
+        } else {
+          var successText = data.message || DEFAULT_SUCCESS;
+          notifyWaitlistSuccess(form, successText);
+          capture('waitlist_submit', Object.assign({ result: 'success', mode: 'api' }, utm));
+        }
         if (input) input.value = '';
       })
       .catch(function (err) {

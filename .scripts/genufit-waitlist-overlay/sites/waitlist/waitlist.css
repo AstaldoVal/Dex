@@ -1344,6 +1344,10 @@ body.waitlist-success-dialog-open {
   justify-content: center;
 }
 
+.waitlist-success-dialog--existing .waitlist-success-dialog__eyebrow {
+  color: #475569;
+}
+
 .form-row + .form-message.success,
 .form-message.success {
   font-weight: 600;
