@@ -26,6 +26,8 @@
     style.textContent = SUCCESS_DIALOG_CSS;
     document.head.appendChild(style);
   }
+
+  function readMeta(name) {
     var el = document.querySelector('meta[name="' + name + '"]');
     return el && el.getAttribute('content') ? el.getAttribute('content').trim() : '';
   }
