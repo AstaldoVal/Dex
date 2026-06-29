@@ -77,12 +77,21 @@ try {
   const previewHtml = path.join(workDir, 'preview-people', 'index.html');
   if (fs.existsSync(previewHtml)) {
     let html = fs.readFileSync(previewHtml, 'utf8');
-    const brokenFaqScript =
-      /<script src="\.\.\/waitlist\.js"><\/script>\s*document\.querySelectorAll\('\.faq-item'\)[\s\S]*?<\/script>/;
-    if (brokenFaqScript.test(html)) {
-      html = html.replace(brokenFaqScript, '<script src="../waitlist.js"></script>');
+    const faqScriptPatterns = [
+      /<script src="\.\.\/waitlist\.js"><\/script>\s*document\.querySelectorAll\('\.faq-item'\)[\s\S]*?<\/script>/,
+      /<script src="\.\.\/waitlist\.js"><\/script>\s*<script>[\s\S]*?document\.querySelectorAll\('\.faq-item'\)[\s\S]*?<\/script>/,
+    ];
+    let patched = false;
+    for (const pattern of faqScriptPatterns) {
+      if (pattern.test(html)) {
+        html = html.replace(pattern, '<script src="../waitlist.js"></script>');
+        patched = true;
+        break;
+      }
+    }
+    if (patched) {
       fs.writeFileSync(previewHtml, html);
-      console.log('→ patched preview-people/index.html (removed broken FAQ inline script)');
+      console.log('→ patched preview-people/index.html (FAQ handled by waitlist.js only)');
     }
   }
 
