@@ -7,14 +7,20 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { loadCloudflareEnv } = require('./load-cloudflare-env.cjs');
 
 const root = path.resolve(__dirname, '../..');
+loadCloudflareEnv();
 const overlayDir = path.join(__dirname, 'sites/waitlist');
 const projectName = process.env.GENUFIT_PAGES_PROJECT || 'genufit-landing';
 const baseUrl = (process.env.GENUFIT_LANDING_BASE_URL || 'https://genufit-landing.pages.dev').replace(/\/$/, '');
 
 if (!process.env.CLOUDFLARE_API_TOKEN) {
-  console.error('CLOUDFLARE_API_TOKEN is not set — cannot deploy to Cloudflare Pages.');
+  console.error(
+    'CLOUDFLARE_API_TOKEN is not set — cannot deploy to Cloudflare Pages.\n' +
+      'Add it once: GitHub repo Settings → Secrets → CLOUDFLARE_API_TOKEN,\n' +
+      'or Cursor Cloud Agent secrets, or Credentials/applicator-staging/cloudflare-genufit.env on a machine that runs deploy.'
+  );
   process.exit(1);
 }
 

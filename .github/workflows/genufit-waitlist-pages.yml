@@ -8,6 +8,7 @@ on:
     paths:
       - '.scripts/genufit-waitlist-overlay/**'
       - '.github/workflows/genufit-waitlist-pages.yml'
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,6 +18,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Require Cloudflare API token
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is missing in GitHub repo secrets. Add it under Settings → Secrets and variables → Actions, then re-run this workflow. No Mac terminal deploy needed."
+            exit 1
+          fi
       - name: Deploy waitlist overlay to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
