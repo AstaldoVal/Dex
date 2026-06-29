@@ -14,25 +14,17 @@
 
 ---
 
-## Notion MCP
+## Notion MCP (Plugin)
 
-**Назначение:** читать данные в Notion Spaces, создавать новые страницы. Пока не встроен в flow «PRD → push в Notion».
+**Назначение:** читать данные в Notion Spaces, создавать/обновлять страницы и базы, использовать готовые Notion skills из плагина.
 
-**URL:** `https://mcp.notion.com/mcp`
+**Источник:** Cursor Plugin `notion-workspace` (сервер `plugin-notion-workspace-notion`).
 
-**Добавить в `.cursor/mcp.json.source`:**
+**Важно:** в Dex больше **не используем** отдельную запись `"notion"` в `.cursor/mcp.json.source` для официального remote endpoint. Оставляем только plugin-сервер.
 
-```json
-"notion": {
-  "url": "https://mcp.notion.com/mcp"
-}
-```
+**Первый запуск:** при первом вызове любого Notion-инструмента плагина откроется OAuth в браузере; выбрать workspace и подтвердить доступ.
 
-**Первый запуск:** при первом вызове любого Notion-инструмента откроется браузер для OAuth; выбрать workspace и подтвердить доступ. Дальше авторизация не требуется.
-
-**Что уметь после подключения:** читать информацию в Spaces (страницы, базы), создавать новые страницы. Официальная документация: [Notion MCP — Get started](https://developers.notion.com/guides/mcp/get-started-with-mcp).
-
-**Дескриптор в репо:** `.claude/mcp/notion.json`
+**Что доступно после подключения:** поиск (`notion-search`), чтение (`notion-fetch`), создание и обновление страниц/баз, комментарии, views, а также готовые plugin-skills (например `create-task`, `database-query`, `meeting-intelligence`).
 
 ---
 
@@ -89,7 +81,7 @@
 
 | MCP        | URL                             | Фокус сейчас                          |
 |-----------|----------------------------------|--------------------------------------|
-| Notion    | https://mcp.notion.com/mcp      | Подключить, читать Spaces, создавать страницы |
+| Notion (Plugin) | plugin-notion-workspace-notion | Подключить через Cursor Plugin, OAuth, использовать tools + skills |
 | Atlassian | https://mcp.atlassian.com/v1/mcp | Подключить, Confluence: Spaces и страницы; несколько сайтов — несколько записей + OAuth для каждой |
 | Slack     | https://mcp.slack.com/mcp       | Список чатов, анализ каналов/Space   |
 

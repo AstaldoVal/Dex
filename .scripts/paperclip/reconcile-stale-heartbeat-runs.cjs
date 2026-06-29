@@ -14,7 +14,10 @@
  */
 
 const VAULT = process.env.VAULT_PATH || require("path").resolve(__dirname, "../..");
-const BASE = (process.env.PAPERCLIP_BASE_URL || "http://127.0.0.1:3100").replace(/\/$/, "");
+const {
+  resolvePaperclipApiBase,
+  paperclipFetch,
+} = require("./paperclip-api-lib.cjs");
 const COMPANY_ID =
   process.env.PAPERCLIP_COMPANY_ID || "bcce9859-427e-404c-beaf-4401cc79dc04";
 const API_KEY = (process.env.PAPERCLIP_API_KEY || "").trim();
@@ -29,29 +32,10 @@ const ADAPTER_FAIL_PATTERNS = [
 ];
 
 async function api(method, urlPath, body) {
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-  if (API_KEY) headers.Authorization = `Bearer ${API_KEY}`;
-  const res = await fetch(`${BASE}${urlPath}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+  return paperclipFetch(method, urlPath, {
+    apiKey: API_KEY,
+    body,
   });
-  const text = await res.text();
-  let parsed;
-  try {
-    parsed = text ? JSON.parse(text) : {};
-  } catch {
-    parsed = { raw: text };
-  }
-  if (!res.ok) {
-    const err = new Error(parsed.error || parsed.message || `HTTP ${res.status}`);
-    err.status = res.status;
-    throw err;
-  }
-  return parsed;
 }
 
 function runAgeMinutes(run) {
@@ -80,6 +64,9 @@ async function main() {
     return;
   }
 
+  const base = await resolvePaperclipApiBase();
+  console.log(`paperclip api base: ${base}`);
+
   const runs = await api("GET", `/api/companies/${COMPANY_ID}/live-runs?limit=50`);
   const live = Array.isArray(runs) ? runs : runs.items || [];
   const stale = live.filter((run) => {
@@ -102,11 +89,21 @@ async function main() {
       cancelled += 1;
       continue;
     }
-    await api("POST", `/api/heartbeat-runs/${run.id}/cancel`, {
-      reason: `HIR-278 reconcile: stale ${run.status} ${age}m${adapterHint}`,
-    });
-    console.log(`cancelled ${run.id} (${run.agentName || run.agentId}) age=${age}m`);
-    cancelled += 1;
+    try {
+      await api("POST", `/api/heartbeat-runs/${run.id}/cancel`, {
+        reason: `HIR-278 reconcile: stale ${run.status} ${age}m${adapterHint}`,
+      });
+      console.log(`cancelled ${run.id} (${run.agentName || run.agentId}) age=${age}m`);
+      cancelled += 1;
+    } catch (err) {
+      if (err.status === 403) {
+        console.log(
+          `skip cancel ${run.id} (${run.agentName || run.agentId}) age=${age}m — board access required (CEO/Roman token)`
+        );
+        continue;
+      }
+      throw err;
+    }
   }
 
   console.log(`reconciled ${cancelled} stale run(s)`);

@@ -1,12 +1,13 @@
 {
   "name": "user-telegram",
-  "description": "Telegram: list chats, get messages, search in chats (user account)",
+  "description": "Telegram: list chats, chat folders (e.g. Recruiting), get messages, search (user account)",
   "server": {
-    "command": "python",
-    "args": ["core/mcp/telegram_server.py"],
+    "command": "bash",
+    "args": ["core/mcp/run-telegram-mcp.sh"],
     "env": {
-      "VAULT_PATH": "${workspaceFolder}"
+      "VAULT_PATH": "${workspaceFolder}",
+      "TELEGRAM_SESSION_PATH": "${workspaceFolder}/.claude/telegram/telegram"
     }
   },
-  "notes": "Requires one-time login: TELEGRAM_API_ID and TELEGRAM_API_HASH from my.telegram.org, then run python core/mcp/telegram_login.py"
+  "notes": "Uses uv to install Telethon+mcp on the fly. One-time login: TELEGRAM_API_ID and TELEGRAM_API_HASH from my.telegram.org, then npm run job-search:telegram-login"
 }

@@ -11,7 +11,8 @@
  *   npm run job-search:teal-match-score -- --test   (only export from 2026-02-10, limit 1)
  *   npm run job-search:teal-match-score -- [path] --company Cloudbeds --wait-for-click
  *   # Test Applied export on one resume by link (no digest; opens resume, exports resume PDF + cover letter):
- *   npm run job-search:teal-match-score -- --resume-url "https://app.tealhq.com/resume-builder/resumes/<uuid>" [--company "Company Name"] [--job-title "Product Manager"] [--job-description-file path/to/jd.txt]
+ *   npm run job-search:teal-match-score -- --resume-url "https://app.tealhq.com/resume-builder/resumes/<uuid>/preview" [--company "Company Name"] [--job-title "Product Manager"] [--job-description-file path/to/jd.txt]
+ *   Same UUID works with Teal short URL: .../resume-builder/<uuid>/preview (no "resumes/" segment).
  *     With --job-title and --company: renames resume to "Title — Company" before Job Matcher (fixes wrong names like "Single System — —").
  *     With --job-description-file the script auto-generates the cover letter (OpenAI + python-docx) into Applied/<Company>/<Vacancy>/.
  *
@@ -31,14 +32,31 @@ const path = require('path');
 const os = require('os');
 const net = require('net');
 const { spawn, spawnSync } = require('child_process');
-const { TEAL_DIR, ensureDirs, VAULT: VAULT_PATH, JOB_SEARCH_ROOT, LINKEDIN_DIGESTS_DIR, DATA_DIR, JOBS_DIR, APPLIED_BASE, COVER_LETTERS_DIR, TEAL_CHROME_PROFILE_ALT, TEAL_CHROME_PROFILE_MATCHSCORE, TEAL_CHROME_PROFILE_BATCH, TEAL_CHROME_PROFILE_FALLBACK } = require('./job-search-paths.cjs');
+const { TEAL_DIR, TEAL_FLOW_DIR, ensureDirs, VAULT: VAULT_PATH, JOB_SEARCH_ROOT, LINKEDIN_DIGESTS_DIR, DATA_DIR, JOBS_DIR, APPLIED_BASE, COVER_LETTERS_DIR, TEAL_CHROME_PROFILE_ALT, TEAL_CHROME_PROFILE_MATCHSCORE, TEAL_CHROME_PROFILE_BATCH, TEAL_CHROME_PROFILE_FALLBACK } = require('./job-search-paths.cjs');
 // Default profile for match-score so it can run in parallel with resume-for-job and batch
 if (!process.env.TEAL_CHROME_PROFILE) process.env.TEAL_CHROME_PROFILE = TEAL_CHROME_PROFILE_MATCHSCORE;
-const { getTealProfileCandidates, removeStaleSingletonLock } = require('./teal-chrome-profile.cjs');
+const {
+  getTealProfileCandidates,
+  getTealProfileCandidatesForSession,
+  removeStaleSingletonLock,
+  launchPersistentContextGuarded
+} = require('./teal-chrome-profile.cjs');
 const { loadTealEnv, doTealLogin } = require('./teal-login-helper.cjs');
 const { updateFlowProgress } = require('./teal-flow-state.cjs');
 const { isRemoteFromExcludedCountry, isVideoGamingRole, isAutomotiveRole, isHardwareRole, isTelecomRole, requiresSapExperience, requiresHighTravel, requiresRelocation, requiresResidenceInExcludedCountry, isBelowMinSalary, fetchJobPageTitleAndCompany, deriveTitleFromDescription, looksLikeJobTitle } = require('./job-search-utils.cjs');
 const { extractResumeExperienceFromPage } = require('./teal-resume-experience.cjs');
+const {
+  STEP8_MIN_MATCH_SCORE,
+  STEP8_MIN_JD_LENGTH,
+  STEP8_MAX_SUMMARY_ITERATIONS,
+  hasQualifyingJobDescription,
+  shouldRunStep8SummaryLoop,
+  shouldLogLowScoreWithoutJd,
+  shouldContinueStep8SummaryLoop,
+  buildStep8SummaryExitReason,
+  shouldWarnScoreStillLowAfterLoop,
+  writeStep8EvidenceFile
+} = require('./professional-summary-step8-policy.cjs');
 const CORE_MCP = path.join(VAULT_PATH, 'core', 'mcp');
 let scriptErrors;
 try {
@@ -52,6 +70,41 @@ try {
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Reload with retries: transient network drops (ERR_INTERNET_DISCONNECTED) or slow Teal
+ * should not kill a long match-score run.
+ */
+async function safeReloadPage(page, logProgress, label) {
+  const maxAttempts = 4;
+  let lastErr = null;
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      await page.reload({ waitUntil: 'domcontentloaded', timeout: 20000 });
+      return;
+    } catch (e) {
+      lastErr = e;
+      const msg = (e && e.message) ? String(e.message) : String(e);
+      const transient =
+        /ERR_INTERNET_DISCONNECTED|ERR_NETWORK_CHANGED|ERR_CONNECTION|TIMED_OUT|Timeout/i.test(msg);
+      if (logProgress) {
+        logProgress(
+          '[Teal match-score] reload failed' +
+            (label ? ' (' + label + ')' : '') +
+            ' attempt ' +
+            (i + 1) +
+            '/' +
+            maxAttempts +
+            ': ' +
+            msg.slice(0, 120)
+        );
+      }
+      if (!transient || i === maxAttempts - 1) break;
+      await sleep(2000 * (i + 1));
+    }
+  }
+  throw lastErr || new Error('safeReloadPage: reload failed');
 }
 
 /** Wait until port is connectable. Returns true when connected. */
@@ -91,12 +144,12 @@ const PROGRESS_LOG = path.join(TEAL_DIR, 'match-score.log');
 /** Full stderr/traceback from failed summary generation (append). Used to debug and self-correct. */
 const SUMMARY_ERROR_LOG = path.join(TEAL_DIR, 'summary-errors.log');
 
-const MIN_SCORE = 80;
+const MIN_SCORE = STEP8_MIN_MATCH_SCORE;
 const SCORE_WAIT_MS = 60000; // 60s — Teal Job Matcher can be slow to compute score
 const BETWEEN_RESUMES_MS = 2000;
-const MIN_JOB_DESCRIPTION_LENGTH = 100;
+const MIN_JOB_DESCRIPTION_LENGTH = STEP8_MIN_JD_LENGTH;
 /** Safety cap: with current_summary passed to generator we expect 3–4 iterations; cap at 5. */
-const MAX_SUMMARY_ITERATIONS = 5;
+const MAX_SUMMARY_ITERATIONS = STEP8_MAX_SUMMARY_ITERATIONS;
 /** Stop early if score is unchanged this many times in a row (avoids timeout; test completes successfully). */
 const MAX_UNCHANGED_SCORE_ITERATIONS = 3;
 /** Max refresh attempts when score is loading (job selected but Teal slow). On timeout we always refresh and retry. */
@@ -172,7 +225,7 @@ async function waitForMatchScoreSmart(page, logProgress, job, selectJobFn) {
     } else if (detected.state === 'job_selected_loading' || detected.state === 'unknown') {
       if (attempt > 0) {
         logProgress('[Teal match-score] Job Matcher: job selected but score not shown yet (Teal slow), refreshing page (attempt ' + (attempt + 1) + '/' + (MAX_SCORE_WAIT_REFRESHES + 1) + ')…');
-        await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
+        await safeReloadPage(page, logProgress, 'job_selected_loading');
         await sleep(3000);
         await selectJobFn(page, job, logProgress);
         await sleep(2000);
@@ -184,7 +237,7 @@ async function waitForMatchScoreSmart(page, logProgress, job, selectJobFn) {
 
     if (attempt < MAX_SCORE_WAIT_REFRESHES) {
       logProgress('[Teal match-score] Score not loaded in 60s — ' + (detected.state === 'no_job_selected' ? 'job was not selected' : 'Teal may be slow') + ', refreshing and retrying…');
-      await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
+      await safeReloadPage(page, logProgress, 'score_wait_smart');
       await sleep(3000);
     }
   }
@@ -198,7 +251,7 @@ async function waitForMatchScoreWithReload(page, logProgress) {
     if (score !== null) return score;
     if (attempt < MAX_SCORE_WAIT_REFRESHES) {
       logProgress('[Teal match-score] Score not loaded in ' + (SCORE_WAIT_MS / 1000) + 's; refreshing page and retrying (attempt ' + (attempt + 2) + '/' + (MAX_SCORE_WAIT_REFRESHES + 1) + ')…');
-      await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
+      await safeReloadPage(page, logProgress, 'score_wait_reload');
       await sleep(3000);
     }
   }
@@ -392,7 +445,12 @@ async function extractSkillsFromOneScreenshotViaVision(screenshotPath, logProgre
     }
     return result;
   } catch (e) {
-    logProgress('  Vision extraction failed: ' + (e.message || String(e)).slice(0, 100));
+    const vmsg = e.message || String(e);
+    if (/429|quota|rate limit|exceeded your current/i.test(vmsg)) {
+      logProgress('  Vision: OpenAI quota/rate limit — skip Vision this round (use DOM skills only)');
+    } else {
+      logProgress('  Vision extraction failed: ' + vmsg.slice(0, 100));
+    }
     try {
       if (scriptErrors && scriptErrors.logWarning) {
         scriptErrors.logWarning({
@@ -1193,7 +1251,7 @@ function isProfileBusyError(e) {
 async function launchChromeWithProfile(playwright, profileDir) {
   if (!profileDir) return null;
   try {
-    const context = await playwright.chromium.launchPersistentContext(profileDir, {
+    const context = await launchPersistentContextGuarded(playwright.chromium, profileDir, {
       channel: os.platform() === 'darwin' ? 'chrome' : undefined,
       headless: false,
       args: ['--no-first-run'],
@@ -1206,7 +1264,8 @@ async function launchChromeWithProfile(playwright, profileDir) {
   }
 }
 
-const RESUME_ID_RE = /resumes\/([0-9a-f-]{36})/i;
+/** Teal uses both /resume-builder/resumes/<uuid>/... and /resume-builder/<uuid>/preview */
+const RESUME_ID_RE = /(?:resume-builder\/resumes\/|resume-builder\/)([0-9a-f-]{36})(?:\/|$|\?)/i;
 
 function parseArgs() {
   const argv = process.argv.slice(2);
@@ -1224,6 +1283,7 @@ function parseArgs() {
   let resumeCompany = ''; // for Applied folder when using --resume-url
   let resumeJobTitle = ''; // for renaming resume when using --resume-url (e.g. "Product Manager")
   let jobDescriptionFile = ''; // for cover letter generation in resume-url mode
+  let allowNonProduct = false; // for single-vacancy flow: do not skip non-product titles
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--filter') {
       filterJobs = true;
@@ -1236,6 +1296,10 @@ function parseArgs() {
     if (argv[i] === '--test') {
       testMode = true;
       if (limit === 0) limit = 1;
+      continue;
+    }
+    if (argv[i] === '--allow-non-product') {
+      allowNonProduct = true;
       continue;
     }
     if (argv[i] === '--resume-url' && argv[i + 1]) {
@@ -1273,7 +1337,7 @@ function parseArgs() {
   }
   if (resumeUrl && !resumeId) resumeId = resumeUrl.match(RESUME_ID_RE)?.[1] || '';
   if (resumeId && companyFilter) resumeCompany = companyFilter;
-  return { exportPath, exclude, fromIndex, limit, companyFilter, waitForClick, testMode, filterJobs, cdpUrl, resumeId, resumeCompany, resumeJobTitle, jobDescriptionFile };
+  return { exportPath, exclude, fromIndex, limit, companyFilter, waitForClick, testMode, filterJobs, cdpUrl, resumeId, resumeCompany, resumeJobTitle, jobDescriptionFile, allowNonProduct };
 }
 
 /** LinkedIn UI labels that must not be used as job/resume title (from export noise). */
@@ -1314,14 +1378,25 @@ const NON_PM_TITLE_PATTERNS = [
   /Product\s+Adoption\s*&\s*Experience\s+Manager/i,
   /Adoption\s*&\s*Experience\s+Manager/i,
   /Product\s+Adoption\s+Manager/i,
+  // UX leadership (design track), not PM
+  /\bUX\s+Lead\s*\(\s*Product\s*&\s*Growth\s*\)/i,
   // Only product roles (PM, PO); not business analyst
   /\bBusiness\s+Analyst\b/i,
   /\bSenior\s+Business\s+Analyst\b/i,
   /\bLead\s+Business\s+Analyst\b/i,
   /\bPrincipal\s+Business\s+Analyst\b/i
 ];
+
+/** BA + PM/PO in one title (e.g. "Business Analyst / Product Manager") — treat like PM for match-score. Pure BA stays excluded. */
+function isBaPmHybridTitle(title) {
+  const t = (title || '').trim();
+  if (!/\bBusiness\s+Analyst\b/i.test(t)) return false;
+  return /\bProduct\s+Manager\b/i.test(t) || /\bProduct\s+Owner\b/i.test(t);
+}
+
 function isNonProductTitle(title) {
   const t = (title || '').trim();
+  if (isBaPmHybridTitle(t)) return false;
   return NON_PM_TITLE_PATTERNS.some((re) => re.test(t));
 }
 
@@ -1332,6 +1407,7 @@ const NON_ENGLISH_TITLE_PATTERNS = [
 ];
 const REQUIRES_NON_ENGLISH = [
   /fluent\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)/i,
+  /\bproficient\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i,
   /\bfluency\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i,
   /native\s+(German|Spanish|Portuguese|French|Italian|Arabic)\s+(speaker|language)?/i,
   /(German|Spanish|Portuguese|French|Italian|Arabic)\s+(language\s+)?(proficiency|required|essential|fluent)/i,
@@ -1565,7 +1641,7 @@ function locationRank(loc) {
 const TEST_EXPORT_DATE = '2026-02-10';
 
 /** Map Teal resume ID -> { jobId, company, title } for exact JD lookup. Written by match-score (digest) and teal-resume-for-job (--job-id). */
-const RESUME_TO_JOB_MAP_PATH = path.join(TEAL_DIR, 'resume-to-job.json');
+const RESUME_TO_JOB_MAP_PATH = path.join(TEAL_FLOW_DIR, 'resume-to-job.json');
 /** jobId -> exact resume name set in Teal by step 7 (teal-resume-for-job). Used as primary search query so step 8 finds the same resume. */
 const CREATED_RESUME_NAMES_PATH = path.join(TEAL_DIR, 'created-resume-names.json');
 
@@ -1807,6 +1883,8 @@ function loadJobsFromDigestMarkdown(mdPath, exclude, fromIndex, limit, companyFi
   }
   const content = fs.readFileSync(mdPath, 'utf8');
   const lines = content.split(/\n/);
+  const digestJobCount = lines.filter((line) => /^-\s*\[\s*[ x\-]\s*\]\s*\[[^\]]+\]\(https:\/\/www\.linkedin\.com\/jobs\/view\/\d+\/?\)/.test(line)).length;
+  const isSingleDigestJob = digestJobCount === 1;
   const jobs = [];
   const missingTitleDetails = [];
   let i = 0;
@@ -1856,20 +1934,24 @@ function loadJobsFromDigestMarkdown(mdPath, exclude, fromIndex, limit, companyFi
         } catch (_) {}
       }
     }
-    if (exclude.some((c) => (company || '').toLowerCase().includes(c))) continue;
-    if (isRemoteFromExcludedCountry(title, '', job_description)) continue;
-    if (requiresResidenceInExcludedCountry(title, '', job_description)) continue;
-    if (requiresRelocation(title, '', job_description)) continue;
-    if (isVideoGamingRole(title, company, job_description)) continue;
-    if (isAutomotiveRole(title, company, job_description)) continue;
-    if (isHardwareRole(title, company, job_description)) continue;
-    if (isTelecomRole(title, company, job_description)) continue;
-    if (requiresSapExperience(title, company, job_description)) continue;
-    if (requiresHighTravel(title, job_description)) continue;
-    if (isBelowMinSalary(job_description)) continue;
+    if (!isSingleDigestJob) {
+      if (exclude.some((c) => (company || '').toLowerCase().includes(c))) continue;
+      if (isRemoteFromExcludedCountry(title, '', job_description)) continue;
+      if (requiresResidenceInExcludedCountry(title, '', job_description)) continue;
+      if (requiresRelocation(title, '', job_description)) continue;
+      if (isVideoGamingRole(title, company, job_description)) continue;
+      if (isAutomotiveRole(title, company, job_description)) continue;
+      if (isHardwareRole(title, company, job_description)) continue;
+      if (isTelecomRole(title, company, job_description)) continue;
+      if (requiresSapExperience(title, company, job_description)) continue;
+      if (requiresHighTravel(title, job_description)) continue;
+      if (isBelowMinSalary(job_description)) continue;
+    }
     if (companyFilter && !(company || '').toLowerCase().includes(companyFilter.toLowerCase())) continue;
-    let effectiveTitle = (title && title !== '—' && !isPlaceholderJobField(title)) ? title : (title || '—');
-    let isMissingTitle = !effectiveTitle || effectiveTitle === '—' || isPlaceholderJobField(effectiveTitle);
+    const titleIsGenericPm = isPlaceholderJobField(title);
+    const allowGenericPmTitle = isSingleDigestJob && titleIsGenericPm && company && !isPlaceholderJobField(company);
+    let effectiveTitle = (title && title !== '—' && (!titleIsGenericPm || allowGenericPmTitle)) ? title : (title || '—');
+    let isMissingTitle = !effectiveTitle || effectiveTitle === '—' || (isPlaceholderJobField(effectiveTitle) && !allowGenericPmTitle);
     // Reject slogan-like titles (e.g. "We believe in smart execution, continuous improvement") from digest or jobs file.
     if (effectiveTitle && typeof looksLikeJobTitle === 'function' && !looksLikeJobTitle(effectiveTitle)) {
       effectiveTitle = '';
@@ -1883,8 +1965,8 @@ function loadJobsFromDigestMarkdown(mdPath, exclude, fromIndex, limit, companyFi
         isMissingTitle = false;
       }
     }
-    if (isMissingTitle && !effectiveTitle) {
-      effectiveTitle = 'Product Manager';
+    if (isMissingTitle && (!effectiveTitle || (isSingleDigestJob && isPlaceholderJobField(effectiveTitle)))) {
+      effectiveTitle = (title && title !== '—' ? title : 'Product Manager');
       isMissingTitle = false;
     }
     if (isMissingTitle) {
@@ -1994,7 +2076,7 @@ function loadJobsAll(exportPath, exclude, fromIndex, limit, companyFilter, onlyE
   return { jobs: slice, total };
 }
 
-function loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, onlyExportDate) {
+function loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, onlyExportDate, allowNonProduct) {
   if (!fs.existsSync(exportPath)) {
     throw new Error('Export file not found: ' + exportPath);
   }
@@ -2019,7 +2101,7 @@ function loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, onlyExpo
     const location = jobPayload.location || '';
     const rawTitle = (r.title || '').trim();
     const title = (!rawTitle || isUILabel(rawTitle)) ? 'Product Manager' : rawTitle;
-    if (isNonProductTitle(title)) continue;
+    if (!allowNonProduct && isNonProductTitle(title)) continue;
     if (isNonEnglishJob({ title, description: jobPayload.job_description })) continue;
     if (isHardwareRole(rawTitle, r.company || '', jobPayload.job_description || '')) continue;
     if (isTelecomRole(rawTitle, r.company || '', jobPayload.job_description || '')) continue;
@@ -2057,7 +2139,7 @@ function loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, onlyExpo
 
 async function main() {
   ensureDirs();
-  const { exportPath, exclude, fromIndex, limit, companyFilter, waitForClick, testMode, filterJobs, cdpUrl, resumeId, resumeCompany, resumeJobTitle, jobDescriptionFile } = parseArgs();
+  const { exportPath, exclude, fromIndex, limit, companyFilter, waitForClick, testMode, filterJobs, cdpUrl, resumeId, resumeCompany, resumeJobTitle, jobDescriptionFile, allowNonProduct } = parseArgs();
 
   // Mode: single resume by URL/ID — only run Applied export (no digest, no match-score loop).
   if (resumeId) {
@@ -2302,12 +2384,11 @@ async function main() {
     if (score === null) logProgress('[Teal match-score] Score not shown (timeout after refresh); will still add/update summary if JD is available.');
 
     const jobDesc = (job.job_description || '').trim();
-    const hasJd = jobDesc.length >= MIN_JOB_DESCRIPTION_LENGTH;
-    if (!hasJd && score !== null && score < MIN_SCORE) {
+    const hasJd = hasQualifyingJobDescription(jobDesc);
+    if (shouldLogLowScoreWithoutJd({ score, jdText: jobDesc })) {
       logProgress('[Teal match-score] Score is ' + score + '% but job description missing or too short (<' + MIN_JOB_DESCRIPTION_LENGTH + ' chars). Optimization SKIPPED. PDF and cover letter will still be saved to Applied.');
     }
-    // Run summary step when: we have JD and (score unknown/timeout or score < 80%)
-    if (hasJd && (score === null || score < MIN_SCORE)) {
+    if (shouldRunStep8SummaryLoop({ score, jdText: jobDesc })) {
       const jobMatcherTab = page.locator('#resume-builder-matching').or(page.locator('button[aria-label="Job Matcher"]')).first();
       const contentEditorTab = page.locator('#resume-builder-preview').or(page.locator('button[aria-label="Content Editor"]')).first();
       const editorLocator = page.locator('div.ProseMirror[contenteditable="true"]').or(page.locator('div[contenteditable="true"].tiptap')).last();
@@ -2317,8 +2398,13 @@ async function main() {
       let lastSummaryText = null;
 
       /** At least 2 iterations when score < 80% so we don't stop after one (e.g. after reload job selection can be lost and score null). */
-      const MIN_ITERATIONS_WHEN_BELOW_80 = 2;
-      while (currentScore < MIN_SCORE && (summaryIteration < MAX_SUMMARY_ITERATIONS || summaryIteration < MIN_ITERATIONS_WHEN_BELOW_80)) {
+      while (
+        shouldContinueStep8SummaryLoop({
+          currentScore,
+          iteration: summaryIteration,
+          enforceMinIterations: true
+        })
+      ) {
         summaryIteration++;
         logProgress('[Teal match-score] Score < 80%: opening Content Editor, adding/updating summary (iteration ' + summaryIteration + ').');
         const previewUrl = 'https://app.tealhq.com/resume-builder/resumes/' + resumeId + '/preview';
@@ -2364,7 +2450,7 @@ async function main() {
           await jobMatcherTab.click();
           await sleep(1500);
         }
-        await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
+        await safeReloadPage(page, logProgress, 'after_summary_goto_matcher');
         await sleep(3000);
         const scoreAfter = await waitForMatchScoreSmart(page, logProgress, job, selectJobOnMatchingPage);
         if (scoreAfter !== null) {
@@ -2374,12 +2460,14 @@ async function main() {
         }
         if (currentScore >= MIN_SCORE) break;
       }
-      const summaryExitReason = (finalScore !== null && finalScore >= MIN_SCORE)
-        ? ('score reached ' + finalScore + '% (target 80%+)')
-        : ('max iterations (' + summaryIteration + ') reached, final score ' + (finalScore !== null ? finalScore + '%' : 'unknown'));
+      const summaryExitReason = buildStep8SummaryExitReason({
+        finalScore,
+        iteration: summaryIteration,
+        maxIterations: MAX_SUMMARY_ITERATIONS
+      });
       logProgress('[Teal match-score] Summary loop ended — ' + summaryExitReason + ' | resume ' + resumeId + ' | company ' + (job.company || '') + ' | title ' + (job.title || '') + ' | iterations ' + summaryIteration + '.');
 
-      if (finalScore !== null && finalScore < MIN_SCORE) {
+      if (shouldWarnScoreStillLowAfterLoop({ finalScore, iteration: summaryIteration, maxIterations: MAX_SUMMARY_ITERATIONS })) {
         logProgress('[Teal match-score] WARNING: Score still ' + finalScore + '% after up to ' + MAX_SUMMARY_ITERATIONS + ' summary iterations. PDF will be saved; consider manual summary edit or re-run.');
       }
     } else {
@@ -2405,14 +2493,14 @@ async function main() {
   const { jobs, total } = isDigestMd
     ? loadJobsFromDigestMarkdown(exportPath, exclude, fromIndex, limit, companyFilter)
     : (filterJobs
-        ? loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, testMode ? TEST_EXPORT_DATE : null)
+        ? loadJobs(exportPath, exclude, fromIndex, limit, companyFilter, testMode ? TEST_EXPORT_DATE : null, allowNonProduct)
         : loadJobsAll(exportPath, exclude, fromIndex, limit, companyFilter, testMode ? TEST_EXPORT_DATE : null));
 
   if (jobs.length === 0) {
     try {
       if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
       fs.writeFileSync(
-        path.join(TEAL_DIR, 'step-8-evidence.json'),
+        path.join(TEAL_FLOW_DIR, 'step-8-evidence.json'),
         JSON.stringify({ processed: [], noJobsReason: '0 jobs from digest/export', writtenAt: new Date().toISOString() }, null, 2),
         'utf8'
       );
@@ -2436,6 +2524,7 @@ async function main() {
   let connected = false;
   /** True if we launched Chrome ourselves (launchPersistentContext); then we must close it so the script exits. */
   let launchedByUs = false;
+  let launchedProfileDir = null;
   try {
     const browser = await playwright.chromium.connectOverCDP(cdpUrl, { timeout: 6000 });
     const contexts = browser.contexts();
@@ -2448,12 +2537,13 @@ async function main() {
     logProgress('[Teal match-score] CDP failed: ' + (e.message || String(e)).slice(0, 80) + ' — trying profile launch.');
   }
   if (!connected) {
-    const candidates = getTealProfileCandidates();
+    const candidates = getTealProfileCandidatesForSession();
+    const devtoolsWait = Number(process.env.TEAL_DEVTOOLS_PORT_WAIT_MS) || 0;
     const launchOpts = {
       channel: os.platform() === 'darwin' ? 'chrome' : undefined,
       headless: false,
       args: ['--no-first-run'],
-      timeout: 30000
+      timeout: devtoolsWait > 0 ? Math.max(30000, devtoolsWait + 5000) : 90000
     };
     for (let i = 0; i < candidates.length && !connected; i++) {
       const profileDir = candidates[i];
@@ -2462,9 +2552,10 @@ async function main() {
           if (retry === 1 && removeStaleSingletonLock(profileDir)) {
             logProgress('[Teal match-score] Removed stale lock for profile ' + (i + 1) + ', retrying launch.');
           }
-          context = await playwright.chromium.launchPersistentContext(profileDir, launchOpts);
+          context = await launchPersistentContextGuarded(playwright.chromium, profileDir, launchOpts);
           page = context.pages()[0] || await context.newPage();
           launchedByUs = true;
+          launchedProfileDir = profileDir;
           logProgress('[Teal match-score] Launched Chrome with profile: ' + profileDir);
           if (profileDir === TEAL_CHROME_PROFILE_FALLBACK) {
             logProgress('[Teal match-score] Using fallback profile (others were busy). Log in to Teal once in the opened window if needed.');
@@ -2521,12 +2612,9 @@ async function main() {
   let browserClosed = false;
   const processedList = [];
 
-  const step8EvidencePath = path.join(TEAL_DIR, 'step-8-evidence.json');
+  const step8EvidencePath = path.join(TEAL_FLOW_DIR, 'step-8-evidence.json');
   const writeStep8Evidence = (ev) => {
-    try {
-      if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
-      fs.writeFileSync(step8EvidencePath, JSON.stringify({ ...ev, writtenAt: new Date().toISOString() }, null, 2), 'utf8');
-    } catch (_) {}
+    writeStep8EvidenceFile(TEAL_DIR, ev);
   };
 
   loadTealEnv(VAULT_PATH);
@@ -2594,7 +2682,7 @@ async function main() {
 
     for (let i = 0; i < jobs.length; i++) {
       const job = jobs[i];
-      if (isNonProductTitle(job.title)) {
+      if (!allowNonProduct && isNonProductTitle(job.title)) {
         processedList.push({ jobId: job.id, company: job.company, title: job.title, resumeFound: false, skipReason: 'non_product' });
         logProgress(`(${fromIndex + i + 1}/${total}) SKIP (non-product): ${job.company} | ${job.title}`);
         continue;
@@ -2606,6 +2694,7 @@ async function main() {
 
       let finalScore = null;
       let addedSummaryThisJob = false;
+      let jobProfessionalSummaryText = null;
       try {
         await waitForOverlayGone();
 
@@ -2650,7 +2739,16 @@ async function main() {
           if (clicked) break;
           logProgress(`  List search: "${query.slice(0, 50)}${query.length > 50 ? '...' : ''}"`);
           if ((await searchInput.count()) > 0 && (await searchInput.isVisible().catch(() => false))) {
-            await searchInput.click({ timeout: 8000 });
+            // Teal often overlays the list while loading and intercepts pointer events.
+            // Wait for overlay and fall back to force click so search never blocks the whole run.
+            await waitForOverlayGone();
+            try {
+              await searchInput.click({ timeout: 8000 });
+            } catch (e) {
+              logProgress('  Search input click intercepted, retrying with force click.');
+              await waitForOverlayGone();
+              await searchInput.click({ timeout: 8000, force: true });
+            }
             await searchInput.fill('');
             await sleep(300);
             await searchInput.fill(query);
@@ -3241,6 +3339,7 @@ async function main() {
                         await logToBrowserConsole(page, '[Dex teal-match-score] New Professional Summary added and saved.');
                         await sleep(2000);
                         addedSummaryThisJob = true;
+                        jobProfessionalSummaryText = summaryText;
                       } else {
                         logProgress('  Content Editor: Save button not found');
                       }
@@ -3258,8 +3357,8 @@ async function main() {
 
         // After any summary add: loop until score 80-100% or MAX_SUMMARY_ITERATIONS (Job Matcher → reload → score → if < 80% replace summary and repeat)
         // Aligned with --resume-url: run summary when we have JD and (score unknown/timeout or score < 80%)
-        const hasJdDigest = (job.job_description || '').trim().length >= MIN_JOB_DESCRIPTION_LENGTH;
-        if (hasJdDigest && (score === null || score < MIN_SCORE)) {
+        const hasJdDigest = hasQualifyingJobDescription(job.job_description || '');
+        if (shouldRunStep8SummaryLoop({ score, jdText: job.job_description || '' })) {
           if (score === null) logProgress('[Teal match-score] Score unknown/timeout for ' + (job.title || '') + ', running summary step once.');
           let summaryIteration = 0;
           let unchangedScoreCount = 0;
@@ -3284,11 +3383,17 @@ async function main() {
           let lastSummaryText = null;
           let summaryExitReason = '';
 
-          while (currentScore < MIN_SCORE && summaryIteration < MAX_SUMMARY_ITERATIONS) {
+          while (
+            shouldContinueStep8SummaryLoop({
+              currentScore,
+              iteration: summaryIteration,
+              enforceMinIterations: false
+            })
+          ) {
             logProgress('  Switching to Job Matcher (iteration ' + (summaryIteration + 1) + ')…');
             await jobMatcherTab.click().catch(() => {});
             await sleep(1000);
-            await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
+            await safeReloadPage(page, logProgress, 'summary_loop_job_matcher');
             await sleep(3000);
             if (!(await ensureJobMatcherActive())) {
               await sleep(2000);
@@ -3398,6 +3503,7 @@ async function main() {
             }
             lastSummaryText = summaryTextNext;
           }
+          if (lastSummaryText) jobProfessionalSummaryText = lastSummaryText;
         if (summaryExitReason) {
           logProgress('[Teal match-score] Summary loop ended — ' + summaryExitReason + ' | company ' + (job.company || '') + ' | title ' + (job.title || '') + ' | iterations ' + summaryIteration + '.');
         }
@@ -3434,7 +3540,8 @@ async function main() {
           resumeFound: true,
           matchScore: finalScore,
           pdfPath,
-          coverLetterPath
+          coverLetterPath,
+          professionalSummaryText: jobProfessionalSummaryText || undefined
         });
         if (process.env.FULL_FLOW_STATE_FILE) {
           try {
@@ -3483,6 +3590,10 @@ async function main() {
     try {
       await context.close();
     } catch (_) {}
+    if (launchedProfileDir) {
+      const { killChromeForProfile } = require('./teal-chrome-profile.cjs');
+      killChromeForProfile(launchedProfileDir, logProgress);
+    }
   }
 }
 

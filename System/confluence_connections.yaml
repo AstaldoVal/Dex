@@ -1,0 +1,8 @@
+# Confluence Multi-Site MCP — bandaio (BANDA)
+# Credentials in Development/DEX/.env:
+#   CONFLUENCE_BANDAIO_EMAIL=r.matsukatov@banda.io
+#   CONFLUENCE_BANDAIO_TOKEN=<API token from https://id.atlassian.com/manage-profile/security/api-tokens>
+
+connections:
+  - id: bandaio
+    site: bandaio

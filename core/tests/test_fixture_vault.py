@@ -18,6 +18,7 @@ EXPECTED_DIRS = [
     "05-Areas/Companies",
     "05-Areas/Career",
     "05-Areas/Career/Evidence",
+    "05-Areas/Career/Sessions",
     "06-Resources",
     "07-Archives",
     "System",

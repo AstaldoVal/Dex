@@ -12,7 +12,6 @@ Provides deterministic operations through structured tools with:
 - Progress tracking and rollup across planning levels
 """
 
-import os
 import sys
 import json
 import logging
@@ -36,6 +35,22 @@ import mcp.types as types
 # Add repo root to path so "from core.xxx" works when Cursor runs this script directly
 _repo_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_repo_root))
+
+from core.paths import (  # noqa: E402
+    COMPANIES_DIR,
+    DEMO_DIR,
+    GOALS_FILE,
+    INBOX_DIR,
+    MEETINGS_DIR,
+    PEOPLE_DIR,
+    PILLARS_FILE,
+    QUARTER_GOALS_FILE,
+    TASKS_DIR,
+    TASKS_FILE,
+    USER_PROFILE_FILE,
+    VAULT_ROOT as BASE_DIR,
+    WEEK_PRIORITIES_FILE,
+)
 
 # Set up logging before any code that may log
 logging.basicConfig(level=logging.INFO)
@@ -63,25 +78,11 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
-# Configuration - Vault paths
-BASE_DIR = Path(os.environ.get('VAULT_PATH', Path.cwd()))
-TASKS_FILE = BASE_DIR / '03-Tasks/Tasks.md'
-LINEAR_SYNC_FILE = BASE_DIR / '03-Tasks' / 'linear_sync.json'
-WEEK_PRIORITIES_FILE = BASE_DIR / 'Inbox' / 'Week Priorities.md'
-QUARTER_GOALS_FILE = BASE_DIR / '01-Quarter_Goals/Quarter_Goals.md'
-GOALS_FILE = BASE_DIR / 'GOALS.md'  # Legacy, kept for compatibility
-INBOX_DIR = BASE_DIR / 'Inbox'
-PILLARS_FILE = BASE_DIR / 'System' / 'pillars.yaml'
-COMPANIES_DIR = BASE_DIR / 'Active' / 'Relationships' / 'Companies'
-PEOPLE_DIR = BASE_DIR / 'People'
-MEETINGS_DIR = BASE_DIR / 'Inbox' / 'Meetings'
+# Configuration - Vault paths (PARA: core/paths.py)
+LINEAR_SYNC_FILE = TASKS_DIR / 'linear_sync.json'
 # Job search tracking (applications and feedback)
-JOB_APPLICATIONS_TRACKER_FILE = BASE_DIR / '00-Inbox' / 'Job_Search' / 'data' / 'applications-tracker.json'
-JOB_COVER_LETTERS_DIR = BASE_DIR / '00-Inbox' / 'Job_Search' / 'cover_letters'
-
-# Demo Mode Configuration
-USER_PROFILE_FILE = BASE_DIR / 'System' / 'user-profile.yaml'
-DEMO_DIR = BASE_DIR / 'System' / 'Demo'
+JOB_APPLICATIONS_TRACKER_FILE = INBOX_DIR / 'Job_Search' / 'data' / 'applications-tracker.json'
+JOB_COVER_LETTERS_DIR = INBOX_DIR / 'Job_Search' / 'cover_letters'
 
 def is_demo_mode() -> bool:
     """Check if demo mode is enabled in user-profile.yaml"""
@@ -99,7 +100,9 @@ def is_demo_mode() -> bool:
 def get_tasks_file() -> Path:
     """Get the appropriate 03-Tasks/Tasks.md file based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / '03-Tasks/Tasks.md'
+        demo_tasks = DEMO_DIR / '03-Tasks' / 'Tasks.md'
+        if demo_tasks.exists():
+            return demo_tasks
     return TASKS_FILE
 
 def get_pillars_file() -> Path:
@@ -113,20 +116,62 @@ def get_pillars_file() -> Path:
 def get_week_priorities_file() -> Path:
     """Get the appropriate Week Priorities file based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'Inbox' / 'Week Priorities.md'
+        demo_para = DEMO_DIR / '02-Week_Priorities' / 'Week_Priorities.md'
+        if demo_para.exists():
+            return demo_para
+        demo_legacy = DEMO_DIR / 'Inbox' / 'Week Priorities.md'
+        if demo_legacy.exists():
+            return demo_legacy
     return WEEK_PRIORITIES_FILE
 
 def get_people_dir() -> Path:
     """Get the appropriate People directory based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'People'
+        for candidate in (
+            DEMO_DIR / '05-Areas' / 'People',
+            DEMO_DIR / 'Areas' / 'People',
+            DEMO_DIR / 'People',
+        ):
+            if candidate.exists():
+                return candidate
     return PEOPLE_DIR
 
 def get_meetings_dir() -> Path:
     """Get the appropriate Meetings directory based on demo mode"""
     if is_demo_mode():
-        return DEMO_DIR / 'Inbox' / 'Meetings'
+        demo_para = DEMO_DIR / '00-Inbox' / 'Meetings'
+        if demo_para.exists():
+            return demo_para
+        demo_legacy = DEMO_DIR / 'Inbox' / 'Meetings'
+        if demo_legacy.exists():
+            return demo_legacy
     return MEETINGS_DIR
+
+
+def get_quarter_goals_file() -> Path:
+    """Quarter goals file: PARA path, or demo copy when present."""
+    if is_demo_mode():
+        demo_qg = DEMO_DIR / '01-Quarter_Goals' / 'Quarter_Goals.md'
+        if demo_qg.exists():
+            return demo_qg
+    return QUARTER_GOALS_FILE
+
+
+def resolve_company_filepath(company_path: str) -> Path:
+    """Resolve company page: 05-Areas/Companies, legacy Active/Relationships/Companies, or filename."""
+    raw = company_path.strip().replace('\\', '/')
+    if not raw.endswith('.md'):
+        raw += '.md'
+    direct = (BASE_DIR / raw).resolve()
+    if direct.is_file():
+        return direct
+    name = Path(raw).name
+    legacy_companies = BASE_DIR / 'Active' / 'Relationships' / 'Companies'
+    for folder in (COMPANIES_DIR, legacy_companies):
+        cand = (folder / name).resolve()
+        if cand.is_file():
+            return cand
+    return direct
 
 
 # Default pillars (used if pillars.yaml doesn't exist or can't be loaded)
@@ -573,14 +618,14 @@ def extract_file_refs_from_task(task_line: str) -> List[str]:
     """Extract file path references from a task line
     
     Detects:
-    - Direct file paths (People/External/John_Doe.md)
-    - Active/Relationships paths
+    - Direct file paths (People/..., 05-Areas/People/..., 05-Areas/Companies/...)
+    - Legacy Active/... paths
     - Any .md file references
     """
     refs = []
     
-    # Match file path patterns like People/External/John_Doe.md or Active/Relationships/...
-    path_pattern = r'(?:People|Active)/[A-Za-z0-9_/-]+(?:\.md)?'
+    # Match file path patterns: PARA (05-Areas), legacy People/, Active/
+    path_pattern = r'(?:05-Areas/(?:People|Companies)/|People/|Active/)[A-Za-z0-9_/-]+(?:\.md)?'
     refs.extend(re.findall(path_pattern, task_line))
     
     # Also match explicit markdown file references
@@ -635,7 +680,7 @@ def find_tasks_for_page(page_path: str) -> List[Dict[str, Any]]:
                 title = title_match.group(1).strip() if title_match else line.strip()[6:]
                 
                 # Clean title of file references for display
-                clean_title = re.sub(r'\s*\|\s*(?:People|Active)/[^\s]+', '', title)
+                clean_title = re.sub(r'\s*\|\s*(?:05-Areas/(?:People|Companies)/|People/|Active/)[^\s]+', '', title)
                 clean_title = re.sub(r'\s+\.md\b', '', clean_title)
                 clean_title = re.sub(r'\s*\|.*$', '', clean_title)  # Remove trailing | refs
                 
@@ -879,10 +924,7 @@ def refresh_company_page(company_path: str) -> Dict[str, Any]:
     if not company_path.endswith('.md'):
         company_path += '.md'
     
-    if company_path.startswith('Active/'):
-        filepath = BASE_DIR / company_path
-    else:
-        filepath = COMPANIES_DIR / Path(company_path).name
+    filepath = resolve_company_filepath(company_path)
     
     if not filepath.exists():
         return {
@@ -1292,9 +1334,7 @@ def parse_quarterly_goals(filepath: Path) -> List[Dict[str, Any]]:
 
 def get_goal_by_id(goal_id: str) -> Optional[Dict[str, Any]]:
     """Get a specific goal by its ID"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     goals = parse_quarterly_goals(goals_file)
     for goal in goals:
@@ -1362,9 +1402,7 @@ def calculate_goal_progress(goal_id: str) -> Dict[str, Any]:
 
 def update_goal_in_file(goal_id: str, updates: Dict[str, Any]) -> bool:
     """Update a goal's fields in 01-Quarter_Goals/Quarter_Goals.md"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     if not goals_file.exists():
         return False
@@ -1399,9 +1437,7 @@ def update_goal_in_file(goal_id: str, updates: Dict[str, Any]) -> bool:
 
 def create_quarterly_goal_in_file(goal_data: Dict[str, Any]) -> Dict[str, Any]:
     """Create a new quarterly goal in 01-Quarter_Goals/Quarter_Goals.md"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     # Ensure file exists
     if not goals_file.exists():
@@ -1752,9 +1788,7 @@ def find_similar_tasks(item: str, existing_tasks: List[Dict[str, Any]]) -> List[
 
 def migrate_quarterly_goals() -> Dict[str, Any]:
     """Add IDs to existing quarterly goals that don't have them"""
-    goals_file = QUARTER_GOALS_FILE
-    if is_demo_mode():
-        goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+    goals_file = get_quarter_goals_file()
     
     if not goals_file.exists():
         return {
@@ -2565,7 +2599,7 @@ async def handle_list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="get_task_linear_link",
-            description="Get Linear issue link for a Dex task (03-Tasks/linear_sync.json). Returns linear_identifier (e.g. INA-5) and linear_id if linked. Use before calling linear_set_issue_completed when user marks task done.",
+            description="Get Linear issue link for a Dex task (03-Tasks/linear_sync.json). Returns linear_identifier (e.g. INA-5) and linear_id if linked. Use before updating issue state via Plugin Linear when user marks task done.",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -2589,7 +2623,7 @@ async def handle_list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="sync_linear_issues_to_dex",
-            description="Create Dex tasks for Linear issues that are not yet linked. Call after getting issues from Linear MCP (e.g. linear_my_issues or linear_list_issues). Pass the list of issues; only unlinked ones will get a task in 03-Tasks/Tasks.md and a link in linear_sync.json.",
+            description="Create Dex tasks for Linear issues that are not yet linked. Call after getting issues from Plugin Linear (e.g. list_issues with assignee='me'). Pass the list of issues; only unlinked ones will get a task in 03-Tasks/Tasks.md and a link in linear_sync.json.",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -2678,7 +2712,7 @@ async def handle_list_tools() -> list[types.Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "company_path": {"type": "string", "description": "Path to company page (e.g., 'Acme_Corp' or 'Active/Relationships/Companies/Acme_Corp.md')"}
+                    "company_path": {"type": "string", "description": "Company page: filename (e.g. Acme_Corp.md), or vault-relative path: 05-Areas/Companies/..., or legacy Active/Relationships/Companies/..."}
                 },
                 "required": ["company_path"]
             }
@@ -3476,9 +3510,7 @@ async def handle_call_tool(
             quarter = quarter_info['quarter']
         
         # Read goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file)
         
@@ -3715,9 +3747,7 @@ async def handle_call_tool(
         quarter = quarter_info['quarter']
         
         # Get quarterly goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         
@@ -3769,9 +3799,7 @@ async def handle_call_tool(
     
     elif name == "check_goal_alignment":
         # Get all goals, priorities, and tasks
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         priorities_file = get_week_priorities_file()
@@ -3825,9 +3853,7 @@ async def handle_call_tool(
             quarter_info = get_quarter_info()  # Still get for weeks remaining
         
         # Get quarterly goals
-        goals_file = QUARTER_GOALS_FILE
-        if is_demo_mode():
-            goals_file = DEMO_DIR / '01-Quarter_Goals/Quarter_Goals.md'
+        goals_file = get_quarter_goals_file()
         
         goals = parse_quarterly_goals(goals_file) if goals_file.exists() else []
         

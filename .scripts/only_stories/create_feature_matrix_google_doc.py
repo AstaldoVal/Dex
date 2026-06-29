@@ -25,7 +25,7 @@ def _credentials_path() -> Path:
     p = os.environ.get("GOOGLE_DRIVE_CREDENTIALS_PATH") or os.environ.get("GOOGLE_CALENDAR_CREDENTIALS_PATH")
     if p:
         return Path(p).expanduser()
-    return REPO / "credentials.json"
+    return REPO / "Credentials" / "personal" / "credentials.json"
 
 
 def _token_path() -> Path:
@@ -97,7 +97,7 @@ def main() -> int:
                     "success": False,
                     "error": (
                         f"No Google OAuth client JSON at {_credentials_path()}. "
-                        "Set GOOGLE_DRIVE_CREDENTIALS_PATH or add credentials.json at repo root, "
+                        "Set GOOGLE_DRIVE_CREDENTIALS_PATH or add OAuth JSON under Credentials/personal/, "
                         "then re-run (browser opens once for consent)."
                     ),
                 },

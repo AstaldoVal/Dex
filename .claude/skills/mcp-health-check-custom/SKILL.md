@@ -5,7 +5,7 @@ description: Verify stdio MCP servers, apply known fixes. Runs at chat start.
 
 # MCP Health Check
 
-**When to use:** At the start of each new chat (Cursor), or when MCP servers appear broken. Run `/mcp-health-check-custom` to verify all stdio MCP servers and fix known failures.
+**When to use:** At the start of each new chat (Cursor), or when MCP tool connections appear broken. Run `/mcp-health-check-custom` to verify **local** MCP integrations from Cursor's MCP config (stdio transport; the script skips remote URL servers) and fix known failures.
 
 ## Workflow
 
@@ -13,7 +13,7 @@ description: Verify stdio MCP servers, apply known fixes. Runs at chat start.
    ```bash
    node .claude/skills/mcp-health-check-custom/scripts/mcp-health-check.cjs
    ```
-   Exit code 0 = all OK; 1 = at least one failure. Output is JSON to stdout.
+   For the **agent** (internal): exit code 0 means every **stdio** MCP entry the script tests passed; 1 means at least one failure. Script prints JSON to stdout. For **Roman in chat**, do not say «stdio» or exit codes first; say in plain Russian whether **local tool connections to Cursor** are OK and what that means (see «User-visible report» below).
 
 2. **Parse output:**
    - `{ "ok": true }` → All servers pass. Report "All MCP servers OK."
@@ -30,6 +30,14 @@ description: Verify stdio MCP servers, apply known fixes. Runs at chat start.
 5. **Report:**
    - List fixed servers and what was done.
    - For unfixable failures, show error and suggest manual debugging (run MCP manually, check setup docs).
+
+### User-visible report (chat to Roman)
+
+- **Success (canonical, prefer verbatim):** «Все подключения MCP инструментов в порядке. В данном чате можно ими пользоваться.»
+- **Do not** append one long parenthesis to those two sentences mixing «stdio», «проверка из корня репозитория», and URL-only entries — that puts internal report jargon back into the same breath as the human outcome. If Roman should know URL-only servers (e.g. Atlassian) were not exercised: **separate** short plain-Russian sentence **without** «stdio», e.g. «Записи Atlassian в конфиге только по URL, этот скрипт их не проверяет, так задумано.»
+- **Single failure (canonical template):** «Не поднимается подключение к … (имя из списка) MCP, в настройках Tools and MCP посмотри статус / перезапусти Cursor» — подставь точное имя из списка вместо многоточия; при нескольких сбоях можно повторить шаблон по одному имени за раз или одной фразой перечислить имена, затем одна рекомендация про Tools and MCP / перезапуск Cursor.
+- **Do not** start the user message with `exit 0`, raw exit codes, `128 + N`, jargon like «stdio MCP», or similar. Those belong in logs or after the human summary if Roman asks for debug detail.
+- Optional follow-up (plain Russian, no «stdio»): MCP entries that exist only as URLs in config were not exercised by this script (auth in Cursor); say so only if it matters to Roman’s expectations.
 
 ## Important
 

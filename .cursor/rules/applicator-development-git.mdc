@@ -37,6 +37,20 @@ alwaysApply: false
 - Запуск: `npm run dev:no-ngrok` из `04-Projects/Applicator` (веб :3000, API :8000).
 - API venv: Python **3.12** через `uv` в `apps/api/venv` (не полагаться на системный 3.14 для PyMuPDF).
 
+## Staging deploy (обязательно после UI)
+
+Roman смотрит результат на **staging**, не просит «скажи, если задеплоить».
+
+После **любой** правки под `04-Projects/Applicator/**`, которую Roman должен проверить в браузере (UI, resume detail, preview rail, landing/waitlist):
+
+1. Commit в Applicator git (см. выше).
+2. **Сразу** из `04-Projects/Applicator`: `./scripts/deploy-staging-pages.sh` (API-only: `./scripts/deploy-staging-api.sh`).
+3. В ответе: `https://applicator-staging.pages.dev` (или `https://staging.genufit.app`), какую страницу обновить, exit code.
+
+**Не спрашивать** разрешение на deploy. **Исключения:** Roman явно написал «без deploy» в этом turn; deploy упал — ошибка + один fix step + повтор.
+
+Канон внутри Applicator: `04-Projects/Applicator/.cursor/rules/staging-deploy/RULE.md`.
+
 ## Согласованность
 
 - `.cursor/rules/applicator-resume-section-feedback.mdc` — full-flow-v2 step 9–10.

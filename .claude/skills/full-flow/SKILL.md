@@ -3,13 +3,13 @@ name: full-flow
 description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%, add to Teal, resumes, match-score). Invoke with /full-flow or say "Hello" to start; paste LinkedIn search URL when asked.
 ---
 
-# Full Flow: LinkedIn Search → Teal (8 шагов)
+# Full Flow: LinkedIn Search → Teal (10 шагов)
 
 **Команда:** `/full-flow` или **Hello** (в ответ попросите ссылку на поиск LinkedIn и запустите flow).
 
 Один запуск выполняет весь цикл: захват вакансий по URL поиска LinkedIn → дайджест (PM/PO, дедуп) → HTML со ссылками → загрузка описаний до **100%** → фильтр remote/on-site → добавление в Teal → создание резюме по дайджесту → match-score (summary, Target Title, PDF, cover letter).
 
-**Порядок выполнения:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8.
+**Порядок выполнения:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 (Claude Code review) → 10 (apply + отчёт по ручным правкам).
 
 ## Правило 100%
 
@@ -44,6 +44,8 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
 
 **Fallback только на HTML, не на --from-text.** Если по какой-то причине захват через браузер недоступен, можно сохранить HTML страницы вакансии («Сохранить как») и перезапустить с **`--from-html`** (скрипт распарсит title/company из файла; jobId берётся из URL).
 
+Для запусков с **одной вакансией** (single-job URL или дайджест на 1 позицию) Step 8 всегда выполняется **полностью**: non-product фильтр не делает SKIP, а идут match-score, summary loop, Target Title, PDF и cover letter.
+
 ## Вставленный текст вакансии (без LinkedIn)
 
 Если пользователь **вставляет текст вакансии** (заголовок, компания, описание) без ссылки на LinkedIn:
@@ -54,7 +56,9 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
      ```bash
      node .scripts/job-search/run-full-linkedin-teal-flow.cjs --from-text-parse-only "00-Inbox/Job_Search/pasted-job-....md"
      ```
-   - Вывести пользователю: **«Определил: должность = … , компания = … . Всё верно?»**
+   - Вывести пользователю только короткое подтверждение, без объяснений, команд и списка файлов:
+     - Если компания определена нормально: **«Определил: должность = …, компания = …. Всё верно?»**
+     - Если компания не определена или выглядит как фрагмент описания: **«Определил должность: … . Компанию нормально определить не удалось. Уточни, пожалуйста, название компании, если знаешь.»**
    - **После подтверждения пользователя:** обновить файл так, чтобы первая строка была ровно `Должность | Компания` (как подтвердил пользователь), затем пустая строка, затем описание. Иначе при запуске flow скрипт снова разбирает файл и может подставить длинную фразу из описания вместо должности — имя резюме в Teal получится неверным.
    - Если пользователь исправляет — обновить файл по его правкам (первая строка `Должность | Компания`, пустая строка, описание).
    - Затем запустить flow с `--from-text`.
@@ -68,7 +72,7 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
 ## When You Run This Command
 
 1. **URL в сообщении:** Если пользователь написал ссылку на поиск LinkedIn (например `https://www.linkedin.com/jobs/search/?...`) или **на одну вакансию** (`https://www.linkedin.com/jobs/view/4371749875/...`) в том же сообщении, что и `/full-flow` или "Hello", использовать её.
-2. **Вставленный текст вакансии:** Если пользователь вставил текст вакансии без ссылки — сохранить в файл. Затем вызвать `--from-text-parse-only` для извлечения должности и компании, показать пользователю результат и спросить: «Определил: должность = X, компания = Y. Всё верно?» Только после подтверждения (или после исправления файла по замечаниям) запускать `npm run job-search:full-flow -- --from-text "<path>"`.
+2. **Вставленный текст вакансии:** Если пользователь вставил текст вакансии без ссылки — сохранить в файл. Затем вызвать `--from-text-parse-only` для извлечения должности и компании, показать пользователю только короткий результат и спросить подтверждение или уточнение компании. Только после подтверждения (или после исправления файла по замечаниям) запускать `npm run job-search:full-flow -- --from-text "<path>"`.
 3. **Одна вакансия (jobs/view/ID):** Если URL — страница просмотра вакансии (`linkedin.com/jobs/view/<id>`), скрипт создаёт экспорт из одной вакансии, **пропускает шаг 1** (без браузера и расширения) и не применяет фильтр «только PM/PO» — в дайджест попадёт любая роль (в т.ч. Compliance, Legal). Запуск тот же: `npm run job-search:full-flow -- "<URL>"`.
 4. **Без URL и без текста:** Если ни ссылки, ни текста вакансии нет — спросить: «Пришли ссылку на поиск/вакансию LinkedIn или вставь текст вакансии (должность, компания, описание).»
 5. **Опция без Teal:** Если пользователь просит только до шага 5 (без добавления в Teal и резюме) — запустить с флагом `--no-teal`.
@@ -76,7 +80,7 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
 ## What You Do
 
 1. Определить вход: **URL** (поиск или одна вакансия) или **вставленный текст вакансии**.
-2. Для **вставленного текста:** сохранить в файл. Разобрать файл (`--from-text-parse-only`), показать пользователю определённые title и company, запросить подтверждение; после подтверждения запустить:
+2. Для **вставленного текста:** сохранить в файл. Разобрать файл (`--from-text-parse-only`), показать пользователю определённые title и company коротко, запросить подтверждение; после подтверждения запустить:
    ```bash
    npm run job-search:full-flow -- --from-text "00-Inbox/Job_Search/pasted-job-YYYY-MM-DD.md"
    ```
@@ -88,10 +92,20 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
 4. Не прерывать по таймауту. Дождаться завершения. В терминале будут видны логи с `[Step N] [Label]` и блоки статистики после каждого шага.
 5. Если скрипт упал с ошибкой — по логу определить шаг и причину; при необходимости исправить (retry встроен для шагов 5 и 6) и запустить снова.
 6. Кратко резюмировать результат: сколько вакансий на каждом этапе (по последним STEP STATS), успешно ли завершён flow.
+7. **Обязательно вывести пользователю прямые ссылки на созданные резюме Teal** из блока лога `=== Direct Teal resume links ===` (или из созданных `resumeId`), по одной ссылке на каждое резюме. Если ссылки не найдены — явно указать это и дать путь к логу `00-Inbox/Job_Search/teal/full-flow.log`.
+8. **Обязательный финальный критерий done (после шага 8):** проверить, что создана папка в `~/Documents/Applied/<Company>/<Vacancy>/` и в ней есть оба файла:
+   - `Roman Matsukatov - CV.pdf`
+   - `Roman Matsukatov - Cover Letter.docx`
+   Если хотя бы одного файла нет, flow считается незавершённым: перезапустить шаг 8/экспорт до фактического появления файлов, и только потом сообщать об успехе.
+9. **Шаг 9 (Claude Code, по умолчанию):** `teal-cowork-resume-review.cjs` запускает **`claude -p`** в папке пакета → `feedback.json` с **`apply`** (всё, что пайплайн применяет в Teal: title, summary, toggles, skills, bullets_add/rewrite) и **`deferred_v1`** (только ручное: new_sections, other). Gate: `step-9-eval.json` `pass: true`. Отключить: `--no-cowork-review`. Legacy UI Cowork: только если `JOB_SEARCH_STEP9_REVIEW=cowork`.
+10. **Шаг 10:** `teal-apply-resume-feedback.cjs` применяет **`apply`**, пишет **`step-10-manual-report.md`** (что Claude Code оставил в `deferred_v1` — ещё не автоматизируем), gate: `step-10-eval.json` `pass: true`. В логе full-flow печатается текст отчёта.
+11. **Done:** `~/Documents/Applied/<Company>/<Vacancy>/` с **актуальным** `Roman Matsukatov - CV.pdf` (перезаписывается на step 10 после всех правок Teal; step 8 может оставить более ранний PDF) + cover letter; шаги 9–10 `pass`; ручное — `step-10-manual-report.md`.
 
-## Chrome: занятый профиль
+## Chrome: занятый профиль и фокус
 
-**Правило:** Когда основной профиль Chrome занят (Chrome уже открыт), скрипты Teal (match-score, add-digest, resume batch и т.д.) **всегда** пробуют альтернативные профили и в конце — fallback (`.chrome-profile-fallback`). **Не требовать от пользователя закрывать Chrome (Cmd+Q).** Если все профили заняты — скрипт запускает fallback; при первом запуске в открывшемся окне один раз войти в Teal. Реализация: `getTealProfileCandidates()` в `teal-chrome-profile.cjs` включает fallback; при успешном запуске с fallback выводится подсказка «Log in to Teal once if needed».
+**Пул профилей:** Teal (6–10) и LinkedIn Dex (1–4) берут **первый свободный** каталог из `teal/.chrome-profile*` (`acquireTealProfile`). **Не требовать закрывать Chrome (Cmd+Q).** Fallback: `.chrome-profile-fallback`.
+
+**Фокус:** Chrome **не** должен становиться frontmost. В `.env`: `TEAL_CHROME_LAUNCH_MODE=pipe_minimized` (агент добавляет сам, если нет). LinkedIn: `open -g` + pool (`dex-chrome-open-background.cjs`). Teal: `open -g` + CDP. **Не** советовать `DEX_CHROME_PROFILE_DIRECTORY`. Канон: `.claude/reference/teal-chrome-launch-modes.md`. Smoke: `npm run job-search:teal-chrome-focus-smoke`.
 
 ## Requirements
 
@@ -105,6 +119,7 @@ description: Run full LinkedIn → Teal flow (capture, digest, descriptions 100%
 - **Одна вакансия:** URL `jobs/view/<id>` — full-flow без шага 1, любая роль.
 - **Вакансия уже в дайджесте:** если при поиске сработал cross-dedup и в логе указан digest (например `search-single-job-2026-02-20.md`), можно прогнать шаги 3→4→5(skip)→6→7→8 от этого дайджеста: `npm run job-search:full-flow -- --from-digest "00-Inbox/Job_Search/digests/linkedin/<filename>.md"`.
 - **Одна вакансия по URL, fetch не отдал страницу:** перезапуск с `--from-html <path>` — путь к сохранённому HTML страницы вакансии. Парсер извлекает title/company из блока с `aria-label="Company, ..."` и `data-display-contents="true"` (или из fallback-селекторов). jobId остаётся из URL.
-- **Вставленный текст:** Сначала `--from-text-parse-only <path>` (проверка title/company), подтверждение пользователя, затем `npm run job-search:full-flow -- --from-text "<path>"`. Должность и компания извлекаются из первой строки или из описания. Шаги 1,2,3,4 пропускаются.
+- **Вставленный текст:** Сначала `--from-text-parse-only <path>` (проверка title/company), затем короткое подтверждение пользователя, затем `npm run job-search:full-flow -- --from-text "<path>"`. Должность и компания извлекаются из первой строки или из описания. Шаги 1,2,3,4 пропускаются.
+- **Короткий ответ после parse-only:** До подтверждения пользователя не выводить команды запуска, пути к файлам, `Generated files`, длинное объяснение причины ошибки парсера или план следующих шагов. Разрешённый формат ответа: одна-две строки с определённой должностью и компанией; если компания не распознана, прямо сказать, что компанию нормально определить не удалось, и попросить уточнить название.
 - Связанный скилл: `/linkedin-to-teal` (короткий цикл: только захват + дайджест + добавление в Teal, без резюме и match-score).
 - **Шаг 8, Professional Summary:** тот же стандарт, что в `/job-summary` и `resume-summary-custom`: не повторять одно и то же первое слово или штамп в начале абзацев, не дублировать один и тот же блок смысла в двух абзацах; **не тавтологировать** (один и тот же смысл двумя формулировками в одном предложении, например lifecycles и full development lifecycle) и **не строить предложение как перечень тегов из JD**; **явный субъект кандидата** (I / my experience), не безличное «Work connects…» как из вакансии; **не абзац-список после двоеточия** (Experience spans X: a, b, c); без размытого *stronger* без опоры и без кривых коллокаций вроде *reporting people can trust*. Промпт MCP `generate_job_summary` и референс `.claude/reference/job-summary-keyword-rules.md` (разделы про разнообразие, тавтологию, чей опыт и как подать).

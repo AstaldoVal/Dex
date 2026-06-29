@@ -19,7 +19,10 @@ const patterns = [
   'teal-complete-jobs-flow',
   'add-digest-jobs-to-teal',
   'fetch-job-descriptions',
-  'run-incremental-linkedin-teal-flow'
+  'run-incremental-linkedin-teal-flow',
+  'teal-apply-resume-feedback',
+  'run-job-search-watched',
+  'teal-cowork-resume-review'
 ];
 
 function getTealPids() {

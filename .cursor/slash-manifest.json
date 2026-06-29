@@ -1,0 +1,543 @@
+{
+  "generatedAt": "2026-06-28T06:37:17.860Z",
+  "generator": ".scripts/cursor/sync-slash-autosuggest.cjs",
+  "count": 107,
+  "items": [
+    {
+      "name": "ai-digest",
+      "canonical": ".claude/skills/ai-digest/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "ai-stats",
+      "canonical": ".claude/skills/ai-stats/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-algorithmic-art",
+      "canonical": ".claude/skills/anthropic-algorithmic-art/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-brand-guidelines",
+      "canonical": ".claude/skills/anthropic-brand-guidelines/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-canvas-design",
+      "canonical": ".claude/skills/anthropic-canvas-design/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-doc-coauthoring",
+      "canonical": ".claude/skills/anthropic-doc-coauthoring/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-docx",
+      "canonical": ".claude/skills/anthropic-docx/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-frontend-design",
+      "canonical": ".claude/skills/anthropic-frontend-design/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-internal-comms",
+      "canonical": ".claude/skills/anthropic-internal-comms/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-mcp-builder",
+      "canonical": ".claude/skills/anthropic-mcp-builder/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-pdf",
+      "canonical": ".claude/skills/anthropic-pdf/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-pptx",
+      "canonical": ".claude/skills/anthropic-pptx/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-skill-creator",
+      "canonical": ".claude/skills/anthropic-skill-creator/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-slack-gif-creator",
+      "canonical": ".claude/skills/anthropic-slack-gif-creator/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-theme-factory",
+      "canonical": ".claude/skills/anthropic-theme-factory/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-web-artifacts-builder",
+      "canonical": ".claude/skills/anthropic-web-artifacts-builder/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-webapp-testing",
+      "canonical": ".claude/skills/anthropic-webapp-testing/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "anthropic-xlsx",
+      "canonical": ".claude/skills/anthropic-xlsx/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "architecture",
+      "canonical": ".claude/commands/architecture.md",
+      "kind": "command"
+    },
+    {
+      "name": "banda-google-slides",
+      "canonical": ".claude/skills/banda-google-slides/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "beta-activate",
+      "canonical": ".claude/skills/beta-activate/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "beta-status",
+      "canonical": ".claude/skills/beta-status/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "brainstorm",
+      "canonical": ".claude/commands/brainstorm.md",
+      "kind": "command"
+    },
+    {
+      "name": "career-coach",
+      "canonical": ".claude/skills/career-coach/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "career-setup",
+      "canonical": ".claude/skills/career-setup/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "check-compiler-errors",
+      "canonical": "Skills_library/cursor-team-kit/skills/check-compiler-errors/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "control-cli",
+      "canonical": "Skills_library/cursor-team-kit/skills/control-cli/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "control-ui",
+      "canonical": "Skills_library/cursor-team-kit/skills/control-ui/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "cover-letter",
+      "canonical": ".claude/skills/cover-letter/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "create-agent",
+      "canonical": ".claude/commands/create-agent.md",
+      "kind": "command"
+    },
+    {
+      "name": "create-mcp",
+      "canonical": ".claude/skills/create-mcp/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "create-skill",
+      "canonical": ".claude/skills/create-skill/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "create-story",
+      "canonical": ".claude/commands/create-story.md",
+      "kind": "command"
+    },
+    {
+      "name": "create-ux-design",
+      "canonical": ".claude/commands/create-ux-design.md",
+      "kind": "command"
+    },
+    {
+      "name": "create-workflow",
+      "canonical": ".claude/commands/create-workflow.md",
+      "kind": "command"
+    },
+    {
+      "name": "daily-plan",
+      "canonical": ".claude/skills/daily-plan/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "daily-review",
+      "canonical": ".claude/skills/daily-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "day-sprint",
+      "canonical": ".claude/skills/day-sprint/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "deslop",
+      "canonical": "Skills_library/cursor-team-kit/skills/deslop/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dev-story",
+      "canonical": ".claude/commands/dev-story.md",
+      "kind": "command"
+    },
+    {
+      "name": "dex",
+      "canonical": ".cursor/commands/dex.md",
+      "kind": "command"
+    },
+    {
+      "name": "dex-add-mcp",
+      "canonical": ".claude/skills/dex-add-mcp/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-backlog",
+      "canonical": ".claude/skills/dex-backlog/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-demo",
+      "canonical": ".claude/skills/dex-demo/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-improve",
+      "canonical": ".claude/skills/dex-improve/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-level-up",
+      "canonical": ".claude/skills/dex-level-up/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-obsidian-setup",
+      "canonical": ".claude/skills/dex-obsidian-setup/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-rollback",
+      "canonical": ".claude/skills/dex-rollback/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-update",
+      "canonical": ".claude/skills/dex-update/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "dex-whats-new",
+      "canonical": ".claude/skills/dex-whats-new/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "email-process",
+      "canonical": ".claude/skills/email-process/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "feature-decision",
+      "canonical": "Skills_library/pm/dex/feature-decision/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "fix-ci",
+      "canonical": "Skills_library/cursor-team-kit/skills/fix-ci/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "fix-merge-conflicts",
+      "canonical": "Skills_library/cursor-team-kit/skills/fix-merge-conflicts/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "full-flow",
+      "canonical": ".claude/skills/full-flow/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "full-flow-v2",
+      "canonical": ".claude/skills/full-flow-v2/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "get-pr-comments",
+      "canonical": "Skills_library/cursor-team-kit/skills/get-pr-comments/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "getting-started",
+      "canonical": ".claude/skills/getting-started/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "igaming-vacancy-track",
+      "canonical": ".claude/skills/igaming-vacancy-track/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "integrate-mcp",
+      "canonical": ".claude/skills/integrate-mcp/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "job-apply",
+      "canonical": ".claude/skills/job-apply/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "job-digest",
+      "canonical": ".claude/skills/job-digest/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "job-stats",
+      "canonical": ".claude/skills/job-stats/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "job-summary",
+      "canonical": ".claude/skills/job-summary/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "journal",
+      "canonical": ".claude/skills/journal/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "linkedin-posting",
+      "canonical": ".claude/skills/linkedin-posting/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "linkedin-to-teal",
+      "canonical": ".claude/skills/linkedin-to-teal/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "loop-on-ci",
+      "canonical": "Skills_library/cursor-team-kit/skills/loop-on-ci/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "make-pr-easy-to-review",
+      "canonical": "Skills_library/cursor-team-kit/skills/make-pr-easy-to-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "meeting-prep",
+      "canonical": ".claude/skills/meeting-prep/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "new-branch-and-pr",
+      "canonical": "Skills_library/cursor-team-kit/skills/new-branch-and-pr/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "pr-review-canvas",
+      "canonical": "Skills_library/cursor-team-kit/skills/pr-review-canvas/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "prd",
+      "canonical": ".claude/commands/prd.md",
+      "kind": "command"
+    },
+    {
+      "name": "prioritization",
+      "canonical": "Skills_library/pm/dex/prioritization/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "process-meetings",
+      "canonical": ".claude/skills/process-meetings/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "product-brief",
+      "canonical": ".claude/skills/product-brief/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "project-health",
+      "canonical": ".claude/skills/project-health/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "prompt-improver",
+      "canonical": ".claude/skills/prompt-improver/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "quarter-plan",
+      "canonical": ".claude/skills/quarter-plan/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "quarter-review",
+      "canonical": ".claude/skills/quarter-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "research",
+      "canonical": ".claude/commands/research.md",
+      "kind": "command"
+    },
+    {
+      "name": "resume-builder",
+      "canonical": ".claude/skills/resume-builder/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "review-and-ship",
+      "canonical": "Skills_library/cursor-team-kit/skills/review-and-ship/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "roadmap",
+      "canonical": "Skills_library/pm/dex/roadmap/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "run-smoke-tests",
+      "canonical": "Skills_library/cursor-team-kit/skills/run-smoke-tests/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "save-insight",
+      "canonical": ".claude/skills/save-insight/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "scan-skill-injection",
+      "canonical": ".claude/skills/scan-skill-injection/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "solutioning-gate-check",
+      "canonical": ".claude/commands/solutioning-gate-check.md",
+      "kind": "command"
+    },
+    {
+      "name": "speak",
+      "canonical": ".claude/skills/speak/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "sprint-planning",
+      "canonical": ".claude/commands/sprint-planning.md",
+      "kind": "command"
+    },
+    {
+      "name": "teal-cleanup-copies",
+      "canonical": ".claude/skills/teal-cleanup-copies/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "teal-delete-summary",
+      "canonical": ".claude/skills/teal-delete-summary/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "teal-resume",
+      "canonical": ".claude/skills/teal-resume/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "teal-resume-batch",
+      "canonical": ".claude/skills/teal-resume-batch/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "tech-spec",
+      "canonical": ".claude/commands/tech-spec.md",
+      "kind": "command"
+    },
+    {
+      "name": "thermo-nuclear-code-quality-review",
+      "canonical": "Skills_library/cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "thermo-review",
+      "canonical": ".cursor/commands/thermo-review.md",
+      "kind": "command"
+    },
+    {
+      "name": "triage",
+      "canonical": ".claude/skills/triage/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "verify-this",
+      "canonical": "Skills_library/cursor-team-kit/skills/verify-this/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "week-plan",
+      "canonical": ".claude/skills/week-plan/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "week-review",
+      "canonical": ".claude/skills/week-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "weekly-review",
+      "canonical": "Skills_library/cursor-team-kit/skills/weekly-review/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "what-did-i-get-done",
+      "canonical": "Skills_library/cursor-team-kit/skills/what-did-i-get-done/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "workflow-from-chats",
+      "canonical": "Skills_library/cursor-team-kit/skills/workflow-from-chats/SKILL.md",
+      "kind": "skill"
+    },
+    {
+      "name": "workflow-init",
+      "canonical": ".claude/commands/workflow-init.md",
+      "kind": "command"
+    },
+    {
+      "name": "workflow-status",
+      "canonical": ".claude/commands/workflow-status.md",
+      "kind": "command"
+    },
+    {
+      "name": "youtube-transcript",
+      "canonical": ".claude/skills/youtube-transcript/SKILL.md",
+      "kind": "skill"
+    }
+  ],
+  "missing": []
+}

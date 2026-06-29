@@ -45,7 +45,7 @@ Banned vocabulary and style: `.claude/reference/ai-writing-signs-banned.md`.
 - **Tags:** Every post must have a Tags line (comma-separated topics/keywords). If missing, add one before publish.
 
 ### 7. No technical config in body
-- **Rule:** No raw config (JSON, YAML, `.env` snippets, file paths like `.cursor/mcp.json` or `core/mcp/linear_server.py`) in the post. The reader gets the result by **prompting**: "Ask in chat: ...", "Open Settings -> ...", or one official link. See one-percent-ai-substack -> Writing rules -> No technical config in the body.
+- **Rule:** No raw config (JSON, YAML, `.env` snippets, file paths like `.cursor/mcp.json` or `core/mcp/*.py`) in the post. The reader gets the result by **prompting**: "Ask in chat: ...", "Open Settings -> ...", or one official link. See one-percent-ai-substack -> Writing rules -> No technical config in the body.
 
 ### 8. Post-specific (1% AI Better)
 - **Free vs paid:** If the post offers a ready-made artifact, that artifact is for **paid** subscribers; free readers get the idea and steps to build themselves.

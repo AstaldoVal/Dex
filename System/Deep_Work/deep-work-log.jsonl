@@ -1,0 +1,7 @@
+{"timestamp":"2026-05-07T10:10:10.223Z","event":"deep_work_start","raw":"Draft roadmap | done = outline + 3 risks","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:21:14.119Z","event":"deep_work_start","raw":"тест прогона вне окна | критерий = уведомление + baseline открыт + эта строка в логе","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:21:14.165Z","event":"deep_work_end","raw":"проверили цепочку | отвлечений нет | следующий шаг = в реальном окне писать те же маркеры в чат","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:25:51.723Z","event":"deep_work_start","raw":"автопрогон без сообщения пользователя | критерий = нотификация + baseline + строка в jsonl","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:25:51.783Z","event":"deep_work_end","raw":"цепочка закрыта агентом | отвлечений нет | следующий шаг = боевой слот по расписанию","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:27:22.582Z","event":"deep_work_start","raw":"demo auto | критерий = нотификация + baseline + две строки в логе","source":"hook_user_prompt_submit"}
+{"timestamp":"2026-05-07T21:27:22.619Z","event":"deep_work_end","raw":"demo auto закрыт | отвлечений нет | следующий шаг = слот по расписанию","source":"hook_user_prompt_submit"}

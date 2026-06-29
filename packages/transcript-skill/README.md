@@ -91,8 +91,8 @@ transcript-media --chunk-minutes 45 "/path/to/long.mp3"
 transcript-media --no-auto-tune --compute-type int8 "/path/to/file.mp3"
 # Progress percent on stderr (default on); turn off:
 transcript-media --no-progress "/path/to/file.mp3"
-# Progress format: default --progress-format auto (Rich bar when an interactive TTY is available:
-# stderr TTY, or /dev/tty / stdin tty when stderr is redirected; else line mode).
+# Progress format: default --progress-format rich (Rich bar on TTY; with pipe/2>log/tee: ASCII bar + ETA;
+# use --progress-format lines only for throttled multiline logs; --progress-format rewrite for \r without a bar).
 # Reliable terminal + log: use scripts/transcribe_to_log.sh OUT.json OUT.log -- --model large-v3 "file.mp4"
 # (tee shows progress in the window; no reliance on /dev/tty alone.)
 # With plain `2>file.log`: stderr is mirrored to the terminal (/dev/tty, then stdin tty as fallback);

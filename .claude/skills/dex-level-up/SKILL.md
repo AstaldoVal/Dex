@@ -83,7 +83,7 @@ After analyzing universal feature usage, check for role-specific skills:
 
 ### Check Available Skills
 
-1. List files in `.claude/skills/_available/[role_group]/`
+1. List files in `Skills_library/_available/[role_group]/`
 2. For each available skill directory, read its SKILL.md and extract:
    - name (from frontmatter)
    - description (from frontmatter)
@@ -126,10 +126,10 @@ Say:
 
 When user says "install [skill]" or "install all":
 
-1. **Verify skill exists** in `.claude/skills/_available/[role_group]/[skill-name]/`
+1. **Verify skill exists** in `Skills_library/_available/[role_group]/[skill-name]/`
 2. **Copy skill folder:**
    ```bash
-   cp -r .claude/skills/_available/[role_group]/[skill-name]/ .claude/skills/[skill-name]/
+   cp -r Skills_library/_available/[role_group]/[skill-name]/ .claude/skills/[skill-name]/
    ```
 3. **Confirm to user:** "✓ Installed `/[skill-name]` - try it now!"
 4. **Update usage log:** Add the skill to the "Role-Specific Skills" section in `System/usage_log.md` (see Step 5 for format)

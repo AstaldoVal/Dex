@@ -175,6 +175,7 @@ def emit_cli_summary(
     eff_progress: str,
     show_progress: bool,
     plan_only: bool,
+    speaker_map_display: str = "нет",
 ) -> None:
     chunk_s = "∅ (авто)" if chunk_minutes is None else f"{chunk_minutes:g}"
     rows = [
@@ -187,6 +188,7 @@ def emit_cli_summary(
         ("--no-auto-tune", "да" if no_auto_tune else "нет"),
         ("--youtube-audio", "да" if youtube_audio else "нет"),
         ("--diarize", "да" if diarize else "нет"),
+        ("--speaker-map / --speaker-map-json", speaker_map_display),
         ("HF-токен (--hf-token / env)", hf_auth_display),
         ("--progress", "да" if show_progress else "нет"),
         ("--plan-only", "да" if plan_only else "нет"),

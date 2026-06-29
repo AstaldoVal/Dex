@@ -1,0 +1,61 @@
+---
+description: Full Flow v2 (Applicator) — отчёт после шагов 9–10 в чате Roman
+alwaysApply: false
+globs:
+  - "00-Inbox/Job_Search/teal/full-flow-v2/**"
+  - ".scripts/job-search/full-flow-v2/**"
+---
+
+# Full Flow v2 (Applicator): отчёт в чате
+
+Применять после **шага 9** (Claude review), **шага 10** (apply) или по запросу «фидбек / что применено» для резюме Applicator.
+
+## Структура (совместимо с dex-cognitive-load-budget)
+
+1. **Вердикт** — 2–4 предложения: вакансия, pass/fail шагов 9–10, главный хвост. **Без путей и таблиц.**
+2. **Действия** — 1–3 шага (открыть резюме, PDF, повтор apply). **Без таблиц.**
+3. **## Детали** — обязательная секция с таблицами (см. ниже). Полные пути к файлам **только здесь**, в колонке Path.
+
+## Таблицы в «Детали» (обязательны)
+
+Заголовок вакансии одной строкой: `{job_title} — {company}` · источник.
+
+### Master status
+
+| Step | Status | Eval | Reason | Artifact |
+
+Строки: **Claude Code S9**, **Apply S10**. Eval — из `step-9-eval.json` / `step-10-eval.json` пакета `applicator-review/`.
+
+### Deliverables
+
+| Артефакт | Exists | Path |
+
+В колонке **Path** — полный относительный путь от корня DEX (не только basename). Минимум:
+
+- `…/feedback.json`
+- `…/feedback.md`
+- `…/step-9-eval.json`
+- `…/step-10-eval.json`
+
+### Фидбек → применено
+
+| Блок фидбека | Применено | Комментарий |
+
+Строки по блокам: сначала **`section_reviews`** (9 секций, status ok / needs_changes), затем `apply` в feedback.json: target_title, professional_summary, skills merge, skills_reorder, work_experience toggles, bullets_add, work_experience_merge (сводка), deferred_v1.
+
+В **feedback.md** секция **Section reviews** обязательна после quality gate (вердикт по каждому блоку; для skills — порядок блоков, keep / убрать-слить).
+
+**Применено:** `да` | `нет` | `частично` | `н/д` (deferred).
+
+### Manual follow-up
+
+Только при ⚠️ или ❌ в master status.
+
+## Eval чата
+
+Ответ с секцией `## Детали` и таблицей «Фидбек → применено» проходит `npm run dex:eval-chat-response` (проверка `full_flow_v2_feedback_table`; пути в слое «Детали» не ломают `file_refs_full_relative_path`).
+
+## Согласованность
+
+- `.cursor/rules/dex-flow-results-format.mdc` — те же master/deliverables таблицы.
+- Состояние v2: `00-Inbox/Job_Search/teal/full-flow-v2/`, не v1 `teal/full-flow-state.json`.

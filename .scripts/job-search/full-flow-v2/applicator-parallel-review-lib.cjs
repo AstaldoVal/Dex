@@ -77,18 +77,122 @@ function sliceApplyForSection(feedback, sectionId) {
   }
 }
 
-function companyInventoryFromMerge(companies, companyName) {
-  const co = asArray(companies).find((c) => asString(c.name) === asString(companyName));
-  if (!co) return null;
+function bulletsFromRoleField(role) {
+  return asArray(role && (role.bulletPoints || role.bullets))
+    .map((b) => (b && typeof b === 'object' ? asString(b.text) : asString(b)))
+    .filter(Boolean);
+}
+
+function companyInventoryShape(co) {
+  if (!co || typeof co !== 'object') return null;
   return {
     name: asString(co.name),
     included: co.included !== false,
     roles: asArray(co.roles).map((role) => ({
       position: asString(role.position),
       included: role.included !== false,
-      bullets: asArray(role.bulletPoints || role.bullets).map((b) => asString(b)).filter(Boolean)
+      bullets: bulletsFromRoleField(role)
     }))
   };
+}
+
+function companyHasAnyBullets(company) {
+  if (!company) return false;
+  return asArray(company.roles).some((r) => r.included !== false && asArray(r.bullets).length > 0);
+}
+
+function companyInventoryFromMerge(companies, companyName) {
+  const co = asArray(companies).find((c) => asString(c.name) === asString(companyName));
+  return companyInventoryShape(co);
+}
+
+function companyInventoryFromDetail(detail, companyName) {
+  const co = asArray(detail && detail.companies).find((c) => asString(c.name) === asString(companyName));
+  return companyInventoryShape(co);
+}
+
+function enrichCompanyInventory(primary, ...fallbacks) {
+  if (primary && companyHasAnyBullets(primary)) return primary;
+  for (const fb of fallbacks) {
+    if (fb && companyHasAnyBullets(fb)) return fb;
+  }
+  return primary || fallbacks.find(Boolean) || null;
+}
+
+/**
+ * If sub-agent returns 0 bullets, bad shape, or disables without bullets — keep baseline inventory.
+ */
+function normalizeWorkExperienceCompanyOutput(tailored, baseline) {
+  const base = companyInventoryShape(baseline);
+  if (!tailored || typeof tailored !== 'object' || !asString(tailored.name)) {
+    return base ? { name: base.name, included: true, roles: base.roles.map((r) => ({ ...r })) } : null;
+  }
+
+  const name = asString(tailored.name) || (base && base.name);
+  const baseByPosition = new Map(
+    asArray(base && base.roles)
+      .map((r) => [asString(r.position).toLowerCase(), r])
+      .filter(([k]) => k)
+  );
+
+  const tailoredRoles = asArray(tailored.roles);
+  if (!tailoredRoles.length && base && base.roles.length) {
+    return { name, included: true, roles: base.roles.map((r) => ({ ...r })) };
+  }
+
+  if (tailored.included === false && base && companyHasAnyBullets(base)) {
+    return { name, included: true, roles: base.roles.map((r) => ({ ...r })) };
+  }
+
+  const roles = [];
+  for (const tr of tailoredRoles) {
+    const position = asString(tr.position);
+    const br = baseByPosition.get(position.toLowerCase());
+    let bullets = asArray(tr.bullets).map(asString).filter(Boolean);
+    const roleIncluded = tr.included !== false;
+
+    if (roleIncluded && !bullets.length && br) {
+      bullets = asArray(br.bullets);
+    }
+    if (!roleIncluded && !bullets.length && br && asArray(br.bullets).length) {
+      roles.push({ position, included: true, bullets: [...asArray(br.bullets)] });
+      continue;
+    }
+    if (roleIncluded) {
+      roles.push({ position, included: true, bullets });
+    } else if (bullets.length) {
+      roles.push({ position, included: false, bullets });
+    } else if (br) {
+      roles.push({ position, included: true, bullets: [...asArray(br.bullets)] });
+    }
+  }
+
+  for (const br of asArray(base && base.roles)) {
+    const key = asString(br.position).toLowerCase();
+    if (!key) continue;
+    if (!roles.some((r) => asString(r.position).toLowerCase() === key)) {
+      roles.push({ position: br.position, included: true, bullets: [...asArray(br.bullets)] });
+    }
+  }
+
+  const out = { name, included: tailored.included !== false, roles };
+  if (!companyHasAnyBullets(out) && base && companyHasAnyBullets(base)) {
+    return { name, included: true, roles: base.roles.map((r) => ({ ...r })) };
+  }
+  if (companyHasAnyBullets(out)) out.included = true;
+  return out;
+}
+
+function resolveBaselineCompanyInventory(feedback, companyName) {
+  const merge = (feedback && feedback.apply && feedback.apply.work_experience) || {};
+  const fromMerge = companyInventoryFromMerge(merge.companies, companyName);
+  const wxRow = sectionRow(feedback, 'work_experience');
+  const fromDetail = companyInventoryFromDetail(wxRow && wxRow.work_experience_detail, companyName);
+  const fromMeta = companyInventoryFromDetail(
+    feedback && feedback.meta && feedback.meta.work_experience_detail,
+    companyName
+  );
+  return enrichCompanyInventory(fromMerge, fromDetail, fromMeta);
 }
 
 /**
@@ -99,7 +203,9 @@ function companyInventoryFromMerge(companies, companyName) {
  */
 function planParallelReviewTasks(feedback, routingOptions = {}) {
   const tasks = [];
+  const skipInterests = process.env.APPLICATOR_SKIP_INTERESTS_SUBAGENT === '1';
   for (const sectionId of PARALLEL_SECTION_IDS) {
+    if (skipInterests && sectionId === 'interests') continue;
     const req = REQUIRED_SECTIONS.find((r) => r.id === sectionId);
     tasks.push({
       taskId: `section:${sectionId}`,
@@ -164,13 +270,15 @@ function buildSubagentPayload(base, task) {
   };
 
   if (task.taskType === 'work_experience_company') {
-    const merge = (feedback.apply && feedback.apply.work_experience) || {};
-    payload.company_inventory = companyInventoryFromMerge(merge.companies, task.companyName);
-    const detail = buildBaselineWorkExperienceDetailFromMergeCompanies(merge.companies);
-    const existingCo = asArray(detail && detail.companies).find(
-      (c) => asString(c.name) === asString(task.companyName)
-    );
-    payload.baseline_company_detail = existingCo || null;
+    const inventory = resolveBaselineCompanyInventory(feedback, task.companyName);
+    payload.company_inventory = inventory;
+    payload.baseline_company_detail = inventory
+      ? {
+          name: inventory.name,
+          included: inventory.included,
+          roles: inventory.roles.map((r) => ({ ...r }))
+        }
+      : null;
   }
 
   return payload;
@@ -211,8 +319,13 @@ function mergeSubagentOutputs(baselineFeedback, subagentResults) {
     }
 
     if (result.work_experience_company && asString(result.work_experience_company.name)) {
-      companyResults.push(result.work_experience_company);
-      wxChanges.push(...asArray(result.changes));
+      const companyName = asString(result.work_experience_company.name);
+      const baselineInv = resolveBaselineCompanyInventory(baselineFeedback || out, companyName);
+      const normalized = normalizeWorkExperienceCompanyOutput(result.work_experience_company, baselineInv);
+      if (normalized) {
+        companyResults.push(normalized);
+        wxChanges.push(...asArray(result.changes));
+      }
     }
 
     mergeApplyPatch(out, result.apply);
@@ -237,10 +350,15 @@ function mergeSubagentOutputs(baselineFeedback, subagentResults) {
     const companies = [];
     for (const name of order) {
       const tailored = byName.get(name);
-      if (tailored) companies.push(tailored);
-      else {
-        const baseline = buildBaselineWorkExperienceDetailFromMergeCompanies(merge.companies);
-        const fallback = asArray(baseline.companies).find((c) => asString(c.name) === name);
+      if (tailored) {
+        companies.push(tailored);
+      } else {
+        const baselineInv = resolveBaselineCompanyInventory(baselineFeedback || out, name);
+        const fallback = baselineInv
+          ? normalizeWorkExperienceCompanyOutput(null, baselineInv)
+          : asArray(buildBaselineWorkExperienceDetailFromMergeCompanies(merge.companies).companies).find(
+              (c) => asString(c.name) === name
+            );
         if (fallback) companies.push(fallback);
       }
     }
@@ -258,6 +376,25 @@ function mergeSubagentOutputs(baselineFeedback, subagentResults) {
   }
 
   out.meta.source = 'applicator-parallel-step9';
+
+  const baselineReviews = asArray(baselineFeedback && baselineFeedback.section_reviews);
+  for (const req of REQUIRED_SECTIONS) {
+    const hasRow = asArray(out.section_reviews).some((r) => r && r.section_id === req.id);
+    if (hasRow) continue;
+    const base = baselineReviews.find((r) => r && r.section_id === req.id);
+    out.section_reviews.push(
+      base
+        ? { ...base, status: 'ok', changes: [], verdict: asString(base.verdict) || 'Baseline retained (sub-agent skipped).' }
+        : {
+            section_id: req.id,
+            label: req.label,
+            status: 'ok',
+            verdict: 'No sub-agent output; section unchanged.',
+            changes: []
+          }
+    );
+  }
+
   return normalizeSectionReviews(out);
 }
 
@@ -286,5 +423,9 @@ module.exports = {
   mergeSubagentOutputs,
   mergeApplyPatch,
   runPool,
-  slugCompany
+  slugCompany,
+  normalizeWorkExperienceCompanyOutput,
+  resolveBaselineCompanyInventory,
+  companyInventoryFromMerge,
+  companyHasAnyBullets
 };

@@ -18,3 +18,5 @@ paths:
   docs: "docs"
   stories: "docs/stories"
   tests: "tests"
+  # Optional: BMAD orchestrator agent template overrides (Dex default location)
+  # agent_overrides_folder: ".claude/config/bmad/agent-overrides"

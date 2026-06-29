@@ -49,7 +49,7 @@ npm run job-search:open-in-chrome -- "https://app.navero.me/clarifying-questions
    `GET /ats-profile`, `GET /navero-code`.
 
 2. Убедиться, что Gmail доступен для скрипта:  
-   В корне репо: `credentials.json`, `gmail_token.json`.  
+   **`Credentials/personal/credentials.json`** и **`Credentials/personal/gmail_token.json`** (или пути из `.env`, как у Gmail MCP).  
    При протухшем токене один раз:  
    `python3 core/mcp/navero_code.py`  
    (откроется браузер для OAuth, после этого скрипт выведет код из последнего письма Navero).

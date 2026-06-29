@@ -1,5 +1,7 @@
 # Inbox
 
+Канонический путь захвата в Dex: **`00-Inbox/`** (с префиксом `00-`). Отдельной папки `Inbox/` в корне репозитория больше нет: встречи за 2026-02 перенесены в `00-Inbox/Meetings/`, снимок недельных приоритетов за 2026-02-10 — в `02-Week_Priorities/Week_Priorities_2026-02-10.md`.
+
 Temporary holding area for orphaned files that need routing.
 
 ## What Goes Here

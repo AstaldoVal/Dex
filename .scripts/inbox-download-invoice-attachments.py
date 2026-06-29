@@ -5,7 +5,7 @@ Download original email attachments (PDF, etc.) for invoice emails.
 Reads gmail_id from frontmatter of .md files in the given folder (e.g. 00-Inbox/Invoices_2025_Sep-Dec),
 fetches each message via Gmail API, and saves all attachments to the same folder with safe filenames.
 
-Uses same OAuth as Gmail MCP: GMAIL_CREDENTIALS_PATH, gmail_token.json.
+Uses same OAuth as Gmail MCP: GMAIL_* env vars or Credentials/personal/ (see core/credentials_paths.py).
 
 Usage:
   python .scripts/inbox-download-invoice-attachments.py [folder]
@@ -17,6 +17,8 @@ import re
 import base64
 import argparse
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # Reuse Gmail MCP auth
 try:
@@ -38,14 +40,14 @@ def _credentials_path():
     path = os.environ.get("GMAIL_CREDENTIALS_PATH") or os.environ.get("GOOGLE_CALENDAR_CREDENTIALS_PATH")
     if path:
         return Path(path).expanduser()
-    return Path.cwd() / "credentials.json"
+    return REPO_ROOT / "Credentials" / "personal" / "credentials.json"
 
 
 def _token_path():
     path = os.environ.get("GMAIL_TOKEN_PATH")
     if path:
         return Path(path).expanduser()
-    return _credentials_path().parent / "gmail_token.json"
+    return REPO_ROOT / "Credentials" / "personal" / "gmail_token.json"
 
 
 def get_service():

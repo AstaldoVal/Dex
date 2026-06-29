@@ -145,7 +145,7 @@ Claude reads this file when you type `/daily-plan`, follows the steps, and doesn
 
 ### Role-Specific Skills
 
-Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing, etc.) stored in `.claude/skills/_available/[role]/[skill-name]/`.
+Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing, etc.) stored in `Skills_library/_available/[role]/[skill-name]/`.
 
 **Why separate?** Not everyone needs `/pipeline-health` or `/board-prep`. Skills are discovered via `/dex-level-up` based on your role and installed on demand.
 
@@ -154,14 +154,6 @@ Dex has 25 core skills, plus 27 role-specific skills (Product, Sales, Marketing,
 ### Publishing skills to separate repos
 
 Some skills are prepared for publication in **standalone repositories** (e.g. for AgentSkills marketplaces or community use). The publishable bundle lives in `06-Resources/Dex_System/Skills_Publish/`. Each subfolder (e.g. `scan-skill-injection/`) is self-contained: it includes the skill definition (SKILL.md), the script or assets, docs, test fixtures, and a package.json so the skill can be cloned or copied into a separate repo without Dex. The in-repo version of the skill (e.g. `.claude/skills/scan-skill-injection/`) points at Dex paths (`.scripts/skills/...`); the Skills_Publish copy uses paths suitable for the standalone package (`scripts/`, `docs/`, `fixtures/`).
-
-### Superpowers (obra/superpowers) in this vault
-
-[Superpowers](https://github.com/obra/superpowers) is a separate methodology and skill library (TDD, systematic debugging, brainstorming, plans, subagent workflows, etc.). In Dex it is tracked as a **git submodule** at `06-Resources/External/superpowers/`, not mixed into `.claude/skills/` by default.
-
-**Why keep it in the Technical Guide:** anyone reading “how Dex wires agents and skills” hits one place that explains (1) that Superpowers exists in-repo, (2) how to initialize the submodule after clone, (3) how to point Cursor at the bundled `.cursor-plugin` if you want the vault copy instead of only the marketplace plugin. That reduces duplicate Slack-style answers and keeps onboarding aligned with git reality.
-
-**Operational doc:** `06-Resources/Dex_System/Superpowers_in_Dex.md` (submodule init/update, Cursor from disk, optional upstream bump).
 
 ---
 
@@ -1149,7 +1141,7 @@ Understanding these constraints explains why Dex is designed the way it is.
 ### Skills
 
 - `.claude/skills/[skill-name]/SKILL.md` - All skills follow this structure
-- `.claude/skills/_available/` - Role-specific skills (not loaded by default)
+- `Skills_library/_available/` - Role-specific skills (not loaded by default)
 
 ### Hooks
 

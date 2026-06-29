@@ -25,6 +25,12 @@ import re
 import html
 from email.mime.text import MIMEText
 from pathlib import Path
+import sys
+
+_CORE_DIR = Path(__file__).resolve().parent.parent
+if str(_CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(_CORE_DIR))
+from credentials_paths import default_personal_credentials_json, default_personal_gmail_token
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from collections import defaultdict
@@ -61,14 +67,14 @@ def _credentials_path() -> Path:
     path = os.environ.get("GMAIL_CREDENTIALS_PATH") or os.environ.get("GOOGLE_CALENDAR_CREDENTIALS_PATH")
     if path:
         return Path(path).expanduser()
-    return Path.cwd() / "credentials.json"
+    return default_personal_credentials_json()
 
 
 def _token_path() -> Path:
     path = os.environ.get("GMAIL_TOKEN_PATH")
     if path:
         return Path(path).expanduser()
-    return _credentials_path().parent / "gmail_token.json"
+    return default_personal_gmail_token()
 
 
 def get_credentials():

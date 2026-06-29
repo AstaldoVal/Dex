@@ -129,7 +129,7 @@ async function runScrape(searchUrl, digestPath) {
   const existingIds = getExistingJobIds(digestFile);
   console.log('Existing job IDs in digest:', existingIds.size);
 
-  const context = await chromium.launchPersistentContext(PROFILE_DIR, {
+  const context = await launchPersistentContextGuarded(chromium, PROFILE_DIR, {
     headless: false,
     args: ['--no-sandbox']
   });
@@ -594,6 +594,7 @@ async function runScrape(searchUrl, digestPath) {
 const args = process.argv.slice(2);
 const searchUrl = args[0];
 const digestPath = args[1];
+const { launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 
 runScrape(searchUrl, digestPath).catch((e) => {
   console.error(e);

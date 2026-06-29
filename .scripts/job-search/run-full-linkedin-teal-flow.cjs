@@ -14,6 +14,8 @@
  * 6. Add jobs from digest to Teal (--app; --setup if needed).
  * 7. Create Teal resumes from digest/export (iGaming vs AI/other), rename by job title.
  * 8. Match-score per resume: Job Matcher, summary if <80%, Target Title, PDF to Applied, cover letter.
+ * 9. Claude Code resume review (CLI `claude -p`, feedback.md/json, step-9-eval). Skip: --no-cowork-review
+ * 10. Apply feedback.apply to Teal (step-10-eval, step-10-manual-report.md for deferred_v1 manual items).
  *
  * Usage (from repo root):
  *   node .scripts/job-search/run-full-linkedin-teal-flow.cjs "https://www.linkedin.com/jobs/search/?..."
@@ -30,12 +32,23 @@
  *   --from-text-parse-only <file>  Output JSON { title, company, descriptionLength } and exit (for agent confirmation before --from-text).
  *   --from-html <file>  (Single-job URL only.) When fetch cannot get title/company from LinkedIn, parse them from this saved job page HTML. Keeps real jobId from URL; no fallback to --from-text.
  *   --step-by-step  Run one step per invocation; after each step print artifacts and exit. Resume with same command (URL or --from-digest). For URL/single-job only.
+ *   --from-step <N>  Start at step N (9–10: Claude Code review + apply). Use with --from-text or --from-digest; steps below N are skipped (resume must already exist for step 9).
  */
 'use strict';
 
 const path = require('path');
 const fs = require('fs');
 const { execSync, spawnSync } = require('child_process');
+const { openUrlInDexChrome, closeDexOpenChrome } = require('./dex-chrome-open-background.cjs');
+const {
+  FULL_FLOW_CHROME_STEPS,
+  evalChromeClosedAfterStep,
+  writeStepChromeCleanupEvidence
+} = require('./teal-chrome-cleanup-eval-lib.cjs');
+
+/** Shared Chrome open session for single-job capture (pool lock released on process exit). */
+const dexSingleJobOpenOpts = { runKey: 'full-flow-single-job' };
+process.on('exit', () => closeDexOpenChrome(dexSingleJobOpenOpts));
 const { fetchJobPageTitleAndCompany, fetchJobPageTitleAndCompanyCrawler, fetchJobPageTitleCompanyAndDescription, fetchJobPageTitleCompanyAndDescriptionCrawler, looksLikeJobTitle, deriveTitleFromDescription, deriveCompanyFromDescription, parseTitleAndCompanyFromJobPageHtml } = require('./job-search-utils.cjs');
 const { TEAL_CHROME_PROFILE_ALT, LAST_PROCESSED_JOB_IDS_FILE } = require('./job-search-paths.cjs');
 const { normalizeSearchUrl } = require('./job-search-utils.cjs');
@@ -67,7 +80,9 @@ const STEP_NAMES = {
   5: 'Filter digest by export',
   6: 'Add jobs to Teal',
   7: 'Create Teal resumes',
-  8: 'Match-score (summary, PDF, cover letter)'
+  8: 'Match-score (summary, PDF, cover letter)',
+  9: 'Claude Code resume review (feedback)',
+  10: 'Apply Claude Code feedback to Teal (v1)'
 };
 
 /** Evidence for each step: paths, counts, links, reasons for skip. Written to full-flow-evidence.json so we can point to "why" for every step. */
@@ -81,7 +96,9 @@ let flowEvidence = {
   step5: null,
   step6: null,
   step7: null,
-  step8: null
+  step8: null,
+  step9: null,
+  step10: null
 };
 
 function writeFlowEvidence() {
@@ -219,7 +236,9 @@ function emitStep7SkippedNotification() {
     const company = (s.company || '—').trim();
     const title = (s.title || '—').trim();
     const reason = (s.reason || 'unknown').trim();
-    const linkedinUrl = jobId ? 'https://www.linkedin.com/jobs/view/' + jobId + '/' : '';
+    const linkedinUrl = (jobId && !isSyntheticPastedJobId(jobId))
+      ? ('https://www.linkedin.com/jobs/view/' + jobId + '/')
+      : '';
     const tealJobUrl = jobIdToTealJobUrl[jobId] || '';
 
     log('  • ' + company + ' | ' + title);
@@ -243,6 +262,91 @@ function emitStep7SkippedNotification() {
       fs.writeFileSync(FLOW_STATE_MD, withSection, 'utf8');
       log('Список пропущенных на шаге 7 записан в ' + path.relative(REPO_ROOT, FLOW_STATE_MD));
     } catch (_) {}
+  }
+  log('');
+}
+
+/**
+ * Print direct Teal resume links at end of flow.
+ * Priority:
+ * 1) Step 7 created resumes,
+ * 2) Any resumes mapped to Step 6 added jobs (includes "resume exists" cases),
+ * 3) Teal resume links already written in digest tracking section.
+ */
+function emitFinalCreatedResumeLinks(digestPath) {
+  const step7Path = path.join(TEAL_DIR, 'step-7-evidence.json');
+  const step6Path = path.join(TEAL_DIR, 'step-6-evidence.json');
+  const resumeToJobPath = path.join(TEAL_DIR, 'resume-to-job.json');
+  if (!fs.existsSync(resumeToJobPath)) return;
+
+  let step7 = null;
+  let step6 = null;
+  let resumeToJob;
+  try {
+    if (fs.existsSync(step7Path)) step7 = JSON.parse(fs.readFileSync(step7Path, 'utf8'));
+    if (fs.existsSync(step6Path)) step6 = JSON.parse(fs.readFileSync(step6Path, 'utf8'));
+    resumeToJob = JSON.parse(fs.readFileSync(resumeToJobPath, 'utf8'));
+  } catch (_) {
+    return;
+  }
+
+  // Build latest resumeId by jobId (last entry wins).
+  const latestResumeIdByJobId = {};
+  for (const [resumeId, entry] of Object.entries(resumeToJob || {})) {
+    const jobId = entry && entry.jobId ? String(entry.jobId) : '';
+    if (!jobId) continue;
+    latestResumeIdByJobId[jobId] = resumeId;
+  }
+
+  const rows = [];
+  const seenUrls = new Set();
+  const pushRow = (label, resumeUrl) => {
+    if (!resumeUrl || seenUrls.has(resumeUrl)) return;
+    rows.push({ label, resumeUrl });
+    seenUrls.add(resumeUrl);
+  };
+
+  const created = Array.isArray(step7 && step7.created) ? step7.created : [];
+  for (const item of created) {
+    const jobId = String(item && item.jobId ? item.jobId : '');
+    if (!jobId) continue;
+    const resumeId = latestResumeIdByJobId[jobId] || '';
+    const resumeUrl = resumeId ? ('https://app.tealhq.com/resume-builder/resumes/' + resumeId) : null;
+    const label = ((item && item.title) || '—') + ' — ' + ((item && item.company) || '—');
+    pushRow(label, resumeUrl);
+  }
+
+  const added = Array.isArray(step6 && step6.added) ? step6.added : [];
+  for (const item of added) {
+    const jobId = String(item && item.jobId ? item.jobId : '');
+    if (!jobId) continue;
+    const resumeId = latestResumeIdByJobId[jobId] || '';
+    const resumeUrl = resumeId ? ('https://app.tealhq.com/resume-builder/resumes/' + resumeId) : null;
+    const label = ((item && item.title) || '—') + ' — ' + ((item && item.company) || '—');
+    pushRow(label, resumeUrl);
+  }
+
+  if (digestPath && fs.existsSync(digestPath)) {
+    try {
+      const digestContent = fs.readFileSync(digestPath, 'utf8');
+      const resumeLinkRe = /Teal резюме:\s*\[[^\]]*\]\((https:\/\/app\.tealhq\.com\/resume-builder\/resumes\/[^)\s]+)\)/g;
+      let m;
+      while ((m = resumeLinkRe.exec(digestContent)) !== null) {
+        pushRow('Teal resume', m[1]);
+      }
+    } catch (_) {}
+  }
+
+  if (rows.length === 0) {
+    log('Teal resume links: not found in step evidence/digest.');
+    return;
+  }
+
+  log('');
+  log('=== Direct Teal resume links (' + rows.length + ') ===');
+  for (const row of rows) {
+    log('  • ' + row.label);
+    log('    ' + row.resumeUrl);
   }
   log('');
 }
@@ -331,9 +435,10 @@ function writeFlowState(opts) {
     exportPath: opts.exportPath != null ? opts.exportPath : (existing.exportPath || null),
     linkedinUrl: opts.linkedinUrl !== undefined ? opts.linkedinUrl : (existing.linkedinUrl || null),
     completedSteps: opts.completedSteps || existing.completedSteps || [],
-    currentStep: opts.currentStep != null ? opts.currentStep : (existing.currentStep != null ? existing.currentStep : 1),
+    // Use `in` so explicit null (e.g. on successful completion) clears stale currentStep / failedAtStep.
+    currentStep: ('currentStep' in opts) ? opts.currentStep : (existing.currentStep != null ? existing.currentStep : 1),
     status: opts.status || existing.status || 'running',
-    failedAtStep: opts.failedAtStep != null ? opts.failedAtStep : (existing.failedAtStep != null ? existing.failedAtStep : null),
+    failedAtStep: ('failedAtStep' in opts) ? opts.failedAtStep : (existing.failedAtStep != null ? existing.failedAtStep : null),
     lastUpdated: new Date().toISOString(),
     useExistingExport: opts.useExistingExport || existing.useExistingExport || false,
     stepByStep: opts.stepByStep !== undefined ? opts.stepByStep : existing.stepByStep,
@@ -372,6 +477,11 @@ const PASTED_JOB_ID_MIN = 9999990001;
 const PASTED_JOB_ID_MAX = 9999999999;
 const PASTED_JOB_COUNTER_FILE = path.join(TEAL_DIR, 'pasted-job-counter.json');
 
+function isSyntheticPastedJobId(jobId) {
+  const n = Number(jobId);
+  return Number.isInteger(n) && n >= PASTED_JOB_ID_MIN && n <= PASTED_JOB_ID_MAX;
+}
+
 /** Allocate next unique pasted job ID (persisted in pasted-job-counter.json). */
 function getNextPastedJobId() {
   let next = PASTED_JOB_ID_MIN;
@@ -388,11 +498,23 @@ function getNextPastedJobId() {
 }
 
 const STEP_RETRIES = 3;
-const CAPTURE_TIMEOUT_MS = 40 * 60 * 1000;
-const FETCH_DESC_TIMEOUT_MS = 45 * 60 * 1000;
-const TEAL_ADD_TIMEOUT_MS = 30 * 60 * 1000;
-const BATCH_TIMEOUT_MS = 3 * 60 * 60 * 1000;
-const MATCH_SCORE_TIMEOUT_MS = 3 * 60 * 60 * 1000;
+const {
+  COWORK_FEEDBACK_TIMEOUT_MS,
+  STEP10_SPAWN_TIMEOUT_MS,
+  SINGLE_JOB_CAPTURE_TIMEOUT_MS,
+  SINGLE_JOB_POLL_MS
+} = require('./job-search-timeouts.cjs');
+const { startStage, runSpawnWatchedAsync } = require('./job-search-stage-timing.cjs');
+const {
+  getFullFlowStepBudget,
+  getSubstageBudget,
+  CAPTURE_TIMEOUT_MS,
+  FETCH_DESC_TIMEOUT_MS,
+  TEAL_ADD_TIMEOUT_MS,
+  BATCH_TIMEOUT_MS,
+  MATCH_SCORE_TIMEOUT_MS
+} = require('./full-flow-stage-budgets.cjs');
+const { writeFullFlowProgress } = require('./full-flow-progress.cjs');
 
 function ts() {
   return new Date().toISOString();
@@ -778,15 +900,134 @@ function countSearchExportJobs(exportPath) {
   }
 }
 
-async function runStep(name, fn, maxRetries = STEP_RETRIES) {
+function parseStepNumberFromName(name) {
+  const m = String(name || '').match(/Step (\d+):/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+/**
+ * After Chrome steps: no automation profile may keep a Chrome process (heal = kill + re-check).
+ * @param {number} stepNum
+ */
+async function enforceChromeCleanupAfterStep(stepNum) {
+  if (!stepNum || !FULL_FLOW_CHROME_STEPS.has(stepNum)) return;
+  const result = await evalChromeClosedAfterStep({ step: stepNum, heal: true, log });
+  writeStepChromeCleanupEvidence(TEAL_DIR, stepNum, result);
+  const key = 'step' + stepNum + 'ChromeCleanup';
+  flowEvidence[key] = result;
+  writeFlowEvidence();
+  if (!result.pass) {
+    throw new Error('Chrome cleanup eval failed after step ' + stepNum + ': ' + (result.reason || 'unknown'));
+  }
+  log(
+    '[@chrome-cleanup] step=' +
+      stepNum +
+      ' pass=true' +
+      (result.healed ? ' (killed stray Chrome)' : '')
+  );
+}
+
+/**
+ * @param {string} name
+ * @param {Function} fn
+ * @param {number} [maxRetries]
+ * @param {{ step?: number, stage?: string, limitMs?: number|null }} [timing]
+ */
+async function runStep(name, fn, maxRetries = STEP_RETRIES, timing = null) {
+  const stepNum = (timing && timing.step) ?? parseStepNumberFromName(name);
+  const stageId =
+    (timing && timing.stage) ||
+    String(name)
+      .replace(/^Step \d+:\s*/, '')
+      .slice(0, 96);
+  const stepBudget = stepNum != null ? getFullFlowStepBudget(stepNum) : null;
+  const limitMs =
+    timing && 'limitMs' in timing
+      ? timing.limitMs
+      : stepBudget
+        ? stepBudget.limitMs
+        : null;
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    const stage =
+      stepNum != null
+        ? startStage({
+            flow: 'full-flow',
+            step: stepNum,
+            stage: stageId,
+            limitMs,
+            meta: { attempt, maxRetries, stepName: name }
+          })
+        : null;
+    const stepStarted = Date.now();
+    if (stepNum != null) {
+      log(
+        `[@flow-step] START step=${stepNum} limitMs=${limitMs ?? 'none'} stage=${stageId} attempt=${attempt}/${maxRetries}`
+      );
+      writeFullFlowProgress({
+        done: false,
+        currentStep: stepNum,
+        currentStage: stageId,
+        attempt,
+        limitMs
+      });
+    }
+    let stepTimer;
     try {
       log('--- ' + name + ' (attempt ' + attempt + '/' + maxRetries + ') ---');
-      const result = await Promise.resolve(fn());
+      const work = Promise.resolve(fn());
+      const result = limitMs
+        ? await Promise.race([
+            work,
+            new Promise((_, reject) => {
+              stepTimer = setTimeout(
+                () => reject(new Error(`step ${stepNum} limit ${Math.round(limitMs / 1000)}s`)),
+                limitMs
+              );
+            })
+          ])
+        : await work;
+      if (stepNum != null && FULL_FLOW_CHROME_STEPS.has(stepNum)) {
+        await enforceChromeCleanupAfterStep(stepNum);
+      }
+      if (stepTimer) clearTimeout(stepTimer);
+      const durationMs = Date.now() - stepStarted;
+      if (stepNum != null) {
+        log(`[@flow-step] END step=${stepNum} durationMs=${durationMs} pass=true`);
+        writeFullFlowProgress({
+          done: false,
+          currentStep: stepNum,
+          lastCompletedStep: stepNum,
+          lastStepDurationMs: durationMs,
+          lastStepPass: true
+        });
+      }
+      if (stage) stage.end({ ok: true, meta: { durationMs } });
       log(name + ' OK');
       return result;
     } catch (e) {
+      if (stepTimer) clearTimeout(stepTimer);
+      const durationMs = Date.now() - stepStarted;
+      if (stepNum != null) {
+        log(`[@flow-step] END step=${stepNum} durationMs=${durationMs} pass=false reason=${e.message || e}`);
+        writeFullFlowProgress({
+          done: false,
+          currentStep: stepNum,
+          lastStepDurationMs: durationMs,
+          lastStepPass: false,
+          lastError: e.message || String(e)
+        });
+      }
+      if (stage) stage.end({ ok: false, error: e.message || String(e), meta: { durationMs } });
       log(name + ' FAILED: ' + (e.message || e));
+      if (stepNum != null && FULL_FLOW_CHROME_STEPS.has(stepNum)) {
+        try {
+          await enforceChromeCleanupAfterStep(stepNum);
+        } catch (chromeErr) {
+          log('[@chrome-cleanup] after step failure: ' + (chromeErr.message || chromeErr));
+          if (attempt === maxRetries) throw chromeErr;
+        }
+      }
       try {
         if (scriptErrors && scriptErrors.logError) {
           scriptErrors.logError({
@@ -829,11 +1070,16 @@ async function main() {
   const fromHtmlIdx = process.argv.indexOf('--from-html');
   const fromHtmlPathRaw = fromHtmlIdx >= 0 && process.argv[fromHtmlIdx + 1] ? process.argv[fromHtmlIdx + 1] : null;
   const stepByStepRaw = process.argv.includes('--step-by-step');
+  const fromStepIdx = process.argv.indexOf('--from-step');
+  const fromStepRaw = fromStepIdx >= 0 && process.argv[fromStepIdx + 1] ? process.argv[fromStepIdx + 1] : null;
+  const fromStepNum = fromStepRaw != null ? Number(fromStepRaw) : null;
+  const noCoworkReview = process.argv.includes('--no-cowork-review');
   const argv = process.argv.slice(2).filter((a) =>
-    a !== '--no-teal' && a !== '--use-existing-export' && a !== '--from-digest' && a !== fromDigestPathRaw &&
+    a !== '--no-teal' && a !== '--no-cowork-review' && a !== '--use-existing-export' && a !== '--from-digest' && a !== fromDigestPathRaw &&
     a !== '--from-text' && a !== fromTextPathRaw && a !== '--from-text-parse-only' && a !== fromTextParseOnlyPathRaw &&
     a !== '--from-html' && a !== fromHtmlPathRaw &&
-    a !== '--step-by-step' && !a.startsWith('--'));
+    a !== '--step-by-step' && a !== '--from-step' && a !== fromStepRaw &&
+    !a.startsWith('--'));
   const noTeal = process.argv.includes('--no-teal');
   const useExistingExport = process.argv.includes('--use-existing-export') || process.env.USE_EXISTING_EXPORT === '1';
   const linkedinUrl = (argv[0] || process.env.LINKEDIN_SEARCH_URL || '').trim();
@@ -886,10 +1132,20 @@ async function main() {
   if (fromDigestPath) log('--from-digest: run steps 3,4,5,6,7,8 from existing digest. Skipping Steps 1–2.');
   if (fromTextPath) log('--from-text: creating digest and export from pasted job file. Skipping Steps 1,2,4,5.');
   if (stepByStep) log('--step-by-step: one step per run; after each step artifacts are printed and the script exits. Re-run same command to continue.');
+  if (fromStepNum != null && Number.isFinite(fromStepNum) && fromStepNum >= 9) {
+    log('--from-step ' + fromStepNum + ': skipping steps before ' + fromStepNum + ' (resume must exist in Teal for Claude Code review).');
+  } else if (fromStepNum != null) {
+    console.error('--from-step: only 9 or 10 supported (Claude Code review + apply).');
+    process.exit(1);
+  }
+  if (fromStepNum != null && !fromTextPath && !fromDigestPath) {
+    console.error('--from-step requires --from-text or --from-digest.');
+    process.exit(1);
+  }
 
   let exportPath;
   let digestPath;
-  let startFromStep = null;
+  let startFromStep = fromStepNum != null && fromStepNum >= 9 ? fromStepNum : null;
 
   if (fromTextPath) {
     log('Creating digest and export from: ' + path.relative(REPO_ROOT, fromTextPath));
@@ -934,8 +1190,7 @@ async function main() {
     // Start save server, open single-job helper page → redirects to LinkedIn → extension POSTs to /dex-save-job.
     // LinkedIn pages sometimes take longer to fully render (cookie banners, login, client-side hydration),
     // so we wait for real title/company (not placeholders), not just for the jobs file to appear.
-    const SINGLE_JOB_CAPTURE_TIMEOUT_MS = 5 * 60 * 1000;
-    const SINGLE_JOB_POLL_MS = 3000;
+    // SINGLE_JOB_* from job-search-timeouts.cjs (default 2 min / 3 s poll)
     if (!fs.existsSync(JOBS_DIR)) fs.mkdirSync(JOBS_DIR, { recursive: true });
     const singleJobPath = path.join(JOBS_DIR, singleJobId + '.json');
     const captureAlreadyExists = fs.existsSync(singleJobPath);
@@ -947,20 +1202,20 @@ async function main() {
         await new Promise(r => setTimeout(r, 2000));
       }
       const singleJobPageUrl = 'http://127.0.0.1:8765/single-job?url=' + encodeURIComponent(linkedinUrl) + '&dex-auto-capture=1';
-      try {
-        execSync('open -a "Google Chrome" ' + JSON.stringify(singleJobPageUrl), { cwd: REPO_ROOT, stdio: 'inherit' });
-      } catch (e1) {
-        try {
-          execSync('open ' + JSON.stringify(singleJobPageUrl), { cwd: REPO_ROOT, stdio: 'inherit' });
-        } catch (e2) {
-          log('Could not open browser. Open this URL in Chrome (with Dex extension): ' + singleJobPageUrl);
-          process.exit(1);
-        }
+      if (!openUrlInDexChrome(singleJobPageUrl, { log, ...dexSingleJobOpenOpts })) {
+        log('Could not open browser. Open this URL in Chrome (with Dex extension): ' + singleJobPageUrl);
+        process.exit(1);
       }
       log('Waiting for extension to capture the job (poll every ' + SINGLE_JOB_POLL_MS / 1000 + 's, timeout ' + SINGLE_JOB_CAPTURE_TIMEOUT_MS / 60000 + ' min)…');
     }
 
     // Poll until we get real title/company (not placeholders).
+    const stageSingleCap = startStage({
+      flow: 'full-flow',
+      step: 1,
+      stage: 'single_job_extension_capture',
+      limitMs: SINGLE_JOB_CAPTURE_TIMEOUT_MS
+    });
     const deadline = Date.now() + SINGLE_JOB_CAPTURE_TIMEOUT_MS;
     let payload = null;
     while (Date.now() < deadline) {
@@ -987,9 +1242,11 @@ async function main() {
     }
 
     if (!payload || !payload.company) {
+      stageSingleCap.end({ ok: false, error: 'single job capture timeout' });
       log('Capture did not produce enough data in time. If LinkedIn login is needed, finish login in the opened window; then re-run the same command.');
       process.exit(1);
     }
+    stageSingleCap.end({ ok: true, meta: { company: payload.company } });
 
     let jobTitle = (payload.job_title || '').trim();
     let jobCompany = (payload.company || '').trim();
@@ -1047,6 +1304,13 @@ async function main() {
       }, null, 2), 'utf8');
     } catch (_) {}
     log('Created single-job export: ' + path.basename(exportPath) + ' (1 job). Skipping Step 1.');
+    closeDexOpenChrome({ log, ...dexSingleJobOpenOpts });
+    try {
+      await enforceChromeCleanupAfterStep(1);
+    } catch (chromeErr) {
+      log(chromeErr.message || String(chromeErr));
+      process.exit(1);
+    }
     if (stepByStep) {
       flowEvidence.step1 = { singleJobCapture: true, exportPath: path.relative(REPO_ROOT, exportPath), jobFile: path.relative(REPO_ROOT, singleJobPath) };
       writeFlowEvidence();
@@ -1487,42 +1751,47 @@ async function main() {
     if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
     if (!fs.existsSync(TEAL_CHROME_PROFILE_ALT)) fs.mkdirSync(TEAL_CHROME_PROFILE_ALT, { recursive: true });
   } catch (_) {}
-  process.env.TEAL_CHROME_PROFILE = TEAL_CHROME_PROFILE_ALT;
-  log('Teal steps use alternate Chrome profile: ' + TEAL_CHROME_PROFILE_ALT + ' (main Chrome can stay open).');
+  if (process.env.TEAL_CHROME_RUN_KEY && process.env.TEAL_CHROME_PROFILE) {
+    log('Teal steps use pool Chrome profile (parallel run): ' + process.env.TEAL_CHROME_PROFILE);
+  } else {
+    process.env.TEAL_CHROME_PROFILE = TEAL_CHROME_PROFILE_ALT;
+    log('Teal steps use alternate Chrome profile: ' + TEAL_CHROME_PROFILE_ALT + ' (main Chrome can stay open).');
+  }
 
   // Step 6: Add jobs to Teal
   if (!startFromStep || startFromStep <= 6) {
-  await runStep('Step 6: Add jobs from digest to Teal', () => {
+  await runStep('Step 6: Add jobs from digest to Teal', async () => {
     const digestTotal = countDigestJobs(digestPath);
+    const b6 = getFullFlowStepBudget(6);
     stepLog(6, 'Teal вакансии', 'Добавление вакансий из дайджеста в Teal (' + digestTotal + ' шт.)…');
     const script = path.join(__dirname, 'add-digest-jobs-to-teal-playwright.cjs');
     const step6Env = { ...process.env, FULL_FLOW_STATE_FILE: FLOW_STATE_FILE };
     if (linkedinUrl && linkedinUrl.includes('linkedin.com')) step6Env.LINKEDIN_OPEN_URL = linkedinUrl;
     const step6Args = [script, digestPath, '--app'].concat(exportPath ? ['--export', exportPath] : []);
-    let r = spawnSync('node', step6Args, {
-      cwd: REPO_ROOT,
-      stdio: 'inherit',
-      timeout: TEAL_ADD_TIMEOUT_MS,
-      env: step6Env
-    });
+    let r = await runSpawnWatchedAsync(
+      { step: 6, stage: 'teal_add_digest', limitMs: TEAL_ADD_TIMEOUT_MS, stallMs: b6.stallMs },
+      'node',
+      step6Args,
+      { cwd: REPO_ROOT, env: step6Env }
+    );
     if (r.status !== 0) {
       stepLog(6, 'Teal вакансии', 'Повтор с --setup (логин)…');
-      const setupRun = spawnSync('node', [script, digestPath, '--app', '--setup'].concat(exportPath ? ['--export', exportPath] : []), {
-        cwd: REPO_ROOT,
-        stdio: 'inherit',
-        timeout: TEAL_ADD_TIMEOUT_MS,
-        env: step6Env
-      });
+      const setupRun = await runSpawnWatchedAsync(
+        { step: 6, stage: 'teal_add_setup_login', limitMs: TEAL_ADD_TIMEOUT_MS, stallMs: b6.stallMs },
+        'node',
+        [script, digestPath, '--app', '--setup'].concat(exportPath ? ['--export', exportPath] : []),
+        { cwd: REPO_ROOT, env: step6Env }
+      );
       if (setupRun.status !== 0) {
         r = setupRun;
       } else {
         stepLog(6, 'Teal вакансии', 'Setup завершён, повторяю добавление вакансий…');
-        r = spawnSync('node', step6Args, {
-          cwd: REPO_ROOT,
-          stdio: 'inherit',
-          timeout: TEAL_ADD_TIMEOUT_MS,
-          env: step6Env
-        });
+        r = await runSpawnWatchedAsync(
+          { step: 6, stage: 'teal_add_digest_retry', limitMs: TEAL_ADD_TIMEOUT_MS, stallMs: b6.stallMs },
+          'node',
+          step6Args,
+          { cwd: REPO_ROOT, env: step6Env }
+        );
       }
     }
     if (r.status !== 0) {
@@ -1566,17 +1835,21 @@ async function main() {
 
   // Step 7: Create Teal resumes only for jobs that were added in Step 6 (never create resume without vacancy in Teal).
   if (!startFromStep || startFromStep <= 7) {
-  await runStep('Step 7: Create Teal resumes (iGaming vs AI/other, rename by job)', () => {
+  await runStep('Step 7: Create Teal resumes (iGaming vs AI/other, rename by job)', async () => {
     const digestTotal = countDigestJobs(digestPath);
+    const b7 = getFullFlowStepBudget(7);
     stepLog(7, 'Резюме', 'Создание копий резюме в Teal по дайджесту (' + digestTotal + ' вакансий)…');
     const script = path.join(__dirname, 'teal-resume-batch-from-export.cjs');
     const onlyAddedThisRun = '1';
-    const r = spawnSync('node', [script, digestPath], {
-      cwd: REPO_ROOT,
-      stdio: 'inherit',
-      timeout: BATCH_TIMEOUT_MS,
-      env: { ...process.env, FULL_FLOW_STATE_FILE: FLOW_STATE_FILE, TEAL_ONLY_ADDED_THIS_RUN: onlyAddedThisRun }
-    });
+    const r = await runSpawnWatchedAsync(
+      { step: 7, stage: 'create_teal_resumes', limitMs: BATCH_TIMEOUT_MS, stallMs: b7.stallMs },
+      'node',
+      [script, digestPath],
+      {
+        cwd: REPO_ROOT,
+        env: { ...process.env, FULL_FLOW_STATE_FILE: FLOW_STATE_FILE, TEAL_ONLY_ADDED_THIS_RUN: onlyAddedThisRun }
+      }
+    );
     if (r.status !== 0) {
       printStepStats(7, 'Резюме Teal', {
         'Вакансий в дайджесте': digestTotal,
@@ -1630,18 +1903,24 @@ async function main() {
   if (!startFromStep || startFromStep <= 8) {
   const STEP8_MAX_ATTEMPTS = 3;
   // Step 8 can take many minutes per job (summary loop, Teal slow). When invoking this flow from an agent, do NOT pass a short shell timeout — the flow must run in foreground until exit (see CLAUDE.md "Full flow: no background").
-  await runStep('Step 8: Match-score (summary, target title, PDF, cover letter)', () => {
+  await runStep('Step 8: Match-score (summary, target title, PDF, cover letter)', async () => {
     const digestTotal = countDigestJobs(digestPath);
+    const b8 = getFullFlowStepBudget(8);
     const script = path.join(__dirname, 'teal-resume-match-score.cjs');
+    const allowNonProductForSingleVacancy = digestTotal === 1;
+    const step8Args = [script, digestPath].concat(allowNonProductForSingleVacancy ? ['--allow-non-product'] : []);
     let lastStatus = -1;
     for (let attempt = 1; attempt <= STEP8_MAX_ATTEMPTS; attempt++) {
       stepLog(8, 'Match-score', attempt > 1 ? `Повтор ${attempt}/${STEP8_MAX_ATTEMPTS}…` : 'Обработка резюме: summary, target title, PDF, cover letter…');
-      const r = spawnSync('node', [script, digestPath], {
-        cwd: REPO_ROOT,
-        stdio: 'inherit',
-        timeout: MATCH_SCORE_TIMEOUT_MS,
-        env: { ...process.env, FULL_FLOW_STATE_FILE: FLOW_STATE_FILE }
-      });
+      const r = await runSpawnWatchedAsync(
+        { step: 8, stage: 'match_score_attempt_' + attempt, limitMs: MATCH_SCORE_TIMEOUT_MS, stallMs: b8.stallMs },
+        'node',
+        step8Args,
+        {
+          cwd: REPO_ROOT,
+          env: { ...process.env, FULL_FLOW_STATE_FILE: FLOW_STATE_FILE }
+        }
+      );
       lastStatus = r.status;
       if (r.status === 0) {
         mergeStepEvidence(8);
@@ -1683,7 +1962,195 @@ async function main() {
     throw new Error('teal-resume-match-score exited with ' + (lastStatus || 'signal') + ' after ' + STEP8_MAX_ATTEMPTS + ' attempts');
   });
   }
-  writeFlowState({ exportPath, digestPath, completedSteps: [1, 2, 3, 4, 5, 6, 7, 8], currentStep: null, status: 'completed', failedAtStep: null, useExistingExport, ...(stepByStep ? { stepByStep: false } : {}) });
+
+  // Step 9–10: Claude Code review + apply feedback (optional; skip with --no-cowork-review)
+  if (!noCoworkReview && (!startFromStep || startFromStep <= 10)) {
+    writeFlowState({
+      exportPath,
+      digestPath,
+      completedSteps: [1, 2, 3, 4, 5, 6, 7, 8],
+      currentStep: 9,
+      status: 'running',
+      useExistingExport,
+      ...(stepByStep ? { stepByStep: true } : {})
+    });
+
+    if (!startFromStep || startFromStep <= 9) {
+      await runStep('Step 9: Claude Code resume review', async () => {
+        const b9 = getFullFlowStepBudget(9);
+        const script = path.join(__dirname, 'teal-cowork-resume-review.cjs');
+        const coworkArgs = ['--digest', digestPath];
+        const step9Mode = (
+          process.env.JOB_SEARCH_STEP9_REVIEW ||
+          process.env.DEX_STEP9_REVIEW ||
+          'cli'
+        )
+          .trim()
+          .toLowerCase();
+        if (step9Mode === 'cowork' || step9Mode === 'ui' || step9Mode === 'cowork-ui') {
+          coworkArgs.push('--cowork-ui');
+          log('Step 9: legacy Cowork UI review (JOB_SEARCH_STEP9_REVIEW=cowork)');
+        } else if (step9Mode === 'cli-first') {
+          log('Step 9: Claude Code CLI first, legacy Cowork UI fallback (JOB_SEARCH_STEP9_REVIEW=cli-first)');
+        } else {
+          coworkArgs.push('--cli-review-only');
+          log('Step 9: Claude Code CLI review (default, no legacy Cowork UI)');
+        }
+        const resumeMapPath = path.join(TEAL_DIR, 'resume-to-job.json');
+        if (fs.existsSync(resumeMapPath) && digestPath) {
+          try {
+            const resumeToJob = JSON.parse(fs.readFileSync(resumeMapPath, 'utf8'));
+            const digestMd = fs.readFileSync(digestPath, 'utf8');
+            const jobIdMatch = digestMd.match(/\/jobs\/view\/(\d+)/);
+            const jobId = jobIdMatch ? jobIdMatch[1] : null;
+            if (jobId) {
+              for (const [rid, entry] of Object.entries(resumeToJob)) {
+                if (entry && String(entry.jobId) === String(jobId)) {
+                  coworkArgs.push('--resume-id', rid);
+                  log('Claude Code review resume-id from digest jobId ' + jobId + ': ' + rid);
+                  break;
+                }
+              }
+            }
+          } catch (_) {}
+        }
+        const r = await runSpawnWatchedAsync(
+          {
+            step: 9,
+            stage: 'cowork_resume_review',
+            limitMs: COWORK_FEEDBACK_TIMEOUT_MS,
+            stallMs: b9.stallMs
+          },
+          'node',
+          [script, ...coworkArgs],
+          { cwd: REPO_ROOT, env: process.env }
+        );
+        mergeStepEvidence(9);
+        if (r.status !== 0) {
+          printStepStats(9, 'Claude Code review', { Результат: 'FAIL — см. step-9-eval.json' });
+          throw new Error('teal-cowork-resume-review exited with ' + (r.status || 'signal'));
+        }
+        printStepStats(9, 'Claude Code review', { Результат: '100%' });
+      });
+    }
+    if (stepByStep && (!startFromStep || startFromStep <= 9)) {
+      printStepArtifacts(9, { exportPath, digestPath });
+      writeFlowState({
+        exportPath,
+        digestPath,
+        completedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        currentStep: 10,
+        status: 'running',
+        useExistingExport,
+        stepByStep: true
+      });
+      process.exit(0);
+    }
+
+    writeFlowState({
+      exportPath,
+      digestPath,
+      completedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      currentStep: 10,
+      status: 'running',
+      useExistingExport
+    });
+
+    if (!startFromStep || startFromStep <= 10) {
+      await runStep('Step 10: Apply Claude Code feedback to Teal', async () => {
+        const b10 = getFullFlowStepBudget(10);
+        const step9Path = path.join(TEAL_DIR, 'step-9-evidence.json');
+        let packageDir = null;
+        if (fs.existsSync(step9Path)) {
+          try {
+            packageDir = JSON.parse(fs.readFileSync(step9Path, 'utf8')).packageDir;
+          } catch (_) {}
+        }
+        if (!packageDir) {
+          const dirs = fs.existsSync(path.join(TEAL_DIR, 'cowork-review'))
+            ? fs
+                .readdirSync(path.join(TEAL_DIR, 'cowork-review'))
+                .map((d) => path.join(TEAL_DIR, 'cowork-review', d))
+                .filter((d) => fs.statSync(d).isDirectory())
+                .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)
+            : [];
+          packageDir = dirs[0] || null;
+        }
+        if (!packageDir) throw new Error('No cowork-review package dir; run step 9 first');
+        const script = path.join(__dirname, 'teal-apply-resume-feedback.cjs');
+        const r = await runSpawnWatchedAsync(
+          {
+            step: 10,
+            stage: 'apply_feedback_spawn',
+            limitMs: STEP10_SPAWN_TIMEOUT_MS,
+            stallMs: b10.stallMs
+          },
+          'node',
+          [script, '--package-dir', packageDir],
+          { cwd: REPO_ROOT, env: process.env }
+        );
+        mergeStepEvidence(10);
+        if (r.status !== 0) {
+          printStepStats(10, 'Apply feedback', {
+            Результат: 'FAIL — см. step-10-eval.json и step-10-manual-report.md'
+          });
+          throw new Error('teal-apply-resume-feedback exited with ' + (r.status || 'signal'));
+        }
+        try {
+          const { logStep10ManualReportToConsole, logManualOnlySummary } = require('./feedback-not-applied.cjs');
+          logManualOnlySummary(packageDir, log);
+          logStep10ManualReportToConsole(packageDir, log);
+        } catch (_) {}
+        const ctxPath10 = path.join(packageDir, 'context.json');
+        let appliedPdfInfo = {};
+        if (fs.existsSync(ctxPath10)) {
+          try {
+            const ctx10 = JSON.parse(fs.readFileSync(ctxPath10, 'utf8'));
+            const { verifyAppliedPdfReady, formatPdfMtime } = require('./teal-applied-paths.cjs');
+            const v = verifyAppliedPdfReady(ctx10.company, ctx10.jobTitle, log);
+            if (!v.ok) throw new Error(v.error || 'Applied CV PDF missing after step 10');
+            appliedPdfInfo = { 'Applied CV': v.appliedPdf, 'CV mtime': formatPdfMtime(v.appliedPdf) };
+            log('FINAL Applied CV: ' + v.appliedPdf);
+          } catch (e) {
+            throw new Error('Step 10 Applied PDF check failed: ' + (e.message || e));
+          }
+        }
+        printStepStats(10, 'Apply feedback', { Результат: '100%', ...appliedPdfInfo });
+      });
+    }
+    if (stepByStep) {
+      printStepArtifacts(10, { exportPath, digestPath });
+      writeFlowState({
+        exportPath,
+        digestPath,
+        completedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        currentStep: null,
+        status: 'completed',
+        useExistingExport,
+        stepByStep: false
+      });
+      process.exit(0);
+    }
+  } else if (noCoworkReview) {
+    log('--no-cowork-review: skipping steps 9–10.');
+  }
+
+  writeFlowState({
+    exportPath,
+    digestPath,
+    completedSteps: noCoworkReview ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    currentStep: null,
+    status: 'completed',
+    failedAtStep: null,
+    useExistingExport,
+    ...(stepByStep ? { stepByStep: false } : {})
+  });
+  writeFullFlowProgress({
+    done: true,
+    ok: true,
+    currentStep: null,
+    completedSteps: noCoworkReview ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  });
 
   try {
     buildAndWriteDigestTrackingSection(digestPath);
@@ -1692,6 +2159,7 @@ async function main() {
   }
 
   emitStep7SkippedNotification();
+  emitFinalCreatedResumeLinks(digestPath);
 
   if (stepByStep) printStepArtifacts(8, { exportPath, digestPath });
 

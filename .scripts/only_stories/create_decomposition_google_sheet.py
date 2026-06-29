@@ -10,7 +10,7 @@ Sheets (mirrors BIMerge estimate structure):
   - High-level structure (10 blocks)
   - Roadmap phases
 
-Auth: same as create_feature_matrix_google_sheet.py (credentials.json + google_drive_token.json).
+Auth: same as create_feature_matrix_google_sheet.py (Credentials/personal/ + google_drive_token.json).
 Env:
   ONLY_STORIES_DECOMPOSITION_SHEET_ID  — optional; else google_decomposition_sheet_id.txt in SafeNSafe
   ONLY_STORIES_DECOMPOSITION_SHEET_ID_FILE — override path to id file
@@ -52,7 +52,7 @@ def _credentials_path() -> Path:
     p = os.environ.get("GOOGLE_DRIVE_CREDENTIALS_PATH") or os.environ.get("GOOGLE_CALENDAR_CREDENTIALS_PATH")
     if p:
         return Path(p).expanduser()
-    return REPO / "credentials.json"
+    return REPO / "Credentials" / "personal" / "credentials.json"
 
 
 def _token_path() -> Path:

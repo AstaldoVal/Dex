@@ -755,6 +755,8 @@ async function main() {
   const processingMode = profile.meeting_processing?.mode || 'automatic';
   log(`\nProcessing mode: ${processingMode}`);
 
+  const dataSource = 'granola-cache';
+
   if (processingMode === 'manual') {
     // Queue mode — write JSON files, user runs /process-meetings to analyse
     log(`Queuing ${newMeetings.length} meeting(s) for manual processing...`);

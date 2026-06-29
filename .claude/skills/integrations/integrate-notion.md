@@ -1,7 +1,7 @@
 # /integrate-notion - Connect Notion to Dex
 
 ## Purpose
-Guide users through setting up Notion integration with Dex using the official Notion MCP.
+Guide users through setting up Notion integration with Dex using the Cursor Notion plugin (`notion-workspace`).
 
 ## When to Use
 - User says "connect notion", "set up notion", "integrate notion"
@@ -10,91 +10,54 @@ Guide users through setting up Notion integration with Dex using the official No
 
 ## Prerequisites
 - Notion account
-- Admin access to create integrations (or ask workspace admin)
+- Access to connect Notion workspace via OAuth in Cursor
 
 ## Flow
 
 ### Step 1: Check Existing Setup
-```python
-from core.integrations.detect import detect_integration, load_claude_config
-from core.integrations.notion.setup import is_installed, get_setup_instructions, install
+- Ensure Cursor plugin `notion-workspace` is enabled.
+- Ensure there is no Dex-managed `notion` entry in `.cursor/mcp.json.source`.
 
-status = detect_integration("notion", load_claude_config() or {})
+### Step 2: OAuth Authorization
+Display instructions and ask user to:
+1. Trigger any Notion tool from plugin in Cursor
+2. Complete OAuth in browser
+3. Confirm workspace is connected
 
-if status["installed"]:
-    if status["is_dex_recommended"]:
-        print("✅ Notion is already set up with the recommended package!")
-        # Offer to test or reconfigure
-    else:
-        print(f"⚠️ You have Notion configured, but using: {status['package']}")
-        print(f"Recommendation: {status['recommendation']}")
-        # Offer to upgrade or keep existing
-```
+### Step 3: Verify Access
+- Run a simple Notion tool (`notion-search` or `notion-fetch`) to verify access.
 
-### Step 2: Show Instructions (if needed)
-```python
-print(get_setup_instructions())
-```
-
-Display the instructions and wait for user to:
-1. Create integration at notion.so/my-integrations
-2. Copy the integration token
-3. Share pages with the integration
-
-### Step 3: Collect Token
-Ask user to paste their Notion integration token.
-- Should start with `ntn_` or `secret_`
-- Validate format before proceeding
-
-### Step 4: Install
-```python
-success, message = install(token)
-print(message)
-```
-
-### Step 5: Confirm and Explain Next Steps
-- Remind user to restart Claude Desktop
+### Step 4: Confirm and Explain Next Steps
+- Remind user to restart Cursor only if plugin was just installed or updated
 - Explain what they can now do
 - Offer to test the connection
 
 ## Key Messages
 
 **Success:**
-> ✅ Notion connected! You can now:
+> ✅ Notion plugin connected! You can now:
 > - Search your Notion workspace: "Find my Q1 planning doc"
 > - Get context during meetings: "What Notion pages does [person] have?"
 > - Link Notion docs to projects and people pages
 >
-> **Restart Claude Desktop** to activate.
+> If you just enabled the plugin, restart Cursor to activate.
 
-**Already Configured (Dex Package):**
-> ✅ Notion is already set up and using the recommended package.
-> Want me to test the connection or reconfigure?
-
-**Already Configured (Other Package):**
-> You have Notion configured using `{package}`.
-> 
-> Dex recommends `@notionhq/notion-mcp-server` (official from Notion).
-> Benefits: Best maintained, full API coverage, official support.
->
-> Would you like to:
-> 1. **Keep your current setup** - It's working, stick with it
-> 2. **Switch to Dex recommended** - I'll migrate your config
-> 3. **Learn more** - Compare the two options
+**Already Configured (Plugin):**
+> ✅ Notion plugin is already enabled and connected.
+> Want me to test the connection?
 
 ## Error Handling
 
 | Error | Response |
 |-------|----------|
-| Invalid token format | "That doesn't look like a Notion token. It should start with `ntn_` or `secret_`. Did you copy the full token?" |
-| Missing pages access | "Make sure you've shared pages with your integration. Notion integrations can only see pages explicitly shared with them." |
-| Config write error | "I couldn't update Claude Desktop config. Check file permissions at `~/Library/Application Support/Claude/`" |
+| OAuth not completed | "Please run any Notion plugin tool and complete OAuth in browser first." |
+| Missing pages access | "Check page/database permissions in Notion workspace and reconnect OAuth if needed." |
+| Plugin disabled | "Enable `notion-workspace` plugin in Cursor settings, then retry." |
 
 ## Analytics Event
 ```python
 fire_event('integration_notion_completed', {
-    'was_upgrade': status.get("installed", False),
-    'previous_package': status.get("package") if status.get("installed") else None
+    'integration_mode': 'cursor_plugin'
 })
 ```
 

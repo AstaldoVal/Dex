@@ -85,10 +85,13 @@ function buildInstruction(payload) {
   if (payload.task_type === 'work_experience_company') {
     parts.push(
       '',
-      '## Company inventory (pick bullets verbatim only)',
+      '## Company inventory (verbatim bullets source — prefer this when non-empty)',
       truncateToTokenBudget(JSON.stringify(payload.company_inventory || {}, null, 2), 2000),
       '',
-      'OUTPUT: JSON with work_experience_company + changes[] only for this employer.'
+      '## Baseline company detail (if inventory empty or uncertain — return this unchanged)',
+      truncateToTokenBudget(JSON.stringify(payload.baseline_company_detail || {}, null, 2), 2000),
+      '',
+      'OUTPUT: JSON with task_id, work_experience_company, changes[] only for this employer. Never return zero bullets on included roles due to empty inventory.'
     );
   } else {
     parts.push(

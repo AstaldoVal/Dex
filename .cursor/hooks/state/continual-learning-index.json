@@ -1,0 +1,1145 @@
+{
+  "version": 1,
+  "transcripts": {
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/01443d2b-1ed7-4e5b-a9db-eff23c33cd4b.txt": {
+      "mtimeMs": 1771162584693.324,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/01463bee-b9c6-4a01-ac45-365e015b5722/01463bee-b9c6-4a01-ac45-365e015b5722.jsonl": {
+      "mtimeMs": 1772625884643.6997,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/040ded4d-fc74-4ec3-b24e-d2ab980d293e/040ded4d-fc74-4ec3-b24e-d2ab980d293e.jsonl": {
+      "mtimeMs": 1771831661918.4028,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/05ea946c-5187-4eee-b915-a0ca969ef1e0/05ea946c-5187-4eee-b915-a0ca969ef1e0.jsonl": {
+      "mtimeMs": 1772541691172.172,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/06ab50d8-d6c3-4643-8d14-bb2e40b0c112.txt": {
+      "mtimeMs": 1770654666283.5098,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/06fd6329-131b-4adc-93e9-f5ab508fc089/06fd6329-131b-4adc-93e9-f5ab508fc089.jsonl": {
+      "mtimeMs": 1771746958939.7874,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/08519af4-0c9f-4f6b-9a59-9457566f7938.txt": {
+      "mtimeMs": 1770982200660.2102,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/08682b4a-a360-4f66-aaa7-67ef217e838e.txt": {
+      "mtimeMs": 1770730168610.0574,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/087d0926-6de7-438c-8760-171f9b13410f.txt": {
+      "mtimeMs": 1770922664093.6736,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/08d0ca1a-e032-4059-8905-71a4e595febb.txt": {
+      "mtimeMs": 1770634630745.863,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0a95476b-4415-4717-83f5-9c87ca516a53.txt": {
+      "mtimeMs": 1771254470143.2559,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0b6a4355-d482-4d66-b960-a925f4f665ef.txt": {
+      "mtimeMs": 1770719284888.6804,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0b815fa8-6dcb-4c9a-9c70-bc1b72e6344a.txt": {
+      "mtimeMs": 1770922908336.916,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0bd1ebff-4106-495c-9d77-0bf630a237d0.txt": {
+      "mtimeMs": 1771181766525.0525,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0d18bf24-f348-4faf-8fd1-e2c365de0d54/0d18bf24-f348-4faf-8fd1-e2c365de0d54.jsonl": {
+      "mtimeMs": 1772578348925.0886,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/0f61035f-db12-420b-a48b-1caa7c3ade17.txt": {
+      "mtimeMs": 1770911843779.5374,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/12558496-865c-4886-97c8-368955b4a8f4/12558496-865c-4886-97c8-368955b4a8f4.jsonl": {
+      "mtimeMs": 1773043361251.0452,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/14c3cc2e-44d8-4306-b6b4-6f55b18c8041/14c3cc2e-44d8-4306-b6b4-6f55b18c8041.jsonl": {
+      "mtimeMs": 1773073270981.2676,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/16693c64-e822-4d44-9f0a-f040cda4ef29/16693c64-e822-4d44-9f0a-f040cda4ef29.jsonl": {
+      "mtimeMs": 1771601965850.4092,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/171401ec-4cfa-4dbc-91a2-9aaac00e7688.txt": {
+      "mtimeMs": 1771359869509.1099,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/188b15d8-153d-4d60-974b-aef61350c50c.txt": {
+      "mtimeMs": 1771416650448.902,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/19fc8e4c-3f45-4026-aaf9-da85c558742f/19fc8e4c-3f45-4026-aaf9-da85c558742f.jsonl": {
+      "mtimeMs": 1772563261314.1736,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1af8b25e-f58b-4a77-8e86-d0085ef5ec8b.txt": {
+      "mtimeMs": 1771331143236.6882,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1b58c801-3bf0-4172-9040-39244509f605.txt": {
+      "mtimeMs": 1771345601402.7646,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1c64475a-5609-4fe4-850e-fab6fdae66e6.txt": {
+      "mtimeMs": 1771073968559.8125,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1dd2ced6-bff0-4400-891c-98bf2a9ace8e.txt": {
+      "mtimeMs": 1771233000831.014,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1e371a7e-2466-430c-a44c-cb7bae1cb26c.txt": {
+      "mtimeMs": 1771279394065.2756,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1edc4073-e060-4c8b-8518-931ce9bbca13.txt": {
+      "mtimeMs": 1770842447350.6067,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/1fddb0d6-5b23-43f7-8806-cc5dd86549ef/1fddb0d6-5b23-43f7-8806-cc5dd86549ef.jsonl": {
+      "mtimeMs": 1772579268840.0732,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/208b7306-f95d-45ea-8557-6d4680d3a9f6.txt": {
+      "mtimeMs": 1770681142936.5542,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/20bc467a-6f0c-4c6b-a64d-37968a2412da.txt": {
+      "mtimeMs": 1771281611075.392,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2209b4a6-0dbb-42da-aebd-df73308ba1a2.txt": {
+      "mtimeMs": 1770736465434.9658,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/22bbf80e-e815-4d20-880c-6ad507e5ae9d/22bbf80e-e815-4d20-880c-6ad507e5ae9d.jsonl": {
+      "mtimeMs": 1772718572795.0186,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2382027f-d267-45ad-a42f-c572477333f6/2382027f-d267-45ad-a42f-c572477333f6.jsonl": {
+      "mtimeMs": 1771860107359.4592,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/240dbbeb-2dfc-4880-ab62-182197b4dbf1/240dbbeb-2dfc-4880-ab62-182197b4dbf1.jsonl": {
+      "mtimeMs": 1772713774049.9048,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2450e97a-3bdd-47a4-80d2-db6c07429a64/2450e97a-3bdd-47a4-80d2-db6c07429a64.jsonl": {
+      "mtimeMs": 1772698292972.2822,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/26ed9d06-b125-4c65-84a1-2134b5835721/26ed9d06-b125-4c65-84a1-2134b5835721.jsonl": {
+      "mtimeMs": 1771603875148.173,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/27c50d0d-8873-401b-82ae-44a3050552dc/27c50d0d-8873-401b-82ae-44a3050552dc.jsonl": {
+      "mtimeMs": 1772228258057.5962,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/28b3319b-aa60-4732-a47d-e63061ae5daf.txt": {
+      "mtimeMs": 1770932638861.53,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/294a9923-77d9-44c4-9077-07469b95e2e6/294a9923-77d9-44c4-9077-07469b95e2e6.jsonl": {
+      "mtimeMs": 1771968126354.6624,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/29c79a5f-efd0-4d6f-9c29-73e14e03bb3d.txt": {
+      "mtimeMs": 1771240195534.632,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2a2edd9f-4328-4066-a547-da2c1b6c5ac7/2a2edd9f-4328-4066-a547-da2c1b6c5ac7.jsonl": {
+      "mtimeMs": 1771794952925.514,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2a4e9ad4-f76f-4da8-9ed6-0110e50e7b24/2a4e9ad4-f76f-4da8-9ed6-0110e50e7b24.jsonl": {
+      "mtimeMs": 1772005483948.4128,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2b066061-73d4-4de1-ba23-143c12d8443e/2b066061-73d4-4de1-ba23-143c12d8443e.jsonl": {
+      "mtimeMs": 1772316334383.8508,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2cefce9e-6434-42ea-af3d-97c63933ade4.txt": {
+      "mtimeMs": 1771087172984.5393,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2d2dc96d-0529-465f-a01c-d3d8ffc02839.txt": {
+      "mtimeMs": 1770893171385.543,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2e0a9e0e-47b6-434c-8244-56d702162835.txt": {
+      "mtimeMs": 1770883409725.1128,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2e457067-4a8d-4321-a5c9-cd8fec8e2685/2e457067-4a8d-4321-a5c9-cd8fec8e2685.jsonl": {
+      "mtimeMs": 1772706971142.63,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/2f4aa1ff-4058-4bc6-a628-7d60372bfbe6/2f4aa1ff-4058-4bc6-a628-7d60372bfbe6.jsonl": {
+      "mtimeMs": 1771452462106.962,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/30778c4a-7c03-483b-91dd-19525d4c98bd.txt": {
+      "mtimeMs": 1771280606812.7834,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3185e6f1-b171-4577-b25f-8b1ea61e00c5/3185e6f1-b171-4577-b25f-8b1ea61e00c5.jsonl": {
+      "mtimeMs": 1772958132035.86,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/34cff34a-5ea9-4c03-bf34-24ab1790968a.txt": {
+      "mtimeMs": 1771270441086.178,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/34e95bad-639e-4d12-9728-80f2918fec93.txt": {
+      "mtimeMs": 1770655555672.6047,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/350ad2a9-3087-4924-9e00-6476349f1b3a/350ad2a9-3087-4924-9e00-6476349f1b3a.jsonl": {
+      "mtimeMs": 1772259882258.9001,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/352dddf2-3f2a-4bf5-84be-adea77ab96e2.txt": {
+      "mtimeMs": 1771322442823.1343,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/358d32fa-e7aa-4f48-a03c-1564c9b92e26/358d32fa-e7aa-4f48-a03c-1564c9b92e26.jsonl": {
+      "mtimeMs": 1771426830245.2732,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/36e52dfa-aa6c-4580-9230-f7bf12349630/36e52dfa-aa6c-4580-9230-f7bf12349630.jsonl": {
+      "mtimeMs": 1772709875085.502,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/38909037-e018-4371-a197-aadb13a1c5cb/38909037-e018-4371-a197-aadb13a1c5cb.jsonl": {
+      "mtimeMs": 1772537860149.7063,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3a800a7f-5efb-4e33-a732-767a68792523/3a800a7f-5efb-4e33-a732-767a68792523.jsonl": {
+      "mtimeMs": 1772724009292.876,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3abb9a0a-f79c-4a1c-b504-876e26477bcb.txt": {
+      "mtimeMs": 1771253326730.8547,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3b5d36dc-11b1-4f0d-b48c-49b290ad40f2.txt": {
+      "mtimeMs": 1771318389144.2532,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3d175491-6fe4-46e3-bd0a-3bb7a68389a3.txt": {
+      "mtimeMs": 1771411599309.9702,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3e06c301-0ef5-4f08-9479-43fa56da688a.txt": {
+      "mtimeMs": 1771023218666.1787,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/3e14a93f-da7e-421f-9485-d30c675f4c09/3e14a93f-da7e-421f-9485-d30c675f4c09.jsonl": {
+      "mtimeMs": 1772637194227.7002,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4176fe9b-cf6c-459f-8308-13411339716d.txt": {
+      "mtimeMs": 1770726024660.5452,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/41944f70-4ae4-4061-bb33-af0a5206954a/41944f70-4ae4-4061-bb33-af0a5206954a.jsonl": {
+      "mtimeMs": 1771689974474.2573,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/426a34d7-af18-416e-9e5d-315dcb75550f/426a34d7-af18-416e-9e5d-315dcb75550f.jsonl": {
+      "mtimeMs": 1772015993299.3604,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/426ec62e-fd77-4eee-95b1-60c9a2defccc/426ec62e-fd77-4eee-95b1-60c9a2defccc.jsonl": {
+      "mtimeMs": 1771837390860.9114,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/438d66ef-a232-4dc6-b9d3-ee74ea1a5e4d/438d66ef-a232-4dc6-b9d3-ee74ea1a5e4d.jsonl": {
+      "mtimeMs": 1772712617413.8562,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/43966024-e672-4171-afea-31833973a180/43966024-e672-4171-afea-31833973a180.jsonl": {
+      "mtimeMs": 1772833281442.4387,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/468351d0-b1de-427a-8bdd-f78869f7e637.txt": {
+      "mtimeMs": 1770968704153.406,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/483f43c0-56fb-45b9-962d-263021950bf2.txt": {
+      "mtimeMs": 1771278706442.264,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/48bd12dd-c460-4d51-b158-4b40116bfaf0/48bd12dd-c460-4d51-b158-4b40116bfaf0.jsonl": {
+      "mtimeMs": 1771663707400.6257,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/49f3fa90-36ec-40c2-bfcf-a3e4fc013b32/49f3fa90-36ec-40c2-bfcf-a3e4fc013b32.jsonl": {
+      "mtimeMs": 1771961538932.3706,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4d976e99-67a3-48eb-88c6-8df3ee0f5582/4d976e99-67a3-48eb-88c6-8df3ee0f5582.jsonl": {
+      "mtimeMs": 1772718566991.5352,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4dd46eb3-b22e-4084-89b6-6bb8e246f40a.txt": {
+      "mtimeMs": 1771109460131.4792,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4e19d458-42ae-4356-8796-741274ee4fff/4e19d458-42ae-4356-8796-741274ee4fff.jsonl": {
+      "mtimeMs": 1772625244308.9446,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4e612f59-01d9-4558-be92-b9b98a1384a4/4e612f59-01d9-4558-be92-b9b98a1384a4.jsonl": {
+      "mtimeMs": 1771831648335.6125,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4eb0720f-d40c-407b-8ad9-0915ebf9afd2/4eb0720f-d40c-407b-8ad9-0915ebf9afd2.jsonl": {
+      "mtimeMs": 1772179675342.2234,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/4f4df15c-6181-4be0-9626-2933c0fc9e3c.txt": {
+      "mtimeMs": 1770886531642.046,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/504890fe-1ed5-4f59-b01d-20b68d54466b/504890fe-1ed5-4f59-b01d-20b68d54466b.jsonl": {
+      "mtimeMs": 1772492676906.9233,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/50e85a3f-dcb0-4bbd-9221-310687552d3f.txt": {
+      "mtimeMs": 1771241474986.886,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5104e3e4-3209-40a3-aaf2-cdbe891b4fd8/5104e3e4-3209-40a3-aaf2-cdbe891b4fd8.jsonl": {
+      "mtimeMs": 1772313346191.6958,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5205b791-fd1b-4cd1-9f25-029f39ffd4e3/5205b791-fd1b-4cd1-9f25-029f39ffd4e3.jsonl": {
+      "mtimeMs": 1771795109646.1482,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5211c81f-584d-48ee-b731-1b0847a61604.txt": {
+      "mtimeMs": 1770592914827.0796,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/523b6ace-6971-4d23-92d9-b37abb729269/523b6ace-6971-4d23-92d9-b37abb729269.jsonl": {
+      "mtimeMs": 1772059824569.0068,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/55337eaf-5da1-4b11-87c1-31c1cd63d02b.txt": {
+      "mtimeMs": 1771279456942.7449,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/562f79f4-f6ef-41f0-9fe5-dfbd1882dfb4/562f79f4-f6ef-41f0-9fe5-dfbd1882dfb4.jsonl": {
+      "mtimeMs": 1772095189120.9216,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/566ffb43-7a62-482e-8ba3-424c2fae10e8/566ffb43-7a62-482e-8ba3-424c2fae10e8.jsonl": {
+      "mtimeMs": 1772890612375.3682,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/56822b13-5088-4625-872c-cde4900e10eb/56822b13-5088-4625-872c-cde4900e10eb.jsonl": {
+      "mtimeMs": 1772561896560.9202,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/57296762-062e-4f3a-91cb-930e65c4ed87/57296762-062e-4f3a-91cb-930e65c4ed87.jsonl": {
+      "mtimeMs": 1772635294497.8748,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/57d57cdd-7b7e-4b25-a530-b756568765fa/57d57cdd-7b7e-4b25-a530-b756568765fa.jsonl": {
+      "mtimeMs": 1771537270132.5447,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/57dca6b6-0fd4-45e2-9e21-5626b23edd31/57dca6b6-0fd4-45e2-9e21-5626b23edd31.jsonl": {
+      "mtimeMs": 1772794048222.638,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/58c3b9e0-c7aa-4ab9-87dd-a1ec13ddc503/58c3b9e0-c7aa-4ab9-87dd-a1ec13ddc503.jsonl": {
+      "mtimeMs": 1772127185377.9749,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/58dbad4e-9460-47d7-9deb-9c440763cd29.txt": {
+      "mtimeMs": 1770913082305.5632,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/58e283fa-2b1f-4b9f-abcd-7b29a54c7304/58e283fa-2b1f-4b9f-abcd-7b29a54c7304.jsonl": {
+      "mtimeMs": 1772226134362.9922,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/59a48050-e3cd-4016-8b28-bad3699934e4.txt": {
+      "mtimeMs": 1771366683039.433,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/59eba9cb-74f3-4bae-b84b-7059fdd11c2f/59eba9cb-74f3-4bae-b84b-7059fdd11c2f.jsonl": {
+      "mtimeMs": 1771521909439.96,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5adc6e3e-ac34-40f0-bde6-f7d23b03a233.txt": {
+      "mtimeMs": 1771231432944.8965,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5b13d21b-4a6d-4439-ae24-ad54ef31affe/5b13d21b-4a6d-4439-ae24-ad54ef31affe.jsonl": {
+      "mtimeMs": 1771882469342.1785,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5c4e7eb0-a8a0-4b94-8b2d-46f6c9f7af6f/5c4e7eb0-a8a0-4b94-8b2d-46f6c9f7af6f.jsonl": {
+      "mtimeMs": 1772712227204.1753,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5cb56065-203b-4d64-8c27-639cf784fd28/5cb56065-203b-4d64-8c27-639cf784fd28.jsonl": {
+      "mtimeMs": 1772196069755.3838,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5ce0cc7d-e75b-4a19-97f9-bcaf7beb2c83/5ce0cc7d-e75b-4a19-97f9-bcaf7beb2c83.jsonl": {
+      "mtimeMs": 1772735790819.3318,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5d2f160d-7a6a-4d83-bdc7-a6a01ef7eb33/5d2f160d-7a6a-4d83-bdc7-a6a01ef7eb33.jsonl": {
+      "mtimeMs": 1772869967389.106,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5d46005d-2858-4275-9901-2031dcda1a88/5d46005d-2858-4275-9901-2031dcda1a88.jsonl": {
+      "mtimeMs": 1772178180364.129,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5da2c4d7-aa3f-4564-9d61-f6a09a4b7b5b/5da2c4d7-aa3f-4564-9d61-f6a09a4b7b5b.jsonl": {
+      "mtimeMs": 1772871230650.7544,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5e7aa43e-61f0-48b4-add4-3493c464f146/5e7aa43e-61f0-48b4-add4-3493c464f146.jsonl": {
+      "mtimeMs": 1772484182536.7607,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5ea03ad3-81f8-4b52-a95a-c3e620311c1c/5ea03ad3-81f8-4b52-a95a-c3e620311c1c.jsonl": {
+      "mtimeMs": 1772626114843.318,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/5f487363-5c7a-4eac-bbcd-6e85099ee7c3.txt": {
+      "mtimeMs": 1771323177503.2366,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6155e10f-8071-48a1-bef4-7292c13222e5/6155e10f-8071-48a1-bef4-7292c13222e5.jsonl": {
+      "mtimeMs": 1771587205753.3127,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/61ceff7f-b4bf-4c06-bd88-7af6a00db663/61ceff7f-b4bf-4c06-bd88-7af6a00db663.jsonl": {
+      "mtimeMs": 1771942192301.2507,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/61e2523f-b171-4a49-a9ec-fc6e21c96c88/61e2523f-b171-4a49-a9ec-fc6e21c96c88.jsonl": {
+      "mtimeMs": 1771759854960.325,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6216db7a-5456-447a-a5fc-512efef45e28/6216db7a-5456-447a-a5fc-512efef45e28.jsonl": {
+      "mtimeMs": 1771710466799.5547,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/62aff26a-fb3a-4503-9094-2efef42b8f96.txt": {
+      "mtimeMs": 1770712990152.7976,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/63366a23-fe33-4d11-bd07-9cba3b756597/63366a23-fe33-4d11-bd07-9cba3b756597.jsonl": {
+      "mtimeMs": 1772909334785.5273,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/640d7392-cc59-4041-9a7a-71791f012dc9/640d7392-cc59-4041-9a7a-71791f012dc9.jsonl": {
+      "mtimeMs": 1772370106814.4812,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/644135bc-fd57-40b2-8638-16cc4f7a3137/644135bc-fd57-40b2-8638-16cc4f7a3137.jsonl": {
+      "mtimeMs": 1772366204301.5295,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/64af40d7-68fd-4b15-be96-08bad35a5133.txt": {
+      "mtimeMs": 1770892676406.9883,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/64e7d07f-fd73-40bf-adfb-4c6cb3d549f3.txt": {
+      "mtimeMs": 1770651358998.509,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/65a0a32f-cfc3-4a9e-a73e-15fe50aa69ff/65a0a32f-cfc3-4a9e-a73e-15fe50aa69ff.jsonl": {
+      "mtimeMs": 1772577183872.9563,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/65bfe133-9059-4d87-b869-816277ee2887/65bfe133-9059-4d87-b869-816277ee2887.jsonl": {
+      "mtimeMs": 1772220398278.749,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/67734ff3-38de-48e9-8fd7-cc4e7c2b5550.txt": {
+      "mtimeMs": 1770844768556.9338,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/681d58dc-776d-47e9-862a-8525275d6d91/681d58dc-776d-47e9-862a-8525275d6d91.jsonl": {
+      "mtimeMs": 1772354854123.9272,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6928857f-4081-4161-8f00-9e358f16a2b1/6928857f-4081-4161-8f00-9e358f16a2b1.jsonl": {
+      "mtimeMs": 1771790625516.5544,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/69661693-8d4b-46dc-8386-5603a995e37a/69661693-8d4b-46dc-8386-5603a995e37a.jsonl": {
+      "mtimeMs": 1772786604864.7383,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/69a30eb6-9330-46ed-afb3-32bd3cf1f171/69a30eb6-9330-46ed-afb3-32bd3cf1f171.jsonl": {
+      "mtimeMs": 1772208447848.8062,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6ae910a6-9f56-472c-9144-bf3555a9a289/6ae910a6-9f56-472c-9144-bf3555a9a289.jsonl": {
+      "mtimeMs": 1771758275047.2244,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6b3ab00d-93e3-4788-a28c-617552b5a3f6.txt": {
+      "mtimeMs": 1770655468300.0776,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6b711945-d720-40d2-b051-50d3185fdb47/6b711945-d720-40d2-b051-50d3185fdb47.jsonl": {
+      "mtimeMs": 1771967513069.5142,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6db81b03-eecd-4374-86ee-ba4a8f0100f1/6db81b03-eecd-4374-86ee-ba4a8f0100f1.jsonl": {
+      "mtimeMs": 1771854028047.16,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6e3ed07c-8f3d-4df0-8fef-781a6c613981/6e3ed07c-8f3d-4df0-8fef-781a6c613981.jsonl": {
+      "mtimeMs": 1772707911801.5818,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/6ed3af7d-3869-47de-bd98-e67950b64cc3/6ed3af7d-3869-47de-bd98-e67950b64cc3.jsonl": {
+      "mtimeMs": 1771796912347.0862,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/714da7a9-99a1-4e32-af67-1521899134f4/714da7a9-99a1-4e32-af67-1521899134f4.jsonl": {
+      "mtimeMs": 1771428847222.2107,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/727739bd-6315-472b-9b13-e1578056aab0.txt": {
+      "mtimeMs": 1770977172829.3096,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7464e3c4-6a5d-48f0-990b-6ffaa156bfcb.txt": {
+      "mtimeMs": 1770578346661.372,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/74daa2e9-0672-4218-874c-4c4aa916c371/74daa2e9-0672-4218-874c-4c4aa916c371.jsonl": {
+      "mtimeMs": 1772907645141.124,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7552007e-8199-4cd7-9a94-a833c625f7f6.txt": {
+      "mtimeMs": 1771179316962.0752,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7565e051-72ff-46e7-ab00-3489691e8b08.txt": {
+      "mtimeMs": 1771278297796.81,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/75ca2d57-4d32-4a89-bf55-3a5c0b6729a0/75ca2d57-4d32-4a89-bf55-3a5c0b6729a0.jsonl": {
+      "mtimeMs": 1771792408893.2568,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/766a73fa-a4dd-499a-9812-c3d371ceca67/766a73fa-a4dd-499a-9812-c3d371ceca67.jsonl": {
+      "mtimeMs": 1772752395326.6357,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7744cf1e-162f-4ceb-b9fb-5379cefa0132.txt": {
+      "mtimeMs": 1770995963968.4973,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/78655f95-dbc8-4bb9-9981-76304706ed75.txt": {
+      "mtimeMs": 1771319255701.5112,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7af49195-aff9-415a-a3f5-aab117a2e051/7af49195-aff9-415a-a3f5-aab117a2e051.jsonl": {
+      "mtimeMs": 1772542764948.7517,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7be46132-38b9-4dbb-92a4-bf1d017d2d7d/7be46132-38b9-4dbb-92a4-bf1d017d2d7d.jsonl": {
+      "mtimeMs": 1772628514005.1755,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7c080b79-f4db-464e-a3c6-ea419a69c9f9/7c080b79-f4db-464e-a3c6-ea419a69c9f9.jsonl": {
+      "mtimeMs": 1772565746842.0078,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7e745adc-c331-4be9-8df3-458ad778f401.txt": {
+      "mtimeMs": 1771064491853.4568,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7eb26f87-ce40-45a2-a341-2261f93ab960/7eb26f87-ce40-45a2-a341-2261f93ab960.jsonl": {
+      "mtimeMs": 1772785868559.8086,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7ec97730-6e07-4d57-aa15-02df01cb421a.txt": {
+      "mtimeMs": 1771420014272.596,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7ee96680-0082-418b-894a-0fd2587f70e8/7ee96680-0082-418b-894a-0fd2587f70e8.jsonl": {
+      "mtimeMs": 1772311124242.115,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7f79d408-1c2c-4b24-af21-f26602c3c864/7f79d408-1c2c-4b24-af21-f26602c3c864.jsonl": {
+      "mtimeMs": 1772639281847.9856,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/7f826deb-71bd-43ad-ac33-1dd6d760c63e.txt": {
+      "mtimeMs": 1771236646666.5974,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/80663909-b286-4cb2-82d3-14ca472dfb99/80663909-b286-4cb2-82d3-14ca472dfb99.jsonl": {
+      "mtimeMs": 1772782493838.3174,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/81adf746-d143-4910-b90e-236f8ffc6ea0/81adf746-d143-4910-b90e-236f8ffc6ea0.jsonl": {
+      "mtimeMs": 1771753615594.4082,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8206e690-4443-4ada-aed9-ba2b6f90fca4.txt": {
+      "mtimeMs": 1771157176638.3403,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/82d25e79-2c05-4cb3-b30f-37f18c5e2dd2/82d25e79-2c05-4cb3-b30f-37f18c5e2dd2.jsonl": {
+      "mtimeMs": 1772721067677.038,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/83ef4ea0-3591-413b-8d54-a89194e9c885.txt": {
+      "mtimeMs": 1770899334903.053,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/864d2df7-5355-420b-b279-1624685b6a37.txt": {
+      "mtimeMs": 1770927364112.0747,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/87488fdf-373b-4ea5-9cdc-1c9b9da097d5/87488fdf-373b-4ea5-9cdc-1c9b9da097d5.jsonl": {
+      "mtimeMs": 1772703740765.018,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/886f16d5-d018-4ed6-9a39-248a929da5bd/886f16d5-d018-4ed6-9a39-248a929da5bd.jsonl": {
+      "mtimeMs": 1772995464365.957,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/890c1a37-311e-42f1-8e17-e49986ef4492/890c1a37-311e-42f1-8e17-e49986ef4492.jsonl": {
+      "mtimeMs": 1772553848263.8833,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/892824de-db0e-4e27-8e9b-15cb29ec880f/892824de-db0e-4e27-8e9b-15cb29ec880f.jsonl": {
+      "mtimeMs": 1772264414617.2808,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8bc1b1e0-9cbe-4e00-9103-032009f748a5/8bc1b1e0-9cbe-4e00-9103-032009f748a5.jsonl": {
+      "mtimeMs": 1772625976257.79,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8c1ab89d-3d18-41d3-8535-b675d6a96736/8c1ab89d-3d18-41d3-8535-b675d6a96736.jsonl": {
+      "mtimeMs": 1772579303002.0837,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8c544384-dbe8-41ea-b212-c5150e79ade3/8c544384-dbe8-41ea-b212-c5150e79ade3.jsonl": {
+      "mtimeMs": 1771796050299.41,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8cc0d2b3-e4c5-40f0-a808-06a9d2f6313e/8cc0d2b3-e4c5-40f0-a808-06a9d2f6313e.jsonl": {
+      "mtimeMs": 1771540855144.6467,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8cc0d2b3-e4c5-40f0-a808-06a9d2f6313e.txt": {
+      "mtimeMs": 1770883905774.9426,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8d43da5d-876a-4c44-b8ab-1105b1fd748a/8d43da5d-876a-4c44-b8ab-1105b1fd748a.jsonl": {
+      "mtimeMs": 1772033790114.8486,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8dbe2775-08a7-442f-a81f-366a40e8396c/8dbe2775-08a7-442f-a81f-366a40e8396c.jsonl": {
+      "mtimeMs": 1771710159997.4822,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8e01af74-2cde-4d98-911d-3e71eec3fdc6/8e01af74-2cde-4d98-911d-3e71eec3fdc6.jsonl": {
+      "mtimeMs": 1771602424735.2861,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8fcf0af2-531b-4006-a156-73012e67ba25/8fcf0af2-531b-4006-a156-73012e67ba25.jsonl": {
+      "mtimeMs": 1771490648853.9473,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/90190cf3-705b-493d-9a56-6665bf1c1239/90190cf3-705b-493d-9a56-6665bf1c1239.jsonl": {
+      "mtimeMs": 1771960550816.2751,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/907b46c9-cd07-4846-9600-d0884c3e6a25/907b46c9-cd07-4846-9600-d0884c3e6a25.jsonl": {
+      "mtimeMs": 1772114452790.363,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/90bf29b5-09d2-482a-bd7f-519156963b75.txt": {
+      "mtimeMs": 1771161847075.0784,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/90e9516c-ba13-4d9e-a6c5-a0887d03d3e5.txt": {
+      "mtimeMs": 1771243176315.2886,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/91dc8138-fd4b-4baa-ad03-f5f00581c0b5.txt": {
+      "mtimeMs": 1770637371020.276,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/934cbc17-83ae-4521-a777-61b8bde0fb9f/934cbc17-83ae-4521-a777-61b8bde0fb9f.jsonl": {
+      "mtimeMs": 1771662403754.0945,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9389306b-84fd-4038-8caa-e129618a99c3.txt": {
+      "mtimeMs": 1771408340743.5613,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/93e12d6d-e4a2-45d9-8d77-0b8d54ba271b/93e12d6d-e4a2-45d9-8d77-0b8d54ba271b.jsonl": {
+      "mtimeMs": 1771519227132.1333,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/957eef5e-5e5c-4daf-b50e-d92029c53c6f/957eef5e-5e5c-4daf-b50e-d92029c53c6f.jsonl": {
+      "mtimeMs": 1773177202088.0989,
+      "lastProcessedAt": "2026-03-10T21:14:30.138Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9776f9a8-1b43-43d3-b45a-6fd2444556db/9776f9a8-1b43-43d3-b45a-6fd2444556db.jsonl": {
+      "mtimeMs": 1772371856599.2324,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/98384ae4-79a5-440f-8be0-6527197c5515.txt": {
+      "mtimeMs": 1770995755938.8179,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/99538ed4-453d-49d7-94e1-f1578cfb41e2/99538ed4-453d-49d7-94e1-f1578cfb41e2.jsonl": {
+      "mtimeMs": 1772746547358.5293,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9981ff82-9a41-4025-92b5-02f925c1a63a/9981ff82-9a41-4025-92b5-02f925c1a63a.jsonl": {
+      "mtimeMs": 1772010333029.2837,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9b05da12-f2ba-45dc-9bc9-57c18b3b70de.txt": {
+      "mtimeMs": 1771336090025.7793,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9bc3abaa-697b-4b42-b008-2fbb9fc07c07/9bc3abaa-697b-4b42-b008-2fbb9fc07c07.jsonl": {
+      "mtimeMs": 1772038694581.9875,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9df095a5-4daa-4873-ada7-4bd327fc0e47/9df095a5-4daa-4873-ada7-4bd327fc0e47.jsonl": {
+      "mtimeMs": 1772745163741.8845,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9df32409-b8e4-4151-8434-48796a5a152d/9df32409-b8e4-4151-8434-48796a5a152d.jsonl": {
+      "mtimeMs": 1771861230133.1538,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/9e24111d-e701-44c0-9ba0-67b36369212d.txt": {
+      "mtimeMs": 1771166191262.2405,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a07a3c50-ae19-4247-8e72-439b826c8d11/a07a3c50-ae19-4247-8e72-439b826c8d11.jsonl": {
+      "mtimeMs": 1771430394460.0352,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a187ba32-37ef-44c2-a588-db5b6fea584d.txt": {
+      "mtimeMs": 1770652695683.1057,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a1c1a9d1-f993-47f5-b911-8f642e6383cf.txt": {
+      "mtimeMs": 1770915302084.3398,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a22b76ac-3f6b-402d-b253-05f25eae2be1/a22b76ac-3f6b-402d-b253-05f25eae2be1.jsonl": {
+      "mtimeMs": 1772549156008.2317,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a4a5d86d-3c37-4e9d-852a-92fc15f8409f/a4a5d86d-3c37-4e9d-852a-92fc15f8409f.jsonl": {
+      "mtimeMs": 1772265779267.891,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a4cc52cf-f8fa-4a82-8497-9eea20ddf66c.txt": {
+      "mtimeMs": 1771343704051.7776,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a508fc3a-177d-44d5-ada5-1f1289fa7cb7/a508fc3a-177d-44d5-ada5-1f1289fa7cb7.jsonl": {
+      "mtimeMs": 1773011113078.057,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a56a8daf-7ab7-4254-8d8b-545f5f6febae.txt": {
+      "mtimeMs": 1771412900726.0505,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a58915be-cb1f-49c9-a771-6384c8964a56.txt": {
+      "mtimeMs": 1770913102033.7107,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/a632630a-6158-41df-b5f3-f4084edacbfa/a632630a-6158-41df-b5f3-f4084edacbfa.jsonl": {
+      "mtimeMs": 1772058603802.9885,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/aaa1273c-b736-4aa0-8349-36ffa20d5237/aaa1273c-b736-4aa0-8349-36ffa20d5237.jsonl": {
+      "mtimeMs": 1772447731962.9878,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/abd43405-e906-471c-9cf2-88a8b21fa6fa.txt": {
+      "mtimeMs": 1771343507032.603,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ada91d91-8e89-44a5-84b3-d7dbf82083a0.txt": {
+      "mtimeMs": 1770736134684.521,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/af5bf875-2e69-4907-9897-e7d754cb4b6a/af5bf875-2e69-4907-9897-e7d754cb4b6a.jsonl": {
+      "mtimeMs": 1772635396124.9644,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b2a95266-c329-40c2-b1e8-cac57ddb88ca/b2a95266-c329-40c2-b1e8-cac57ddb88ca.jsonl": {
+      "mtimeMs": 1772975080953.1648,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b52adfa0-3948-4e3a-878a-4a14f0efbeab.txt": {
+      "mtimeMs": 1771263783891.5005,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b59870fd-a3fb-41b6-94cb-1371683372ce/b59870fd-a3fb-41b6-94cb-1371683372ce.jsonl": {
+      "mtimeMs": 1772354647948.766,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b5ab7858-e90f-44f7-a18b-d85b84951b35.txt": {
+      "mtimeMs": 1770818973010.5125,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b64991ed-b0a7-4f67-a19e-fa8574e571aa.txt": {
+      "mtimeMs": 1771107577686.1428,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b6efc117-3412-43f7-80d8-939ab8124461/b6efc117-3412-43f7-80d8-939ab8124461.jsonl": {
+      "mtimeMs": 1772370422910.1716,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b77046d7-5cde-410b-a5bd-8acb43caad30/b77046d7-5cde-410b-a5bd-8acb43caad30.jsonl": {
+      "mtimeMs": 1771883713151.6733,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/b776a430-75f7-4f1f-b621-e6dc35a5043e/b776a430-75f7-4f1f-b621-e6dc35a5043e.jsonl": {
+      "mtimeMs": 1772738132170.9648,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ba3082b1-c528-45d0-b719-366f1cefee19.txt": {
+      "mtimeMs": 1770643610289.7288,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/baf4f731-be30-4858-96a6-e15bb8c90f4b.txt": {
+      "mtimeMs": 1771334925700.6885,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bb0ad6a9-bf71-4093-ac5b-544aa5df94cc.txt": {
+      "mtimeMs": 1770913430360.939,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bbb8d9b8-eab1-41dd-aa62-ba80db70bcf1/bbb8d9b8-eab1-41dd-aa62-ba80db70bcf1.jsonl": {
+      "mtimeMs": 1772283202283.2258,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bd1e929a-9701-4c4e-a08c-d73b35e9b1cc.txt": {
+      "mtimeMs": 1770827705857.0083,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bd93a74e-661c-42ae-b2c4-80977fd6d655.txt": {
+      "mtimeMs": 1771281498136.6277,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/be00e6c7-568f-4d45-8d6c-a6d3d19654f3.txt": {
+      "mtimeMs": 1770659902105.9158,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bf129c06-f39e-4b2d-8038-86b6715597ed.txt": {
+      "mtimeMs": 1770889229679.9614,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/bfc38d90-be36-4d83-bbd9-72e86810b6aa.txt": {
+      "mtimeMs": 1770824174451.2078,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c03985d6-a1a8-43a5-bbf3-c542e5ae5df6.txt": {
+      "mtimeMs": 1771412866145.897,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c03c3b10-367d-4407-b27a-e58d074995d9.txt": {
+      "mtimeMs": 1770591397137.4219,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c2fb2712-3693-4e10-b5b8-e0567a35890d/c2fb2712-3693-4e10-b5b8-e0567a35890d.jsonl": {
+      "mtimeMs": 1771836388074.0647,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c399d437-86bb-4401-812b-4e2079e14fcd/c399d437-86bb-4401-812b-4e2079e14fcd.jsonl": {
+      "mtimeMs": 1772109500649.8413,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c3fa7b40-f5c8-458a-8fac-eeedf35237b0/c3fa7b40-f5c8-458a-8fac-eeedf35237b0.jsonl": {
+      "mtimeMs": 1771673536585.5952,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c55181f0-a172-465f-a057-ca15156ad6aa.txt": {
+      "mtimeMs": 1770830738103.853,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c8a67847-3563-4d05-a3e2-e70cff4d66e2/c8a67847-3563-4d05-a3e2-e70cff4d66e2.jsonl": {
+      "mtimeMs": 1771520510333.1797,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c8c63da2-da74-4bc5-8622-5fac231b47db.txt": {
+      "mtimeMs": 1770825755444.1443,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c8d7a65b-1f20-4839-a654-be89722e5412/c8d7a65b-1f20-4839-a654-be89722e5412.jsonl": {
+      "mtimeMs": 1771861938483.9778,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c8f5c089-c86c-4ad7-bf61-3cd8a51bcc46/c8f5c089-c86c-4ad7-bf61-3cd8a51bcc46.jsonl": {
+      "mtimeMs": 1772870623099.9333,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/c9f434c5-f462-4135-ac15-40eee3e20774/c9f434c5-f462-4135-ac15-40eee3e20774.jsonl": {
+      "mtimeMs": 1772523983369.3748,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/cbbc5ad3-f4d9-4ee9-aba7-9c2363787ae1.txt": {
+      "mtimeMs": 1771318561738.7585,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/cbf5a602-9900-47eb-8f99-de54fe61889c/cbf5a602-9900-47eb-8f99-de54fe61889c.jsonl": {
+      "mtimeMs": 1771501390131.0632,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ccc0b2e3-1d92-49bd-8637-1d5e8bd42b73/ccc0b2e3-1d92-49bd-8637-1d5e8bd42b73.jsonl": {
+      "mtimeMs": 1772733261901.621,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/cdd264a0-3738-4072-a8ca-f588acca2a91.txt": {
+      "mtimeMs": 1770887401756.2786,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/cf98e303-56ce-4f7a-beb0-b88fcb29b33b.txt": {
+      "mtimeMs": 1771241183717.754,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d283a051-be7e-4740-abaa-992f387b8703/d283a051-be7e-4740-abaa-992f387b8703.jsonl": {
+      "mtimeMs": 1772315015197.4927,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d36f7a17-4e95-45d3-83a6-038d359aae6f/d36f7a17-4e95-45d3-83a6-038d359aae6f.jsonl": {
+      "mtimeMs": 1771499698034.826,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d38e27d0-1d9c-4bf7-bbeb-3e5bed0b9e0d.txt": {
+      "mtimeMs": 1771231192494.4146,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d4e2adde-c690-4d55-9fd9-9a45480976d6/d4e2adde-c690-4d55-9fd9-9a45480976d6.jsonl": {
+      "mtimeMs": 1771851005943.849,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d609f960-be3f-44e1-ad22-45ab7f5c17fd.txt": {
+      "mtimeMs": 1770828521420.9788,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d7bb855f-e7f1-4f28-9ccc-4460b63c0ede.txt": {
+      "mtimeMs": 1771231546856.4583,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d7e833ce-f80b-4884-a4cc-b6f1b9e7bbdb/d7e833ce-f80b-4884-a4cc-b6f1b9e7bbdb.jsonl": {
+      "mtimeMs": 1772267031048.5913,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d9000a6a-380d-4002-b44d-6bde4d21b1c0.txt": {
+      "mtimeMs": 1771107449082.712,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d954a170-7d37-4181-82a4-49d3e38105a4/d954a170-7d37-4181-82a4-49d3e38105a4.jsonl": {
+      "mtimeMs": 1772483355317.4373,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d95ddfe3-beb3-4009-8b3f-ca43ffd00bb6/d95ddfe3-beb3-4009-8b3f-ca43ffd00bb6.jsonl": {
+      "mtimeMs": 1772745568025.4148,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/daa08dc5-82ad-49ca-8680-c119b999dd13/daa08dc5-82ad-49ca-8680-c119b999dd13.jsonl": {
+      "mtimeMs": 1772574159982.8523,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/daf8f791-2f3c-46e4-b084-44b25f19fce6.txt": {
+      "mtimeMs": 1771255490283.7651,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e16b5a82-cdf8-45a2-88d7-4d93ff150266/e16b5a82-cdf8-45a2-88d7-4d93ff150266.jsonl": {
+      "mtimeMs": 1771747688430.766,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e2495a2b-a19f-46d7-bf92-cbd1b9ef7f5d/e2495a2b-a19f-46d7-bf92-cbd1b9ef7f5d.jsonl": {
+      "mtimeMs": 1772973638172.0483,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e3934ca3-dd00-4319-a9de-c3d513ba9455/e3934ca3-dd00-4319-a9de-c3d513ba9455.jsonl": {
+      "mtimeMs": 1771755635367.8188,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e3c7282f-1c9d-43aa-99b3-b00b0cb80cfa/e3c7282f-1c9d-43aa-99b3-b00b0cb80cfa.jsonl": {
+      "mtimeMs": 1771873108615.11,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e41560d9-9155-4f9d-8e23-8678c4de064e/e41560d9-9155-4f9d-8e23-8678c4de064e.jsonl": {
+      "mtimeMs": 1773058313508.599,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e4701887-0f9f-4239-9d14-fba31d43615c/e4701887-0f9f-4239-9d14-fba31d43615c.jsonl": {
+      "mtimeMs": 1772831509604.366,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e47a1c02-d762-47f0-8ce6-29fba6ef6536.txt": {
+      "mtimeMs": 1771324010726.4875,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e4a2dc46-63d5-466e-9064-54337fa4c2c1.txt": {
+      "mtimeMs": 1771317803866.472,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e56f2d17-121c-4bdf-abfe-1ed24ea68847.txt": {
+      "mtimeMs": 1770990232101.788,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e64b3c91-f526-4e05-8ffc-9084311452e3/e64b3c91-f526-4e05-8ffc-9084311452e3.jsonl": {
+      "mtimeMs": 1771972726074.7144,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e67d7832-1b19-4021-94af-b2dcbdc03d4b/e67d7832-1b19-4021-94af-b2dcbdc03d4b.jsonl": {
+      "mtimeMs": 1771533365290.2227,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e68eacce-2028-420b-a188-78ceef1d18c8.txt": {
+      "mtimeMs": 1771142734879.1775,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/e836cdd5-e211-4b7c-9a96-1530e31857d5/e836cdd5-e211-4b7c-9a96-1530e31857d5.jsonl": {
+      "mtimeMs": 1772137904073.9058,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ea01198a-6a31-44a3-99da-427be1c3b0f4.txt": {
+      "mtimeMs": 1770651901211.7073,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ebad63e1-bef8-48b6-bc5c-5c7a15275a82/ebad63e1-bef8-48b6-bc5c-5c7a15275a82.jsonl": {
+      "mtimeMs": 1771709532463.7915,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ebb6d615-a568-40c9-82f9-e580ab44ccfd.txt": {
+      "mtimeMs": 1771147197550.8577,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ece5d25d-c42b-4259-8a9f-711d01abd7ca/ece5d25d-c42b-4259-8a9f-711d01abd7ca.jsonl": {
+      "mtimeMs": 1772576265850.7253,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ed058b07-9138-4c02-bb29-7768414bdba9/ed058b07-9138-4c02-bb29-7768414bdba9.jsonl": {
+      "mtimeMs": 1771860805528.0051,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ed3121e2-c59b-4e6e-9e70-0bda536d535b.txt": {
+      "mtimeMs": 1771315472838.7751,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f20f4edb-2282-4f1a-afd3-fdb8a22b51de.txt": {
+      "mtimeMs": 1770807055136.9705,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f2451c5c-cb40-4cac-8ff1-b0c1e7f8b905/f2451c5c-cb40-4cac-8ff1-b0c1e7f8b905.jsonl": {
+      "mtimeMs": 1771430645985.875,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f37d3bc0-bd4d-412d-bb65-cb4305bcac95.txt": {
+      "mtimeMs": 1770666152384.493,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f3e93a11-f504-4b88-8dcd-0f6047e357bb/f3e93a11-f504-4b88-8dcd-0f6047e357bb.jsonl": {
+      "mtimeMs": 1771854909658.757,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f559057c-4f67-47af-82e4-5c5d032ba798/f559057c-4f67-47af-82e4-5c5d032ba798.jsonl": {
+      "mtimeMs": 1772782167427.9207,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f583a5be-82b1-4093-a3f7-ebb7438ccc6e.txt": {
+      "mtimeMs": 1771070658560.96,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f6003f2a-5f05-4d19-9bf4-39e0862c52bb.txt": {
+      "mtimeMs": 1771319054896.6387,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f739b641-46e0-4d8f-9e22-31fef57db12f.txt": {
+      "mtimeMs": 1770643061492.731,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f8079089-96b8-482d-b7ce-169be52a1f11.txt": {
+      "mtimeMs": 1770728931430.7334,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f87ce883-44e4-4947-9465-8ae2078268fc.txt": {
+      "mtimeMs": 1770636349414.8953,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f92a4c94-0d18-4773-8a81-970fc7639a90/f92a4c94-0d18-4773-8a81-970fc7639a90.jsonl": {
+      "mtimeMs": 1771605053826.0898,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/f9b1d8e5-7960-42bf-bc42-c875c69603ac.txt": {
+      "mtimeMs": 1771173503746.042,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/fc757172-fa4b-44eb-b234-c54da8ec9c3b.txt": {
+      "mtimeMs": 1770797842852.5498,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/fd183d86-77de-4600-a3a6-51eda5bc0a82.txt": {
+      "mtimeMs": 1771158811072.1157,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ffa02f54-ddc5-4a19-b799-f4ea78d5c7a5.txt": {
+      "mtimeMs": 1771160115209.9465,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ffc8eed2-b534-48f3-933a-f368b8780721/ffc8eed2-b534-48f3-933a-f368b8780721.jsonl": {
+      "mtimeMs": 1771489911747.8835,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/ffd42413-eb51-4d51-ac13-456b0fc00563.txt": {
+      "mtimeMs": 1770890915928.793,
+      "lastProcessedAt": "2026-03-10T18:48:43.510Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/8b597a6c-ebcf-4abc-be62-38ff13f353ed/8b597a6c-ebcf-4abc-be62-38ff13f353ed.jsonl": {
+      "mtimeMs": 1773169847377.9597,
+      "lastProcessedAt": "2026-03-10T21:14:30.138Z"
+    },
+    "/Users/admin.roman.matsukatov/.cursor/projects/Users-admin-roman-matsukatov-Documents-Development-DEX-Dex/agent-transcripts/d3b22f2d-dc7b-4117-8b75-a0f8e409d954/d3b22f2d-dc7b-4117-8b75-a0f8e409d954.jsonl": {
+      "mtimeMs": 1773169822698.3677,
+      "lastProcessedAt": "2026-03-10T21:14:30.138Z"
+    }
+  }
+}

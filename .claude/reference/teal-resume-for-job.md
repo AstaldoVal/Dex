@@ -4,7 +4,9 @@
 
 ## Эталонные резюме в Teal
 
-- **iGaming / Compliance:** [preview](https://app.tealhq.com/resume-builder/resumes/ba0cb2e8-5791-4cfc-b405-beeb1acd6dcb/preview)
+Источник истины для ID: переменные **`TEAL_TEMPLATE_IGAMING`** и **`TEAL_TEMPLATE_AI`** в **`.env`** (те же значения по умолчанию зашиты в **`.scripts/job-search/teal-resume-for-job.cjs`**).
+
+- **iGaming / Compliance:** [preview](https://app.tealhq.com/resume-builder/resumes/296be353-ba11-4ee7-a827-cb7985cbfa26/preview)
 - **AI и прочие:** [preview](https://app.tealhq.com/resume-builder/resumes/c0ad3ea2-8d9e-4e84-8b60-eab3172de3d9/preview)
 
 ## Определение типа

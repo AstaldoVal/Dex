@@ -17,6 +17,7 @@ from typing import Callable
 
 from transcript_skill import SCHEMA_VERSION
 from transcript_skill.diarize import (
+    apply_speaker_label_map,
     assign_speakers_to_segments,
     build_transcript_by_speaker,
     format_transcript_by_speaker,
@@ -119,6 +120,7 @@ def emit_stderr_cli_summary(
     eff_progress: str,
     show_progress: bool,
     plan_only: bool,
+    speaker_map_display: str = "нет",
 ) -> None:
     emit_cli_summary(
         input_display=input_display,
@@ -135,6 +137,7 @@ def emit_stderr_cli_summary(
         eff_progress=eff_progress,
         show_progress=show_progress,
         plan_only=plan_only,
+        speaker_map_display=speaker_map_display,
     )
 
 
@@ -432,6 +435,7 @@ def transcribe_local_file(
     hf_token: str | None = None,
     source_context: str = "локальный файл",
     plan_only: bool = False,
+    speaker_map: dict[str, str] | None = None,
 ) -> dict:
     if not source_path.exists():
         raise RuntimeError(f"Local file not found: {source_path}")
@@ -628,6 +632,24 @@ def transcribe_local_file(
             if progress_callback:
                 progress_callback(98.0, "merge")
 
+        sm_norm: dict[str, str] | None = None
+        if speaker_map:
+            sm_norm = {
+                str(k).strip(): str(v).strip()
+                for k, v in speaker_map.items()
+                if str(k).strip()
+            }
+            if not sm_norm:
+                sm_norm = None
+
+        speaker_label_map_applied = False
+        if sm_norm and any(seg.get("speaker") for seg in out_segments):
+            out_segments, transcript_by_speaker, transcript_speaker_formatted = apply_speaker_label_map(
+                out_segments,
+                sm_norm,
+            )
+            speaker_label_map_applied = True
+
         transcript_text = " ".join(seg["text"] for seg in out_segments)
         language_used = language or lang_detected
 
@@ -649,6 +671,10 @@ def transcribe_local_file(
         if diarize:
             quality_hints.append(
                 "Speaker labels come from pyannote diarization merged with Whisper segments (overlap match)."
+            )
+        if speaker_label_map_applied:
+            quality_hints.append(
+                "Display speaker names were applied from your speaker map (see speaker_label_map in JSON)."
             )
 
         if progress_callback:
@@ -684,6 +710,8 @@ def transcribe_local_file(
             "diarization_skipped_reason": None,
             "transcript_by_speaker": transcript_by_speaker,
             "transcript_speaker_formatted": transcript_speaker_formatted,
+            "speaker_label_map": sm_norm,
+            "speaker_label_map_applied": speaker_label_map_applied,
         }
         return payload
     finally:
@@ -868,6 +896,7 @@ def transcribe_apple_podcast(
     progress_callback: Callable[[float, str], None] | None = None,
     diarize: bool = False,
     hf_token: str | None = None,
+    speaker_map: dict[str, str] | None = None,
 ) -> dict:
     temp_dir: str | None = None
     try:
@@ -889,6 +918,7 @@ def transcribe_apple_podcast(
             diarize=diarize,
             hf_token=hf_token,
             source_context="Apple Podcasts (аудио после yt-dlp)",
+            speaker_map=speaker_map,
         )
         result["source_type"] = "apple_podcast"
         result["source_url"] = url
@@ -910,6 +940,7 @@ def transcribe_youtube_via_audio(
     progress_callback: Callable[[float, str], None] | None = None,
     diarize: bool = False,
     hf_token: str | None = None,
+    speaker_map: dict[str, str] | None = None,
 ) -> dict:
     """Download YouTube audio, then Whisper (+ optional diarization). No captions."""
     url = f"https://www.youtube.com/watch?v={video_id}"
@@ -933,6 +964,7 @@ def transcribe_youtube_via_audio(
             diarize=diarize,
             hf_token=hf_token,
             source_context="YouTube (аудио после yt-dlp)",
+            speaker_map=speaker_map,
         )
         result["source_type"] = "youtube"
         result["video_id"] = video_id
@@ -967,6 +999,7 @@ def transcribe_from_input(
     hf_token: str | None = None,
     youtube_audio: bool = False,
     plan_only: bool = False,
+    speaker_map: dict[str, str] | None = None,
 ) -> dict:
     """Route a single URL or path string to the right backend."""
     raw = raw.strip()
@@ -990,6 +1023,7 @@ def transcribe_from_input(
                 progress_callback=progress_callback,
                 diarize=diarize,
                 hf_token=hf_token,
+                speaker_map=speaker_map,
             )
         emit_stderr_youtube_captions_plan(
             video_id=video_id,
@@ -1013,6 +1047,7 @@ def transcribe_from_input(
             progress_callback=progress_callback,
             diarize=diarize,
             hf_token=hf_token,
+            speaker_map=speaker_map,
         )
     if is_local_media_path(raw):
         return transcribe_local_file(
@@ -1027,6 +1062,7 @@ def transcribe_from_input(
             diarize=diarize,
             hf_token=hf_token,
             plan_only=plan_only,
+            speaker_map=speaker_map,
         )
 
     possible_path = Path(raw).expanduser()
@@ -1043,6 +1079,7 @@ def transcribe_from_input(
             diarize=diarize,
             hf_token=hf_token,
             plan_only=plan_only,
+            speaker_map=speaker_map,
         )
 
     raise RuntimeError(

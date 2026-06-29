@@ -10,21 +10,28 @@ Telegram MCP Server for Dex
 
 Tools:
 - telegram_list_chats: список чатов пользователя (диалоги)
+- telegram_list_folder_chats: чаты из именованной папки (dialog filter), например Recruiting
 - telegram_get_messages: последние сообщения из указанного чата
 - telegram_search_in_chat: поиск по тексту в чате
 """
 
-import os
 import json
 import logging
+import os
 from pathlib import Path
-from datetime import datetime
-from typing import Optional
 
-from mcp.server import Server, NotificationOptions
-from mcp.server.models import InitializationOptions
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+try:
+    from dotenv import load_dotenv  # type: ignore
+
+    load_dotenv(_REPO_ROOT / ".env")
+except ImportError:
+    pass
+
 import mcp.server.stdio
 import mcp.types as types
+from mcp.server import NotificationOptions, Server
+from mcp.server.models import InitializationOptions
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -129,6 +136,90 @@ async def _resolve_chat(client, chat: str):
     return chat
 
 
+def _dialog_filter_title(f) -> str:
+    """DialogFilter.title may be str or TextWithEntities (TL)."""
+    t = getattr(f, "title", None)
+    if t is None:
+        return ""
+    if isinstance(t, str):
+        return t.strip()
+    return (getattr(t, "text", None) or str(t)).strip()
+
+
+async def _peer_to_chat_row(client, peer) -> dict:
+    """Resolve InputPeer to title, username, id for JSON output."""
+    try:
+        ent = await client.get_entity(peer)
+        title = getattr(ent, "title", None) or (
+            (getattr(ent, "first_name", "") or "") + " " + (getattr(ent, "last_name", "") or "")
+        ).strip() or "Unknown"
+        username = getattr(ent, "username", None)
+        chat_id = getattr(ent, "id", None)
+        ident = f"@{username}" if username else str(chat_id)
+        return {"title": title, "username": username, "id": chat_id, "identifier": ident}
+    except Exception as e:
+        return {"error": str(e), "peer": str(peer)}
+
+
+def _entity_to_user_row(ent) -> dict:
+    """Normalize Telethon user entity into stable JSON payload."""
+    first = (getattr(ent, "first_name", None) or "").strip()
+    last = (getattr(ent, "last_name", None) or "").strip()
+    full_name = f"{first} {last}".strip()
+    username = getattr(ent, "username", None)
+    user_id = getattr(ent, "id", None)
+    return {
+        "id": user_id,
+        "username": username,
+        "first_name": first or None,
+        "last_name": last or None,
+        "full_name": full_name or None,
+        "identifier": f"@{username}" if username else str(user_id),
+    }
+
+
+async def _resolve_user(client, user_id: int, chat: str | None = None) -> dict | None:
+    """
+    Resolve user by Telegram numeric user_id.
+    Strategy:
+    1) Direct get_entity(PeerUser)
+    2) If chat provided, scan chat participants
+    3) Scan recent dialogs and resolve participants lazily
+    """
+    from telethon.tl.types import PeerUser
+
+    # 1) Direct entity lookup
+    try:
+        ent = await client.get_entity(PeerUser(user_id))
+        if ent is not None:
+            return _entity_to_user_row(ent)
+    except Exception:
+        pass
+
+    # 2) Resolve inside specific chat participants
+    if chat:
+        try:
+            entity = await _resolve_chat(client, chat)
+            async for p in client.iter_participants(entity):
+                pid = getattr(p, "id", None)
+                if pid == user_id:
+                    return _entity_to_user_row(p)
+        except Exception:
+            pass
+
+    # 3) Fallback: scan dialogs and try resolve by user peer
+    try:
+        dialogs = await client.get_dialogs(limit=300)
+        for d in dialogs:
+            e = d.entity
+            if getattr(e, "id", None) == user_id:
+                return _entity_to_user_row(e)
+    except Exception:
+        pass
+
+    return None
+
+
 # ============================================================================
 # MCP SERVER
 # ============================================================================
@@ -149,6 +240,32 @@ async def handle_list_tools() -> list[types.Tool]:
                         "type": "integer",
                         "description": "Max number of chats to return (default 50)",
                         "default": 50,
+                    },
+                },
+            },
+        ),
+        types.Tool(
+            name="telegram_list_folder_chats",
+            description=(
+                "List chats in a Telegram chat folder (dialog filter) by folder title, e.g. Recruiting. "
+                "Uses messages.getDialogFilters; include_peers_count is the number of explicitly included chats. "
+                "Set folder_title empty to only list all folder names and peer counts."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "folder_title": {
+                        "type": "string",
+                        "description": (
+                            "Folder name as shown in Telegram (substring match, case-insensitive), "
+                            "e.g. Recruiting. Leave empty to return summaries for every folder."
+                        ),
+                        "default": "",
+                    },
+                    "resolve_entities": {
+                        "type": "boolean",
+                        "description": "If true (default), resolve each peer to title/username/id. If false, only counts.",
+                        "default": True,
                     },
                 },
             },
@@ -199,6 +316,27 @@ async def handle_list_tools() -> list[types.Tool]:
                 "required": ["chat", "query"],
             },
         ),
+        types.Tool(
+            name="telegram_resolve_user",
+            description=(
+                "Resolve Telegram user identity by numeric user_id. "
+                "Optionally provide chat id/username to resolve from participants of that chat."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "description": "Telegram numeric user id from message.from_id.id",
+                    },
+                    "chat": {
+                        "type": "string",
+                        "description": "Optional chat identifier (@username, t.me/..., or numeric id) to resolve within chat participants",
+                    },
+                },
+                "required": ["user_id"],
+            },
+        ),
     ]
 
 
@@ -234,6 +372,71 @@ async def handle_call_tool(
                 })
             return [types.TextContent(type="text", text=json.dumps({"chats": chats}, indent=2, ensure_ascii=False, default=str))]
 
+        if name == "telegram_list_folder_chats":
+            from telethon.tl.functions.messages import GetDialogFiltersRequest
+
+            folder_title = (args.get("folder_title") or "").strip()
+            resolve_entities = bool(args.get("resolve_entities", True))
+            res = await client(GetDialogFiltersRequest())
+            filters = getattr(res, "filters", None) or []
+            summaries = []
+            for f in filters:
+                peers = getattr(f, "include_peers", None) or []
+                summaries.append({
+                    "title": _dialog_filter_title(f),
+                    "filter_id": getattr(f, "id", None),
+                    "include_peers_count": len(peers),
+                })
+            if not folder_title:
+                return [
+                    types.TextContent(
+                        type="text",
+                        text=json.dumps({"folders": summaries}, indent=2, ensure_ascii=False, default=str),
+                    )
+                ]
+            needle = folder_title.lower()
+            target = None
+            for f in filters:
+                t = _dialog_filter_title(f)
+                if needle == t.lower() or needle in t.lower():
+                    target = f
+                    break
+            if target is None:
+                return [
+                    types.TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "folder not found",
+                                "folder_title_query": folder_title,
+                                "folders": summaries,
+                            },
+                            indent=2,
+                            ensure_ascii=False,
+                            default=str,
+                        ),
+                    )
+                ]
+            peers = getattr(target, "include_peers", None) or []
+            payload = {
+                "folder_title": _dialog_filter_title(target),
+                "filter_id": getattr(target, "id", None),
+                "include_peers_count": len(peers),
+                "flags": {
+                    "contacts": getattr(target, "contacts", None),
+                    "non_contacts": getattr(target, "non_contacts", None),
+                    "bots": getattr(target, "bots", None),
+                    "groups": getattr(target, "groups", None),
+                    "broadcasts": getattr(target, "broadcasts", None),
+                },
+            }
+            if resolve_entities:
+                chats = []
+                for p in peers:
+                    chats.append(await _peer_to_chat_row(client, p))
+                payload["chats"] = chats
+            return [types.TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False, default=str))]
+
         if name == "telegram_get_messages":
             chat = args.get("chat", "").strip()
             if not chat:
@@ -258,6 +461,26 @@ async def handle_call_tool(
             messages = await client.get_messages(entity, search=query, limit=limit)
             out = [_message_to_dict(m) for m in messages]
             return [types.TextContent(type="text", text=json.dumps({"messages": out}, indent=2, ensure_ascii=False, default=str))]
+
+        if name == "telegram_resolve_user":
+            user_id = args.get("user_id")
+            if user_id is None:
+                return [types.TextContent(type="text", text=json.dumps({"error": "user_id is required"}, indent=2))]
+            chat = (args.get("chat") or "").strip() or None
+            user = await _resolve_user(client, int(user_id), chat=chat)
+            if user is None:
+                return [
+                    types.TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {"error": "user not found", "user_id": int(user_id), "chat": chat},
+                            indent=2,
+                            ensure_ascii=False,
+                            default=str,
+                        ),
+                    )
+                ]
+            return [types.TextContent(type="text", text=json.dumps({"user": user}, indent=2, ensure_ascii=False, default=str))]
 
         return [types.TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}, default=str))]
     except Exception as e:

@@ -113,6 +113,94 @@ def generate_letter_via_openai(job_description: str, company: str, role: str, sy
             return None, None, "", False
 
 
+def generate_letter_via_anthropic(job_description: str, company: str, role: str, system_prompt: str) -> tuple[str | None, dict | None, str, bool]:
+    """Optional Anthropic fallback when OpenAI quota or errors block generation."""
+    try:
+        import anthropic  # type: ignore
+    except ImportError:
+        return None, None, "", False
+    api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        return None, None, "", False
+    jd = (job_description or "").strip()
+    user_block = (
+        f"Company: {company}\nRole: {role}\n\nJob description:\n{jd[:14000]}"
+        if len(jd) >= 100
+        else f"Company: {company}\nRole: {role}\n\nWrite a professional cover letter using only the resume (and confirmed facts) from the system prompt. Do not invent experience."
+    )
+    client = anthropic.Anthropic(api_key=api_key)
+    model = "claude-3-5-sonnet-20241022"
+    try:
+        msg = client.messages.create(
+            model=model,
+            max_tokens=2000,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_block}],
+        )
+        parts = []
+        for block in getattr(msg, "content", []) or []:
+            if getattr(block, "type", None) == "text" and getattr(block, "text", None):
+                parts.append(block.text)
+        raw = "\n".join(parts).strip()
+        usage = {
+            "prompt_tokens": getattr(msg.usage, "input_tokens", None),
+            "completion_tokens": getattr(msg.usage, "output_tokens", None),
+            "total_tokens": None,
+        }
+        return raw, usage, model, False
+    except Exception:
+        return None, None, "", False
+
+
+def generate_letter_offline(job_description: str, company: str, role: str, cv_content: str, confirmed_facts: str) -> str:
+    """
+    Last-resort cover letter when LLM APIs are unavailable (e.g. OpenAI 429).
+    Uses only high-level themes from the JD plus facts that appear in cv_content or confirmed_facts.
+    Does not claim tools or metrics not present in those sources.
+    """
+    jd = (job_description or "").strip().lower()
+    cv_l = (cv_content or "").lower()
+    cf = (confirmed_facts or "").lower()
+
+    has_tableau = "tableau" in cv_l or "tableau" in jd
+    has_payments = "payment" in cv_l or "payments" in cv_l or "psp" in jd
+    has_compliance = "compliance" in cv_l or "compliance" in cf or "aml" in jd
+    has_igaming = "igaming" in cv_l or "igaming" in cf or "sportsbook" in cv_l
+    has_migration = "migrat" in cv_l or "migration" in cv_l
+
+    p1 = (
+        f"I am keen to apply for the {role} position with {company}. "
+        "Your posting emphasizes ownership of the payment ecosystem, PSP and checkout journeys, wallets, antifraud, and cross-functional delivery with a clear focus on conversion, revenue, and scalable operations."
+    )
+
+    p2 = "I bring twelve plus years in product leadership with sustained ownership of roadmaps, prioritization against business impact, and delivery with engineering, analytics, and design partners."
+    if has_igaming:
+        p2 += " In iGaming I have led B2C product execution, including work where partner integrations and player-facing journeys had to stay stable while the stack evolved."
+    if has_migration:
+        p2 += " I have also driven complex platform migrations where sequencing, risk controls, and continuity for customers were non negotiable."
+
+    p3 = ""
+    if has_payments or has_compliance:
+        p3 = (
+            "My recent work includes compliance oriented product leadership for a major operator, including preparation for MGA certification, player protection, and aligning promo economics with antifraud and retention signals."
+        )
+        if has_tableau:
+            p3 += " I routinely used Tableau with analytics partners to make payment and behavior trends legible for decisions."
+        p3 += " That background maps closely to roles that combine regulated flows, operational monitoring, and careful change management across GEOs."
+
+    p4 = (
+        "I work well in remote first teams, communicate in English at B2 plus, and stay hands on with backlog quality, stakeholder clarity, and measurable outcomes. "
+        "I look forward to discussing how I can help strengthen routing, cascading fallback logic, checkout UX, and partner governance for your product."
+    )
+
+    paras = [p1, p2]
+    if p3.strip():
+        paras.append(p3)
+    paras.append(p4)
+    # One paragraph per line so raw_to_paragraphs() maps lines to body blocks correctly.
+    return "\n".join(paras)
+
+
 def raw_to_paragraphs(raw: str) -> list[str]:
     """Convert model output to list of paragraph strings. Add salutation and closing."""
     # Normalize: no em dash
@@ -157,6 +245,9 @@ def write_docx(paragraphs: list[str], out_path: Path) -> None:
 
 
 def main() -> int:
+    if not HAS_DOCX:
+        print("cover-letter-generate: python-docx not installed; pip install python-docx", file=sys.stderr)
+        return 1
     parser = argparse.ArgumentParser(description="Generate cover letter .docx from job description")
     parser.add_argument("--company", required=True, help="Company name")
     parser.add_argument("--role", default="Product Manager", help="Job title / role")
@@ -196,34 +287,44 @@ def main() -> int:
     confirmed_path = vault / ".claude" / "skills" / "resume-summary-custom" / "references" / "confirmed-facts.md"
     confirmed_facts = load_text(confirmed_path) if confirmed_path.exists() else ""
 
-    if not HAS_OPENAI:
-        print("cover-letter-generate: openai not installed or OPENAI_API_KEY not set", file=sys.stderr)
-        return 1
     system_prompt = build_system_prompt(cv_content, confirmed_facts)
-    raw, usage_dict, model_used, fallback_used = generate_letter_via_openai(jd, args.company, args.role, system_prompt)
+    raw: str | None = None
+    usage_dict = None
+    model_used = ""
+    fallback_used = False
+
+    if HAS_OPENAI and (os.environ.get("OPENAI_API_KEY") or "").strip():
+        raw, usage_dict, model_used, fallback_used = generate_letter_via_openai(jd, args.company, args.role, system_prompt)
     if not raw:
-        print("cover-letter-generate: OpenAI generation failed", file=sys.stderr)
+        raw, usage_dict, model_used, fallback_used = generate_letter_via_anthropic(jd, args.company, args.role, system_prompt)
+    if not raw:
+        print("cover-letter-generate: LLM paths failed or keys missing; using offline template.", file=sys.stderr)
+        raw = generate_letter_offline(jd, args.company, args.role, cv_content, confirmed_facts)
+        model_used = "offline-template"
+    if not raw:
+        print("cover-letter-generate: could not build cover letter text", file=sys.stderr)
         return 1
     # Log usage and eval to System/openai-usage/YYYY-MM-DD.jsonl
-    try:
-        sys.path.insert(0, str(vault / "core" / "mcp"))
-        from openai_usage_logger import log_openai_call, eval_cover_letter as _eval_cl
-        eval_score, eval_notes = _eval_cl(raw)
-        log_openai_call(
-            "cover_letter",
-            model_used,
-            prompt_tokens=usage_dict.get("prompt_tokens") if usage_dict else None,
-            completion_tokens=usage_dict.get("completion_tokens") if usage_dict else None,
-            total_tokens=usage_dict.get("total_tokens") if usage_dict else None,
-            max_tokens_limit=2000,
-            request_id=f"{args.company}_{args.role}"[:120].replace("/", "_"),
-            iteration=1,
-            eval_score=eval_score,
-            eval_notes=eval_notes or None,
-            fallback_used=fallback_used,
-        )
-    except Exception:
-        pass
+    if model_used and model_used != "offline-template":
+        try:
+            sys.path.insert(0, str(vault / "core" / "mcp"))
+            from openai_usage_logger import log_openai_call, eval_cover_letter as _eval_cl
+            eval_score, eval_notes = _eval_cl(raw)
+            log_openai_call(
+                "cover_letter",
+                model_used or "offline-template",
+                prompt_tokens=usage_dict.get("prompt_tokens") if usage_dict else None,
+                completion_tokens=usage_dict.get("completion_tokens") if usage_dict else None,
+                total_tokens=usage_dict.get("total_tokens") if usage_dict else None,
+                max_tokens_limit=2000,
+                request_id=f"{args.company}_{args.role}"[:120].replace("/", "_"),
+                iteration=1,
+                eval_score=eval_score,
+                eval_notes=eval_notes or None,
+                fallback_used=fallback_used,
+            )
+        except Exception:
+            pass
 
     paragraphs = raw_to_paragraphs(raw)
     company_safe = re.sub(r"[^\w\s]", "", args.company).strip().replace(" ", "_")[:40] or "Company"

@@ -18,6 +18,7 @@ from core.paths import (
     ARCHIVES_DIR,
     COMPANIES_DIR,
     DAILY_PLANS_DIR,
+    EVIDENCE_DIR,
     IDEAS_DIR,
     INTEL_DIR,
     LEARNINGS_DIR,
@@ -25,7 +26,6 @@ from core.paths import (
     PEOPLE_DIR,
     PROJECTS_DIR,
     QUARTER_GOALS_DIR,
-    SESSIONS_DIR,
     SYSTEM_DIR,
     TASKS_DIR,
     TASKS_FILE,
@@ -49,7 +49,7 @@ PROJECTS_REL = _rel(PROJECTS_DIR)
 PEOPLE_INTERNAL_REL = _rel(PEOPLE_DIR / "Internal")
 PEOPLE_EXTERNAL_REL = _rel(PEOPLE_DIR / "External")
 COMPANIES_REL = _rel(COMPANIES_DIR)
-EVIDENCE_REL = _rel(SESSIONS_DIR.parent.parent / "Evidence")
+EVIDENCE_REL = _rel(EVIDENCE_DIR)
 MEETING_INTEL_REL = _rel(INTEL_DIR / "Meeting_Intel")
 LEARNINGS_REL = _rel(LEARNINGS_DIR)
 ARCHIVES_REL = _rel(ARCHIVES_DIR)

@@ -27,6 +27,16 @@ For **web and academic research** in Cursor (Open WebSearch, Brave, Tavily, Exa,
 
 Server list: **`.cursor/mcp.json.source`**; after edits run **`python3 .scripts/cursor-sync-mcp.py`** and restart Cursor.
 
+### LangSmith MCP (`langsmith-mcp`)
+
+**What it does:** Read-only access to LangSmith workspace: runs/traces, prompts, datasets, experiments, billing usage (official `langsmith-mcp-server` via `uvx`).
+
+**Applicator staging (EU):** API key and endpoint live in **`Credentials/applicator-staging/langsmith-staging.env`** (see `langsmith-staging.env.example`). `cursor-sync-mcp.py` injects `LANGSMITH_API_KEY`, `LANGSMITH_ENDPOINT`, `LANGSMITH_PROJECT` into `~/.cursor/mcp.json` — never commit keys.
+
+**Tools (examples):** `list_projects`, `fetch_runs`, `list_prompts`, `list_datasets`, `get_thread_history`.
+
+**Docs:** https://docs.langchain.com/langsmith/langsmith-mcp-server
+
 ---
 
 ## Built-in MCP Servers
@@ -136,8 +146,8 @@ Same benefits as Calendar MCP (live events, attendees, day-at-a-glance) but with
    - Application type: **Desktop app** → Create → download the JSON
 
 3. **Credentials**
-   - Save the downloaded file as `credentials.json` in the project root, **or** set `GOOGLE_CALENDAR_CREDENTIALS_PATH` in `.env` to its path.
-   - Optional: set `GOOGLE_CALENDAR_TOKEN_PATH` if you want the token file elsewhere (default: same directory as credentials, file `google_calendar_token.json`).
+   - Save the downloaded file as **`Credentials/personal/credentials.json`** (recommended), **or** set `GOOGLE_CALENDAR_CREDENTIALS_PATH` in `.env` to its path.
+   - Optional: set `GOOGLE_CALENDAR_TOKEN_PATH` if you want the token file elsewhere (default: **`Credentials/personal/google_calendar_token.json`** when using defaults from `core/credentials_paths.py`).
 
 4. **First run**
    - Enable the MCP in Cursor (e.g. add or enable `.claude/mcp/google-calendar.json`). On first tool use, a browser window opens for Google sign-in and consent. After that, the token is saved and no browser is needed.
@@ -169,7 +179,7 @@ Drive holds documents and spreadsheets; the MCP gives Dex structured access with
 - **List** - Files and folders in any folder or root
 - **Read** - Google Docs as plain text, Sheets as CSV, other text files as-is
 - **Metadata** - Id, name, mimeType, size, dates, links, parents
-- **Same credentials** - Can reuse `credentials.json` from Google Calendar MCP (enable Drive API in the same project); token is separate (`google_drive_token.json`)
+- **Same credentials** - Can reuse `credentials.json` from Google Calendar MCP (enable Drive API in the same project); token is separate (`google_drive_token.json`, default under **`Credentials/personal/`**)
 
 **Tools:** `gdrive_list_files`, `gdrive_search`, `gdrive_get_metadata`, `gdrive_read_file`, `gdrive_get_folder_info`
 
@@ -193,8 +203,8 @@ Drive holds documents and spreadsheets; the MCP gives Dex structured access with
    - Use the same OAuth 2.0 Desktop client credentials as Calendar, or create new → download JSON
 
 3. **Credentials**
-   - Same `credentials.json` as Calendar is fine; or set `GOOGLE_DRIVE_CREDENTIALS_PATH` in `.env`
-   - Token is stored in `google_drive_token.json` (or `GOOGLE_DRIVE_TOKEN_PATH`)
+   - Same `credentials.json` as Calendar is fine (typically **`Credentials/personal/credentials.json`**); or set `GOOGLE_DRIVE_CREDENTIALS_PATH` in `.env`
+   - Token defaults to **`Credentials/personal/google_drive_token.json`** (or `GOOGLE_DRIVE_TOKEN_PATH`)
 
 4. **First run**
    - Enable the MCP in Cursor (e.g. `.claude/mcp/google-drive.json`). On first tool use, browser opens for Google sign-in and Drive consent.
@@ -233,7 +243,7 @@ LinkedIn doesn't provide public API for following companies. Browser automation 
 2. **First login**
    - Enable MCP in Cursor (e.g. `.claude/mcp/linkedin.json`)
    - Run `linkedin_login` - browser opens, login manually
-   - Session (cookies) saved to `.claude/linkedin/context_state.json`
+   - Session (cookies) saved to **`Credentials/linkedin/context_state.json`** (compatibility symlink **`.claude/linkedin`** → `../Credentials/linkedin`)
 
 3. **Use with caution**
    - Add delays between actions (3-5 seconds minimum)
@@ -286,7 +296,7 @@ Granola MCP:
 - **Чтение сообщений** — последние N сообщений из любого чата по @username или id
 - **Поиск в чате** — поиск по тексту внутри указанного чата
 
-**Tools:** `telegram_list_chats`, `telegram_get_messages`, `telegram_search_in_chat`
+**Tools:** `telegram_list_chats`, `telegram_list_folder_chats` (папки вроде Recruiting через `messages.getDialogFilters`), `telegram_get_messages`, `telegram_search_in_chat`
 
 **Setup:**
 
@@ -294,24 +304,24 @@ Granola MCP:
 
 2. **Зависимости** (из корня репо):
    ```bash
-   pip install -r core/mcp/requirements-telegram.txt
+   uv pip install -r core/mcp/requirements-telegram.txt
    ```
 
-3. **Первая авторизация** (один раз, в терминале):
+3. **Первая авторизация** (один раз): положить `TELEGRAM_API_ID` и `TELEGRAM_API_HASH` в `.env` в корне vault. Опционально `TELEGRAM_PHONE=+...` (код страны), чтобы не вводить номер вручную. Затем из корня репо:
    ```bash
-   cd /path/to/Dex
-   export TELEGRAM_API_ID=ваш_api_id
-   export TELEGRAM_API_HASH=ваш_api_hash
-   python core/mcp/telegram_login.py
+   npm run job-search:telegram-login
    ```
-   Ввести номер телефона (с кодом страны, например +79991234567) и код из Telegram. Сессия сохранится в `VAULT_PATH/.claude/telegram/`.
+   или `uv run python core/mcp/telegram_login.py`. Ввести код из приложения Telegram (и пароль 2FA, если включён). Сессия сохранится в `VAULT_PATH/.claude/telegram/telegram.session`.
 
-4. **Конфиг MCP в Cursor:** включить сервер `user-telegram` (например через `.claude/mcp/user-telegram.json`). В `env` передать `VAULT_PATH`; при необходимости задать `TELEGRAM_API_ID` и `TELEGRAM_API_HASH` в окружении или в `.env`, чтобы логин-скрипт и MCP использовали один и тот же session path.
+4. **Фидбэк рекрутеров по откликам (Telegram):** после шага 3 — `npm run job-search:telegram-feedback` → `00-Inbox/Job_Search/Job_Application_Feedback_Telegram_Snapshot_*.md`. По умолчанию сканируются **только личные чаты** (не каналы и не группы), **только входящие** сообщения (ответы рекрутера). Отчёт группирует сообщения по **позиции из** `applications-tracker.json` (сопоставление по названию компании в тексте и словам из роли); остальное в блок «без привязки». Параметры: `TELEGRAM_JOB_FEEDBACK_ONLY_PRIVATE`, `TELEGRAM_JOB_FEEDBACK_INCOMING_ONLY`, `TELEGRAM_JOB_FEEDBACK_DAYS`, `TELEGRAM_JOB_FEEDBACK_MAX_*`, `TELEGRAM_JOB_FEEDBACK_INCLUDE_ALL_CHANNELS` (см. заголовок `.scripts/job-search/collect_job_feedback_from_telegram.py`).
 
-5. **Опционально:** `TELEGRAM_SESSION_PATH` — путь к файлу сессии без расширения; по умолчанию `VAULT_PATH/.claude/telegram/telegram`.
+5. **Конфиг MCP в Cursor:** включить сервер `user-telegram` (например через `.claude/mcp/user-telegram.json`). Команда по умолчанию: `bash core/mcp/run-telegram-mcp.sh` — подтягивает `mcp`, `telethon`, `python-dotenv` через **uv** (не нужен глобальный `pip install telethon`). В `env` передать `VAULT_PATH`. Ключи `TELEGRAM_API_ID` / `TELEGRAM_API_HASH` сервер подхватывает из `.env` в корне workspace (через `load_dotenv` в `telegram_server.py`). После смены конфига MCP — перезапуск Cursor.
+
+6. **Опционально:** `TELEGRAM_SESSION_PATH` — путь к файлу сессии без расширения; по умолчанию `VAULT_PATH/.claude/telegram/telegram`.
 
 **Usage examples:**
 - «Покажи мои чаты в Telegram» → `telegram_list_chats`
+- «Сколько чатов в папке Recruiting / выгрузи список» → `telegram_list_folder_chats` с `folder_title` (пустой `folder_title` — сводка по всем папкам и числу peer’ов в каждой)
 - «Достань последние 30 сообщений из канала @channelname» → `telegram_get_messages(chat="@channelname", limit=30)`
 - «Найди в чате @group сообщения про дедлайн» → `telegram_search_in_chat(chat="@group", query="дедлайн")`
 
@@ -386,7 +396,7 @@ Resume MCP workflow:
 8. `generate_linkedin()` → Creates LinkedIn content with enforced character limits
 9. `export_resume()` → Saves to `05-Areas/Career/Resume/2026-01-28 - Resume.md`
 
-Sessions auto-save after each step. You can resume later with `load_session()`.
+Sessions auto-save after each step. You can resume later with `load_session()`. Session JSON files are stored under `05-Areas/Career/Sessions/` (vault-relative `SESSIONS_DIR` in `core/paths.py`).
 
 **Tools:** `start_session`, `list_sessions`, `load_session`, `add_role`, `extract_achievements`, `pull_career_evidence`, `generate_role_writeup`, `compile_resume`, `generate_linkedin`, `validate_metrics`, `export_resume`
 
@@ -486,33 +496,28 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 
 ---
 
-### Linear MCP (`linear_server.py`) — user/custom
+### Linear (Plugin Linear)
 
 **What it does:**  
-Подключение DEX к Linear: личный task management (один workspace). Мои задачи, создание задач без выбора команды. Ключ подхватывается из `VAULT_PATH/.env` при старте сервера.
+Работа с Linear через установленный Plugin Linear (Cursor Marketplace): задачи, проекты, статусы, комментарии, документы и метки.
 
-**Setup:**  
-1. `pip install -r core/mcp/requirements-linear.txt`  
-2. В `.env` добавить `LINEAR_API_KEY=lin_api_...` (ключ из Linear → Settings → API → Personal API keys).  
-3. Добавить в MCP конфиг сервер `user-linear` (файл `.claude/mcp/user-linear.json`). Окружение: только `VAULT_PATH` — ключ читается из .env.
+**Основные tools плагина:**  
+- `list_issues`, `get_issue`, `save_issue`  
+- `list_teams`, `list_projects`, `save_project`  
+- `list_issue_statuses`, `list_comments`, `save_comment`  
+- `get_user`  
+- `list_documents`, `create_document`, `update_document`
 
-**Для личного использования (один workspace):**  
-- `linear_viewer` — текущий пользователь (id, name, email)  
-- `linear_my_issues` — мои задачи (назначены на меня), опционально state_type (backlog, unstarted, started, completed, canceled)  
-- `linear_create_my_issue` — создать задачу: автоматически одна команда и назначение на себя (title, description, priority)
+**Рекомендуемый flow для Dex sync:**  
+- **Dex -> Linear при создании задачи:** Plugin Linear `list_teams` + `save_issue(...)` -> Work MCP `add_linear_sync_link(...)`.  
+- **Dex -> Linear при закрытии задачи:** Work MCP `get_task_linear_link(task_id)` -> Plugin Linear `save_issue(id=<linear_identifier|linear_id>, state="completed")`.  
+- **Linear -> Dex:**  
+ - периодический pull без вебхука: `./.scripts/install-linear-sync-launchd.sh` (каждые 10 минут запускает `.scripts/sync_linear_to_dex.py`);  
+ - либо webhook-listener: `core/mcp/linear_webhook_listener.py` + публичный URL (ngrok) в настройках Webhooks Linear;  
+ - либо вручную: Plugin Linear `list_issues(assignee="me")` -> Work MCP `sync_linear_issues_to_dex(...)`.
 
-**Остальные tools:**  
-- `linear_list_teams`, `linear_list_projects` — при одном workspace обычно одна команда  
-- `linear_create_project` — создать проект (team_id, name, description), затем привязывать задачи через project_id  
-- `linear_list_issues` — список с фильтрами и пагинацией  
-- `linear_get_issue` — по id или identifier (ENG-123)  
-- `linear_create_issue`, `linear_create_my_issue(..., project_id=...)`, `linear_update_issue` — с явным team_id / project_id при необходимости  
-
-**Экспорт задач из Dex в Linear:** скрипт `.scripts/export_tasks_to_linear.py` создаёт проект «Dex / Cursor tasks» и выгружает туда все открытые задачи из `03-Tasks/Tasks.md`, пишет привязки в `03-Tasks/linear_sync.json`. Запуск: `VAULT_PATH=/path/to/Dex python .scripts/export_tasks_to_linear.py` (нужен `LINEAR_API_KEY` в `.env`).
-
-**Двусторонняя синхронизация:** см. CLAUDE.md → Linear sync (Dex ↔ Linear). Кратко: (1) **При создании задачи в Dex** — всегда сразу создавать тикет в Linear и `add_linear_sync_link`. (2) При завершении задачи в Dex — `get_task_linear_link` и при связи `linear_set_issue_completed`. (3) **Linear → Dex:** рекомендуемый способ без вебхука — один раз запустить `./.scripts/install-linear-sync-launchd.sh`: каждые 10 мин тикеты из Linear подтягиваются в Dex (нужен только `LINEAR_API_KEY` в `.env`). Альтернатива: вебхук (нужен туннель и URL в Linear) или по запросу MCP `sync_linear_issues_to_dex`.
-
-**Note:** Имя сервера с префиксом `user-` сохраняется при `/dex-update`.
+**Экспорт задач из Dex в Linear:**  
+`.scripts/export_tasks_to_linear.py` создаёт проект «Dex / Cursor tasks», выгружает открытые задачи из `03-Tasks/Tasks.md` и пишет привязки в `03-Tasks/linear_sync.json`. Нужен `LINEAR_API_KEY` в `.env`.
 
 ---
 
@@ -606,31 +611,27 @@ User runs `/dex-update` → Update Checker MCP checks GitHub → finds v2.1.0 wi
 
 ---
 
-### Notion MCP (remote, official)
+### Notion MCP (Cursor Plugin)
 
 **What it does:**  
-Официальный Notion MCP: чтение и запись в workspace (Spaces, страницы, базы данных). OAuth, без своего сервера.
+Notion через Cursor Plugin `notion-workspace`: чтение/запись в workspace (Spaces, страницы, базы, comments, views) + готовые workflow-skills.
 
 **Why it's an MCP:**  
-Doc-hub для PRD, заметок, баз. Пока **не прошит** в один flow с «push PRD» — сначала подключаем, авторизуем, учимся читать Spaces и создавать страницы.
+Doc-hub для PRD, заметок и баз. В Dex используем plugin-вариант как единый источник (без отдельной custom-записи `notion` в `.cursor/mcp.json.source`).
 
 **Power:**
-- **Подключение и авторизация** — один раз OAuth в браузере при первом использовании инструмента.
-- **Чтение** — информация в Spaces (страницы, базы, блоки).
-- **Создание** — новые страницы в выбранном Space или родительской странице.
+- **Подключение и авторизация** — OAuth при первом использовании.
+- **Чтение и поиск** — страницы, базы, блоки через `notion-fetch` / `notion-search`.
+- **CRUD-операции** — страницы, базы, comments, views.
+- **Готовые skills** — `create-task`, `database-query`, `meeting-intelligence` и др.
 
 **Setup:**
 
-1. Добавить в `.cursor/mcp.json.source` (или в глобальный MCP-конфиг Cursor):
-   ```json
-   "notion": {
-     "url": "https://mcp.notion.com/mcp"
-   }
-   ```
-2. Выполнить `python3 .scripts/cursor-sync-mcp.py` и **полностью перезапустить Cursor**.
-3. При первом вызове любого Notion-инструмента откроется браузер для OAuth; после согласия workspace подключён.
+1. Убедиться, что включён Cursor Plugin `notion-workspace`.
+2. Полностью перезапустить Cursor (если плагин только что установлен/обновлён).
+3. При первом вызове Notion-инструмента плагина пройти OAuth в браузере.
 
-**Reference:** `.claude/mcp/notion.json`, [Notion MCP — Get started](https://developers.notion.com/guides/mcp/get-started-with-mcp).
+**Reference:** [Notion MCP — Get started](https://developers.notion.com/guides/mcp/get-started-with-mcp).
 
 **Note:** Единый flow «PRD → push в Notion» пока не делаем; фокус — подключить, авторизовать, читать Spaces и создавать страницы.
 
@@ -745,10 +746,10 @@ Confluence как doc-hub. Пока **не прошит** в один flow с «
 | Dex Improvements | `dex_improvements_server.py` | Built-in |
 | Google Drive | `google_drive_server.py` | Built-in |
 | LinkedIn | `linkedin_server.py` | Built-in (⚠️ browser automation, use at risk) |
-| Linear | `linear_server.py` | user/custom (`user-linear`) |
+| Linear | Plugin Linear (Cursor) | External plugin |
 | Nano Banana | `nanobanana_server.py` | Built-in (optional, requires API key) |
 | Figma | Remote (https://mcp.figma.com/mcp) | External (OAuth, optional) |
-| Notion | Remote (https://mcp.notion.com/mcp) | External (OAuth, optional); read Spaces, create pages; not yet in PRD-push flow |
+| Notion | Cursor Plugin `notion-workspace` | External plugin (OAuth); tools + workflow skills for pages/databases/comments/views |
 | Confluence / Atlassian | Remote (https://mcp.atlassian.com/v1/mcp) | External (OAuth, optional); Jira, Confluence, Compass; multiple sites = multiple entries + separate OAuth each; not yet in PRD-push flow |
 | Confluence Multi | `confluence_multi_server.py` | Local; several Confluence Cloud sites in parallel (API token per site); list connections, spaces, pages |
 | Slack | Remote (https://mcp.slack.com/mcp) | External (OAuth, optional); list chats, analyze channel content |

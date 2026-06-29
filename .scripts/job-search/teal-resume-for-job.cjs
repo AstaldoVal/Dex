@@ -97,16 +97,49 @@ function parseArgs() {
     const p = path.isAbsolute(descFile) ? descFile : path.resolve(process.cwd(), descFile);
     if (fs.existsSync(p)) jobDescription = fs.readFileSync(p, 'utf8');
   }
+  const forceJobTypeRaw = (getVal('--force-job-type') || process.env.TEAL_FORCE_JOB_TYPE || '').trim().toLowerCase();
+  const forceJobType =
+    forceJobTypeRaw === 'igaming' || forceJobTypeRaw === 'ai' ? forceJobTypeRaw : null;
+  const forceCreate =
+    process.argv.includes('--force-create') ||
+    process.env.TEAL_FORCE_CREATE === '1' ||
+    process.env.TEAL_FORCE_CREATE === 'true';
   return {
     jobTitle: getVal('--job-title') || '',
     jobDescription: jobDescription || '',
-    jobId: getVal('--job-id') || ''
+    jobId: getVal('--job-id') || '',
+    forceJobType,
+    forceCreate
   };
 }
 
 /** Persist resumeId -> jobId (and company, title) so match-score can load JD by id. Same file as teal-resume-match-score. */
-function saveResumeJobMapping(resumeId, entry) {
+function removeJobIdFromResumeMapping(jobId, keepResumeId) {
+  if (!jobId) return;
+  const mapPath = path.join(TEAL_DIR, 'resume-to-job.json');
+  let map = {};
+  try {
+    if (fs.existsSync(mapPath)) map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+  } catch (_) {}
+  const want = String(jobId);
+  let removed = 0;
+  for (const [resumeId, entry] of Object.entries(map)) {
+    if (entry && entry.jobId === want && resumeId !== keepResumeId) {
+      delete map[resumeId];
+      removed++;
+    }
+  }
+  if (removed > 0) {
+    try {
+      fs.writeFileSync(mapPath, JSON.stringify(map, null, 2), 'utf8');
+      console.log('[Teal resume] Removed ' + removed + ' older resume mapping(s) for jobId=' + want);
+    } catch (_) {}
+  }
+}
+
+function saveResumeJobMapping(resumeId, entry, opts = {}) {
   if (!resumeId || !entry || !entry.jobId) return;
+  if (opts.replaceJobIdMappings) removeJobIdFromResumeMapping(entry.jobId, resumeId);
   const mapPath = path.join(TEAL_DIR, 'resume-to-job.json');
   let map = {};
   try {
@@ -148,22 +181,24 @@ function saveCreatedResumeName(jobId, resumeName) {
 
 async function main() {
   ensureDirs();
-  const { jobTitle, jobDescription, jobId } = parseArgs();
+  const { jobTitle, jobDescription, jobId, forceJobType, forceCreate } = parseArgs();
   if (!jobTitle.trim()) {
-    console.error('Usage: node teal-resume-for-job.cjs --job-title "Job title" [--job-description "..." | --job-description-file path]');
+    console.error('Usage: node teal-resume-for-job.cjs --job-title "Job title" [--job-description "..." | --job-description-file path] [--job-id id] [--force-job-type igaming|ai] [--force-create]');
     process.exit(1);
   }
 
-  if (jobId) {
+  if (jobId && !forceCreate) {
     const map = loadResumeJobMapping();
     const existing = Object.entries(map).find(([_, entry]) => entry && entry.jobId === String(jobId));
     if (existing) {
       console.log('[Teal resume] Resume for this job already exists (jobId=' + jobId + ', resumeId=' + existing[0] + '). Skip duplicate.');
       process.exit(0);
     }
+  } else if (jobId && forceCreate) {
+    console.log('[Teal resume] --force-create: creating another resume for jobId=' + jobId);
   }
 
-  const jobType = detectJobType(jobDescription, jobTitle);
+  const jobType = forceJobType || detectJobType(jobDescription, jobTitle);
   const templateId = jobType === 'igaming' ? TEAL_TEMPLATE_IGAMING : TEAL_TEMPLATE_AI;
   const resumeName = sanitizeResumeName(jobTitle);
 
@@ -728,8 +763,13 @@ async function main() {
       if (jobId) {
         const parts = jobTitle.split(/\s*[—\-|]\s*/).map((s) => s.trim());
         const title = parts[0] || 'Product Manager';
-        const company = parts.length >= 2 ? parts[parts.length - 1] : '';
-        saveResumeJobMapping(newResumeId, { jobId, company, title });
+        let company = parts.length >= 2 ? parts[parts.length - 1] : '';
+        company = company.replace(/\s*\(iGaming\)\s*$/i, '').trim();
+        saveResumeJobMapping(
+          newResumeId,
+          { jobId, company, title },
+          { replaceJobIdMappings: forceCreate }
+        );
         saveCreatedResumeName(jobId, resumeName);
       }
     }

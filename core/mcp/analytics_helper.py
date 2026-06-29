@@ -14,26 +14,17 @@ Usage in skills:
     from analytics_helper import fire_event, check_consent, mark_feature_used
 """
 
+import hashlib
+import json
 import os
 import re
-import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
-try:
-    import requests
-    HAS_REQUESTS = True
-except ImportError:
-    HAS_REQUESTS = False
-
-
-# Configuration
-PENDO_ENDPOINT = "https://app.pendo.io/data/track"
-
-# Bundled Pendo Track Event secret (write-only - can only send events, cannot read data)
-# This enables anonymous feature tracking for Dex users who opt in
-PENDO_TRACK_SECRET = "9b69df0b-ed13-4fed-925d-265243eef113"
+# Local-only analytics configuration
+ANALYTICS_TRANSPORT_MODE = os.environ.get("DEX_ANALYTICS_TRANSPORT", "local").strip().lower()
+LOCAL_ANALYTICS_PATH = os.environ.get("DEX_ANALYTICS_LOG", "System/analytics/events.jsonl")
 
 
 def get_vault_path() -> Path:
@@ -42,15 +33,28 @@ def get_vault_path() -> Path:
     return Path(vault)
 
 
-def get_pendo_secret() -> Optional[str]:
-    """Get Pendo Track Event shared secret."""
-    # Check environment variable first (allows override)
-    secret = os.environ.get('PENDO_TRACK_SECRET')
-    if secret:
-        return secret
-    
-    # Use bundled secret
-    return PENDO_TRACK_SECRET
+def get_analytics_log_path() -> Path:
+    """Return path for local analytics events JSONL."""
+    path = Path(LOCAL_ANALYTICS_PATH)
+    if not path.is_absolute():
+        path = get_vault_path() / path
+    return path
+
+
+def get_analytics_transport() -> Dict[str, Any]:
+    """
+    Resolve analytics transport in a privacy-first local-only mode.
+
+    We intentionally do not send data to third-party endpoints.
+    """
+    log_path = get_analytics_log_path()
+    return {
+        "mode": "local" if ANALYTICS_TRANSPORT_MODE != "disabled" else "disabled",
+        "configured": ANALYTICS_TRANSPORT_MODE != "disabled",
+        "endpoint": str(log_path),
+        "headers": {},
+        "reason": "local_only",
+    }
 
 
 def load_usage_log() -> Dict[str, Any]:
@@ -270,6 +274,25 @@ def get_visitor_info() -> Dict[str, str]:
     }
 
 
+def log_event_locally(event_name: str, properties: Optional[Dict[str, Any]] = None, source: str = "analytics_helper") -> Dict[str, Any]:
+    """Append analytics event to local JSONL log."""
+    visitor_info = get_visitor_info()
+    event_props = properties or {}
+    entry = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "event": event_name,
+        "visitor_id": visitor_info["visitor_id"],
+        "account_id": visitor_info["account_id"],
+        "source": source,
+        "properties": event_props,
+    }
+    log_path = get_analytics_log_path()
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    return {"logged_locally": True, "path": str(log_path)}
+
+
 def fire_event(event_name: str, properties: Dict[str, Any] = None) -> Dict[str, Any]:
     """
     Fire an analytics event to Pendo.
@@ -286,13 +309,10 @@ def fire_event(event_name: str, properties: Dict[str, Any] = None) -> Dict[str, 
     if not is_analytics_enabled():
         return {'fired': False, 'reason': 'analytics_disabled'}
     
-    if not HAS_REQUESTS:
-        return {'fired': False, 'reason': 'requests_not_installed'}
-    
-    secret = get_pendo_secret()
-    if not secret:
-        return {'fired': False, 'reason': 'no_pendo_secret'}
-    
+    transport = get_analytics_transport()
+    if transport.get("mode") == "disabled":
+        return {'fired': False, 'reason': 'transport_disabled'}
+
     visitor_info = get_visitor_info()
     journey = calculate_journey_metadata()
     profile = load_user_profile()
@@ -308,26 +328,14 @@ def fire_event(event_name: str, properties: Dict[str, Any] = None) -> Dict[str, 
         **(properties or {})
     }
     
-    payload = {
-        'type': 'track',
-        'event': event_name,
-        'visitorId': visitor_info['visitor_id'],
-        'accountId': visitor_info['account_id'],
-        'timestamp': int(datetime.now(timezone.utc).timestamp() * 1000),
-        'properties': event_props
-    }
-    
-    headers = {
-        'Content-Type': 'application/json',
-        'x-pendo-integration-key': secret
-    }
-    
     try:
-        response = requests.post(PENDO_ENDPOINT, json=payload, headers=headers, timeout=10)
-        if response.status_code == 200:
-            return {'fired': True, 'event': event_name}
-        else:
-            return {'fired': False, 'error': f'HTTP {response.status_code}'}
+        local_result = log_event_locally(event_name, event_props, source="fire_event")
+        return {
+            'fired': True,
+            'event': event_name,
+            'transport_mode': transport.get('mode'),
+            **local_result,
+        }
     except Exception as e:
         return {'fired': False, 'error': str(e)}
 

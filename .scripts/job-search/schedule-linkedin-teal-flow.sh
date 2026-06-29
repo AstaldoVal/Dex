@@ -52,6 +52,8 @@ elif [ "$1" = "incremental-cpo" ]; then
   CRON_LOG="$TEAL_LOG_DIR/incremental-cpo-cron.log"
 elif [ "$1" = "incremental-sequential" ]; then
   CRON_LOG="$TEAL_LOG_DIR/incremental-sequential-cron.log"
+elif [ "$1" = "full-sequential" ]; then
+  CRON_LOG="$TEAL_LOG_DIR/full-flow-sequential-cron.log"
 else
   CRON_LOG="$TEAL_LOG_DIR/incremental-cron.log"
 fi
@@ -156,8 +158,31 @@ case "${1:-}" in
     echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] Run finished: exit_code=$EXIT" >> "$CRON_LOG"
     exit $EXIT
     ;;
+  full-sequential)
+    # Run three full 8-step flows one after another (only one LinkedIn capture / Teal session at a time).
+    if [ -z "$LINKEDIN_SEARCH_URL" ] || [ -z "$LINKEDIN_SEARCH_URL_IGAMING" ] || [ -z "$LINKEDIN_SEARCH_URL_CPO" ]; then
+      echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] full-sequential requires LINKEDIN_SEARCH_URL, LINKEDIN_SEARCH_URL_IGAMING, LINKEDIN_SEARCH_URL_CPO in cron-env.sh" >> "$CRON_LOG" 2>&1
+      exit 1
+    fi
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] Starting full-sequential: senior PM -> igaming -> CPO (wait for each to finish)." >> "$CRON_LOG"
+    EXIT=0
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] --- 1/3 full flow (senior PM) ---" >> "$CRON_LOG"
+    node .scripts/job-search/run-full-linkedin-teal-flow.cjs "$LINKEDIN_SEARCH_URL" >> "$CRON_LOG" 2>&1
+    R=$?; [ $R -ne 0 ] && EXIT=$R
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] 1/3 finished: exit_code=$R" >> "$CRON_LOG"
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] --- 2/3 full flow (igaming) ---" >> "$CRON_LOG"
+    node .scripts/job-search/run-full-linkedin-teal-flow.cjs "$LINKEDIN_SEARCH_URL_IGAMING" >> "$CRON_LOG" 2>&1
+    R=$?; [ $R -ne 0 ] && EXIT=$R
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] 2/3 finished: exit_code=$R" >> "$CRON_LOG"
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] --- 3/3 full flow (CPO) ---" >> "$CRON_LOG"
+    node .scripts/job-search/run-full-linkedin-teal-flow.cjs "$LINKEDIN_SEARCH_URL_CPO" >> "$CRON_LOG" 2>&1
+    R=$?; [ $R -ne 0 ] && EXIT=$R
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] 3/3 finished: exit_code=$R" >> "$CRON_LOG"
+    echo "[$(date '+%Y-%m-%dT%H:%M:%S%z')] full-sequential done: exit_code=$EXIT" >> "$CRON_LOG"
+    exit $EXIT
+    ;;
   *)
-    echo "Usage: $0 incremental | incremental-sequential | incremental-igaming | incremental-cpo | full | full-igaming | full-cpo" >&2
+    echo "Usage: $0 incremental | incremental-sequential | incremental-igaming | incremental-cpo | full | full-igaming | full-cpo | full-sequential" >&2
     echo "  incremental            — single run: primary search (LINKEDIN_SEARCH_URL), new jobs only." >&2
     echo "  incremental-sequential — run all three (senior PM, igaming, CPO) one after another; one LinkedIn capture at a time." >&2
     echo "  incremental-igaming    — single run: igaming search (LINKEDIN_SEARCH_URL_IGAMING), new jobs only." >&2
@@ -165,6 +190,7 @@ case "${1:-}" in
     echo "  full                — daily: full 8-step flow (senior PM)." >&2
     echo "  full-igaming        — daily: full 8-step flow (igaming)." >&2
     echo "  full-cpo            — daily: full 8-step flow (CPO)." >&2
+    echo "  full-sequential     — all three full flows in order (senior PM, then igaming, then CPO); second starts after first exits." >&2
     exit 1
     ;;
 esac

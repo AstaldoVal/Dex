@@ -13,6 +13,7 @@
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
+const { openUrlInDexChrome } = require('./dex-chrome-open-background.cjs');
 const { DATA_DIR, LINKEDIN_DIGESTS_DIR } = require('./job-search-paths.cjs');
 
 const GROW_URL = 'https://www.linkedin.com/mynetwork/grow/';
@@ -25,18 +26,7 @@ function todayStr() {
 }
 
 function openInChrome(url) {
-  const quoted = '"' + url.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-  try {
-    execSync('open -a "Google Chrome" ' + quoted, { stdio: 'inherit' });
-    return true;
-  } catch (e1) {
-    try {
-      execSync('open ' + quoted, { stdio: 'inherit' });
-      return true;
-    } catch (e2) {
-      return false;
-    }
-  }
+  return openUrlInDexChrome(url);
 }
 
 function waitForExportFile(dateStr) {

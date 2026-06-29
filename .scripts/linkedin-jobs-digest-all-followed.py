@@ -85,7 +85,7 @@ def get_company_jobs(page, company_url):
 
 def load_followed_companies(vault_path):
     """Load list of company URLs we followed (from subscription_results + 100hp-gaming)."""
-    results_path = os.path.join(vault_path, '.claude', 'linkedin', 'subscription_results.json')
+    results_path = os.path.join(vault_path, 'Credentials', 'linkedin', 'subscription_results.json')
     with open(results_path, 'r') as f:
         data = json.load(f)
     urls = [r['url'] for r in data['results'] if r.get('status') == 'followed']
@@ -109,7 +109,7 @@ def main():
     save_every = 10
     digests_dir = os.path.join(vault_path, '00-Inbox', 'Job_Search', 'digests')
     os.makedirs(digests_dir, exist_ok=True)
-    partial_path = os.path.join(vault_path, '.claude', 'linkedin', 'jobs_digest_partial.json')
+    partial_path = os.path.join(vault_path, 'Credentials', 'linkedin', 'jobs_digest_partial.json')
     digest_path = os.path.join(digests_dir, f"linkedin-jobs-digest-all-companies-{datetime.now().strftime('%Y-%m-%d')}.md")
 
     print(f"📋 Всего компаний для проверки: {len(companies)}")

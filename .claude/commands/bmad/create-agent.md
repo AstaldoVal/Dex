@@ -163,7 +163,7 @@ Use TodoWrite to track: Gather Requirements → Design Agent → Define Workflow
 ```
 Module: bmb (builder module for custom agents)
 Role: {{agent_role}} (normalized: lowercase, hyphens)
-Path: ~/.claude/skills/bmad/bmb/{{role-name}}/SKILL.md
+Path: ~/Skills_library/bmad/bmb/{{role-name}}/SKILL.md
 ```
 
 **Generate SKILL.md using template:**
@@ -280,8 +280,8 @@ File: ./custom-agents/{{role-name}}/SKILL.md
 
 1. **Copy to Claude skills directory:**
    ```bash
-   mkdir -p ~/.claude/skills/bmad/bmb/{{role-name}}
-   cp ./custom-agents/{{role-name}}/SKILL.md ~/.claude/skills/bmad/bmb/{{role-name}}/
+   mkdir -p ~/Skills_library/bmad/bmb/{{role-name}}
+   cp ./custom-agents/{{role-name}}/SKILL.md ~/Skills_library/bmad/bmb/{{role-name}}/
    ```
 
 2. **Restart Claude Code**

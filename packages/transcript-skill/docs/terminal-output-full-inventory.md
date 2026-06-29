@@ -39,7 +39,7 @@
 10. **HF-токен (--hf-token / env)** — источник токена для pyannote **без** вывода секрета: например «не используется (нет --diarize)», «задан через --hf-token», «задан через окружение», «не задан».
 11. **--progress** — `да` или `нет`.
 12. **--plan-only** — `да` или `нет`.
-13. **--progress-format** — одно из `auto`, `rewrite`, `lines`, `rich`; к значению дописывается хвост вида `  (прогресс: <eff>)`, где `<eff>` при `auto` выглядит как `auto->rich` или `auto->lines` или `auto->rewrite` в зависимости от TTY; для явного режима — `rich`, `lines` или `rewrite`.
+13. **--progress-format** — одно из `auto`, `rewrite`, `lines`, `rich`; по умолчанию **`rich`**. Хвост `  (прогресс: <eff>)`: при **`auto`** — `auto->rich`; при **`rich`** — `rich`; **`lines`** — `lines`; **`rewrite`** — `rewrite`.
 
 ### 1.3. Вёрстка блока 1 (plain), как в терминале
 
@@ -322,7 +322,7 @@
 
 ### 6.1. Режимы `--progress-format`
 
-- **rich** (при доступном TTY / зеркале): полоса Rich (Spinner, описание фазы, Bar, %, время), без префикса `[transcript-media]` в каждой строке.
+- **rich** (по умолчанию) и **auto** (то же поведение): на настоящем TTY **`stderr`** — полоса Rich (Spinner, фаза, Bar, %, время). Если **`stderr`** не TTY — **ASCII-полоса с ETA** (`progress_cb_rich_textbar`), не **lines** и не голый **rewrite**.
 - **lines:** строки вида `[transcript-media] <pct>%  <phase>` с прореживанием (не каждый тик).
 - **rewrite:** одна строка с `\r` и обновлением: `\r[transcript-media] <pct>%  <phase>   `
 

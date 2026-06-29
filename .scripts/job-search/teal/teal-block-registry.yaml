@@ -1,0 +1,180 @@
+# Teal Block Registry — machine-readable source of truth
+# Human doc: PRD-teal-block-layer.md
+
+version: 1
+updated: 2026-05-25
+
+smoke:
+  # Default resume for block-check only; production uses any meta.resume_id
+  defaultResumeId: 98a9852c-c971-430f-a49b-6e45b9a72c88
+  description: Asenium Product Data Manager (current debug)
+
+surfaces:
+  preview:
+    urlPattern: "/resume-builder/resumes/{resumeId}/preview"
+    tab: content-editor
+  matcher:
+    urlPattern: "/resume-builder/resumes/{resumeId}/matching"
+    tab: matching
+  exportPdf:
+    requiresSurface: preview
+    ops: [export, mirrorToPackage]
+
+blocks:
+  - id: preview.contactHeader
+    surface: preview
+    anchors: [contact-fields, resume-header]
+    legacyModule: teal-set-contact-links.cjs
+    verifySurface: [page, pdf]
+    removeMode: null
+    ops: [find, ensureVisible, extract, apply, verify]
+    migration: facade
+
+  - id: preview.targetTitles
+    surface: preview
+    anchors: ["#target-titles", 'button[aria-label="Add a Target Title"]']
+    legacyModule: teal-target-title.cjs
+    verifySurface: [page, pdf]
+    removeMode: uncheck
+    ops: [find, ensureVisible, expand, extract, apply, verify, toggle]
+    migration: facade
+
+  - id: preview.professionalSummary
+    surface: preview
+    anchors: ['button[aria-label="Add a Professional Summary"]', ProseMirror, tiptap]
+    legacyModule: teal-paste-professional-summary.cjs
+    verifySurface: [page, pdf]
+    removeMode: deleteSection
+    ops: [find, ensureVisible, expand, extract, apply, verify, editText, deleteItem]
+    migration: facade
+
+  - id: preview.blurbs
+    surface: preview
+    anchors: ["#blurbs"]
+    legacyModule: teal-resume-sections.cjs
+    verifySurface: page
+    removeMode: deleteItem
+    ops: [find, ensureVisible, extract, apply, verify, editText, addItem]
+    migration: facade
+
+  - id: preview.workExperience
+    surface: preview
+    anchors:
+      - "#work-experience"
+      - '[data-testid="work-experience"]'
+      - '[data-testid="company"]'
+      - '[data-testid="Position"]'
+      - '[data-testid="Achievement"]'
+    legacyModule: teal-resume-experience.cjs
+    verifySurface: page
+    removeMode: uncheck
+    ops: [find, ensureVisible, expand, extract, apply, verify, toggle, editText, addItem]
+    migration: partial
+    children: [preview.workExperience.company, preview.workExperience.position, preview.workExperience.achievement]
+
+  - id: preview.workExperience.bullets
+    surface: preview
+    anchors: ['#work-experience', '[data-testid="Achievement"]']
+    legacyModule: teal-resume-experience.cjs
+    verifySurface: page
+    removeMode: null
+    ops: [find, apply, heal]
+    migration: facade
+
+  - id: preview.projects
+    surface: preview
+    anchors: ["#projects", '[data-testid="Project"]']
+    legacyModule: teal-exclude-projects.cjs
+    verifySurface: [page, pdf]
+    removeMode: uncheck
+    ops: [find, ensureVisible, extract, apply, verify, toggle]
+    migration: facade
+
+  - id: preview.skills
+    surface: preview
+    anchors:
+      - "#skills"
+      - '[data-testid="resume-tags"]'
+      - '[role="button"][aria-roledescription="sortable"]'
+    legacyModule: teal-resume-skills.cjs
+    verifySurface: [page, pdf]
+    removeMode: uncheck
+    ops:
+      - find
+      - ensureVisible
+      - expand
+      - extract
+      - apply
+      - verify
+      - toggle
+      - add
+      - deleteChip
+      - reorderCategory
+      - reorderChip
+      - domFallback
+    migration: in_progress
+    notes: reorderCategory v1 required; deleteChip = remove from library only when explicit
+
+  - id: preview.certifications
+    surface: preview
+    anchors: ["#certifications", label.resume-label]
+    legacyModule: teal-sync-certifications.cjs
+    verifySurface: [page, pdf]
+    removeMode: uncheck
+    ops: [find, ensureVisible, extract, apply, verify, toggle]
+    migration: facade
+
+  - id: preview.education
+    surface: preview
+    anchors: []
+    legacyModule: null
+    verifySurface: page
+    removeMode: uncheck
+    ops: [find, ensureVisible, extract, apply, verify, toggle]
+    migration: planned
+    notes: anchors filled by teal-ui-learn; no legacy script yet
+
+  - id: preview.interests
+    surface: preview
+    anchors: ["#interests", '[role="button"][aria-roledescription="sortable"]']
+    legacyModule: teal-resume-interests.cjs
+    verifySurface: page
+    removeMode: deleteChip
+    ops: [find, ensureVisible, expand, extract, apply, verify, toggle, deleteChip]
+    migration: facade
+
+  - id: matcher.rightCol
+    surface: matcher
+    anchors: ["#right-col", '[data-testid="job-matcher-content"]']
+    legacyModule: teal-resume-match-score.cjs
+    verifySurface: page
+    removeMode: null
+    ops: [find, ensureVisible, extract, screenshotSkills]
+    migration: facade
+
+  - id: matcher.jobSearch
+    surface: matcher
+    anchors: ["#job-search-input", "#job-search-listbox"]
+    legacyModule: teal-resume-match-score.cjs
+    verifySurface: page
+    removeMode: null
+    ops: [find, apply, selectJob]
+    migration: facade
+
+  - id: export.pdf
+    surface: exportPdf
+    anchors: ['button:has-text("Export PDF")', '[role="menuitem"]:has-text("Resume")']
+    legacyModule: teal-export-resume-pdf.cjs
+    verifySurface: pdf
+    removeMode: null
+    ops: [find, apply, export, mirrorToPackage]
+    migration: facade
+
+selfHeal:
+  onUnsupported:
+    - npm run job-search:teal-ui-learn
+    - update teal-block-registry.yaml anchors from selectors-report
+    - npm run job-search:teal-blocks-check
+  onEvalFail:
+    - heal round in teal-apply-resume-feedback (block-specific)
+    - maxHealRounds: 5

@@ -51,20 +51,75 @@ function readBridgePort() {
 }
 
 function readBridgeApiSecret() {
-  const tryFiles = [path.join(BRIDGE_DIR, ".env"), path.join(ROOT, ".env")];
-  for (const f of tryFiles) {
-    if (!fs.existsSync(f)) continue;
-    const line = fs
-      .readFileSync(f, "utf8")
-      .split("\n")
-      .find((l) => /^\s*BRIDGE_API_SECRET=/.test(l));
-    if (line) {
-      const v = line.split("=", 2)[1]?.trim().replace(/\r$/, "") ?? "";
-      if (v) return v;
-    }
-  }
-  return process.env.BRIDGE_API_SECRET?.trim() || "";
+  return readEnvValueFromFiles("BRIDGE_API_SECRET", [
+    path.join(BRIDGE_DIR, ".env"),
+    path.join(ROOT, ".env"),
+  ]);
 }
+
+/** Read KEY=value from the first file that defines it (non-empty). */
+function readEnvValueFromFiles(key, files) {
+  for (const f of files) {
+    if (!fs.existsSync(f)) continue;
+    const raw = fs.readFileSync(f, "utf8");
+    const re = new RegExp(`^\\s*${key}\\s*=\\s*(.*)$`, "m");
+    const m = raw.match(re);
+    if (!m) continue;
+    let v = (m[1] ?? "").trim().replace(/\r$/, "");
+    if (!v || v.startsWith("#")) continue;
+    if (
+      (v.startsWith('"') && v.endsWith('"')) ||
+      (v.startsWith("'") && v.endsWith("'"))
+    ) {
+      v = v.slice(1, -1);
+    }
+    if (v) return v;
+  }
+  const fromProc = process.env[key]?.trim();
+  return fromProc || "";
+}
+
+const DASHBOARD_DIR = path.join(ROOT, "apps", "telegram-news-dashboard");
+const DASHBOARD_ENV_LOCAL = path.join(DASHBOARD_DIR, ".env.local");
+
+/** Env keys to mirror from local files → Vercel (README / .env.example). */
+const VERCEL_EXTRA_ENV_SPECS = [
+  {
+    key: "BRIDGE_API_SECRET",
+    files: [path.join(BRIDGE_DIR, ".env"), path.join(ROOT, ".env")],
+    sensitive: true,
+  },
+  {
+    key: "BRIDGE_JWT_SECRET",
+    files: [path.join(BRIDGE_DIR, ".env"), path.join(ROOT, ".env")],
+    sensitive: true,
+  },
+  {
+    key: "DASHBOARD_PASSWORD",
+    files: [DASHBOARD_ENV_LOCAL, path.join(BRIDGE_DIR, ".env")],
+    sensitive: true,
+  },
+  {
+    key: "DASHBOARD_SESSION_SECRET",
+    files: [DASHBOARD_ENV_LOCAL, path.join(BRIDGE_DIR, ".env")],
+    sensitive: true,
+  },
+  {
+    key: "REWRITE_BACKEND",
+    files: [DASHBOARD_ENV_LOCAL, path.join(BRIDGE_DIR, ".env")],
+    sensitive: false,
+  },
+  {
+    key: "OPENAI_API_KEY",
+    files: [DASHBOARD_ENV_LOCAL, path.join(BRIDGE_DIR, ".env"), path.join(ROOT, ".env")],
+    sensitive: true,
+  },
+  {
+    key: "REWRITE_MODEL",
+    files: [DASHBOARD_ENV_LOCAL, path.join(BRIDGE_DIR, ".env")],
+    sensitive: false,
+  },
+];
 
 /** Append trycloudflare origin to BRIDGE_CORS_ORIGINS so browser can call the tunnel. */
 function ensureBridgeCorsOrigin(bridgeEnvPath, origin) {
@@ -248,6 +303,50 @@ async function vercelUpsertBridgeUrls({ token, teamId, projectName, baseUrl }) {
   }
 }
 
+async function vercelUpsertOneEnv({ token, teamId, projectName, key, value, type, comment }) {
+  const q = teamId ? `?teamId=${encodeURIComponent(teamId)}&upsert=true` : "?upsert=true";
+  const r = await fetch(`https://api.vercel.com/v10/projects/${encodeURIComponent(projectName)}/env${q}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      key,
+      value,
+      type,
+      target: ["production", "preview"],
+      comment,
+    }),
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error(`Vercel env upsert ${key}: ${r.status} ${t}`);
+  }
+  console.log(`Vercel: upserted ${key}`);
+}
+
+/** Push BRIDGE_* secrets and optional dashboard keys from local .env files (see README). */
+async function vercelUpsertExtraEnvFromLocal({ token, teamId, projectName }) {
+  for (const spec of VERCEL_EXTRA_ENV_SPECS) {
+    const value = readEnvValueFromFiles(spec.key, spec.files);
+    if (!value) {
+      console.log(`Vercel: skip ${spec.key} (empty locally)`);
+      continue;
+    }
+    const type = spec.sensitive ? "encrypted" : "plain";
+    await vercelUpsertOneEnv({
+      token,
+      teamId,
+      projectName,
+      key: spec.key,
+      value,
+      type,
+      comment: "synced by .scripts/telegram-news-stack-restart.cjs (local .env)",
+    });
+  }
+}
+
 async function vercelRedeployProduction({ token, teamId, projectName }) {
   const hook = process.env.VERCEL_DEPLOY_HOOK_URL?.trim();
   if (hook) {
@@ -355,6 +454,7 @@ async function main() {
   }
 
   await vercelUpsertBridgeUrls({ token, teamId, projectName, baseUrl: publicUrl });
+  await vercelUpsertExtraEnvFromLocal({ token, teamId, projectName });
   await vercelRedeployProduction({ token, teamId, projectName });
 
   const bearer = readBridgeApiSecret();

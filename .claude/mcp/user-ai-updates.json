@@ -2,7 +2,7 @@
   "name": "user-ai-updates",
   "description": "Обновления OpenAI, Google Cloud, Grok, Manus, Gemini, Anthropic и ежедневный AI-дайджест",
   "server": {
-    "command": "python",
+    "command": "core/mcp/.venv/bin/python",
     "args": ["core/mcp/ai_updates_server.py"],
     "env": { "VAULT_PATH": "${workspaceFolder}" }
   },

@@ -11,6 +11,10 @@ Thumbs.db
 # Dex slash commands (topic-based menu) — keep in repo
 !.cursor/commands/
 !.cursor/commands/**
+# Cursor slash autosuggest wrappers (synced from dex menus + commands)
+!.cursor/skills/
+!.cursor/skills/**
+!.cursor/slash-manifest.json
 # Cursor hooks (project automation; keep in repo)
 !.cursor/hooks.json
 !.cursor/hooks/
@@ -73,6 +77,7 @@ System/usage_log.md
 System/Session_Learnings/
 System/.last-update-check
 System/telegram-news-bridge-runtime.local.md
+System/integrations/todoist.yaml
 
 # Custom extensions (user-created, never in upstream)
 CLAUDE-custom.md

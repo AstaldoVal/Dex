@@ -39,7 +39,7 @@ If pre-load is missing, follow the enforcer fallback before first code-touching 
 1. Do not conflate `using-superpowers` and `mcp-health-check-custom`.
    - `using-superpowers` = method/protocol layer.
    - `mcp-health-check-custom` = tooling/infrastructure layer.
-2. Keep bootstrap concise and factual.
+2. Keep bootstrap concise and factual. If the first reply also summarizes an MCP health check you ran, add a **plain-language** outcome for Roman (see `.claude/skills/mcp-health-check-custom/SKILL.md` «User-visible report» and `CLAUDE.md` USER_EXTENSIONS «Отчёт о проверке MCP в чате» — там канонические две фразы про успех и шаблон про сбой); never open that summary with exit codes.
 3. After bootstrap block, immediately execute user request.
 4. Do not repeat bootstrap block in later responses within the same chat unless user asks for status.
 5. Karpathy echo block, fallback behavior, and recovery policy are defined in `.cursor/rules/session-bootstrap-enforcer.mdc`.

@@ -1,0 +1,11 @@
+---
+description: Canonical spelling of Roman's surname in Russian/Ukrainian vs Latin in English artifacts.
+globs: "**/*.{md,txt,yaml,yml}"
+alwaysApply: true
+---
+
+# User name spelling (Roman)
+
+- In **Russian and Ukrainian** user-facing text (notes, emails, posts, vault, Linear descriptions in those languages): surname **Мацукатов** (Cyrillic). Do not use erroneous variants such as **Матсукатов** or other letter swaps.
+- In **English** professional contexts (LinkedIn, international CV, calendar titles that are English-only): **Matsukatov** is acceptable as the Latin form.
+- When editing imports (Granola, transcripts) that contain the wrong Cyrillic surname, normalize to **Мацукатов** unless the source is a direct quote that must stay verbatim.

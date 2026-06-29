@@ -40,38 +40,15 @@ from analytics_helper import (
     check_consent,
     fire_event,
     get_analytics_transport,
-    get_vault_path,
     get_visitor_info,
     is_analytics_enabled,
     load_user_profile,
+    log_event_locally,
 )
-
-try:
-    import requests
-    HAS_REQUESTS = True
-except ImportError:
-    HAS_REQUESTS = False
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-
-def log_event_locally(event_name: str, properties: dict, visitor_id: str):
-    """Log event to local file as backup."""
-    log_path = get_vault_path() / 'System' / 'analytics_log.jsonl'
-    entry = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "event": event_name,
-        "visitor_id": visitor_id,
-        "properties": properties
-    }
-    try:
-        with open(log_path, 'a') as f:
-            f.write(json.dumps(entry) + '\n')
-    except Exception:
-        pass
-
 
 # Create MCP server
 server = Server("dex-analytics")
@@ -165,10 +142,9 @@ async def _call_tool_inner(name: str, arguments: dict) -> list[TextContent]:
             "transport_endpoint": transport.get("endpoint"),
             "transport_configured": transport.get("configured", False),
             "transport_reason": transport.get("reason"),
-            "requests_available": HAS_REQUESTS,
             "visitor_id": visitor_info['visitor_id'],
             "account_id": visitor_info['account_id'],
-            "ready": enabled and transport.get("configured", False) and HAS_REQUESTS
+            "ready": transport.get("configured", False)
         }
 
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
@@ -182,8 +158,7 @@ async def _call_tool_inner(name: str, arguments: dict) -> list[TextContent]:
 
         # Check if analytics is enabled (consent-gated)
         if not is_analytics_enabled():
-            visitor_info = get_visitor_info()
-            log_event_locally(event_name, properties, visitor_info['visitor_id'])
+            log_event_locally(event_name, properties, source="analytics_server.track_event")
             return [TextContent(type="text", text=json.dumps({
                 "fired": False,
                 "reason": "analytics_disabled",
@@ -194,8 +169,7 @@ async def _call_tool_inner(name: str, arguments: dict) -> list[TextContent]:
         result = fire_event(event_name, properties)
 
         # Also log locally as backup
-        visitor_info = get_visitor_info()
-        log_event_locally(event_name, properties, visitor_info['visitor_id'])
+        log_event_locally(event_name, properties, source="analytics_server.track_event_backup")
         result["logged_locally"] = True
 
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
@@ -226,54 +200,25 @@ async def _call_tool_inner(name: str, arguments: dict) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
     elif name == "test_connection":
-        if not HAS_REQUESTS:
-            return [TextContent(type="text", text=json.dumps({
-                "success": False,
-                "error": "requests library not installed. Run: pip install requests"
-            }))]
-
         transport = get_analytics_transport()
         if not transport.get("configured"):
             return [TextContent(type="text", text=json.dumps({
                 "success": False,
-                "error": f"Analytics transport not configured ({transport.get('reason', 'unknown')})."
+                "error": f"Analytics transport not configured ({transport.get('reason', 'unknown')})"
             }))]
 
-        visitor_info = get_visitor_info()
-        test_visitor = "test-" + visitor_info['visitor_id'][:8]
-
-        payload = {
-            "type": "track",
-            "event": "dex_analytics_test",
-            "visitorId": test_visitor,
-            "accountId": "dex-test",
-            "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000),
-            "properties": {"test": True, "timestamp": datetime.now().isoformat()}
-        }
-
         try:
-            response = requests.post(
-                transport["endpoint"],
-                json=payload,
-                headers=transport["headers"],
-                timeout=10
+            probe = log_event_locally(
+                "dex_analytics_test",
+                {"test": True, "timestamp": datetime.now(timezone.utc).isoformat()},
+                source="analytics_server.test_connection",
             )
-            if response.status_code == 200:
-                return [TextContent(type="text", text=json.dumps({
-                    "success": True,
-                    "status": response.status_code,
-                    "visitor_id_used": test_visitor,
-                    "transport_mode": transport.get("mode"),
-                    "transport_endpoint": transport.get("endpoint"),
-                }))]
-            else:
-                return [TextContent(type="text", text=json.dumps({
-                    "success": False,
-                    "status": response.status_code,
-                    "transport_mode": transport.get("mode"),
-                    "transport_endpoint": transport.get("endpoint"),
-                    "body": response.text[:200]
-                }))]
+            return [TextContent(type="text", text=json.dumps({
+                "success": True,
+                "transport_mode": transport.get("mode"),
+                "transport_endpoint": transport.get("endpoint"),
+                **probe,
+            }))]
         except Exception as e:
             return [TextContent(type="text", text=json.dumps({
                 "success": False,

@@ -31,6 +31,8 @@ email_domain: ""
 # Communication Preferences
 # How the AI adapts its tone and language when working with you
 communication:
+  # Cursor / assistant chat and user-facing setup text: default Russian for Roman unless he asks otherwise
+  assistant_language: "ru"
   # Formality level
   formality: "professional_casual"  # options: formal, professional_casual, casual
   

@@ -1,28 +1,30 @@
 #!/usr/bin/env bash
-# Start local Paperclip server with routine + heartbeat schedulers enabled.
-# HEARTBEAT_SCHEDULER_ENABLED=false disables BOTH agent heartbeats AND routine cron triggers.
+# Ensure Paperclip runs via launchd (dev monorepo + synced Dex UI). Do NOT start global `paperclipai run`.
 set -euo pipefail
 
-INSTANCE_DIR="${PAPERCLIP_INSTANCE_DIR:-$HOME/.paperclip/instances/default}"
-LOG_FILE="${PAPERCLIP_SERVER_LOG:-/tmp/paperclip-run.log}"
 PORT="${PORT:-3100}"
+PLIST_LABEL="com.dex.paperclip-server"
+LAUNCHD_UID="$(id -u)"
 
-if lsof -i ":${PORT}" -sTCP:LISTEN >/dev/null 2>&1; then
-  echo "Paperclip already listening on :${PORT}" >&2
+if curl -sf --connect-timeout 2 "http://127.0.0.1:${PORT}/api/health" >/dev/null \
+  && curl -sf --connect-timeout 2 "http://127.0.0.1:${PORT}/api/plugins/ui-contributions" >/dev/null; then
+  echo "Paperclip already healthy on :${PORT} (launchd dev server)"
   exit 0
 fi
 
-export HEARTBEAT_SCHEDULER_ENABLED=true
+echo "Starting Paperclip via launchd (not global paperclipai)…" >&2
+launchctl kickstart -k "gui/${LAUNCHD_UID}/${PLIST_LABEL}" 2>/dev/null \
+  || launchctl bootstrap "gui/${LAUNCHD_UID}" "$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist" 2>/dev/null \
+  || true
 
-if [[ -f "$INSTANCE_DIR/.env" ]]; then
-  set -a
-  # shellcheck disable=SC1090
-  source "$INSTANCE_DIR/.env"
-  set +a
-fi
+for i in $(seq 1 30); do
+  if curl -sf --connect-timeout 2 "http://127.0.0.1:${PORT}/api/health" >/dev/null \
+    && curl -sf --connect-timeout 2 "http://127.0.0.1:${PORT}/api/plugins/ui-contributions" >/dev/null; then
+    echo "Paperclip ready on http://127.0.0.1:${PORT}"
+    exit 0
+  fi
+  sleep 1
+done
 
-# Re-assert after sourcing instance .env (must not be "false").
-export HEARTBEAT_SCHEDULER_ENABLED=true
-
-nohup paperclipai run >>"$LOG_FILE" 2>&1 &
-echo "Started paperclipai run (pid $!, log $LOG_FILE, HEARTBEAT_SCHEDULER_ENABLED=true)"
+echo "Paperclip did not become healthy on :${PORT}. Run: npm run paperclip:server-launchd:install" >&2
+exit 1

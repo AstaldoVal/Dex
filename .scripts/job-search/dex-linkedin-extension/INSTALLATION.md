@@ -28,7 +28,7 @@
 2. Включите **"Режим разработчика"** (Developer mode) в правом верхнем углу
 3. Нажмите **"Загрузить распакованное расширение"** (Load unpacked)
 4. Выберите папку: 
-   - **Абсолютный путь:** `/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex/.scripts/job-search/dex-linkedin-extension`
+   - **Абсолютный путь:** `/Users/admin.roman.matsukatov/Development/DEX/.scripts/job-search/dex-linkedin-extension`
    - **Относительный путь:** `.scripts/job-search/dex-linkedin-extension` (от корня Dex vault)
    
    **Если не видите папку в Finder:**

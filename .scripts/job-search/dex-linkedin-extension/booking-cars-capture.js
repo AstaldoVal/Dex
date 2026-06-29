@@ -92,9 +92,11 @@
       var catRaw = sp.get('dex-booking-cat-scan');
       if ((catRaw == null || catRaw === '') && hp.get('dex-booking-cat-scan')) catRaw = hp.get('dex-booking-cat-scan');
       var catScan = catRaw === '0' || catRaw === 'false' ? false : true;
-      return { autostart: autostart, nDays: nDays, catScan: catScan };
+      var lisRaw = sp.get('dex-booking-lis-scan') || hp.get('dex-booking-lis-scan');
+      var lisScan = lisRaw === '1' || lisRaw === 'true';
+      return { autostart: autostart, nDays: nDays, catScan: catScan, lisScan: lisScan };
     } catch (e) {
-      return { autostart: false, nDays: null, catScan: true };
+      return { autostart: false, nDays: null, catScan: true, lisScan: false };
     }
   }
 
@@ -106,20 +108,24 @@
         !u.searchParams.has('dex-booking-autostart') &&
         !u.searchParams.has('dex-booking-n') &&
         !u.searchParams.has('dex-booking-cat-scan') &&
+        !u.searchParams.has('dex-booking-lis-scan') &&
         hash.indexOf('dex-booking-autostart=') === -1 &&
         hash.indexOf('dex-booking-n=') === -1 &&
-        hash.indexOf('dex-booking-cat-scan=') === -1
+        hash.indexOf('dex-booking-cat-scan=') === -1 &&
+        hash.indexOf('dex-booking-lis-scan=') === -1
       ) {
         return;
       }
       u.searchParams.delete('dex-booking-autostart');
       u.searchParams.delete('dex-booking-n');
       u.searchParams.delete('dex-booking-cat-scan');
+      u.searchParams.delete('dex-booking-lis-scan');
       if (hash && hash.length > 1) {
         var hp = new URLSearchParams(hash.replace(/^#/, ''));
         hp.delete('dex-booking-autostart');
         hp.delete('dex-booking-n');
         hp.delete('dex-booking-cat-scan');
+        hp.delete('dex-booking-lis-scan');
         var nextHash = hp.toString();
         u.hash = nextHash ? ('#' + nextHash) : '';
       }
@@ -145,16 +151,71 @@
       else if (level === 'info') console.info(line);
       else console.log(line);
     } catch (e) {}
+    if (tag === 'lis-scan' && !DEBUG) return;
     try {
       var logEl = document.getElementById(UI_LOG_ID);
       if (logEl) {
         var next = (logEl.textContent || '') + '\n' + line;
-        // Keep overlay log bounded.
         var lines = next.split('\n');
         if (lines.length > 180) lines = lines.slice(lines.length - 180);
         logEl.textContent = lines.join('\n');
       }
     } catch (e2) {}
+  }
+
+  function setUiMode(mode) {
+    var matrix = document.getElementById('dex-booking-matrix-panel');
+    var lis = document.getElementById('dex-booking-lis-panel');
+    var badge = document.getElementById('dex-booking-mode-badge');
+    if (matrix) matrix.style.display = mode === 'matrix' ? 'block' : 'none';
+    if (lis) lis.style.display = mode === 'lis' ? 'block' : 'none';
+    if (badge) badge.textContent = mode === 'lis' ? 'LIS · 2 dates · 20:00' : 'price matrix';
+    var logEl = document.getElementById(UI_LOG_ID);
+    if (logEl) logEl.style.display = DEBUG ? 'block' : 'none';
+  }
+
+  function setLisProgress(html) {
+    var el = document.getElementById('dex-booking-lis-progress');
+    if (el) el.innerHTML = html;
+  }
+
+  function updateLisOverlay(state, extra) {
+    setUiMode('lis');
+    var stopBtn = document.getElementById('dex-booking-stop');
+    if (stopBtn) stopBtn.style.display = 'inline-block';
+    if (!state) return;
+    var pairs = state.pairs || getLisScanDatePairs();
+    var idx = typeof state.pairIndex === 'number' ? state.pairIndex : 0;
+    var totalVehicles = 0;
+    if (state.searches) {
+      for (var i = 0; i < state.searches.length; i++) {
+        totalVehicles += state.searches[i].vehicleCount || 0;
+      }
+    }
+    var pairLine = idx < pairs.length
+      ? 'Пара ' + (idx + 1) + '/' + pairs.length + ': ' + pairs[idx].pickupISO + ' 20:00 → ' + pairs[idx].dropoffISO + ' 20:00'
+      : 'Обе пары обработаны';
+    var progressBits = [];
+    if (extra && extra.scrapedCount != null) {
+      var availTxt = extra.availableCount != null ? (' из ~' + extra.availableCount + ' на странице') : '';
+      progressBits.push('С этой пары: ' + extra.scrapedCount + availTxt);
+    }
+    if (totalVehicles) progressBits.push('Уже в JSON: ' + totalVehicles + ' машин');
+    setLisProgress(pairLine + (progressBits.length ? '<br/>' + progressBits.join(' · ') : ''));
+    if (extra && extra.status) setStatus(extra.status);
+  }
+
+  function ensureOverlayVisible() {
+    if (!document.getElementById(UI_ID)) {
+      var autoParams = extractAutoStartParams();
+      var ui = buildUI({
+        N: autoParams.nDays != null ? autoParams.nDays : DEFAULT_N,
+        catScan: autoParams.catScan,
+        uiMode: autoParams.lisScan ? 'lis' : 'matrix'
+      });
+      document.documentElement.appendChild(ui.root);
+      wireUiEvents(ui);
+    }
   }
 
   function getElByTextContains(root, text, maxMatches) {
@@ -183,9 +244,8 @@
   }
 
   function moneyRegex() {
-    // Capture strings like: € 123.45, £123, $1,234.56, EUR 123.45
-    // We rely on heuristics later.
-    return /(?:€|£|\$)\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})|\b(?:EUR|USD|GBP|AUD|CAD|CHF|SEK|NOK|DKK|PLN)\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})/gi;
+    // €5, € 123.45, €1,234.56 — decimals optional (Booking often shows whole euros per day)
+    return /(?:€|£|\$)\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?|\b(?:EUR|USD|GBP|AUD|CAD|CHF|SEK|NOK|DKK|PLN)\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?/gi;
   }
 
   function extractMoneyFromText(text) {
@@ -204,7 +264,7 @@
         var codeM = raw.match(/\b(EUR|USD|GBP|AUD|CAD|CHF|SEK|NOK|DKK|PLN)\b/i);
         cur = codeM ? codeM[1].toUpperCase() : null;
       }
-      var numM = raw.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}))/);
+      var numM = raw.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)/);
       var numRaw = numM ? numM[1] : null;
       var val = normalizeMoney(numRaw || '');
       if (!isNaN(val)) out.push({ raw: raw, currency: cur, value: val });
@@ -521,6 +581,7 @@
   }
 
   function buildUI(initial) {
+    var uiMode = (initial && initial.uiMode) || 'matrix';
     var root = document.createElement('div');
     root.id = UI_ID;
     root.style.cssText = [
@@ -533,6 +594,7 @@
       'padding:12px',
       'border-radius:10px',
       'min-width:320px',
+      'max-width:380px',
       'font-family:system-ui,sans-serif',
       'box-shadow:0 8px 30px rgba(0,0,0,.35)',
       'user-select:none'
@@ -541,20 +603,38 @@
     var topRow = [
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">',
       '<div style="font-weight:800;font-size:14px;line-height:1;">Dex Booking Cars</div>',
-      '<div style="font-size:11px;opacity:.85;">session-scrape</div>',
+      '<div id="dex-booking-mode-badge" style="font-size:11px;opacity:.85;">',
+      uiMode === 'lis' ? 'LIS · 2 dates · 20:00' : 'price matrix',
+      '</div>',
       '</div>'
     ].join('');
 
-    var form = [
-      '<div style="margin-top:10px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">',
+    var lisPanel = [
+      '<div id="dex-booking-lis-panel" style="margin-top:10px;' + (uiMode === 'lis' ? '' : 'display:none;') + '">',
+      '<div style="font-size:12px;line-height:1.45;opacity:.95;">',
+      'Аэропорт LIS · две пары дат · 20:00–20:00',
+      '</div>',
+      '<div id="dex-booking-lis-progress" style="margin-top:8px;font-size:12px;font-weight:600;line-height:1.4;">Готов к запуску</div>',
+      '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">',
+      '<button id="dex-booking-lis-scan" type="button" style="flex:1;background:#fff;color:#0a66c2;border:none;padding:8px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;">Запустить LIS</button>',
+      '<button id="dex-booking-stop" type="button" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:8px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:none;">Stop</button>',
+      '</div>',
+      '<details style="margin-top:8px;font-size:11px;opacity:.9;">',
+      '<summary style="cursor:pointer;">Другой режим: матрица дат (±N)</summary>',
+      '<div style="margin-top:6px;font-size:11px;opacity:.85;">Переключит панель на скан смещений drop-off.</div>',
+      '<button id="dex-booking-switch-matrix" type="button" style="margin-top:6px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Открыть матрицу</button>',
+      '</details>',
+      '</div>'
+    ].join('');
+
+    var matrixPanel = [
+      '<div id="dex-booking-matrix-panel" style="margin-top:10px;' + (uiMode === 'matrix' ? '' : 'display:none;') + '">',
+      '<div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">',
       '<label style="font-size:12px;opacity:.95;">N (drop-off ±days)</label>',
       '<input id="dex-booking-n" type="number" min="0" max="' + MAX_OFFSET_DAYS + '" style="width:88px;padding:6px 8px;border-radius:6px;border:none;outline:none;color:#000;" value="' + (initial && initial.N != null ? initial.N : DEFAULT_N) + '"/>',
       '<button id="dex-booking-start" type="button" style="background:#fff;color:#0a66c2;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;">Start</button>',
-      '<button id="dex-booking-stop" type="button" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:none;">Stop</button>',
-      '</div>'
-    ].join('');
-
-    var catMode = [
+      '<button id="dex-booking-matrix-stop" type="button" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:none;">Stop</button>',
+      '</div>',
       '<div style="margin-top:8px;font-size:12px;opacity:.95;">',
       '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">',
       '<input id="dex-booking-cat-scan" type="checkbox" ' +
@@ -562,24 +642,92 @@
         ' style="accent-color:#0a66c2;"/>',
       'Scan car categories on page',
       '</label>',
+      '</div>',
+      '<div style="margin-top:8px;">',
+      '<button id="dex-booking-lis-from-matrix" type="button" style="width:100%;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px;">LIS 2× dates (20:00)</button>',
+      '</div>',
+      '<button id="dex-booking-switch-lis" type="button" style="margin-top:6px;background:transparent;color:rgba(255,255,255,.85);border:none;padding:0;cursor:pointer;font-size:11px;text-decoration:underline;">← режим LIS</button>',
       '</div>'
     ].join('');
 
     var status = [
       '<div style="margin-top:10px;font-size:12px;opacity:.95;" id="dex-booking-status">Idle.</div>',
-      '<div style="margin-top:8px;font-size:11px;opacity:.9;white-space:pre-wrap;max-height:160px;overflow:auto;" id="' + UI_LOG_ID + '"></div>'
+      '<div style="margin-top:8px;font-size:11px;opacity:.9;white-space:pre-wrap;max-height:120px;overflow:auto;display:' + (DEBUG ? 'block' : 'none') + ';" id="' + UI_LOG_ID + '"></div>'
     ].join('');
 
-    root.innerHTML = topRow + form + catMode + status;
-
-    var stopBtn = root.querySelector('#dex-booking-stop');
-    var startBtn = root.querySelector('#dex-booking-start');
+    root.innerHTML = topRow + lisPanel + matrixPanel + status;
 
     return {
       root: root,
-      startBtn: startBtn,
-      stopBtn: stopBtn
+      startBtn: root.querySelector('#dex-booking-start'),
+      stopBtn: root.querySelector('#dex-booking-stop') || root.querySelector('#dex-booking-matrix-stop'),
+      lisScanBtn: root.querySelector('#dex-booking-lis-scan')
     };
+  }
+
+  function wireUiEvents(ui) {
+    if (!ui || ui._wired) return;
+    ui._wired = true;
+    var lisFromMatrix = document.getElementById('dex-booking-lis-from-matrix');
+    if (lisFromMatrix) {
+      lisFromMatrix.addEventListener('click', function () {
+        startLisAirportListScan();
+      });
+    }
+    if (ui.lisScanBtn) {
+      ui.lisScanBtn.addEventListener('click', async function () {
+        var state = await storageGet();
+        if (state && state.status === 'stopped' && state.mode === 'lis-list') {
+          state.stopRequested = false;
+          state.status = 'capturing';
+          state.startedAt = nowIso();
+          await storageSet(state);
+          setUiMode('lis');
+          setTimeout(runLisListScanLoop, 500);
+          return;
+        }
+        startLisAirportListScan();
+      });
+    }
+    var switchMatrix = document.getElementById('dex-booking-switch-matrix');
+    if (switchMatrix) {
+      switchMatrix.addEventListener('click', function () { setUiMode('matrix'); });
+    }
+    var switchLis = document.getElementById('dex-booking-switch-lis');
+    if (switchLis) {
+      switchLis.addEventListener('click', function () { setUiMode('lis'); });
+    }
+    if (ui.startBtn) {
+      ui.startBtn.addEventListener('click', async function () {
+        setUiMode('matrix');
+        var state = await storageGet();
+        if (state && state.status === 'stopped' && state.mode !== 'lis-list') {
+          state.stopRequested = false;
+          state.status = 'capturing';
+          state.startedAt = nowIso();
+          await storageSet(state);
+          setTimeout(runCaptureLoop, 500);
+          return;
+        }
+        var nEl = document.getElementById('dex-booking-n');
+        var catScanEl = document.getElementById('dex-booking-cat-scan');
+        startCaptureFromUI({
+          nDays: nEl ? nEl.value : DEFAULT_N,
+          catScan: catScanEl ? !!catScanEl.checked : true
+        });
+      });
+    }
+    var stopBtns = document.querySelectorAll('#dex-booking-stop, #dex-booking-matrix-stop');
+    for (var si = 0; si < stopBtns.length; si++) {
+      stopBtns[si].addEventListener('click', async function () {
+        var state = await storageGet();
+        if (!state) return;
+        state.stopRequested = true;
+        state.status = 'capturing';
+        await storageSet(state);
+        setStatus('Stop requested. Will stop after current step.');
+      });
+    }
   }
 
   function setStatus(html) {
@@ -882,6 +1030,627 @@
     return addDaysToISODate(baseDropoffISO, offset);
   }
 
+  var LIS_AIRPORT = {
+    iata: 'LIS',
+    name: 'Lisbon Humberto Delgado Airport'
+  };
+  var LIS_PICKUP_HOUR = 20;
+  var LIS_DROPOFF_HOUR = 20;
+
+  function localTodayISO() {
+    var now = new Date();
+    var yyyy = now.getFullYear();
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(now.getDate()).padStart(2, '0');
+    return yyyy + '-' + mm + '-' + dd;
+  }
+
+  function getLisScanDatePairs() {
+    var today = localTodayISO();
+    var tomorrow = addDaysToISODate(today, 1);
+    var dayAfter = addDaysToISODate(today, 2);
+    return [
+      { label: 'today-tomorrow', pickupISO: today, dropoffISO: tomorrow },
+      { label: 'tomorrow-dayafter', pickupISO: tomorrow, dropoffISO: dayAfter }
+    ];
+  }
+
+  function isoToBookingUrlParts(iso) {
+    var m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return null;
+    return {
+      year: m[1],
+      month: String(parseInt(m[2], 10)),
+      day: String(parseInt(m[3], 10))
+    };
+  }
+
+  function isBookingCarsHost() {
+    try {
+      var h = String(window.location.hostname || '').toLowerCase();
+      var p = String(window.location.pathname || '').toLowerCase();
+      if (h === 'cars.booking.com') return true;
+      if (h.indexOf('booking.com') !== -1 && p.indexOf('/cars') !== -1) return true;
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function buildLisAirportSearchUrl(pair) {
+    var pu = isoToBookingUrlParts(pair.pickupISO);
+    var dO = isoToBookingUrlParts(pair.dropoffISO);
+    if (!pu || !dO) return 'https://cars.booking.com/search-results';
+    var locName = encodeURIComponent(LIS_AIRPORT.name);
+    var q = [
+      'locationIata=' + LIS_AIRPORT.iata,
+      'dropLocationIata=' + LIS_AIRPORT.iata,
+      'locationName=' + locName,
+      'dropLocationName=' + locName,
+      'puYear=' + pu.year,
+      'puMonth=' + pu.month,
+      'puDay=' + pu.day,
+      'puHour=' + LIS_PICKUP_HOUR,
+      'puMinute=0',
+      'doYear=' + dO.year,
+      'doMonth=' + dO.month,
+      'doDay=' + dO.day,
+      'doHour=' + LIS_DROPOFF_HOUR,
+      'doMinute=0',
+      'driversAge=30',
+      'preflang=en'
+    ];
+    return 'https://cars.booking.com/search-results?' + q.join('&');
+  }
+
+  function buildLisListFilename() {
+    var dt = new Date();
+    var yyyy = dt.getFullYear();
+    var mm = String(dt.getMonth() + 1).padStart(2, '0');
+    var dd = String(dt.getDate()).padStart(2, '0');
+    return 'dex-booking-cars-lis-list-' + yyyy + '-' + mm + '-' + dd + '.json';
+  }
+
+  function buildLisListPayload(state, meta) {
+    var searches = state && state.searches ? state.searches : [];
+    var totalVehicles = 0;
+    for (var i = 0; i < searches.length; i++) {
+      totalVehicles += searches[i] && searches[i].vehicles ? searches[i].vehicles.length : 0;
+    }
+    return {
+      source: {
+        mode: 'lis-list',
+        airport: LIS_AIRPORT,
+        timeWindow: { pickup: '20:00', dropoff: '20:00' },
+        exportedAt: nowIso(),
+        snapshotType: meta && meta.snapshotType ? meta.snapshotType : 'final'
+      },
+      datePairs: state && state.pairs ? state.pairs : getLisScanDatePairs(),
+      searches: searches,
+      totalVehicles: totalVehicles
+    };
+  }
+
+  function persistLisPartialSnapshot(state) {
+    try {
+      var payload = buildLisListPayload(state, { snapshotType: 'partial' });
+      var filename = buildLisListFilename().replace(/\.json$/i, '-partial.json');
+      sendPayloadToSave(filename, payload);
+    } catch (e) {
+      log('[Dex Booking] LIS partial save failed:', e && e.message ? e.message : String(e));
+    }
+  }
+
+  function exportLisListResults(state) {
+    var payload = buildLisListPayload(state, { snapshotType: 'final' });
+    sendPayloadToSave(buildLisListFilename(), payload);
+  }
+
+  function parseAvailableCountFromPage() {
+    try {
+      var t = (document.body && document.body.innerText) ? document.body.innerText : '';
+      var m = t.match(/(\d{1,4})\s+cars\s+available/i);
+      return m ? parseInt(m[1], 10) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function countViewDealButtons(root) {
+    root = root || document;
+    var n = 0;
+    var nodes = root.querySelectorAll('a, button');
+    for (var i = 0; i < nodes.length; i++) {
+      if (!isElementVisible(nodes[i])) continue;
+      var label = ((nodes[i].innerText || '') + ' ' + (nodes[i].getAttribute('aria-label') || '')).trim();
+      if (/view deal|see deal|select car|choose|book now/i.test(label)) n++;
+    }
+    return n;
+  }
+
+  function isFilterSidebarElement(el) {
+    if (!el) return false;
+    if (el.closest && el.closest('#' + UI_ID)) return true;
+    var tag = (el.tagName || '').toLowerCase();
+    if (tag === 'aside' || tag === 'nav' || tag === 'header' || tag === 'form') return true;
+    var cls = (el.className && typeof el.className === 'string') ? el.className.toLowerCase() : '';
+    if (/filter|sidebar|search-form|searchbox|facets|search-bar|modify-search/i.test(cls)) return true;
+    var role = el.getAttribute && el.getAttribute('role');
+    if (role === 'search' || role === 'navigation' || role === 'banner') return true;
+    var testId = (el.getAttribute && el.getAttribute('data-testid')) || '';
+    if (/filter|search-form|modify/i.test(testId)) return true;
+    return false;
+  }
+
+  function isNonVehicleChrome(text, root) {
+    text = String(text || '');
+    var lower = text.toLowerCase();
+    if (/pick-up location|pick-up date|drop-off date|driver age|sort by|filter by|modify search/i.test(lower)) return true;
+    if ((lower.match(/\b00:\d{2}\b/g) || []).length >= 6) return true;
+    if (text.length > 1200 && lower.indexOf('view deal') === -1 && lower.indexOf('see deal') === -1) return true;
+    if (root && isFilterSidebarElement(root)) return true;
+    return false;
+  }
+
+  function getResultsListContainer() {
+    var main = document.querySelector('main');
+    if (main && countViewDealButtons(main) >= 2 && !isFilterSidebarElement(main)) return main;
+
+    var nodes = document.querySelectorAll('section, div, main, [role="main"]');
+    var best = null;
+    var bestScore = 0;
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!isElementVisible(el)) continue;
+      if (isFilterSidebarElement(el)) continue;
+      if (el.closest && el.closest('#' + UI_ID)) continue;
+      var deals = countViewDealButtons(el);
+      if (deals < 2) continue;
+      var t = (el.innerText || '').slice(0, 800).toLowerCase();
+      var score = deals * 10;
+      if (/\d+\s+cars\s+available/.test(t)) score += 50;
+      if (/view deal/.test(t)) score += 5;
+      if (/pick-up location/.test(t) && deals < 4) score -= 40;
+      if (score > bestScore) {
+        bestScore = score;
+        best = el;
+      }
+    }
+    if (best) return best;
+
+    if (main) return main;
+    return document.body;
+  }
+
+  function findMinimalVehicleCardFromButton(btn, container) {
+    var best = null;
+    var bestLen = Infinity;
+    var p = btn;
+    for (var up = 0; up < 10 && p; up++) {
+      if (p === document.body) break;
+      if (container && !container.contains(p)) break;
+      if (isFilterSidebarElement(p)) {
+        p = p.parentElement;
+        continue;
+      }
+      var t = (p.innerText || '').trim();
+      if (t.length < 20 || t.length > 900) {
+        p = p.parentElement;
+        continue;
+      }
+      if (isNonVehicleChrome(t, p)) {
+        p = p.parentElement;
+        continue;
+      }
+      var money = extractMoneyFromText(t);
+      var hasPositive = false;
+      for (var mi = 0; mi < money.length; mi++) {
+        if (money[mi].value > 0) { hasPositive = true; break; }
+      }
+      if (!hasPositive) {
+        p = p.parentElement;
+        continue;
+      }
+      if (t.length < bestLen) {
+        best = p;
+        bestLen = t.length;
+      }
+      if (t.length <= 450) break;
+      p = p.parentElement;
+    }
+    return best;
+  }
+
+  function extractVehiclesFromResultsArea(container) {
+    container = container || getResultsListContainer();
+    var scope = container || document;
+    var out = [];
+    var fpSet = {};
+    var dealNodes = scope.querySelectorAll('a, button');
+    for (var d = 0; d < dealNodes.length; d++) {
+      var btn = dealNodes[d];
+      if (!isElementVisible(btn)) continue;
+      if (isFilterSidebarElement(btn)) continue;
+      var label = ((btn.innerText || '') + ' ' + (btn.getAttribute('aria-label') || '')).trim();
+      if (!/(view deal|see deal|select car|choose|book now)/i.test(label)) continue;
+      var root = findMinimalVehicleCardFromButton(btn, container);
+      if (!root) continue;
+      var text = (root.innerText || '').trim();
+      if (isNonVehicleChrome(text, root)) continue;
+      var priceObj = pickBestPriceFromCardText(text);
+      if (priceObj.price == null || isNaN(priceObj.price) || priceObj.price <= 0) continue;
+      var name = extractVehicleNameFromCard(root, text);
+      if (!name || /^(filter|pick-up|drop-off|sort by|price)$/i.test(name)) continue;
+      if (/pick-up location|drop-off date/i.test(name)) continue;
+      var supplier = extractSupplierFromCard(text);
+      var fp = name + '|' + priceObj.price + '|' + (supplier || '');
+      if (fpSet[fp]) continue;
+      fpSet[fp] = true;
+      out.push({
+        index: out.length,
+        name: name,
+        price: priceObj.price,
+        currency: priceObj.currency,
+        priceRaw: priceObj.raw,
+        supplier: supplier,
+        rentalTerm: buildRentalTermLabel(null, null),
+        snippet: text.slice(0, 600)
+      });
+    }
+    return out;
+  }
+
+  async function collectAllVehicleListingsIncremental(onProgress) {
+    var container = getResultsListContainer();
+    var fpSet = {};
+    var out = [];
+    var available = parseAvailableCountFromPage();
+
+    function mergeBatch(batch) {
+      for (var i = 0; i < batch.length; i++) {
+        var v = batch[i];
+        if (!v || v.price == null || v.price <= 0) continue;
+        var fp = v.name + '|' + v.price + '|' + (v.supplier || '');
+        if (fpSet[fp]) continue;
+        fpSet[fp] = true;
+        v.index = out.length;
+        out.push(v);
+      }
+      if (typeof onProgress === 'function') onProgress(out.length, available);
+    }
+
+    function scrollStep() {
+      if (container && container !== document.body && container.scrollHeight > container.clientHeight + 80) {
+        container.scrollTop = Math.min(
+          container.scrollHeight,
+          container.scrollTop + Math.max(500, Math.floor(container.clientHeight * 0.9))
+        );
+      } else {
+        try { window.scrollBy(0, Math.max(500, Math.floor(window.innerHeight * 0.9))); } catch (e) {}
+      }
+    }
+
+    mergeBatch(extractVehiclesFromResultsArea(container));
+    var stagnant = 0;
+    var prev = out.length;
+    for (var r = 0; r < 55; r++) {
+      scrollStep();
+      await sleep(700);
+      mergeBatch(extractVehiclesFromResultsArea(container));
+      if (out.length <= prev) stagnant++;
+      else stagnant = 0;
+      prev = out.length;
+      if (available && out.length >= available) break;
+      if (stagnant >= 5) break;
+    }
+    try {
+      if (container && container.scrollTop != null) container.scrollTop = 0;
+      window.scrollTo(0, 0);
+    } catch (e2) {}
+    await sleep(300);
+    mergeBatch(extractVehiclesFromResultsArea(container));
+    return { vehicles: out, availableOnPage: available };
+  }
+
+  function findVehicleCardRoots() {
+    var container = getResultsListContainer();
+    var roots = [];
+    var seen = [];
+    var dealNodes = (container || document).querySelectorAll('a, button');
+    for (var d = 0; d < dealNodes.length; d++) {
+      var btn = dealNodes[d];
+      if (!isElementVisible(btn) || isFilterSidebarElement(btn)) continue;
+      var label = ((btn.innerText || '') + ' ' + (btn.getAttribute('aria-label') || '')).trim();
+      if (!/(view deal|see deal|select car|choose|book now)/i.test(label)) continue;
+      var root = findMinimalVehicleCardFromButton(btn, container);
+      if (!root || seen.indexOf(root) !== -1) continue;
+      seen.push(root);
+      roots.push(root);
+    }
+    return roots;
+  }
+
+  function pickBestPriceFromCardText(text) {
+    var moneyAll = extractMoneyFromText(text);
+    if (!moneyAll.length) return { price: null, currency: null, raw: null };
+    var lower = String(text || '').toLowerCase();
+    var best = null;
+    for (var i = 0; i < moneyAll.length; i++) {
+      if (moneyAll[i].value <= 0) continue;
+      var raw = moneyAll[i].raw;
+      var idx = lower.indexOf(String(raw).toLowerCase());
+      var snippet = idx >= 0 ? lower.slice(Math.max(0, idx - 50), idx + 60) : '';
+      var isTotal = snippet.indexOf('total') !== -1 || snippet.indexOf('for the') !== -1;
+      if (!best) best = moneyAll[i];
+      else if (isTotal && moneyAll[i].value < best.value) best = moneyAll[i];
+      else if (!isTotal && moneyAll[i].value < best.value && best.value > moneyAll[i].value * 1.5) best = moneyAll[i];
+    }
+    if (!best) return { price: null, currency: null, raw: null };
+    return { price: best.value, currency: best.currency, raw: best.raw };
+  }
+
+  function extractVehicleNameFromCard(root, text) {
+    var headings = root.querySelectorAll('h1, h2, h3, h4, strong, [class*="title" i], [class*="name" i]');
+    for (var i = 0; i < headings.length; i++) {
+      var ht = (headings[i].textContent || '').trim();
+      if (ht.length >= 3 && ht.length <= 120 && !/^(total|price|filter|€|£|\$)/i.test(ht)) return ht;
+    }
+    var lines = String(text || '').split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+    for (var j = 0; j < lines.length; j++) {
+      if (lines[j].length >= 3 && lines[j].length <= 120 && !/^(total|from|price|filter|pick-up|drop-off)/i.test(lines[j])) {
+        if (!extractMoneyFromText(lines[j]).length) return lines[j];
+      }
+    }
+    return lines[0] || 'unknown';
+  }
+
+  function extractSupplierFromCard(text) {
+    var m = String(text || '').match(/(?:supplier|provided by|rented from)\s*[:\-]?\s*([^\n]{2,40})/i);
+    if (m) return m[1].trim();
+    var lines = String(text || '').split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+    for (var i = lines.length - 1; i >= 0; i--) {
+      if (/^(avis|europcar|sixt|hertz|budget|enterprise|goldcar|localiza|green motion|alamo|national|dollar|thrifty)/i.test(lines[i])) return lines[i];
+    }
+    return null;
+  }
+
+  function extractAllVehicleListings() {
+    return extractVehiclesFromResultsArea(getResultsListContainer());
+  }
+
+  async function scrollResultsListToBottom(maxRounds) {
+    maxRounds = maxRounds || 12;
+    var container = getResultsListContainer();
+    var prevCount = 0;
+    for (var r = 0; r < maxRounds; r++) {
+      if (container && container.scrollHeight > container.clientHeight + 80) {
+        container.scrollTop = container.scrollHeight;
+      } else {
+        try { window.scrollTo(0, document.body.scrollHeight); } catch (e) {}
+      }
+      await sleep(900);
+      var count = countViewDealButtons(container);
+      if (count <= prevCount && r > 2) break;
+      prevCount = count;
+    }
+    try {
+      if (container && container.scrollTop != null) container.scrollTop = 0;
+      window.scrollTo(0, 0);
+    } catch (e2) {}
+    await sleep(400);
+  }
+
+  function isBookingSearchLoading() {
+    try {
+      var t = ((document.body && document.body.innerText) ? document.body.innerText : '').toLowerCase();
+      if (t.indexOf('searching our best deals') !== -1) return true;
+      if (t.indexOf('searching hundreds') !== -1) return true;
+      if (t.indexOf('finding the best') !== -1 && countViewDealButtons(getResultsListContainer()) === 0) return true;
+      if (t.indexOf('just a moment') !== -1 && countViewDealButtons(getResultsListContainer()) === 0) return true;
+      var busy = document.querySelector('[aria-busy="true"]');
+      if (busy && isElementVisible(busy) && countViewDealButtons(getResultsListContainer()) === 0) return true;
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function waitForSearchResultsReady(msTotal) {
+    msTotal = msTotal || 90000;
+    var start = Date.now();
+    while (Date.now() - start < msTotal) {
+      await sleep(1000);
+      if (isBookingSearchLoading()) {
+        setStatus('Booking loading… waiting for car list');
+        continue;
+      }
+      var cardCount = countViewDealButtons(getResultsListContainer());
+      if (cardCount >= 1) return true;
+      if (hasResultsSignals()) {
+        await sleep(1500);
+        if (countViewDealButtons(getResultsListContainer()) >= 1) return true;
+        var p = extractPriceHeuristics();
+        if (p && typeof p.price === 'number' && !isNaN(p.price)) return true;
+      }
+      if (isBookingCarsIndexPage()) {
+        var t = ((document.body && document.body.innerText) ? document.body.innerText : '').toLowerCase();
+        if (t.indexOf('searching') !== -1) continue;
+      }
+    }
+    return false;
+  }
+
+  async function startLisAirportListScan() {
+    var pairs = getLisScanDatePairs();
+    var state = {
+      status: 'capturing',
+      mode: 'lis-list',
+      startedAt: nowIso(),
+      airport: LIS_AIRPORT,
+      timeWindow: { pickupHour: LIS_PICKUP_HOUR, dropoffHour: LIS_DROPOFF_HOUR },
+      pairs: pairs,
+      pairIndex: 0,
+      searches: [],
+      warnings: [],
+      stopRequested: false
+    };
+    await storageSet(state);
+    ensureOverlayVisible();
+    setUiMode('lis');
+    updateLisOverlay(state, { status: 'Запуск LIS…' });
+    var firstUrl = buildLisAirportSearchUrl(pairs[0]);
+    flowLog('info', 'lis-scan', { event: 'start', pairs: pairs, firstUrl: firstUrl, currentHref: window.location.href });
+
+    if (!isBookingCarsHost()) {
+      flowLog('warn', 'lis-scan', { event: 'redirect-away-from-stays', to: firstUrl });
+      setStatus('Not on Car rental — redirecting to LIS search…');
+      window.location.href = firstUrl;
+      return;
+    }
+
+    var currentBase = window.location.href.split('#')[0];
+    var targetBase = firstUrl.split('#')[0];
+    if (currentBase !== targetBase) {
+      window.location.href = firstUrl;
+      return;
+    }
+    setTimeout(runLisListScanLoop, 600);
+  }
+
+  async function runLisListScanLoop() {
+    flowLog('log', 'lis-scan', { event: 'loop-start', href: window.location.href });
+    ensureCookieConsentDismissed();
+
+    if (!isBookingCarsHost()) {
+      var pairsFix = getLisScanDatePairs();
+      var fixUrl = buildLisAirportSearchUrl(pairsFix[0]);
+      flowLog('warn', 'lis-scan', { event: 'loop-redirect-stays', to: fixUrl });
+      setStatus('Redirecting to Car rental (LIS)…');
+      window.location.href = fixUrl;
+      return;
+    }
+
+    var state = await storageGet();
+    if (!state || state.mode !== 'lis-list') return;
+    ensureOverlayVisible();
+    setUiMode('lis');
+    updateLisOverlay(state);
+    if (!state.status || state.status !== 'capturing') {
+      setStatus('Idle.');
+      return;
+    }
+
+    if (state.stopRequested) {
+      state.status = 'stopped';
+      await storageSet(state);
+      setStatus('Остановлено. Нажми «Запустить LIS» для повтора.');
+      return;
+    }
+
+    var pairs = state.pairs || getLisScanDatePairs();
+    var pairIndex = typeof state.pairIndex === 'number' ? state.pairIndex : 0;
+    if (pairIndex >= pairs.length) {
+      state.status = 'done';
+      await storageSet(state);
+      exportLisListResults(state);
+      await storageClear();
+      updateLisOverlay(state);
+      setStatus('Готово. JSON сохранён.');
+      return;
+    }
+
+    var pair = pairs[pairIndex];
+    updateLisOverlay(state, {
+      status: 'LIS ' + (pairIndex + 1) + '/' + pairs.length + ': ' + pair.pickupISO + ' → ' + pair.dropoffISO
+    });
+
+    if (isBookingCarsIndexPage()) {
+      var clickedSearch = await clickSearchButton();
+      if (!clickedSearch) {
+        state.status = 'stopped';
+        state.stopRequested = true;
+        state.error = { message: 'Could not click Search on Booking index page' };
+        await storageSet(state);
+        setStatus('Stopped: Search button not found.');
+        return;
+      }
+    }
+
+    setStatus('Waiting for Booking results (loading page)…');
+    var ready = await waitForSearchResultsReady(120000);
+    if (!ready) {
+      state.status = 'stopped';
+      state.stopRequested = true;
+      state.warnings = state.warnings || [];
+      state.warnings.push('Timeout waiting for results: ' + pair.label);
+      state.error = { message: 'Timeout after Search — no vehicle list rendered' };
+      await storageSet(state);
+      persistLisPartialSnapshot(state);
+      setStatus('Stopped: loading finished but no car list. Press Resume or retry.');
+      return;
+    }
+
+    setStatus('Прокрутка списка и сбор карточек…');
+    var collected = await collectAllVehicleListingsIncremental(function (n, avail) {
+      updateLisOverlay(state, {
+        scrapedCount: n,
+        availableCount: avail,
+        status: 'Сбор… ' + n + (avail ? ' / ~' + avail : '')
+      });
+    });
+    var vehicles = collected.vehicles || [];
+    var availableOnPage = collected.availableOnPage;
+    var rentalTerm = buildRentalTermLabel(pair.pickupISO, pair.dropoffISO);
+    for (var vi = 0; vi < vehicles.length; vi++) {
+      vehicles[vi].rentalTerm = rentalTerm;
+    }
+    flowLog('info', 'lis-scan', {
+      event: 'scraped',
+      pair: pair.label,
+      count: vehicles.length,
+      availableOnPage: availableOnPage
+    });
+    updateLisOverlay(state, {
+      scrapedCount: vehicles.length,
+      availableCount: availableOnPage,
+      status: 'Собрано ' + vehicles.length + (availableOnPage ? ' из ~' + availableOnPage : '') + ' · пара ' + (pairIndex + 1) + '/' + pairs.length
+    });
+
+    state.searches = state.searches || [];
+    state.searches.push({
+      pairLabel: pair.label,
+      pickupISO: pair.pickupISO,
+      dropoffISO: pair.dropoffISO,
+      pickupTime: '20:00',
+      dropoffTime: '20:00',
+      url: window.location.href,
+      scrapedAt: nowIso(),
+      vehicleCount: vehicles.length,
+      availableOnPage: availableOnPage,
+      vehicles: vehicles
+    });
+
+    state.pairIndex = pairIndex + 1;
+    await storageSet(state);
+    persistLisPartialSnapshot(state);
+
+    if (state.pairIndex >= pairs.length) {
+      state.status = 'done';
+      await storageSet(state);
+      exportLisListResults(state);
+      await storageClear();
+      updateLisOverlay(state);
+      var total = 0;
+      for (var ti = 0; ti < state.searches.length; ti++) total += state.searches[ti].vehicleCount || 0;
+      setStatus('Готово. Всего ' + total + ' машин · JSON сохранён.');
+      return;
+    }
+
+    var nextUrl = buildLisAirportSearchUrl(pairs[state.pairIndex]);
+    setStatus('Next pair… navigating');
+    window.location.href = nextUrl;
+  }
+
   function categoryMatchesLabel(label, candidateText) {
     if (!label) return false;
     if (!candidateText) return false;
@@ -956,17 +1725,7 @@
   }
 
   async function waitForResultsAfterSearch(msTotal) {
-    msTotal = msTotal || 45000;
-    var start = Date.now();
-    while (Date.now() - start < msTotal) {
-      await sleep(1000);
-      if (!isBookingCarsIndexPage()) return true;
-      if (hasResultsSignals()) {
-        var p = extractPriceHeuristics();
-        if (p && typeof p.price === 'number' && !isNaN(p.price)) return true;
-      }
-    }
-    return false;
+    return waitForSearchResultsReady(msTotal || 45000);
   }
 
   function buildRentalTermLabel(pickupISO, dropoffISO) {
@@ -1108,8 +1867,9 @@
 
   function isBookingCarsIndexPage() {
     try {
-      var p = String(window.location.pathname || '');
-      // Example: /cars/index.html
+      var h = String(window.location.hostname || '').toLowerCase();
+      var p = String(window.location.pathname || '').toLowerCase();
+      if (h === 'cars.booking.com' && p.indexOf('search-results') === -1) return true;
       return p.indexOf('cars/index') !== -1 || p.indexOf('/cars/index.html') !== -1 || p.endsWith('index.html');
     } catch (e) {
       return false;
@@ -1477,6 +2237,10 @@
   }
 
   function startCaptureFromUI(opts) {
+    if (opts && opts.mode === 'lis-list') {
+      startLisAirportListScan();
+      return;
+    }
     var n = parseInt(opts && opts.nDays, 10);
     if (isNaN(n) || n < 0) n = DEFAULT_N;
     if (n > MAX_OFFSET_DAYS) n = MAX_OFFSET_DAYS;
@@ -1514,80 +2278,89 @@
   try {
     window.__DEX_BOOKING_AUTOMATION = {
       start: function (opts) {
-        startCaptureFromUI(opts || {});
+        opts = opts || {};
+        if (opts.mode === 'lis-list') {
+          startLisAirportListScan();
+          return;
+        }
+        startCaptureFromUI(opts);
+      },
+      startLisListScan: function () {
+        startLisAirportListScan();
       }
     };
   } catch (e) {}
 
   async function init() {
-    // Inject UI
+    var autoParams = extractAutoStartParams();
     var existing = document.getElementById(UI_ID);
     if (!existing) {
-      var autoParams = extractAutoStartParams();
-      var ctx = readOrBuildInitialContext();
       var ui = buildUI({
         N: autoParams.nDays != null ? autoParams.nDays : DEFAULT_N,
-        catScan: autoParams.catScan
+        catScan: autoParams.catScan,
+        uiMode: autoParams.lisScan ? 'lis' : 'matrix'
       });
       document.documentElement.appendChild(ui.root);
-      ui.startBtn.addEventListener('click', async function () {
-        var state = await storageGet();
-        if (state && state.status === 'stopped') {
-          state.stopRequested = false;
-          state.status = 'capturing';
-          state.startedAt = nowIso();
-          await storageSet(state);
-          removeUI(); // keep page clean; capture will resume now
-          setTimeout(runCaptureLoop, 500);
-          return;
-        }
-
-        var nEl = document.getElementById('dex-booking-n');
-        var catScanEl = document.getElementById('dex-booking-cat-scan');
-        startCaptureFromUI({
-          nDays: nEl ? nEl.value : DEFAULT_N,
-          catScan: catScanEl ? !!catScanEl.checked : true
-        });
-      });
-      ui.stopBtn.addEventListener('click', async function () {
-        var state = await storageGet();
-        if (!state) return;
-        state.stopRequested = true;
-        state.status = 'capturing';
-        await storageSet(state);
-        setStatus('Stop requested. Will stop after current step.');
-      });
+      wireUiEvents(ui);
+    } else {
+      wireUiEvents({ root: existing });
     }
 
-    // Try to resume capture if state exists
     var state = await storageGet();
     if (state && state.status === 'capturing') {
-      setStatus('Resuming capture...');
-      // Toggle buttons
-      var stopBtn = document.getElementById('dex-booking-stop');
-      if (stopBtn) stopBtn.style.display = 'inline-block';
-      setTimeout(runCaptureLoop, 700);
+      if (state.mode === 'lis-list') {
+        setUiMode('lis');
+        updateLisOverlay(state, { status: 'Продолжаем LIS…' });
+        var stopBtnLis = document.getElementById('dex-booking-stop');
+        if (stopBtnLis) stopBtnLis.style.display = 'inline-block';
+        setTimeout(runLisListScanLoop, 700);
+      } else {
+        setUiMode('matrix');
+        setStatus('Resuming capture...');
+        var stopBtnM = document.getElementById('dex-booking-matrix-stop');
+        if (stopBtnM) stopBtnM.style.display = 'inline-block';
+        setTimeout(runCaptureLoop, 700);
+      }
       return;
     }
 
     var auto = extractAutoStartParams();
+    if (auto.lisScan) {
+      stripDexBookingControlParamsFromUrl();
+      setUiMode('lis');
+      setStatus('Auto-start LIS list scan…');
+      setTimeout(startLisAirportListScan, 1200);
+      return;
+    }
     if (state && state.status === 'stopped') {
-      // Autostart should also resume previously stopped sessions without manual click.
       if (auto.autostart) {
         state.stopRequested = false;
         state.status = 'capturing';
         state.startedAt = nowIso();
         await storageSet(state);
         setStatus('Auto-resume from URL…');
-        setTimeout(runCaptureLoop, 700);
+        if (state.mode === 'lis-list') {
+          setUiMode('lis');
+          setTimeout(runLisListScanLoop, 700);
+        } else {
+          setTimeout(runCaptureLoop, 700);
+        }
         return;
       }
-      var startBtn = document.getElementById('dex-booking-start');
-      if (startBtn) startBtn.textContent = 'Resume';
-      setStatus('Stopped. Press Resume to continue.');
+      if (state.mode === 'lis-list') {
+        setUiMode('lis');
+        var lisBtn = document.getElementById('dex-booking-lis-scan');
+        if (lisBtn) lisBtn.textContent = 'Продолжить LIS';
+        setStatus('Остановлено. Нажми «Продолжить LIS».');
+      } else {
+        var startBtn = document.getElementById('dex-booking-start');
+        if (startBtn) startBtn.textContent = 'Resume';
+        setStatus('Stopped. Press Resume to continue.');
+      }
       return;
     }
 
+    setUiMode(autoParams.lisScan ? 'lis' : 'matrix');
     setStatus('Idle.');
 
     if (auto.autostart) {

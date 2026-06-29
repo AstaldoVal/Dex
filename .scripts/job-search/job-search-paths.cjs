@@ -16,6 +16,10 @@ const JOBS_DIR = path.join(DATA_DIR, 'jobs');
 const COVER_LETTERS_DIR = path.join(JOB_SEARCH_ROOT, 'cover_letters');
 const SUMMARIES_DIR = path.join(JOB_SEARCH_ROOT, 'summaries');
 const TEAL_DIR = path.join(JOB_SEARCH_ROOT, 'teal');
+/** Flow-scoped artifacts (evidence, resume-to-job, cowork-review). Set JOB_SEARCH_TEAL_FLOW_DIR for Full Flow v2. */
+const TEAL_FLOW_DIR = process.env.JOB_SEARCH_TEAL_FLOW_DIR
+  ? path.resolve(process.env.JOB_SEARCH_TEAL_FLOW_DIR)
+  : TEAL_DIR;
 const DEBUG_DIR = path.join(JOB_SEARCH_ROOT, 'debug');
 
 const PROFILE_EXTENSION = path.join(JOB_SEARCH_ROOT, '.playwright-linkedin');
@@ -57,6 +61,7 @@ module.exports = {
   COVER_LETTERS_DIR,
   SUMMARIES_DIR,
   TEAL_DIR,
+  TEAL_FLOW_DIR,
   DEBUG_DIR,
   PROFILE_EXTENSION,
   PROFILE_APP,

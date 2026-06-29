@@ -1,0 +1,57 @@
+---
+description: Job-search Teal / Claude Code review runs — hard timeouts, stall kill, stage timing log
+globs:
+  - .scripts/job-search/**
+  - 00-Inbox/Job_Search/**
+---
+
+# Job-search: не ждать зависшие Teal / Claude Code прогоны
+
+## Лимиты (default 25 min pipeline, 90 s stall)
+
+- `RESUME_PIPELINE_WAIT_MS` / `COWORK_FEEDBACK_TIMEOUT_MS` / `STEP10_*` — **25 min** (env override).
+- `JOB_SEARCH_STALL_MS` — **90 s** без новых строк stdout → kill child + **только его** Chrome profile.
+
+## Параллельные teal-apply
+
+- Каждый процесс получает **свой** `user-data-dir` через `acquireTealProfile()` (pool lock или `teal/.chrome-profile-runs/<hash>`).
+- **Не** использовать `pkill -f .chrome-profile` при параллельных run — убьёт чужие apply.
+- Watchdog: `--run-key <package-id>` + `TEAL_CHROME_PROFILE` в env child.
+
+## Как запускать
+
+- Step 10 apply: `npm run job-search:teal-apply-feedback` (watchdog в npm).
+- Параллельно несколько пакетов:  
+  `node .scripts/job-search/run-job-search-watched.cjs --flow step10 --step 10 --stage apply --run-key adwa --stall-ms 90000 -- node .scripts/job-search/teal-apply-resume-feedback.cjs --package-dir …`
+
+## Лог таймингов (шаги 1–10)
+
+- Файл: `00-Inbox/Job_Search/teal/flow-stage-timing.jsonl` — каждый этап с `limitMs`, `durationMs`, `overLimit`.
+- Сводка: `npm run job-search:flow-timing-report`
+
+## iGaming step 10 hygiene (автоматически)
+
+Для пакетов iGaming (`enrichApplyForStep10`): выключить **Figma** в iGaming & Compliance, один **Curacao** (без дубля Curaçao), буллет Pin-Up **Held → Owned**. См. skill `job-search-igaming-step10` и `node .scripts/job-search/test-igaming-hygiene.cjs`.
+
+## Applied PDF (обязательно)
+
+После **любого** изменения резюме в Teal скрипт должен вызвать `exportAndMirrorAppliedPdf` → канонический путь `~/Documents/Applied/<Company>/<Role>/Roman Matsukatov - CV.pdf` + копия в пакет cowork-review. **Не** использовать `--no-export-pdf` на step 10, кроме отладки. Hygiene-only (`teal-skills-igaming-hygiene-only.cjs`) экспортирует PDF сам.
+
+## При exit 124 / stall / STEP10_GLOBAL_TIMEOUT
+
+1. Не ждать дольше — процесс уже убит (Chrome profile тоже).
+2. Читать jsonl или timing-report — последний `stage` = где застряли.
+3. Чинить причину, перезапускать только зависший этап.
+
+## Shell в Cursor
+
+- `block_until_ms` ≤ лимит этапа + 1 min; при stall watchdog сработает раньше.
+- Не полагаться на ручной kill пользователя.
+
+## Block live (Skills LD и др. блоки)
+
+- `npm run job-search:test-skills-gates-live` → `run-block-live-watched.cjs` + per-gate лимиты в `block-live-gate-budgets.cjs`.
+- Потолок для `block_until_ms`: `npm run job-search:block-live-total-ms` (или `BLOCK_LIVE_SLUG=skills`) + ~2 min запас.
+- Shell **завершается при exit** дочернего процесса; не ставить «45 min» без расчёта.
+- Прогресс: `teal/<reportDir>/progress.json`; опрос `wait-block-live-progress.cjs --slug skills --once`.
+- Часть гейтов: `BLOCK_LIVE_GATES=SK1,SK3`.

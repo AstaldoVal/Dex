@@ -19,14 +19,14 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { isRemoteFromExcludedCountry, isVideoGamingRole, isAutomotiveRole, isHardwareRole, isTelecomRole, requiresSapExperience, requiresHighTravel, requiresRelocation, requiresResidenceInExcludedCountry, requiresNonEnglishLanguage, isBelowMinSalary, looksLikeJobTitle, deriveTitleFromDescription } = require('./job-search-utils.cjs');
 const { updateFlowProgress } = require('./teal-flow-state.cjs');
-const { TEAL_CHROME_PROFILE_BATCH } = require('./job-search-paths.cjs');
+const { TEAL_CHROME_PROFILE_BATCH, TEAL_FLOW_DIR } = require('./job-search-paths.cjs');
 
 const VAULT = process.env.VAULT_PATH || path.resolve(__dirname, '../..');
 const JOBS_DIR = path.join(VAULT, '00-Inbox/Job_Search/data/jobs');
 const TMP_DESC = path.join(VAULT, '00-Inbox/Job_Search/data/tmp-teal-batch-desc.txt');
 const TEAL_DIR = path.join(VAULT, '00-Inbox/Job_Search/teal');
 const PROGRESS_LOG = path.join(TEAL_DIR, 'batch-progress.log');
-const RESUME_TO_JOB_MAP_PATH = path.join(TEAL_DIR, 'resume-to-job.json');
+const RESUME_TO_JOB_MAP_PATH = path.join(TEAL_FLOW_DIR, 'resume-to-job.json');
 const BATCH_JOB_MAX_RETRIES = 2; // 1 initial + 2 retries on crash/fail
 const BATCH_RETRY_DELAY_MS = 8000; // wait before retry so browser can fully close
 
@@ -200,18 +200,23 @@ function main() {
 
   if (fromDigestOnly && digestPath && fs.existsSync(digestPath)) {
     jobs = getJobsFromDigest(digestPath);
-    jobs = jobs.filter((j) => !exclude.some((c) => (j.company || '').toLowerCase().includes(c)));
-    jobs = jobs.filter((j) => !isVideoGamingRole(j.title, j.company, j.job_description || j.description || ''));
-    jobs = jobs.filter((j) => !isAutomotiveRole(j.title, j.company, j.job_description || j.description || ''));
-    jobs = jobs.filter((j) => !isHardwareRole(j.title, j.company, j.job_description || j.description || ''));
-    jobs = jobs.filter((j) => !isTelecomRole(j.title, j.company, j.job_description || j.description || ''));
-    jobs = jobs.filter((j) => !requiresSapExperience(j.title, j.company, j.job_description || j.description || ''));
-    jobs = jobs.filter((j) => !isRemoteFromExcludedCountry(j.title, '', j.job_description || ''));
-    jobs = jobs.filter((j) => !requiresResidenceInExcludedCountry(j.title, '', j.job_description || ''));
-    jobs = jobs.filter((j) => !requiresRelocation(j.title, '', j.job_description || ''));
-    jobs = jobs.filter((j) => !requiresHighTravel(j.title, j.job_description || ''));
-    jobs = jobs.filter((j) => !isBelowMinSalary(j.job_description || ''));
-    jobs = jobs.filter((j) => !requiresNonEnglishLanguage(j.title || '', j.job_description || j.description || ''));
+    const isSingleDigestJob = jobs.length === 1;
+    if (!isSingleDigestJob) {
+      jobs = jobs.filter((j) => !exclude.some((c) => (j.company || '').toLowerCase().includes(c)));
+      jobs = jobs.filter((j) => !isVideoGamingRole(j.title, j.company, j.job_description || j.description || ''));
+      jobs = jobs.filter((j) => !isAutomotiveRole(j.title, j.company, j.job_description || j.description || ''));
+      jobs = jobs.filter((j) => !isHardwareRole(j.title, j.company, j.job_description || j.description || ''));
+      jobs = jobs.filter((j) => !isTelecomRole(j.title, j.company, j.job_description || j.description || ''));
+      jobs = jobs.filter((j) => !requiresSapExperience(j.title, j.company, j.job_description || j.description || ''));
+      jobs = jobs.filter((j) => !isRemoteFromExcludedCountry(j.title, '', j.job_description || ''));
+      jobs = jobs.filter((j) => !requiresResidenceInExcludedCountry(j.title, '', j.job_description || ''));
+      jobs = jobs.filter((j) => !requiresRelocation(j.title, '', j.job_description || ''));
+      jobs = jobs.filter((j) => !requiresHighTravel(j.title, j.job_description || ''));
+      jobs = jobs.filter((j) => !isBelowMinSalary(j.job_description || ''));
+      jobs = jobs.filter((j) => !requiresNonEnglishLanguage(j.title || '', j.job_description || j.description || ''));
+    } else {
+      logProgress('[Teal batch] Single job digest detected: skip strict policy filters for manual run.');
+    }
     logProgress(`[Teal batch] From digest only: ${digestPath} (${jobs.length} jobs)`);
   } else {
     if (!exportPath || !fs.existsSync(exportPath)) {
@@ -264,6 +269,18 @@ function main() {
   const total = jobs.length;
   let startNum = fromIndex + 1;
 
+  const step7EvidencePath = path.join(TEAL_FLOW_DIR, 'step-7-evidence.json');
+  const writeStep7Evidence = (ev) => {
+    try {
+      if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
+      fs.writeFileSync(step7EvidencePath, JSON.stringify({ ...ev, writtenAt: new Date().toISOString() }, null, 2), 'utf8');
+    } catch (_) {}
+  };
+
+  const forceCreate =
+    process.argv.includes('--force-create') ||
+    process.env.TEAL_FORCE_CREATE === '1' ||
+    process.env.TEAL_FORCE_CREATE === 'true';
   const onlyAddedThisRun = process.env.TEAL_ONLY_ADDED_THIS_RUN === '1' || process.env.TEAL_ONLY_ADDED_THIS_RUN === 'true';
   const { addedIds: lastAddedSet } = loadLastAddedJobIds();
   if (onlyAddedThisRun && lastAddedSet) {
@@ -287,14 +304,6 @@ function main() {
       return;
     }
   }
-
-  const step7EvidencePath = path.join(TEAL_DIR, 'step-7-evidence.json');
-  const writeStep7Evidence = (ev) => {
-    try {
-      if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
-      fs.writeFileSync(step7EvidencePath, JSON.stringify({ ...ev, writtenAt: new Date().toISOString() }, null, 2), 'utf8');
-    } catch (_) {}
-  };
 
   logProgress(`[Teal batch] Exclude: ${exclude.join(', ')} | Total: ${total} | Start from: ${startNum}`);
   logProgress(`[Teal batch] Progress log: ${PROGRESS_LOG}`);
@@ -326,7 +335,7 @@ function main() {
     const job = toProcess[i];
     const n = startNum + i;
 
-    if (hasResumeForJobId(job.id, resumeToJobMap)) {
+    if (!forceCreate && hasResumeForJobId(job.id, resumeToJobMap)) {
       skippedList.push({ jobId: job.id, company: job.company, title: job.title, reason: 'resume_exists_for_job' });
       logProgress(`(${n}/${total}) SKIP (resume exists for jobId) ${job.company} | ${job.title}`);
       skippedExisting++;
@@ -338,7 +347,7 @@ function main() {
       }
       continue;
     }
-    if (hasResumeForCompanyTitle(resumeToJobMap, job.company, job.title)) {
+    if (!forceCreate && hasResumeForCompanyTitle(resumeToJobMap, job.company, job.title)) {
       skippedList.push({ jobId: job.id, company: job.company, title: job.title, reason: 'resume_exists_for_company_title' });
       logProgress(`(${n}/${total}) SKIP (resume exists for company+title) ${job.company} | ${job.title}`);
       skippedExisting++;
@@ -350,12 +359,20 @@ function main() {
       }
       continue;
     }
+    if (forceCreate) {
+      logProgress(`(${n}/${total}) FORCE CREATE ${job.company} | ${job.title}`);
+    }
 
     const companyForName = (job.company || '').trim();
     const jobTitle = (companyForName && companyForName !== '—' && !/^—\s*$/.test(companyForName))
       ? `${job.title} — ${companyForName}` : job.title;
     const descFile = path.join(JOBS_DIR, job.id + '.json');
     const args = ['--job-title', jobTitle, '--job-id', String(job.id)];
+    if (forceCreate) args.push('--force-create');
+    const forceJobType = (process.env.TEAL_FORCE_JOB_TYPE || '').trim().toLowerCase();
+    if (forceJobType === 'igaming' || forceJobType === 'ai') {
+      args.push('--force-job-type', forceJobType);
+    }
 
     let descText = (job.job_description || '').trim();
     if (!descText && fs.existsSync(descFile)) {

@@ -59,7 +59,7 @@ COMPANIES_DIR = AREAS_DIR / 'Companies'
 CAREER_DIR = AREAS_DIR / 'Career'
 EVIDENCE_DIR = CAREER_DIR / 'Evidence'
 RESUME_DIR = CAREER_DIR / 'Resume'
-SESSIONS_DIR = RESUME_DIR / 'Sessions'
+SESSIONS_DIR = CAREER_DIR / 'Sessions'
 
 # --- Derived: Resources ---
 INTEL_DIR = RESOURCES_DIR / 'Intel'

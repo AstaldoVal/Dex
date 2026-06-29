@@ -3,15 +3,15 @@
 # Работает в двух режимах:
 # 1) Внутри Dex vault: клоны в 06-Resources/External, BMAD → .claude/skills|commands|config/bmad
 # 2) Отдельный репо: клоны в ./External, BMAD → ./bmad, ./commands/bmad, ./config/bmad
-# Запуск: из корня папки со скиллами — ./update.sh (или из корня vault — ./.claude/skills/pm/update.sh)
+# Запуск: из корня папки со скиллами — ./update.sh (или из корня vault — ./Skills_library/pm/update.sh)
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PM_ROOT="$SCRIPT_DIR"
 
 # Режим: внутри Dex vault или отдельный репозиторий
-POSSIBLE_VAULT="$(cd "$SCRIPT_DIR/../../.." 2>/dev/null && pwd)"
-if [[ -f "${POSSIBLE_VAULT}/CLAUDE.md" ]] && [[ -d "${POSSIBLE_VAULT}/.claude/skills/pm" ]]; then
+POSSIBLE_VAULT="$(cd "$SCRIPT_DIR/../.." 2>/dev/null && pwd)"
+if [[ -f "${POSSIBLE_VAULT}/CLAUDE.md" ]] && [[ -d "${POSSIBLE_VAULT}/Skills_library/pm" ]]; then
   VAULT_ROOT="$POSSIBLE_VAULT"
   EXTERNAL="${VAULT_ROOT}/06-Resources/External"
   STANDALONE=0
@@ -142,15 +142,15 @@ if [[ $STANDALONE -eq 1 ]]; then
     echo "Updated BMAD config -> config/bmad/"
   fi
 else
-  # Dex vault: BMAD в .claude/skills|commands|config/bmad
+  # Dex vault: BMAD в Skills_library/bmad + .claude/commands|config/bmad
   if [[ -d "$BMAD_V6/skills" ]]; then
-    rm -rf "${VAULT_ROOT}/.claude/skills/bmad"
-    mkdir -p "${VAULT_ROOT}/.claude/skills/bmad"
+    rm -rf "${VAULT_ROOT}/Skills_library/bmad"
+    mkdir -p "${VAULT_ROOT}/Skills_library/bmad"
     for sub in "$BMAD_V6/skills"/*/; do
       [[ -d "$sub" ]] || continue
-      cp -R "$sub" "${VAULT_ROOT}/.claude/skills/bmad/"
+      cp -R "$sub" "${VAULT_ROOT}/Skills_library/bmad/"
     done
-    echo "Updated BMAD skills -> .claude/skills/bmad/"
+    echo "Updated BMAD skills -> Skills_library/bmad/"
   fi
   if [[ -d "$BMAD_V6/commands" ]]; then
     rm -rf "${VAULT_ROOT}/.claude/commands/bmad"

@@ -2,6 +2,10 @@
 
 Полный прогон: **URL поиска LinkedIn** → захват → дайджест → фильтр → описания 100% → добавление в Teal → создание резюме → match-score. Порядок: **1 → 2 → 3 → 4 → 5 → 6 → 7 → 8**.
 
+**Тайминг (watchdog):** `npm run job-search:full-flow` → `run-full-flow-watched.cjs`; атомарный лимит на каждый шаг (`full-flow-stage-budgets.cjs`); в логе `[@flow-step] START/END`; прогресс `teal/full-flow-progress.json`; потолок shell: `npm run job-search:full-flow-total-ms`. Завершение по **exit** дочернего процесса, не фиксированному sleep.
+
+**Chrome cleanup eval:** после шагов **1, 4, 6, 7, 8, 10** (где вызывается Chrome) Full Flow и отдельный **`npm run job-search:teal-apply-feedback`** проверяют, что процессов Chrome для automation-профилей Teal не осталось (пул `.chrome-profile*`, dedicated runs, профили из fallback-цепочки launch); при зависших окнах — `pkill` по user-data-dir и повтор проверки. В логе `[@chrome-cleanup] step=N pass=true`; артефакты `00-Inbox/Job_Search/teal/step-N-chrome-cleanup-eval.json` и в пакете вакансии `step-N-chrome-cleanup-eval.json`. Ручная зачистка: `npm run job-search:teal-chrome-cleanup`. При fail full-flow шаг перезапускается (retry `runStep`). Юнит: `npm run job-search:test-chrome-cleanup-eval`.
+
 ---
 
 ## Термины и ключевые файлы
@@ -209,5 +213,34 @@
   `node .scripts/job-search/run-full-linkedin-teal-flow.cjs --from-text-parse-only path/to/job.txt`
 - Без шагов Teal (остановка после шага 5):  
   `... --no-teal`
+- Без Claude Code review/apply (остановка после шага 8):  
+  `... --no-cowork-review` (имя флага историческое)
+- Шаг 9 **по умолчанию — Claude Code CLI** в папке пакета (`claude -p`, без диалогов «Allow file from external app»). `JOB_SEARCH_STEP9_REVIEW=cli` (default). **Legacy Cowork UI** (редко): `JOB_SEARCH_STEP9_REVIEW=cowork` или `--cowork-ui` у `teal-cowork-resume-review.cjs`.
 
-**Файлы состояния и доказательств (все в `00-Inbox/Job_Search/teal/`):** `full-flow-state.json`, `full-flow-state.md`, `full-flow-evidence.json`, `step-6-evidence.json`, `step-7-evidence.json`, `step-8-evidence.json`, `resume-to-job.json`.
+**Файлы состояния и доказательств (все в `00-Inbox/Job_Search/teal/`):** `full-flow-state.json`, `full-flow-evidence.json`, `step-9-eval.json`, `step-10-eval.json`, `cowork-review/<date>_<resumeId>/` (`feedback.json` с **`apply`** = автоматизация, **`deferred_v1`** = только ручное, `step-10-manual-report.md`).
+
+**Лог артефактов для оптимизации скриптов:** после прогона (особенно первого полного 1–10) заводи инвентарь в `00-Inbox/Job_Search/teal/full-flow-artifact-log/` — список всех путей, размеров, статусов шагов и гипотез правок. Эталон: `2026-05-26_kwan_senior-data-product-manager.md`. Глобальные `step-*-evidence.json` перезаписываются следующим прогоном; для разбора старого run опирайся на пакет `cowork-review/` и файл в artifact-log.
+
+## Шаг 9. Resume review (пакет + feedback)
+
+После шага 8: `teal-cowork-resume-review.cjs` собирает пакет (PDF + JD + `review-prompt.md`), пишет `feedback.md` / `feedback.json` (`apply` + `deferred_v1`), `step-9-eval.cjs`. При fail — до 3 раундов.
+
+**Режим по умолчанию:** `JOB_SEARCH_STEP9_REVIEW=cli` — subprocess **`claude -p`** с `cwd` = папка пакета; модель читает `review-prompt.md`, `job-description.md`, PDF из той же папки. Один раз в терминале: `claude --dangerously-skip-permissions` и логин (как для MCP claude-code-mcp).
+
+**Ошибка «You've hit your session limit · resets HH:MM (Europe/Lisbon)»** — это **лимит подписки Anthropic** на использование Claude Code (окно «current session», обычно скользящее ~5 ч на Pro/Max + недельный потолок), а не лимит Dex. Проверка: в интерактивном Claude Code команда **`/usage`** (current session %, current week %, время сброса). После сброса окна — повтор `npm run job-search:full-flow -- --from-step 9 …`. Если лимит «залип» при низком `/usage` — `claude auth logout` && `claude auth login`.
+
+**Команды:**
+
+- Только CLI (шаг 9): `npm run job-search:teal-review-cli -- --resume-id <uuid>` или `--digest <digest.md>`
+- Full-flow уже передаёт `--cli-review-only`, если env не `cowork`
+- Legacy Cowork UI only: `JOB_SEARCH_STEP9_REVIEW=cowork npm run job-search:claude-code-review -- --resume-id <uuid>` (алиас `job-search:cowork-review`)
+
+**Legacy Cowork UI (если включён):** `claude://cowork/new`, AppleScript Approve/Send. Не используется в обычном full-flow с 2026-05.
+
+**Содержимое feedback:** **`apply`** — step 10 в Teal; **`deferred_v1`** — только ручное (новые секции, drag категорий, прочее). В чате после step 10 смотри блок **«Только ручные шаги»** и файл `step-10-manual-report.md`.
+
+## Шаг 10. Apply feedback + manual report
+
+`teal-apply-resume-feedback.cjs` применяет **`feedback.apply`** в Teal (Playwright, видимый Chrome). **`deferred_v1`** не трогает. В конце лога: **«Только ручные шаги»** + `step-10-manual-report.md`. Gate: `step-10-eval.json` (`pass: true` = автоматизация совпала с критериями).
+
+**Что остаётся ручным на первых порах (типично):** несовпадение названия компании/роли в Teal с `company_match` в feedback; перетаскивание категории skills; пункты в `deferred_v1`; отдельные skills, если форма Add Skills в Teal зависла (тогда eval пишет, что skill не найден — дорабатываем скрипт, не вы).

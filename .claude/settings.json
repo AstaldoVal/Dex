@@ -5,6 +5,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node .claude/hooks/session-bootstrap-reminder.cjs"
+          },
+          {
+            "type": "command",
             "command": "bash .claude/hooks/session-start.sh"
           },
           {
@@ -34,6 +38,10 @@
           {
             "type": "command",
             "command": "node .claude/hooks/ensure-mcp-user-scope.cjs"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/local-analytics.cjs"
           }
         ]
       }
@@ -55,6 +63,20 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Ping.aiff"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/local-analytics.cjs"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/deep-work-capture.cjs"
           }
         ]
       }

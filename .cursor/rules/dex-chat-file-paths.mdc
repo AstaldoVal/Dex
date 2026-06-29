@@ -1,0 +1,44 @@
+---
+description: В чате Roman — только полные относительные пути к файлам репозитория; eval блокирует голые имена
+alwaysApply: true
+---
+
+# Пути к файлам в ответах Cursor (Roman)
+
+Дополняет `CLAUDE.md` (USER_EXTENSIONS «Ссылки на файлы в чате»), `.cursor/rules/dex-chat-response-eval.mdc`, `.cursor/rules/dex-cognitive-load-budget.mdc`.
+
+## Обязательно
+
+Когда в ответе **упоминается локальный файл** внутри репозитория DEX (создан, изменён, открыть, прочитать, артефакт шага):
+
+1. Указывать **полный относительный путь от корня репозитория** — как для Cmd+P (например `04-Projects/Foo/RICE_Prioritized_Hypotheses.md`, `.cursor/projects/…/canvases/ruby-labs-metrics-pyramid.canvas.tsx`).
+2. **Запрещено** давать только **имя файла** (basename), если файл лежит **не** в корне репозитория.
+
+**Антипример:** «уже были `RICE_Prioritized_Hypotheses.md` и `State_User_Portraits_and_Testing_Strategy.md`».
+
+**Эталон:** «уже были `04-Projects/…/RICE_Prioritized_Hypotheses.md` и `04-Projects/…/State_User_Portraits_and_Testing_Strategy.md`» (с реальными сегментами пути из репо).
+
+## Исключения (не считается ошибкой)
+
+- Файл **в корне** репозитория: достаточно одного сегмента (`README.md`, `package.json`, `CLAUDE.md`, `AGENTS.md`, `CHANGELOG.md`, `env.example`, `.cursorrules`, `install.sh`).
+- **Вложенный git-проект в vault** (Applicator и др. под `04-Projects/`): для Roman и Paperclip `board-read` — полный путь **от корня Dex**, например `04-Projects/Applicator/docs/product/…`, не только `docs/product/…` от корня Applicator. Канон Applicator: `04-Projects/Applicator/instructions/CURSOR_FILE_PATHS_FOR_ROMAN.md`.
+- **URL** (`https://…`), идентификаторы задач, названия продуктов.
+- **Цитата кода** в формате `startLine:endLine:path/to/file` — путь уже полный.
+- Блок **Session bootstrap** / Karpathy echo в первом сообщении чата.
+- Режим **exempt** eval (`ок`, `ping`, …) — по `dex-chat-response-eval.mdc`.
+
+## Блок Generated files
+
+Если в ответе есть блок `Generated files:` — **каждая** строка списка = полный относительный путь (те же правила).
+
+## Eval (обязательно)
+
+Перед отправкой ответа Roman: `npm run dex:eval-chat-response` (см. `dex-chat-response-eval.mdc`).
+
+Отдельная проверка **`file_refs_full_relative_path`**: при fail ответ **не отправлять**; переписать с полными путями (до 3 попыток). Hook `stop` догоняет тем же eval.
+
+Логика: `.scripts/dex/eval-chat-response-lib.cjs`.
+
+## Слои 1–2
+
+В **вердикте и действиях** по-прежнему **не** открывать ответ путями (`dex-cognitive-load-budget`). Полные пути к файлам — в **деталях**, в блоке `Generated files`, в таблицах артефактов (full-flow) или когда Roman явно просит пути / «разверни».

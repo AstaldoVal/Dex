@@ -52,8 +52,8 @@ description: Break a PRD into tickets and create them in Linear. Optional sync t
 
 ### 4. Создать тикеты в Linear
 
-- Вызвать **Linear MCP:** `linear_list_teams`, при необходимости `linear_list_projects` (чтобы подставить `project_id`) или `linear_create_project` (team_id, name, description) и использовать возвращённый `project_id`.
-- Для каждого элемента списка вызвать `linear_create_my_issue(title=..., description=..., project_id=...)` (если проект выбран). Без проекта — `linear_create_my_issue(title=..., description=...)`.
+- Вызвать **Plugin Linear:** `list_teams`, при необходимости `list_projects` (чтобы подставить `project`) или `save_project` и использовать созданный проект.
+- Для каждого элемента списка вызвать `save_issue(title=..., description=..., team=..., project=...)` (если проект выбран). Без проекта — `save_issue(title=..., description=..., team=...)`.
 - Собрать по каждому созданному issue: `id`, `identifier` (например ENG-42).
 
 Если Linear MCP недоступен — сообщить пользователю: нужен настроенный Linear MCP и `LINEAR_API_KEY` в `.env`; альтернатива — выдать структурированный список тикетов (markdown или JSON) для ручного создания или для скрипта.
@@ -65,7 +65,7 @@ description: Break a PRD into tickets and create them in Linear. Optional sync t
 - Для каждого созданного issue вызвать **Work MCP:** `create_task(title=..., context=description или identifier)` (или эквивалент с минимальным контекстом), получить `task_id`.
 - Сразу вызвать `add_linear_sync_link(task_id=..., linear_identifier=..., linear_id=...)` с данными из шага 4.
 
-В итоге в `03-Tasks/Tasks.md` появятся новые задачи, в `03-Tasks/linear_sync.json` — привязки; при завершении задачи в Dex по правилам CLAUDE.md будет вызываться `linear_set_issue_completed`.
+В итоге в `03-Tasks/Tasks.md` появятся новые задачи, в `03-Tasks/linear_sync.json` — привязки; при завершении задачи в Dex по правилам CLAUDE.md issue переводится в Done через Plugin Linear (`save_issue(..., state="completed")`).
 
 ### 6. Итог
 
@@ -81,7 +81,7 @@ description: Break a PRD into tickets and create them in Linear. Optional sync t
 
 ## Dependencies
 
-- **Linear MCP** — `linear_list_teams`, `linear_list_projects`, `linear_create_project`, `linear_create_my_issue`. См. `.claude/reference/mcp-servers.md` (Linear MCP). Требуется `LINEAR_API_KEY` в `VAULT_PATH/.env`.
+- **Plugin Linear** — `list_teams`, `list_projects`, `save_project`, `save_issue`. См. `.claude/reference/mcp-servers.md` (Linear).
 - **Work MCP** (для опции Dex) — `create_task`, `add_linear_sync_link`. См. CLAUDE.md → Linear sync.
 
 ## Notes

@@ -35,7 +35,7 @@
     "RESOURCES_DIR": "06-Resources",
     "RESUME_DIR": "05-Areas/Career/Resume",
     "RITUAL_INTELLIGENCE_DB_FILE": "System/.dex/ritual-intelligence.db",
-    "SESSIONS_DIR": "05-Areas/Career/Resume/Sessions",
+    "SESSIONS_DIR": "05-Areas/Career/Sessions",
     "SESSION_FILE": "System/.onboarding-session.json",
     "SKILL_RATINGS_FILE": "System/Skill_Ratings/ratings.jsonl",
     "STATE_FILE": "System/.demo-mode-state.json",

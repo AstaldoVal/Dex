@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "resume_id": "608d280d-0f27-4340-968a-19786d23ee3a",
+    "job_title": "AI Innovation Lead",
+    "company": "iGaming Operator",
+    "review_round": 1,
+    "jd_themes": ["ai", "automation", "llm", "igaming", "transformation"]
+  },
+  "apply": {
+    "target_title": { "action": "set", "value": "AI Innovation Lead" },
+    "professional_summary": {
+      "action": "replace",
+      "text": "AI and product leader with 12+ years building automation, LLM workflows, and cross-functional delivery in iGaming and SaaS. I design AI-first operating models that replace manual processes with measurable business impact."
+    },
+    "work_experience": [
+      {
+        "company_match": "Roman",
+        "role_match": "Consultoria",
+        "company_included": true,
+        "role_included": true,
+        "bullets": [
+          {
+            "text_match_prefix": "Designed and deployed AI agents",
+            "included": true
+          }
+        ]
+      }
+    ],
+    "skills_add": ["LLM orchestration", "multi-agent systems", "n8n"],
+    "skills_remove": [],
+    "bullets_add": [
+      {
+        "company_match": "Pin-Up",
+        "role_match": "Compliance",
+        "text": "Led AI automation pilot for compliance evidence collection."
+      }
+    ],
+    "bullets_rewrite": []
+  },
+  "deferred_v1": {
+    "new_sections": ["AI Projects — dedicated section after experience"],
+    "other": [
+      {
+        "category": "structure",
+        "suggestion": "Reorder skill categories: drag Product Management above Analytics in Teal UI.",
+        "reason_deferred": "Teal category drag not automated"
+      }
+    ]
+  }
+}

@@ -116,6 +116,9 @@ Add any personal instructions between these markers. The `/dex-update` process p
 ### Результат: сначала что сделать, не «почему нельзя»
 Канонический источник: `.cursor/rules/action-first-outcomes.mdc`. Здесь сохраняем только напоминание: ответы вести от действий и автоматизации; если нужен только человек (OAuth, секрет), запрашивать одним коротким блоком. См. также `AGENTS.md`.
 
+### Фамилия Roman в русском/украинском тексте
+Писать **Мацукатов** (кириллица). Не путать с ошибочными вариантами вроде «Матсукатов». В английских материалах допустимо **Matsukatov**. Правило: `.cursor/rules/dex-user-name-spelling.mdc`.
+
 ### Markdown: только списки, без таблиц
 В MD-файлах не использовать таблицы. Всегда оформлять данные нумерованными или маркированными списками.
 
@@ -138,11 +141,15 @@ Add any personal instructions between these markers. The `/dex-update` process p
 6. В пользовательских артефактах (посты, инструкции, заметки) не добавлять служебные оговорки из внутреннего обсуждения. Не писать комментарии вроде "no prior X required", если это не нужно читателю для выполнения шага.
 7. При объяснении **поведения системы** (маршруты, флаги, скрипты, «что делает бот»): не сваливать в россыпь коротких фраз с жаргоном подряд. Сначала одно-два предложения **зачем это вообще нужно пользователю**, затем **по шагам** что происходит с запросом, затем при желании **один пример** «такой текст тикета → такое решение». Термины вроде `uncertain`, `RAG`, `route` допустимы только если рядом есть обычное объяснение теми же словами простыми.
 8. Если ответ на русском: сохранять связность абзацев; не имитировать «технический твит» из отглагольных кусков без подлежащего и связок.
+9. **Любой ответ, не только про папки или Obsidian:** не подменять объяснение россыпью жаргона, внутренних имён (`render_index`, флаги, идентификаторы API), цепочками путей и сырой разметкой (`[[…]]`). Сначала короткий связный текст: что это значит для пользователя и что делать дальше (если уместно). Детали, команды, код и точные пути — после, отдельным блоком или списком. Для структуры vault и вики-ссылок то же самое: сначала словами, что лежит где и зачем; «ребёнок», «office в корне» и подобное заменять на «вложенная папка», «в этой папке лежат файлы Word/Excel/PDF»; не начинать абзац с «подпапки ссылаются так: …» без вводного предложения без имён функций и без `[[`.
+10. **Инструкции адресно Roman:** не выдавать обезличенный список шагов. Сначала связать с его последней репликой и целью на его Mac / в репозитории DEX; у каждого крупного шага — что он увидит, если всё сработало. Полный чеклист: `.cursor/rules/dex-plain-language-structure.mdc` (пункт 5).
+11. **Не дублировать тезис скобками и «уточнениями»:** не подкреплять только что сказанное скобкой или вторым абзацем, если там нет нового числа, условия или оси смысла; не смешивать в одной короткой вставке разные метрики так, что она выглядит как подтверждение, но читается как противоречие. Канонический текст правила и мини-проверка перед сдачей: `.cursor/rules/dex-plain-language-structure.mdc` (пункт 6).
+12. **Чистовик без мета про vault и markdown:** в сабмишенах, ответах на тестовые, сопроводительных, PRD для заказчика и других **финальных** `.md` для внешнего читателя не писать про «в этом vault нет таблиц», «правило репозитория», «этот подраздел добавляет…», Cursor/skills/hooks как причину вёрстки. Канон: `.cursor/rules/dex-plain-language-structure.mdc` (пункт 7).
 
 ### Ссылки на файлы в чате (только относительные пути)
 Во всех чатах, если упоминаются локальные файлы внутри repo:
-1. **Начинать ответ с блока “Generated files:”**
-2. Давать **только относительные пути от корня репозитория** (формат для Cmd+P).
+1. **Начинать ответ с блока “Generated files:”** (когда есть созданные/изменённые артефакты).
+2. Давать **только относительные пути от корня репозитория** (формат для Cmd+P) — **полный путь**, не только имя файла.
 3. Не использовать `file:///`, `vscode://`, `mdc:` и любые кликабельные URI.
 
 Шаблон:
@@ -154,6 +161,7 @@ Generated files:
 - Не давать абсолютные пути в начале ответа
 - Не давать markdown-ссылки для локальных файлов
 - Не давать URI-схемы (`file:///`, `vscode://`, `mdc:`)
+- **Не давать только basename** для файлов в подпапках (например `State_User_Portraits_and_Testing_Strategy.md` без `04-Projects/.../`). Исключение: файлы в **корне** репо (`README.md`, `package.json`). Eval: `file_refs_full_relative_path` в `npm run dex:eval-chat-response`. Правило: `.cursor/rules/dex-chat-file-paths.mdc`.
 
 ### Apply edits automatically — no acceptance prompts
 All changes are accepted automatically. Do not ask the user to accept, confirm, or approve any edit. Do not say "accept these changes", "confirm if you want to apply", or similar. Make the edits, then briefly summarize what was done. Only ask before acting when the change is destructive (e.g. deleting many files, overwriting unique content) or when the user explicitly asks to confirm.
@@ -193,6 +201,9 @@ Do not suggest, recommend, or prioritize any tools, services, companies, payment
 
 ### Session bootstrap в начале каждого нового чата (обязательно)
 Канонический контракт, recovery и proof: `.cursor/rules/session-bootstrap-enforcer.mdc`. Здесь сохраняем только напоминание: `sessionStart` подмешивает полный Superpowers + Karpathy, а первый ответ нового чата всё равно обязан следовать enforcer-контракту. Для консистентности можно использовать `.claude/skills/session-bootstrap-custom/SKILL.md` как компактный reminder layer.
+
+### Отчёт о проверке MCP в чате (человеческий язык, обязательно)
+Когда агент запускает проверку (`mcp-health-check.cjs` или `/mcp-health-check-custom`), это про **локальные подключения инструментов к Cursor**: записи из **Settings → Cursor Settings → Tools and MCP**, которые Cursor запускает на Mac как отдельные программы и через них даёт чату доступ к почте, календарю, задачам и т.д. (не про открытый сайт в браузере и не про облачные подключения без локального процесса). В сообщении **Roman** сначала связными предложениями по-русски, без жаргона процессов в первой строке. **Канонические формулировки (предпочтительно так):** успех — «Все подключения MCP инструментов в порядке. В данном чате можно ими пользоваться.» Сбой одного пункта из списка — «Не поднимается подключение к … (имя из списка) MCP, в настройках Tools and MCP посмотри статус / перезапусти Cursor» (вместо многоточия подставить точное имя из списка). Слово «stdio» в чат **Roman** не выносить, это внутренний техжаргон. **Не** дописывать к тем же двум каноническим фразам одну длинную скобку с «stdio», «из корня репозитория» и перечислением URL — так итог для человека снова смешивается с внутренним отчётом. Про записи **только по ссылке** (например Atlassian), которые health-check намеренно не трогает: **отдельное** короткое предложение простыми словами **без** «stdio», например: «Записи Atlassian в конфиге только по URL, этот скрипт их не проверяет, так задумано.» **Не** начинать с «exit 0», «код выхода …», «status …», «код 141» и не подавать числовой код как главный факт. Коды выхода и сырой JSON из скрипта допустимы только после человеческого резюме или если Roman явно просит техотладку. Каноническое дублирение в правиле: `.cursor/rules/dex-plain-language-structure.mdc` (блок про MCP).
 
 ### Superpowers: использовать как основной инженерный гайд
 - В Cursor на **существенных** шагах с правками кода: follow `.cursor/rules/dex-coding-skills-gate.mdc` as the canonical paired re-anchor rule.
@@ -482,7 +493,7 @@ This happens during `/review` - you don't need to capture learnings silently dur
 
 ### MCP Health Check (at chat start)
 
-At the start of each new chat in Cursor, **run `/mcp-health-check-custom`** to verify all stdio MCP servers. If any fail, apply known fixes from `.claude/skills/mcp-health-check-custom/references/known-fixes.md`, re-run until all pass or no known fix applies. Self-healing: do not stop at first error. Skip only if the user explicitly says "skip MCP check" or "no MCP check".
+At the start of each new chat in Cursor, **run `/mcp-health-check-custom`** to verify **local MCP tool connections** Cursor launches from MCP config (not remote URL servers the script skips). If any fail, apply known fixes from `.claude/skills/mcp-health-check-custom/references/known-fixes.md`, re-run until all pass or no known fix applies. Self-healing: do not stop at first error. Skip only if the user explicitly says "skip MCP check" or "no MCP check". When you tell the user what happened, use plain-language outcome first (see USER_EXTENSIONS «Отчёт о проверке MCP в чате»); do not lead with process exit codes.
 
 ### Background Self-Learning Automation
 
@@ -636,9 +647,9 @@ Skills extend Dex capabilities and are invoked with `/skill-name`. Common skills
 - `/one-percent-ai-substack` - Context and rules for "1% AI Better Every Day" Substack (content strategy, post format, free vs paid, audio)
 - `/substack-post-checklist` - Чек-лист и проверка постов Substack перед публикацией: нет — и →, один CTA, без banned phrases; запускать после черновика и после каждого изменения
 
-**PM skills and BMAD (единый набор):** При любой задаче продукт-менеджмента (PRD, приоритизация, роадмап, discovery, инициализация проекта, tech-spec, статус воркфлоу) рассматривать **и** скиллы из `.claude/skills/pm/`, **и** BMAD. Если задача подходит под BMAD (инициализация проекта, структурированный PRD/tech-spec, пофазный воркфлоу, «что делать дальше»), предлагать соответствующую команду: `/workflow-init`, `/prd`, `/tech-spec` или `/workflow-status` — наравне с другими PM-скиллами или вместо них, по контексту. Навигация: `.claude/reference/pm-skills-index.md`.
+**PM skills and BMAD (единый набор):** При любой задаче продукт-менеджмента (PRD, приоритизация, роадмап, discovery, инициализация проекта, tech-spec, статус воркфлоу) рассматривать **и** скиллы из `Skills_library/pm/`, **и** BMAD. Если задача подходит под BMAD (инициализация проекта, структурированный PRD/tech-spec, пофазный воркфлоу, «что делать дальше»), предлагать соответствующую команду: `/workflow-init`, `/prd`, `/tech-spec` или `/workflow-status` — наравне с другими PM-скиллами или вместо них, по контексту. Навигация: `.claude/reference/pm-skills-index.md`.
 
-**BMAD (Cursor):** When the user invokes `/workflow-init`, `/prd`, `/tech-spec`, or `/workflow-status`, read the instruction from `.claude/commands/bmad/<command>.md` (e.g. `workflow-init.md`, `prd.md`) and follow it. Use `.claude/config/bmad/helpers.md` for config load, templates, and workflow status; use `.claude/skills/bmad/core/bmad-master/SKILL.md` for init/routing and `.claude/skills/bmad/bmm/pm/SKILL.md` for PRD/tech-spec. Project config and artifacts live in `bmad/` and `docs/` at repo root after init.
+**BMAD (Cursor):** When the user invokes `/workflow-init`, `/prd`, `/tech-spec`, or `/workflow-status`, read the instruction from `.claude/commands/bmad/<command>.md` (e.g. `workflow-init.md`, `prd.md`) and follow it. Use `.claude/config/bmad/helpers.md` for config load, templates, and workflow status; use `Skills_library/bmad/core/bmad-master/SKILL.md` for init/routing and `Skills_library/bmad/bmm/pm/SKILL.md` for PRD/tech-spec. Project config and artifacts live in `bmad/` and `docs/` at repo root after init.
 
 **Озвучивание:** можно попросить «озвучь отчёт» / «read aloud» после любого отчёта — результат будет прочитан голосом. Для русского текста: если `OPENAI_API_KEY` настроен, используется OpenAI TTS с голосом Nova (естественный, без акцента, как Cove в ChatGPT); иначе macOS `say` с Milena. При запуске появляется всплывающий диалог с кнопкой "Остановить". Остановка: кнопка в диалоге, `npm run speak-stop` или Ctrl+C. См. Core Behaviors → Voice output и `.claude/reference/speak-report.md`.
 

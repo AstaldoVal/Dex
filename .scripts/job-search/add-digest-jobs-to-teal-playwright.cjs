@@ -35,9 +35,21 @@ dotenv.config({ path: envPath });
 if (!process.env.TEAL_EMAIL || !process.env.TEAL_PASSWORD) {
   dotenv.config({ path: path.join(process.cwd(), '.env') });
 }
-const { DIGESTS_DIR, DATA_DIR, JOBS_DIR, TEAL_DIR, PROFILE_EXTENSION, PROFILE_APP, TEAL_CHROME_PROFILE_ALT, LAST_PROCESSED_JOB_IDS_FILE, ensureDirs } = require('./job-search-paths.cjs');
+const { DIGESTS_DIR, DATA_DIR, JOBS_DIR, TEAL_DIR, TEAL_FLOW_DIR, PROFILE_EXTENSION, PROFILE_APP, TEAL_CHROME_PROFILE_ALT, LAST_PROCESSED_JOB_IDS_FILE, ensureDirs } = require('./job-search-paths.cjs');
 const { deriveTitleFromDescription, locationRank, fetchJobPageTitleCompanyAndDescription, fetchJobPageTitleCompanyAndDescriptionCrawler, requiresNonEnglishLanguage } = require('./job-search-utils.cjs');
-const { getTealProfileCandidates, isProfileInUseError } = require('./teal-chrome-profile.cjs');
+const {
+  getTealProfileCandidates,
+  isProfileInUseError,
+  launchPersistentContextGuarded,
+  killChromeForProfile
+} = require('./teal-chrome-profile.cjs');
+
+async function closeTealBrowser(context, profileDir) {
+  try {
+    await closeTealBrowser(context, usedProfileDir);
+  } catch (_) {}
+  if (profileDir) killChromeForProfile(profileDir);
+}
 const { updateFlowProgress } = require('./teal-flow-state.cjs');
 
 function getDefaultChromeProfileDir() {
@@ -499,7 +511,7 @@ async function main() {
   let jobsToAdd = jobs;
   let addedKeys = new Set();
   let keyToLocation = {};
-  const step6EvidencePath = path.join(TEAL_DIR, 'step-6-evidence.json');
+  const step6EvidencePath = path.join(TEAL_FLOW_DIR, 'step-6-evidence.json');
   const writeStep6Evidence = (ev) => {
     try {
       if (!fs.existsSync(TEAL_DIR)) fs.mkdirSync(TEAL_DIR, { recursive: true });
@@ -596,20 +608,37 @@ async function main() {
   let context;
   let usedProfileDir = profileDir;
   if (useApp && useSystemChrome) {
-    const candidates = getTealProfileCandidates();
+    const envDedicated =
+      process.env.TEAL_CHROME_PROFILE &&
+      path.resolve(process.env.TEAL_CHROME_PROFILE.replace(/^~/, os.homedir()));
+    const candidates =
+      envDedicated && fs.existsSync(envDedicated)
+        ? [envDedicated]
+        : getTealProfileCandidates();
     ensureDirs();
     for (const p of candidates) {
-      try {
-        context = await playwright.chromium.launchPersistentContext(p, launchOptions);
-        usedProfileDir = p;
-        if (p !== (chromeProfileDir || '')) {
-          console.log('Запущен профиль (предпочтительный был занят): ' + p);
+      for (let launchAttempt = 0; launchAttempt < 2; launchAttempt++) {
+        try {
+          context = await launchPersistentContextGuarded(playwright.chromium, p, launchOptions);
+          usedProfileDir = p;
+          if (p !== (chromeProfileDir || '')) {
+            console.log('Запущен профиль (предпочтительный был занят): ' + p);
+          }
+          break;
+        } catch (e) {
+          const msg = e && e.message ? String(e.message) : '';
+          if (launchAttempt === 0 && msg.includes('DevToolsActivePort')) {
+            const { removeStaleSingletonLock } = require('./teal-chrome-profile.cjs');
+            removeStaleSingletonLock(p);
+            console.log('DevToolsActivePort: повтор после сброса singleton lock…');
+            continue;
+          }
+          if (!isProfileInUseError(e)) throw e;
+          console.log('Профиль занят; пробуем следующий…');
+          break;
         }
-        break;
-      } catch (e) {
-        if (!isProfileInUseError(e)) throw e;
-        console.log('Профиль занят; пробуем следующий…');
       }
+      if (context) break;
     }
     if (!context) {
       const tealEmail = process.env.TEAL_EMAIL && process.env.TEAL_EMAIL.trim();
@@ -617,7 +646,7 @@ async function main() {
       if (tealEmail && tealPassword) {
         console.log('Все профили заняты — временный профиль и вход по TEAL_EMAIL/TEAL_PASSWORD.');
         usedProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'teal-playwright-'));
-        context = await playwright.chromium.launchPersistentContext(usedProfileDir, launchOptions);
+        context = await launchPersistentContextGuarded(playwright.chromium, usedProfileDir, launchOptions);
         if (useApp && usedProfileDir && usedProfileDir.startsWith(os.tmpdir())) {
           context.on('close', () => { try { fs.rmSync(usedProfileDir, { recursive: true, force: true }); } catch (_) {} });
         }
@@ -627,7 +656,7 @@ async function main() {
     }
   } else {
     try {
-      context = await playwright.chromium.launchPersistentContext(profileDir, launchOptions);
+      context = await launchPersistentContextGuarded(playwright.chromium, profileDir, launchOptions);
     } catch (e) {
       if (!useApp && e.message && e.message.includes('channel')) {
         console.error('Chrome не найден. Используйте --app для добавления вакансий через веб-приложение Teal.');
@@ -657,7 +686,7 @@ async function main() {
             const url = p.url();
             if (url.includes('app.tealhq.com') && !url.includes('sign-up') && !url.includes('sign-in') && !url.includes('login') && !url.includes('accounts.google.com')) {
               console.log('Detected Teal dashboard. Setup done.');
-              await context.close();
+              await closeTealBrowser(context, usedProfileDir);
               return;
             }
           }
@@ -667,7 +696,9 @@ async function main() {
         }
       }
       console.log('Timeout. If you logged in, run the script without --setup.');
-      try { await context.close(); } catch (_) {}
+      try {
+        await closeTealBrowser(context, usedProfileDir);
+      } catch (_) {}
       return;
     }
     await page.goto('https://app.tealhq.com/job-tracker', { waitUntil: 'domcontentloaded', timeout: 15000 });
@@ -716,17 +747,17 @@ async function main() {
               await page.screenshot({ path: path.join(TEAL_DIR, 'teal-login-check.png') });
               fs.writeFileSync(path.join(TEAL_DIR, 'teal-login-check.html'), await page.content(), 'utf8');
             }
-            await context.close();
+            await closeTealBrowser(context, usedProfileDir);
             console.error('Вход не прошёл или редирект. Проверьте TEAL_EMAIL/TEAL_PASSWORD в .env или запустите с --debug.');
             process.exit(1);
           }
         } else {
-          await context.close();
+          await closeTealBrowser(context, usedProfileDir);
           console.error('Форма входа по email не найдена (возможно, только Google). Задайте TEAL_EMAIL/TEAL_PASSWORD в .env для входа по email или закройте Chrome и запустите с вашим профилем.');
           process.exit(1);
         }
       } else {
-        await context.close();
+        await closeTealBrowser(context, usedProfileDir);
         const envFile = path.join(VAULT, '.env');
         console.error('Креды не найдены. Проверьте:');
         console.error('  Файл .env: ' + envFile);
@@ -763,7 +794,10 @@ async function main() {
         }
         await sleep(3000);
         const dialog = page.locator('.ant-modal.job-tracker-job-modal, [role="dialog"].ant-modal, [role="dialog"], [data-state="open"], .modal').first();
-        const form = (await dialog.count()) > 0 && (await dialog.isVisible()) ? dialog : page;
+        const jobPostForm = page.locator('form#job-post').first();
+        const form = (await jobPostForm.count()) > 0 && (await jobPostForm.isVisible().catch(() => false))
+          ? jobPostForm
+          : ((await dialog.count()) > 0 && (await dialog.isVisible()) ? dialog : page);
 
         async function fillField(selectors, value) {
           if (!value || typeof value !== 'string') return;
@@ -776,6 +810,69 @@ async function main() {
               return;
             }
           }
+        }
+
+        async function fillFieldByLabel(labelPattern, value, multiline = false) {
+          if (!value || typeof value !== 'string') return false;
+          const trimmed = value.trim().slice(0, multiline ? 15000 : 5000);
+          return await form.evaluate((root, { labelPattern, value, multiline }) => {
+            const re = new RegExp(labelPattern, 'i');
+            const isUsable = (el) => {
+              if (!el || el.disabled || el.getAttribute('aria-hidden') === 'true') return false;
+              const rect = el.getBoundingClientRect();
+              const style = window.getComputedStyle(el);
+              return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+            };
+            const setValue = (el) => {
+              if (!isUsable(el)) return false;
+              el.focus();
+              if (el.isContentEditable || el.getAttribute('contenteditable') === 'true') {
+                el.textContent = value;
+                el.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: value }));
+              } else {
+                const setter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value')?.set;
+                if (setter) setter.call(el, value);
+                else el.value = value;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              el.dispatchEvent(new Event('change', { bubbles: true }));
+              return true;
+            };
+            let labels = Array.from(root.querySelectorAll('label'))
+              .filter((el) => re.test((el.textContent || '').trim()))
+              .filter((el) => !el.closest('button'));
+            if (labels.length === 0) {
+              labels = Array.from(root.querySelectorAll('div, span, p'))
+                .filter((el) => re.test((el.textContent || '').trim()))
+                .filter((el) => !el.closest('button'));
+            }
+            for (const label of labels) {
+              const controlSelector = multiline
+                ? 'textarea, [contenteditable="true"], div[role="textbox"], .ProseMirror'
+                : 'input, textarea, [contenteditable="true"], div[role="textbox"]';
+              const explicitTarget = label.getAttribute('for')
+                ? root.querySelector('#' + CSS.escape(label.getAttribute('for')))
+                : null;
+              const explicitControl = explicitTarget && explicitTarget.matches?.(controlSelector)
+                ? explicitTarget
+                : explicitTarget?.querySelector?.(controlSelector);
+              if (setValue(explicitControl)) return true;
+              let scope = label;
+              for (let depth = 0; scope && depth < 5; depth++, scope = scope.parentElement) {
+                const controls = Array.from(scope.querySelectorAll(controlSelector));
+                const preferred = multiline
+                  ? controls.find((el) => el.tagName === 'TEXTAREA') || controls[0]
+                  : controls.find((el) => el.tagName === 'INPUT') || controls[0];
+                if (setValue(preferred)) return true;
+              }
+              let next = label.nextElementSibling;
+              for (let hops = 0; next && hops < 4; hops++, next = next.nextElementSibling) {
+                const control = next.matches?.(controlSelector) ? next : next.querySelector?.(controlSelector);
+                if (setValue(control)) return true;
+              }
+            }
+            return false;
+          }, { labelPattern, value: trimmed, multiline }).catch(() => false);
         }
 
         const pastedJob = isPastedJob(job);
@@ -796,11 +893,15 @@ async function main() {
         await switchToManualDescriptionMode();
         if (!pastedJob) {
           await fillField(['input[type="url"]', 'input[placeholder*="url" i]', 'input[placeholder*="link" i]', 'input[name*="url" i]'], job.url);
+          await fillFieldByLabel('url|original posting|posting', job.url);
         }
         await fillField(['input[placeholder*="job title" i]', 'input[placeholder*="position" i]', 'input[name*="title" i]', 'input[name*="position" i]', 'input[aria-label*="title" i]'], job.job_title);
+        await fillFieldByLabel('job\\s*title|position', job.job_title);
         const companyValue = (job.company || '').trim() || '—';
         await fillField(['input[placeholder*="company" i]', 'input[name*="company" i]', 'input[aria-label*="company" i]', 'input[placeholder*="Company" i]'], companyValue);
+        await fillFieldByLabel('company', companyValue);
         await fillField(['input[placeholder*="location" i]', 'input[placeholder*="type" i]', 'input[name*="location" i]', 'input[name*="work" i]', 'select[name*="location" i]', 'select[name*="type" i]'], job.work_type);
+        await fillFieldByLabel('location|work\\s*type', job.work_type);
 
         const descSelectors = [
           '.ProseMirror', '.tiptap.ProseMirror', 'div.ProseMirror', '[class*="ProseMirror"][class*="cursor-text"]',
@@ -814,6 +915,17 @@ async function main() {
         const richPasteShortcut = process.platform === 'darwin' ? 'Meta+v' : 'Control+v';
         const selectAllShortcut = process.platform === 'darwin' ? 'Meta+a' : 'Control+a';
         async function tryFillDescriptionOnce() {
+          const filledByLabel = await fillFieldByLabel('job\\s*description|description', descText, true);
+          if (filledByLabel) {
+            const labelFilledLength = await form.evaluate((root) => {
+              const controls = Array.from(root.querySelectorAll('textarea, [contenteditable="true"], div[role="textbox"], .ProseMirror'));
+              return controls.reduce((max, el) => Math.max(max, ((el.value || el.textContent || '').trim()).length), 0);
+            }).catch(() => 0);
+            if (labelFilledLength >= 50) {
+              descTextarea = form.locator('textarea, [contenteditable="true"], div[role="textbox"], .ProseMirror').first();
+              return;
+            }
+          }
           for (const sel of descSelectors) {
             const textarea = form.locator(sel).first();
             if ((await textarea.count()) > 0 && (await textarea.isVisible()) && descText.length > 0) {
@@ -1095,7 +1207,7 @@ async function main() {
         JSON.stringify({ addedIds, addedAt: new Date().toISOString() }, null, 2),
         'utf8'
       );
-      const step6EvidencePath = path.join(TEAL_DIR, 'step-6-evidence.json');
+      const step6EvidencePath = path.join(TEAL_FLOW_DIR, 'step-6-evidence.json');
       const skippedForEvidence = (typeof skippedList !== 'undefined' && Array.isArray(skippedList)) ? skippedList : [];
       fs.writeFileSync(
         step6EvidencePath,
@@ -1114,12 +1226,15 @@ async function main() {
       );
       if (addedToTeal.length > 0 && digestPath && fs.existsSync(digestPath)) {
         const timestamp = new Date().toISOString().replace(/T/, ' ').slice(0, 16);
-        const sectionLines = ['', '## Added to Teal (' + timestamp + ')', 'Ссылки на вакансии, добавленные в Teal (для трекинга):', ''];
+        const sectionLines = ['', '## Added to Teal (' + timestamp + ')', 'Ссылки: LinkedIn (источник) и при успешном редиректе — карточка в Teal:', ''];
         for (const j of addedToTeal) {
           const url = j.url || ('https://www.linkedin.com/jobs/view/' + (getJobIdFromUrl(j.url) || '') + '/');
           const title = (j.title || '—').replace(/\]/g, '\\]');
           const company = (j.company || '—').replace(/\]/g, '\\]');
           sectionLines.push('- [' + title + ' · ' + company + '](' + url + ')');
+          if (j.tealJobUrl && String(j.tealJobUrl).trim()) {
+            sectionLines.push('  - Teal: ' + String(j.tealJobUrl).trim());
+          }
         }
         sectionLines.push('');
         let content = fs.readFileSync(digestPath, 'utf8');
@@ -1132,7 +1247,7 @@ async function main() {
         fs.writeFileSync(digestPath, content, 'utf8');
       }
     } catch (_) {}
-    await context.close();
+    await closeTealBrowser(context, usedProfileDir);
     if (addedToTeal.length > 0) {
       console.log('');
       console.log('---');
@@ -1167,7 +1282,7 @@ async function main() {
   const loginCheckUrl = (userUrl && userUrl.includes('linkedin.com')) ? userUrl : (urls.length > 0 ? urls[0] : 'https://www.linkedin.com/feed/');
   await page.goto(loginCheckUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
   if (page.url().includes('/login') || page.url().includes('/authwall')) {
-    await context.close();
+    await closeTealBrowser(context, usedProfileDir);
     console.error('Not logged into LinkedIn. Run with --setup or use --app to add via Teal web app.');
     process.exit(1);
   }
@@ -1237,7 +1352,7 @@ async function main() {
     }
   }
 
-  await context.close();
+  await closeTealBrowser(context, usedProfileDir);
   console.log('Done.');
 }
 

@@ -1,0 +1,785 @@
+{
+  "enabled": true,
+  "queueLength": 9,
+  "queueSource": "approved_followup",
+  "queueSourceFile": ".scripts/chat-reply/chat-followup-phrases-approved-en.md",
+  "insertOnly": true,
+  "manualSendTimeoutMs": 600000,
+  "stats": {
+    "sent": 59,
+    "skipped": 0,
+    "failed": 0,
+    "byReason": {
+      "user_confirmed_send": 59
+    }
+  },
+  "perChat": [
+    {
+      "peerTitle": "Richard, 66",
+      "peerTitleNormalized": "Richard",
+      "chatUrl": "https://match-club.club/chats/-94307063/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Carl, 73",
+      "peerTitleNormalized": "Carl",
+      "chatUrl": "https://match-club.club/chats/-94307056/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Dorian, 64",
+      "peerTitleNormalized": "Dorian",
+      "chatUrl": "https://match-club.club/chats/-94306795/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Rick, 69",
+      "peerTitleNormalized": "Rick",
+      "chatUrl": "https://match-club.club/chats/-94306791/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Freedcowboy, 67",
+      "peerTitleNormalized": "Freedcowboy",
+      "chatUrl": "https://match-club.club/chats/-94306765/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "BIG Hard DICK, 40",
+      "peerTitleNormalized": "BIG Hard DICK",
+      "chatUrl": "https://match-club.club/chats/48546383/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Paul Daly, 56",
+      "peerTitleNormalized": "Paul Daly",
+      "chatUrl": "https://match-club.club/chats/-94303598/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Paul, 71",
+      "peerTitleNormalized": "Paul",
+      "chatUrl": "https://match-club.club/chats/-94303497/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "David, 66",
+      "peerTitleNormalized": "David",
+      "chatUrl": "https://match-club.club/chats/-94303493/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Michael, 67",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/-94303475/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "thedanceman, 77",
+      "peerTitleNormalized": "thedanceman",
+      "chatUrl": "https://match-club.club/chats/-94303429/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Terrence, 68",
+      "peerTitleNormalized": "Terrence",
+      "chatUrl": "https://match-club.club/chats/-94303312/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "kevinbobir6933, 53",
+      "peerTitleNormalized": "kevinbobir6933",
+      "chatUrl": "https://match-club.club/chats/-94303275/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jamie, 55",
+      "peerTitleNormalized": "Jamie",
+      "chatUrl": "https://match-club.club/chats/-94303115/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Mark, 63",
+      "peerTitleNormalized": "Mark",
+      "chatUrl": "https://match-club.club/chats/-94303059/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Jack, 70",
+      "peerTitleNormalized": "Jack",
+      "chatUrl": "https://match-club.club/chats/48497744/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Darktemptation, 72",
+      "peerTitleNormalized": "Darktemptation",
+      "chatUrl": "https://match-club.club/chats/-94302925/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "RUSSELL, 62",
+      "peerTitleNormalized": "RUSSELL",
+      "chatUrl": "https://match-club.club/chats/48545993/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Peter macdonald, 52",
+      "peerTitleNormalized": "Peter macdonald",
+      "chatUrl": "https://match-club.club/chats/48545986/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bruce, 67",
+      "peerTitleNormalized": "Bruce",
+      "chatUrl": "https://match-club.club/chats/-94302921/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Doug, 71",
+      "peerTitleNormalized": "Doug",
+      "chatUrl": "https://match-club.club/chats/48545980/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bruce Kincaid, 68",
+      "peerTitleNormalized": "Bruce Kincaid",
+      "chatUrl": "https://match-club.club/chats/48545974/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Steve, 64",
+      "peerTitleNormalized": "Steve",
+      "chatUrl": "https://match-club.club/chats/48545968/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Gregorio, 66",
+      "peerTitleNormalized": "Gregorio",
+      "chatUrl": "https://match-club.club/chats/48545958/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bob Merlino, 67",
+      "peerTitleNormalized": "Bob Merlino",
+      "chatUrl": "https://match-club.club/chats/-94248743/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "martinpier1857, 59",
+      "peerTitleNormalized": "martinpier1857",
+      "chatUrl": "https://match-club.club/chats/-94248671/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "kmaughan120919, 70",
+      "peerTitleNormalized": "kmaughan120919",
+      "chatUrl": "https://match-club.club/chats/-94248660/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Steve, 69",
+      "peerTitleNormalized": "Steve",
+      "chatUrl": "https://match-club.club/chats/-94245059/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Friends 227, 67",
+      "peerTitleNormalized": "Friends 227",
+      "chatUrl": "https://match-club.club/chats/48508580/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Michael, 50",
+      "peerTitleNormalized": "Michael",
+      "chatUrl": "https://match-club.club/chats/48508565/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Charles Hand, 59",
+      "peerTitleNormalized": "Charles Hand",
+      "chatUrl": "https://match-club.club/chats/48508553/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tony, 65",
+      "peerTitleNormalized": "Tony",
+      "chatUrl": "https://match-club.club/chats/48497708/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Tim, 67",
+      "peerTitleNormalized": "Tim",
+      "chatUrl": "https://match-club.club/chats/48497756/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Graham, 67",
+      "peerTitleNormalized": "Graham",
+      "chatUrl": "https://match-club.club/chats/48497600/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 3,
+        "textPreview": "It's way too quiet in my house right now. Are you a music-in-the-background person or silence person?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "dpp9475525, 67",
+      "peerTitleNormalized": "dpp9475525",
+      "chatUrl": "https://match-club.club/chats/48498819/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Dan, 66",
+      "peerTitleNormalized": "Dan",
+      "chatUrl": "https://match-club.club/chats/-94243873/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "jalmptyltd397, 70",
+      "peerTitleNormalized": "jalmptyltd397",
+      "chatUrl": "https://match-club.club/chats/-94243646/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "musaqaris916, 38",
+      "peerTitleNormalized": "musaqaris916",
+      "chatUrl": "https://match-club.club/chats/-94243016/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Baci, 50",
+      "peerTitleNormalized": "Baci",
+      "chatUrl": "https://match-club.club/chats/-94242226/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joe, 62",
+      "peerTitleNormalized": "Joe",
+      "chatUrl": "https://match-club.club/chats/-94239086/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Allen, 69",
+      "peerTitleNormalized": "Allen",
+      "chatUrl": "https://match-club.club/chats/-94238739/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Simin, 42",
+      "peerTitleNormalized": "Simin",
+      "chatUrl": "https://match-club.club/chats/-94238515/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Todd, 70",
+      "peerTitleNormalized": "Todd",
+      "chatUrl": "https://match-club.club/chats/-94237982/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Max, 69",
+      "peerTitleNormalized": "Max",
+      "chatUrl": "https://match-club.club/chats/-94233819/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Scoot SPSHFD440, 66",
+      "peerTitleNormalized": "Scoot SPSHFD440",
+      "chatUrl": "https://match-club.club/chats/-94232378/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Drake, 56",
+      "peerTitleNormalized": "Drake",
+      "chatUrl": "https://match-club.club/chats/-94231341/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Edward, 61",
+      "peerTitleNormalized": "Edward",
+      "chatUrl": "https://match-club.club/chats/48497722/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "flowersvegt922, 55",
+      "peerTitleNormalized": "flowersvegt922",
+      "chatUrl": "https://match-club.club/chats/48497768/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "rickieblueyes, 55",
+      "peerTitleNormalized": "rickieblueyes",
+      "chatUrl": "https://match-club.club/chats/48497747/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bryan Oldham, 59",
+      "peerTitleNormalized": "Bryan Oldham",
+      "chatUrl": "https://match-club.club/chats/-94229281/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Mike, 67",
+      "peerTitleNormalized": "Mike",
+      "chatUrl": "https://match-club.club/chats/-94229229/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Dave, 69",
+      "peerTitleNormalized": "Dave",
+      "chatUrl": "https://match-club.club/chats/48497668/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Joe, 70",
+      "peerTitleNormalized": "Joe",
+      "chatUrl": "https://match-club.club/chats/48497651/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Doug, 64",
+      "peerTitleNormalized": "Doug",
+      "chatUrl": "https://match-club.club/chats/48497630/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "simonhills724, 50",
+      "peerTitleNormalized": "simonhills724",
+      "chatUrl": "https://match-club.club/chats/48497623/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bill, 70",
+      "peerTitleNormalized": "Bill",
+      "chatUrl": "https://match-club.club/chats/48497607/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 2,
+        "textPreview": "I'm pretending my inbox isn't chaos. What's the one thing you're actually looking forward to this week?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Bob, 67",
+      "peerTitleNormalized": "Bob",
+      "chatUrl": "https://match-club.club/chats/-94229142/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "plain_only_sequence_continue",
+        "queueIndex": 1,
+        "textPreview": "Okay random question: are you a grill guy or a \"let someone else cook\" guy? I'm judging my neighbors by their smoke.",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "Martin, 59",
+      "peerTitleNormalized": "Martin",
+      "chatUrl": "https://match-club.club/chats/-94225597/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    },
+    {
+      "peerTitle": "scotty7, 56",
+      "peerTitleNormalized": "scotty7",
+      "chatUrl": "https://match-club.club/chats/-94225585/messages",
+      "outbound": {
+        "action": "user_confirmed_send",
+        "insertOnly": true,
+        "decisionReason": "empty_thread_send_first",
+        "queueIndex": 0,
+        "textPreview": "I almost texted you something boring, then deleted it. What are you up to right this minute?",
+        "waitReason": "composer_empty_after_draft"
+      }
+    }
+  ]
+}

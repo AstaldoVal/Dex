@@ -1,0 +1,30 @@
+{
+  "job_type": "ai",
+  "cv_path": "/Users/admin.roman.matsukatov/Development/DEX/CV Examples/Roman Matsukatov - CV.md",
+  "keywords": {
+    "hard": [
+      "product lifecycle",
+      "product lifecycle management",
+      "lifecycle management"
+    ],
+    "soft": [
+      "roadmap",
+      "strategies"
+    ]
+  },
+  "job_title": "Chief Product Officer",
+  "company": "Enable3",
+  "job_url": "",
+  "summary": "Chief Product Officer and product leader with 12+ years in product development and management across B2B SaaS and platform products, including portfolios targeting a global audience. I specialize in defining and executing product vision and product strategy, building a roadmap aligned with business objectives, and driving customer retention, engagement, scalability, and adoption across lifecycles from concept to mass adoption, with a focus on product-market fit, positioning, and segment selection for the small and medium business segment.\n\nIn my roles, I have led cross-functional teams of product managers, developers, and UX/UI designers, and partnered closely with marketing and sales teams to balance competing demands and deliver sustainable product growth. I apply systems thinking and analytics to understand market segments, customer needs, market trends, and competitor landscape, prioritizing decisions that create value and optimize the product offering, including loyalty programs, referral programs, and engagement mechanics while protecting a high-quality user experience.\n\nI bring hands-on product lifecycle management experience with highly customized products, including API integrations and customized solutions, plus stakeholder management with senior leadership, key customers, and external partners. I have implemented processes and tools that improved team efficiency by 50%, managed product lifecycle and quality through launch, and built products that support long-term relationships and partnerships, delivering measurable outcomes including a 10% increase in retention and 7% growth in turnover.",
+  "suggested_questions": [
+    "How would you define the core product positioning and pick the most promising segment to reach product-market fit for Enable3?",
+    "What would your first 90 days look like to scale loyalty programs and referral programs for the small and medium business segment?",
+    "How do you prioritize loyalty mechanics and customization requests from major customers while keeping the product scalable?",
+    "How do you partner with marketing and sales teams to drive adoption and sustainable product growth across market segments?"
+  ],
+  "openai_usage": {
+    "prompt_tokens": 7706,
+    "completion_tokens": 368,
+    "total_tokens": 8074
+  }
+}

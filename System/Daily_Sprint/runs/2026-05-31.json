@@ -1,0 +1,89 @@
+{
+  "version": "1.0.0",
+  "date": "2026-05-31",
+  "timezone": "Europe/Lisbon",
+  "goal": "Инфраструктура дневного agentic-спринта",
+  "created_at": "2026-05-31T15:22:45.413Z",
+  "updated_at": "2026-05-31T15:23:08.827Z",
+  "experiments": [
+    {
+      "id": "EXP-001",
+      "title": "Day-sprint infra: CLI, skill map, slash",
+      "project_path": "System/Daily_Sprint",
+      "spec_path": null,
+      "phase": "done",
+      "status": "complete",
+      "night_shift": false,
+      "peak_slot": null,
+      "outcome": "CLI, config, skill map, slash /day-sprint, npm scripts, unit test ok",
+      "history": [
+        {
+          "ts": "2026-05-31T15:22:52.238Z",
+          "action": "created",
+          "phase": "queued"
+        },
+        {
+          "ts": "2026-05-31T15:22:52.568Z",
+          "action": "advance",
+          "from": "queued",
+          "to": "spec",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:01.533Z",
+          "action": "advance",
+          "from": "spec",
+          "to": "tasks",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:01.834Z",
+          "action": "advance",
+          "from": "tasks",
+          "to": "implement",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:02.211Z",
+          "action": "advance",
+          "from": "implement",
+          "to": "eval",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:02.693Z",
+          "action": "advance",
+          "from": "eval",
+          "to": "human_review",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:03.042Z",
+          "action": "advance",
+          "from": "human_review",
+          "to": "done",
+          "note": null,
+          "eval_pass": null
+        },
+        {
+          "ts": "2026-05-31T15:23:08.827Z",
+          "action": "outcome",
+          "text": "CLI, config, skill map, slash /day-sprint, npm scripts, unit test ok"
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "cycles_started": 1,
+    "cycles_completed": 1,
+    "eval_pass_first_try": 0,
+    "eval_retries": 0,
+    "peaks_used": 0,
+    "night_shift_queued": 0
+  }
+}

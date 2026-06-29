@@ -9,6 +9,7 @@
 'use strict';
 
 const { execSync, spawn } = require('child_process');
+const { openUrlInDexChrome } = require('./dex-chrome-open-background.cjs');
 const path = require('path');
 const fs = require('fs');
 
@@ -57,16 +58,9 @@ function waitForAtsProfile(maxAttempts, intervalSec) {
 }
 
 function openChrome(url) {
-  const quoted = '"' + url.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-  try {
-    execSync('open -a "Google Chrome" ' + quoted, { stdio: 'inherit' });
-  } catch (e1) {
-    try {
-      execSync('open ' + quoted, { stdio: 'inherit' });
-    } catch (e2) {
-      console.error('Could not open browser. URL:', url);
-      process.exit(1);
-    }
+  if (!openUrlInDexChrome(url)) {
+    console.error('Could not open browser. URL:', url);
+    process.exit(1);
   }
 }
 

@@ -13,10 +13,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const net = require('net');
+const { spawn } = require('child_process');
 
 // Target directory: 00-Inbox/Job_Search/data/ relative to this script
 const VAULT = path.resolve(__dirname, '..', '..', '..');
 const DATA_DIR = path.join(VAULT, '00-Inbox', 'Job_Search', 'data');
+const CHAT_REPLY_SERVER_ENTRY = path.join(VAULT, '.scripts', 'chat-reply', 'chat-reply-server.cjs');
 
 // Ensure target directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -67,9 +70,41 @@ function sendMessage(obj) {
   process.stdout.write(buf);
 }
 
+function isPortOpen(host, port, timeoutMs) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    let done = false;
+    function finish(ok) {
+      if (done) return;
+      done = true;
+      try {
+        socket.destroy();
+      } catch (e) {}
+      resolve(!!ok);
+    }
+    socket.setTimeout(timeoutMs);
+    socket.once('connect', () => finish(true));
+    socket.once('timeout', () => finish(false));
+    socket.once('error', () => finish(false));
+    socket.connect(port, host);
+  });
+}
+
+async function waitPortOpen(host, port, maxMs) {
+  const started = Date.now();
+  while (Date.now() - started < maxMs) {
+    // eslint-disable-next-line no-await-in-loop
+    const ok = await isPortOpen(host, port, 350);
+    if (ok) return true;
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((r) => setTimeout(r, 180));
+  }
+  return false;
+}
+
 // ── Handle message ────────────────────────────────────────────────────────────
 
-readMessage(function (msg) {
+readMessage(async function (msg) {
   if (!msg) {
     sendMessage({ ok: false, error: 'No message received' });
     process.exit(0);
@@ -86,6 +121,47 @@ readMessage(function (msg) {
       sendMessage({ ok: true, path: filePath });
     } catch (e) {
       sendMessage({ ok: false, error: e.message });
+    }
+  } else if (msg.action === 'ensureChatReplyServer') {
+    try {
+      const host = '127.0.0.1';
+      let port = parseInt(msg.port, 10);
+      if (!port || port < 1 || port > 65535) port = 8777;
+      const alreadyOpen = await isPortOpen(host, port, 350);
+      if (alreadyOpen) {
+        sendMessage({ ok: true, alreadyRunning: true, port });
+        process.exit(0);
+        return;
+      }
+      if (!fs.existsSync(CHAT_REPLY_SERVER_ENTRY)) {
+        sendMessage({ ok: false, error: 'chat-reply-server entry not found: ' + CHAT_REPLY_SERVER_ENTRY });
+        process.exit(0);
+        return;
+      }
+      const env = Object.assign({}, process.env, {
+        CHAT_REPLY_PORT: String(port)
+      });
+      const child = spawn(process.execPath, [CHAT_REPLY_SERVER_ENTRY], {
+        cwd: VAULT,
+        detached: true,
+        stdio: 'ignore',
+        env
+      });
+      child.unref();
+      const up = await waitPortOpen(host, port, 5000);
+      if (!up) {
+        sendMessage({
+          ok: false,
+          started: true,
+          error: 'chat-reply-server did not open port in time',
+          port
+        });
+        process.exit(0);
+        return;
+      }
+      sendMessage({ ok: true, started: true, port });
+    } catch (e) {
+      sendMessage({ ok: false, error: e && e.message ? e.message : String(e) });
     }
   } else {
     sendMessage({ ok: false, error: 'Unknown action: ' + msg.action });

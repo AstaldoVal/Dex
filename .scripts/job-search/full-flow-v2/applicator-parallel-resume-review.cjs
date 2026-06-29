@@ -11,7 +11,8 @@ const {
   planParallelReviewTasks,
   buildSubagentPayload,
   mergeSubagentOutputs,
-  runPool
+  runPool,
+  normalizeWorkExperienceCompanyOutput
 } = require('./applicator-parallel-review-lib.cjs');
 const { fallbackBrief } = require('./applicator-claude-orchestrator-brief.cjs');
 const {
@@ -25,6 +26,76 @@ const DEFAULT_MONOLITHIC_CMD = `node ${path.join(__dirname, 'applicator-claude-r
 
 const DEFAULT_SUBAGENT_CMD = `node ${path.join(__dirname, 'applicator-claude-section-subagent.cjs')}`;
 const DEFAULT_ORCHESTRATOR_CMD = `node ${path.join(__dirname, 'applicator-claude-orchestrator-brief.cjs')}`;
+
+/** Sections where LLM JSON flake should not fail the whole step 9 round. */
+const SUBAGENT_FALLBACK_SECTION_IDS = new Set(['interests', 'projects', 'education', 'certifications']);
+
+function fallbackSubagentSectionResult(task, subPayload, errorMessage) {
+  const baseline = subPayload && subPayload.baseline_section_review;
+  const sectionReview =
+    baseline && baseline.section_id
+      ? {
+          ...baseline,
+          status: 'ok',
+          changes: [],
+          verdict: 'Sub-agent returned no JSON; kept baseline for this low-priority block.'
+        }
+      : {
+          section_id: task.sectionId,
+          label: task.label || task.sectionId,
+          status: 'ok',
+          verdict: 'Sub-agent returned no JSON; no JD-specific edits for this block.',
+          changes: []
+        };
+  return {
+    section_review: sectionReview,
+    _cost: {
+      call_id: task.taskId,
+      model: task.model || 'haiku',
+      input_tokens: 0,
+      output_tokens: 0,
+      optimization_cogs_usd: 0,
+      fallback_reason: asString(errorMessage).slice(0, 200)
+    }
+  };
+}
+
+function fallbackSubagentWorkExperienceResult(task, subPayload, errorMessage) {
+  const baseline = (subPayload && (subPayload.company_inventory || subPayload.baseline_company_detail)) || null;
+  const company = normalizeWorkExperienceCompanyOutput(null, baseline);
+  return {
+    task_id: task.taskId,
+    work_experience_company:
+      company ||
+      {
+        name: task.companyName || '',
+        included: true,
+        roles: []
+      },
+    changes: [],
+    _cost: {
+      call_id: task.taskId,
+      model: task.model || 'sonnet',
+      input_tokens: 0,
+      output_tokens: 0,
+      optimization_cogs_usd: 0,
+      fallback_reason: asString(errorMessage).slice(0, 200)
+    }
+  };
+}
+
+function sanitizeWorkExperienceSubagentResult(result, subPayload) {
+  const baseline = (subPayload && (subPayload.company_inventory || subPayload.baseline_company_detail)) || null;
+  const normalized = normalizeWorkExperienceCompanyOutput(
+    result && result.work_experience_company,
+    baseline
+  );
+  if (!normalized) return result;
+  return {
+    ...result,
+    work_experience_company: normalized
+  };
+}
 
 function asArray(v) {
   return Array.isArray(v) ? v : [];
@@ -167,11 +238,26 @@ async function runParallelReviewRound(payload, options = {}) {
     const subPayload = buildSubagentPayload(base, task);
     console.log(`[step9-parallel] start ${task.taskId} model=${task.model || 'haiku'}`);
     try {
-      const result = await runJsonCommand(subagentCmd, subPayload, task.taskId);
+      let result = await runJsonCommand(subagentCmd, subPayload, task.taskId);
+      if (task.taskType === 'work_experience_company') {
+        result = sanitizeWorkExperienceSubagentResult(result, subPayload);
+      }
       if (result._cost) telemetry.record(result._cost);
       console.log(`[step9-parallel] done ${task.taskId}`);
       return result;
     } catch (e) {
+      if (task.taskType === 'work_experience_company') {
+        console.error(`[step9-parallel] WARN ${task.taskId}: ${e.message} — baseline WX fallback`);
+        const fallback = fallbackSubagentWorkExperienceResult(task, subPayload, e.message);
+        if (fallback._cost) telemetry.record(fallback._cost);
+        return fallback;
+      }
+      if (task.taskType === 'section' && SUBAGENT_FALLBACK_SECTION_IDS.has(task.sectionId)) {
+        console.error(`[step9-parallel] WARN ${task.taskId}: ${e.message} — baseline ok fallback`);
+        const fallback = fallbackSubagentSectionResult(task, subPayload, e.message);
+        if (fallback._cost) telemetry.record(fallback._cost);
+        return fallback;
+      }
       console.error(`[step9-parallel] FAIL ${task.taskId}: ${e.message}`);
       throw e;
     }

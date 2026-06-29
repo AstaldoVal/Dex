@@ -1,0 +1,853 @@
+# Feedback block rules — how Claude Code maps review items → apply vs deferred_v1
+# Machine source for resume-feedback-blocks.cjs
+# Block IDs align with teal-block-registry.yaml
+
+version: 1
+updated: 2026-05-29
+
+# Each block: allowed ops (routable apply | deferred) and which apply.* keys they populate.
+
+blocks:
+  preview.targetTitles:
+    label: Target title
+    applyKeys: [target_title]
+    behavior: |
+      Teal Target Title block only (not job titles in Work Experience). **Exactly one** title enabled on the resume.
+      - editTitle: fix wording on an **existing library row** (typo, strip noise like «(Remote)») — Edit → Save on that row; **do not** Add a new title. Example: «Senior Product Manager (Remote)» → «Senior Product Manager» with match_from = exact library text.
+      - addTitle: JD needs a **new** library row (title not in list, or genuinely different role wording).
+      - enableTitle: row exists but checkbox is off → enable; disable all other titles.
+      After any apply op, pipeline turns off every other checked title automatically.
+      **Teal platform limit:** only **one** Target Title checkbox can be on per resume — not configurable. Never output two enabled titles, never askUser for «enable both». If JD suggests two roles, pick **one** best title for this vacancy (or editTitle to combine wording); put secondary keywords in Professional Summary / skills instead.
+      **Ambiguous library rows** (e.g. «Senior Product Manager» vs «Product Manager»): step 10 calls **Claude Code** with JD + library list → one recommended title → **enableTitle** if exact library match, else **addTitle**. Do not askUser Roman for pick; do not guess longest match in script.
+      **Not in library** (enable impossible): default **addTitle** with normalized string from feedback / Claude recommendation — never fallback to nearest existing, never skip. After add, verify checkbox on preview + PDF eval.
+      If Claude Code resolve fails on **ambiguous** rows — one automatic retry, then deferred + chat (T8).
+    singleTitlePolicy:
+      max_enabled_on_resume: 1
+      teal_platform_limit: true
+      auto_disable_others: true
+      note: Multi-select Target Titles is impossible in Teal UI; «Product Manager + AI Lead both on» is not a valid feedback case — choose one value per review.
+    edgePolicy:
+      ask_in_chat: true
+      discoveryPolicy: |
+        **T99_novel** и любой непокрытый атомарный кейс → **обязательно** askUser → deferred_v1 (target_title_decision) → блок в чате step 10.
+        После 2+ одинаковых T99 на практике — новый id в edgeCatalog + automation/rule.
+      when:
+        - id T8_claude_ambiguous_failed — Claude resolve упал **после** 1 automatic retry
+        - id T9_add_ui_failed — addTitle/enable verify не прошли в Teal UI (см. edgeCatalog)
+        - id T99_novel_uncatalogued — любой новый кейс вне каталога (опиши situation в askUser)
+      not_ask_user:
+        - id T1_extra_checkboxes — лишние включённые titles → auto-disable
+        - id T3_ambiguous_library — Claude Code step 10 (+ 1 retry on fail)
+        - id T4_not_in_library — auto addTitle + verify
+        - id T5_company_in_title — strip company из value до apply
+        - id T6_empty_value — пустой value → skip
+        - id T12_duplicate_library_rows — несколько одинаковых строк → enable любую (первая в DOM)
+        - id T13_match_score_vs_feedback — step 10 feedback перезаписывает title step 8
+      out_of_flow:
+        - id T10_delete_from_library — сервисная очистка библиотеки; не full-flow; npm run job-search:teal-delete-duplicate-target-titles
+      out_of_scope:
+        - id T11_reorder_library — drag/порядок titles; не поддерживаем
+    edgeCatalog:
+      resolved:
+        - id: T1_extra_checkboxes
+          situation: На резюме включено больше одного Target Title
+          resolution: step10 включает нужный, остальные чекбоксы off автоматически
+        - id: T2_edit_in_place
+          situation: Исправить текст существующей строки (typo, убрать «(Remote)»)
+          resolution: op editTitle (match_from + value); не addTitle
+        - id: T3_ambiguous_library
+          situation: В библиотеке 2+ похожих строк, неясно enable какую
+          resolution: step10 Claude Code по JD → exact enable или add
+        - id: T4_not_in_library
+          situation: Title нет в библиотеке, enableTitle невозможен
+          resolution: auto addTitle + verify checkbox + PDF eval; не fallback на ближайший
+        - id: T5_company_in_title
+          situation: В value попала компания («Title — Acme»)
+          resolution: stripCompanyFromTitle + normalizeJobTitleForTeal до apply
+        - id: T6_empty_value
+          situation: Пустой value / skip
+          resolution: skip — блок Target Title не меняем
+        - id: T7_single_title_platform
+          situation: «Нужно два title одновременно»
+          resolution: невозможно в Teal; один title + keywords в summary/skills
+        - id: T12_duplicate_library_rows
+          situation: В библиотеке 2+ строки с одинаковым текстом
+          resolution: enable первую найденную в DOM; dedupe вне full-flow — npm run job-search:teal-delete-duplicate-target-titles
+        - id: T13_match_score_vs_feedback
+          situation: После step 8 на preview один title (из job.title), в feedback step 9 — другой
+          resolution: step 10 применяет feedback; информационный блок в чате (не askUser, не deferred)
+      deferred_practice:
+        - id: T8_claude_ambiguous_failed
+          situation: Ambiguous library и Claude Code resolve failed после 1 automatic retry
+          resolution: askUser + deferred + чат; manual или retry step 10
+        - id: T9_add_ui_failed
+          situation: |
+            Step 10 не смог добавить/включить title в Teal UI: нет кнопки Add, нет поля после Add,
+            Save не сработал, или после Save чекбокс на preview не включён.
+            Не путать с «title нет в списке» (T4 — auto add) и с editTitle (T2).
+          resolution: stop Chrome profile + 1 restart Target Title apply; если снова fail → askUser + deferred + чат
+        - id: T99_novel_uncatalogued
+          situation: Кейс не в edgeCatalog.resolved / deferred_practice
+          resolution: обязательно askUser + deferred + чат; после 2+ повторов — новый id в edgeCatalog
+      maintenance_out_of_flow:
+        - id: T10_delete_from_library
+          situation: Удалить строку из библиотеки Target Title (снизить нагрузку на страницу)
+          resolution: вне full-flow; npm run job-search:teal-delete-duplicate-target-titles; askUser в step 10 не вызывается
+      out_of_scope:
+        - id: T11_reorder_library
+          situation: Drag / порядок строк в библиотеке titles
+          resolution: не поддерживаем; вне scope pipeline
+    ops:
+      editTitle:
+        routable: apply
+        mapsTo: { action: edit }
+        description: Edit existing Target Title row in place (match_from = exact library text, value = new text)
+      addTitle:
+        routable: apply
+        mapsTo: { action: add }
+        description: Add a new target title via Add a Target Title (job-aligned change)
+      enableTitle:
+        routable: apply
+        mapsTo: { action: enable }
+        description: Find existing title in the list and enable its checkbox on this resume
+      skip:
+        routable: apply
+        description: Leave target titles unchanged
+      askUser:
+        routable: deferred
+        field: other
+        category: target_title_decision
+        description: |
+          Atomic edge from edgeCatalog.deferred_practice or T99_novel — use edge_id + situation.
+          Example: { "op": "askUser", "edge_id": "T10_delete_from_library", "situation": "…", "value": "…" }
+          Pipeline → deferred_v1 + chat block; formalize new rule after repeat on practice.
+      set:
+        routable: apply
+        mapsTo: { action: set }
+        description: Legacy alias — auto (enable if in list, else add). Prefer addTitle / enableTitle.
+
+  preview.professionalSummary:
+    label: Professional summary
+    applyKeys: [professional_summary]
+    behavior: |
+      **Claude Code CLI (step 9), не Cowork UI:** review делает `teal-cowork-resume-review.cjs` → Claude Code CLI по умолчанию. В промпт и rules ниже — только для этого шага.
+      **Редактирование summary поддерживается** — через op **`replace`**: один полный текст в `text` (step 10 вставляет целиком в Teal). Это и есть «edit text» на уровне контента; в feedback **не** использовать имя op `editText` (оно для Teal block-layer, не для Claude blocks).
+      **Формат blocks step 9/10 — только два apply-op:** `replace` или `skip` (не трогать step 8). Частичные правки («подправь абзац», patch, merge) → не маршрутизируются; Claude должен вернуть **весь** обновлённый summary одним `replace.text`.
+      **`editText` в blocks:** unsupported/deferred — не «редактирование запрещено», а **неверное имя op**; эквивалент = `replace` с полным `text`.
+      **`deleteItem` в blocks:** не full-flow step 10. Удаление N summary-items — **вне pipeline**, как T10 для Target Title library: `/teal-delete-summary` → `npm run job-search:teal-delete-first-summary` (batch по count/resumeId).
+      **Step 8 vs step 9/10:** match-score (step 8) может уже записать summary в Teal. Если в feedback `professional_summary.action === replace` с непустым `text` — step 10 **перезаписывает** step 8 (доверяем Claude Code review), **кроме PS7/PS9/PS10:** один Claude regen перед paste. **Regen fail** (timeout, нет JSON): **не** paste step 9; step-10-eval fail; чат `step-10-summary-regen-chat.md`. **Regen OK:** B→C в feedback.json, paste C. Повтор regen на вакансии не делается (`meta.professional_summary_step10_regen_attempted`).
+      **PS8:** `jd_themes` проверяются **только в тексте summary**, не во всём apply — fail step 9 если ни одна theme не встречается в summary.
+      **PS11 CV evidence:** сверка summary с CV PDF — **report-only**, apply **не** блокируется. Проверяются **только tools** (Snowflake, Databricks, …), не эвристика «12 years». Если tool в summary нет в CV → `needs_chat_attention`, файл **`step-10-summary-cv-evidence-chat.md`** и маркеры `STEP10_PS11_CV_EVIDENCE_CHAT_*` в stdout — **агент обязан вывести Roman в чат** для решения (оставить / править summary / править CV). Meta: `professional_summary_extended_gate.ps11_cv_evidence`.
+      **Data PM evidence:** сигналы data/analytics PM пишутся в `00-Inbox/Job_Search/teal/vacancy-profile-evidence-log.json` без отдельного profile.
+      Текст step 8: `step-8-evidence.json` → `professionalSummaryText` + копия `step-8-professional-summary.txt` в package.
+      Статистика replace vs skip/absent — `feedback.meta.professional_summary_step8_stats` + агрегат `00-Inbox/Job_Search/teal/professional-summary-step8-vs-step10-stats.json`.
+      **Пустой/слишком короткий summary на preview после replace** — UI-баг (секция off, paste/save не дошёл, delete/селектор): **не askUser**; step 10 **detect + self-heal** — развернуть секцию, включить toggle, повторить paste (лог: `summary_section_disabled`, `summary_paste_empty`, `summary_too_short`). Пустой `replace` в feedback.json → **fail validation**, apply не стартует.
+      **PS12 content verify:** после paste read-back **превью справа** (панель резюме в Content Editor) и (после PDF export) секция Professional Summary в PDF **должны совпадать** с текстом из feedback.json. Mismatch → retry paste. При fail step-10-eval скрипт пишет **`step-10-summary-verify-chat.md`** и блок между `=== STEP10_PS12_CHAT_REPORT_START/END ===` в stdout — **агент обязан продублировать этот текст Roman в чате** (не только meta в feedback.json). **Не** fail по числу кнопок Delete слева: два summary-item в левом редакторе допустимы, если справа виден правильный текст.
+      **Paste hygiene (не PS13 fail):** **не** жать Add если summary-item уже есть (иначе лишний блок). При двух items слеva (generic сверху + новый с step 8) — править **последний** item; авто-удаление лишних Delete **не** делаем. Claude Code step 9 → один полный `replace.text`, scope `full`.
+      **Writing rules:** summary-writing-checklist.md + ai-writing-signs-banned.md — `sanitizeFeedbackData` → `professional_summary_writing_gate` (auto-fix em/en dash; fail validation + step-10-eval if banned patterns remain). **English in summary: C1 only** — PS3 fail on `English B2`, `B2/C1`, `B2 English`, etc. (Roman rule; см. `.cursor/rules/english-proficiency-resume.mdc`).
+      **Vacancy profile:** follow `meta.vacancy_profile`. PS4: `ai`/`generic` — no iGaming-only phrases in summary. PS5: `ai`/`ai_igaming` — summary must show AI/LLM/agentic/automation (match JD). PS6: `igaming`/`ai_igaming` — summary must show iGaming domain (Pin-Up, compliance, operator, licensing). Each PS → step 9 fail + retry if violated.
+    edgePolicy:
+      not_ask_user:
+        - id PS1_empty_preview — пустой/короткий preview после replace → self-heal paste, не просить новый текст у Roman
+        - id PS3_banned_writing — AI puffery / formulaic / meta phrases / **English B2** → fail eval + retry step 9, не править текст в step 10 (кроме PS7 one-shot improve)
+        - id PS7_step8_regression — step 9 replace слабее step 8 → один Claude regen в step 10; **fail eval + чат** если regen не вернул текст; **paste C** только если regen OK; не retry step 9 loop
+        - id PS8_missing_jd_themes_in_summary — replace без ни одной jd_theme **в тексте summary** → fail step 9 + retry Claude Code
+        - id PS9_writing_quality — tautology / keyword stuffing / duplicate meaning → один Claude regen в step 10 (не askUser)
+        - id PS10_summary_too_long — summary > 1800 chars (soft) → один Claude regen «сократи до ~3 абзацев»
+        - id PS11_cv_evidence — tools в summary не в CV: apply продолжается; обязательный чат-блок для решения Roman (не hard fail)
+        - id PS12_content_verify — превью справа + PDF must match feedback.json text; mismatch → self-heal retry paste, then fail eval
+        - id PS13_paste_hygiene — не Add при существующем item; при 2+ items слеva править последний; без auto-delete и без fail по числу Delete
+        - id PS4_igaming_bleed — vacancy_profile ai/generic + summary replace с iGaming-only фразами → fail step 9 + retry Claude Code, не править summary в step 10
+        - id PS5_missing_ai_focus — vacancy_profile ai/ai_igaming + summary replace без AI/LLM/automation сигналов → fail step 9 + retry
+        - id PS6_missing_igaming_focus — vacancy_profile igaming/ai_igaming + summary replace без domain-акцента → fail step 9 + retry
+      when:
+        - id PS2_empty_feedback_replace — normalize/Claude вернул replace без текста → validateApplyQuality fail до браузера
+        - id PS99_novel_uncatalogued — op askUser на summary вне каталога → deferred_v1.other
+      out_of_flow:
+        - id PS14_delete_summary_items — удалить N summary-items на preview; вне full-flow; /teal-delete-summary или npm run job-search:teal-delete-first-summary (не deleteItem в blocks)
+      out_of_scope:
+        - id PS15_partial_editText_in_blocks — op editText / patch абзаца в blocks; переписать review как один replace.text
+    edgeCatalog:
+      maintenance_out_of_flow:
+        - id: PS14_delete_summary_items
+          situation: Удалить один или несколько первых Professional Summary items (лишние блоки, generic сверху)
+          resolution: вне full-flow; npm run job-search:teal-delete-first-summary; skill /teal-delete-summary
+      out_of_scope:
+        - id: PS15_partial_editText_in_blocks
+          situation: Claude вернул op editText или частичную правку вместо полного текста
+          resolution: один replace.text в blocks; step 10 вставляет весь текст, не patch-by-paragraph
+        - id: PS99_novel_uncatalogued
+          situation: Изменение summary не в каталоге PS1–PS15
+          resolution: op askUser + edge_id PS99_novel_uncatalogued → deferred_v1.other + чат
+    ops:
+      replace:
+        routable: apply
+        description: Full summary replace in Teal (= supported edit; overrides step 8 when non-empty text)
+      skip:
+        routable: apply
+        description: Keep step 8 professional summary unchanged
+      editText:
+        routable: deferred
+        field: other
+        category: professional_summary_format
+        reason: Use replace with full text in `text`; editText is a Teal UI op name, not a feedback blocks op
+      deleteItem:
+        routable: deferred
+        field: other
+        category: professional_summary_maintenance
+        reason: Batch delete summary items outside full-flow — npm run job-search:teal-delete-first-summary (see PS14)
+      askUser:
+        routable: deferred
+        field: other
+        category: professional_summary_decision
+
+  preview.contactHeader:
+    label: Contact header
+    applyKeys: [contact_header]
+    behavior: |
+      Canonical values: `00-Inbox/Job_Search/teal/roman-contact-profile.json` + `.cursor/rules/roman-contact-links.mdc`.
+      Step 10 applies **omit_substack_github** via `teal-set-contact-links.cjs` (clears Substack/GitHub from Twitter/X and Website; keeps Lisbon, phone, email, LinkedIn).
+      Per-field edits (phone, city, email text) are **not** automated — use deferred `set_field`.
+    edgePolicy:
+      not_ask_user:
+        - id CH1_omit_substack_github — feedback/blocks request minimal header → apply omit_substack_github
+      when:
+        - id CH2_set_field_deferred — op set_field on any contact field → deferred_v1.other, never apply.contact_header except omit flag
+        - id CH99_novel_uncatalogued — op askUser on contact header for uncatalogued change
+    edgeCatalog:
+      resolved:
+        - id: CH1_omit_substack_github
+          situation: Cowork/step 10 should drop Substack and GitHub from contact per Roman policy
+          resolution: blocks op omit_substack_github → apply.contact_header; npm run job-search:teal-set-contact-links before PDF
+        - id: CH2_set_field_deferred
+          situation: Claude asks to change phone, city, or other single contact field
+          resolution: op set_field → deferred_v1.other; Roman edits Contact Information in Teal UI
+        - id: CH99_novel_uncatalogued
+          situation: Contact header change not in CH1–CH2 catalog
+          resolution: op askUser + edge_id CH99_novel_uncatalogued → deferred_v1.other + chat
+    ops:
+      omit_substack_github:
+        routable: apply
+      set_field:
+        routable: deferred
+        reason: Individual contact field edits are not automated
+      askUser:
+        routable: deferred
+        field: other
+        category: contact_header_decision
+
+  preview.workExperience:
+    label: Work experience (roles / toggles)
+    applyKeys: [work_experience]
+    behavior: |
+      Step 10 applies **toggleCompany**, **toggleRole**, **toggleBullet**, and **patchBullets** via `teal-resume-experience.cjs`
+      (row shapes: `company_match`, `role_match`, `company_included`, `role_included`, `bullets[]` with `text_match_prefix` + `included`).
+      Excluding a company (`toggleCompany` included false) also sets `role_included` false on that row.
+      Date edits, new roles, role reorder, and company merge are **not** automated — use deferred ops `editDates`, `addRole`, `reorderRoles`, `mergeCompanies`.
+      **PDF inclusion (not text edit):** gates WE11–WE15 require Location, Remote, Contractor, employment dates, and position header checkboxes **ON** on every role where the field exists — unchecked rows drop from the exported resume. `ensureWorkExperienceMetadataIncluded` turns them on during step 10 / live tests. WE13 is **dates on resume**, not `editDates` (WE5).
+      **Canonical location text (WE10):** `Lisbon, Portugal`; `Kyiv, Ukraine`; `Remote` (exact strings when those cities apply). **Wrong text (WE17):** step 10 runs `ensureCanonicalLocationTextOnPage` after apply — same rules as WE10 eval (`Lisboa` → `Lisbon, Portugal`, `Kiev` → `Kyiv, Ukraine`, etc.). Op `setLocation` in feedback records intent on the matching company+role row.
+      **WE3 vs bullets block:** `toggleBullet` on **preview.workExperience** (gate **WE3**) and `disableBullet` / `deleteBullet` / `toggleBullet` on **preview.workExperience.bullets** (gates **WB3**, **WB6**) all land in `apply.work_experience[].bullets[]` — same Teal checkbox. Use the **bullets** block when Claude groups achievement edits; use **workExperience** when toggles sit with company/role/patchBullets in one block.
+    edgePolicy:
+      not_ask_user:
+        - id WE1_toggle_company — feedback excludes or includes whole company → apply work_experience row flags
+        - id WE2_toggle_role — feedback toggles one role under company → apply work_experience row role_included
+        - id WE3_toggle_bullet — single bullet include/exclude by text_match_prefix on matching company+role row
+        - id WE4_patch_bullets — batch bullet toggles on one company+role row in one action
+      when:
+        - id WE5_edit_dates_deferred — op editDates → deferred_v1.other, never apply.work_experience
+        - id WE6_add_role_deferred — op addRole → deferred_v1.other
+        - id WE7_reorder_roles_deferred — op reorderRoles → deferred_v1.other
+        - id WE8_merge_companies_deferred — op mergeCompanies → deferred_v1.other
+        - id WE10_location_canonical — location field text must match Lisbon/Kyiv/Remote canonicals when used
+        - id WE17_location_text_fix — wrong Location text auto-fixed on step 10 (same rules as WE10 eval)
+        - id WE18_manual_only_experience — roles in roman-work-experience-policy.json never ON in automation; Roman enables manually in Teal only
+        - id WE19_chronology_cutoff — default ON only jobs newer than Route4Me Lead PM; anchor and older OFF unless chronology_override in Cowork
+        - id WE20_cyrillic_bullets_off — English resume: achievement bullets with Cyrillic text must stay OFF unless cyrillic_override in Cowork
+        - id WE11_remote_on_resume — Remote employment flag checkbox ON when row exists
+        - id WE12_contractor_on_resume — Contractor flag checkbox ON when row exists
+        - id WE13_dates_on_resume — Start/End dates checkbox ON when period text present (not editDates)
+        - id WE14_location_on_resume — Location checkbox ON when location text present
+        - id WE15_position_on_resume — Position header checkbox ON for every role on resume
+        - id WE99_novel_uncatalogued — op askUser на work experience вне каталога → deferred_v1.other
+    edgeCatalog:
+      resolved:
+        - id: WE1_toggle_company
+          situation: Cowork/step 10 should hide or show an entire employer block
+          resolution: op toggleCompany → apply.work_experience row; included false also sets role_included false
+        - id: WE2_toggle_role
+          situation: Keep company but hide or show one role line
+          resolution: op toggleRole → apply.work_experience matching company_match + role_match
+        - id: WE3_toggle_bullet
+          situation: Include or exclude one achievement bullet by prefix match
+          resolution: op toggleBullet → bullet on correct wx row (see test-work-experience-apply.cjs shapes)
+        - id: WE4_patch_bullets
+          situation: Multiple bullet toggles on the same company+role in one feedback action
+          resolution: op patchBullets → append bullets[] on single wx row
+        - id: WE5_edit_dates_deferred
+          situation: Claude asks to change employment dates in Teal
+          resolution: op editDates → deferred_v1.other; Roman edits dates in Teal UI
+        - id: WE6_add_role_deferred
+          situation: Feedback requests a new role entry not present in resume
+          resolution: op addRole → deferred_v1.other; manual Teal entry
+        - id: WE7_reorder_roles_deferred
+          situation: Feedback asks to reorder roles or employers
+          resolution: op reorderRoles → deferred_v1.other; drag in Teal UI
+        - id: WE8_merge_companies_deferred
+          situation: Structural merge (e.g. collapse INXY into Earlier experience)
+          resolution: op mergeCompanies → deferred_v1.other; manual structure edit
+        - id: WE18_manual_only_experience
+          situation: Employer/role listed in roman-work-experience-policy.json (e.g. Mindera Technical PO Sep 2025–Jan 2026)
+          resolution: step 9 fails if Cowork enables on resume; apply injects company_included/role_included false; step 10 verify + excludePolicyRolesOnPreview unchecks Teal
+        - id: WE19_chronology_cutoff
+          situation: Cowork tries to enable Route4Me Lead PM or any older job when chronology_cutoff is active
+          resolution: injectChronologyCutoffIntoFeedback after policy inject; step 9 validateChronologyCutoff; step 10 verifyChronologyCutoffOnExtract; explicit chronology_override or role/company_included true in apply = Claude override documented in step-9 reason
+        - id: WE20_cyrillic_bullets_off
+          situation: Work Experience achievement bullet text contains Cyrillic on an English-target resume
+          resolution: step 9 validateNoCyrillicBulletsEnabled; apply injectCyrillicBulletsOffIntoFeedback after chronology; step 10 verifyCyrillicBulletsOffOnExtract + excludeCyrillicBulletsOnPreview; rare cyrillic_override:true on bullet action with step-9 reason
+        - id: WE17_location_text_fix
+          situation: Location shows Lisboa, Kiev, or non-canonical Remote wording
+          resolution: ensureCanonicalLocationTextOnPage on step 10; optional op setLocation in feedback blocks
+        - id: WE99_novel_uncatalogued
+          situation: Изменение work experience не в каталоге WE1–WE17
+          resolution: op askUser + edge_id WE99_novel_uncatalogued → deferred_v1.other + чат
+    ops:
+      toggleCompany:
+        routable: apply
+        description: Include or exclude entire company block
+      toggleRole:
+        routable: apply
+        description: Include or exclude a role under a company
+      toggleBullet:
+        routable: apply
+        description: Include or exclude one bullet by text_match_prefix
+      patchBullets:
+        routable: apply
+        description: Batch bullet toggles on one company+role row
+      editDates:
+        routable: deferred
+        reason: Date field edits in Teal are not automated
+      addRole:
+        routable: deferred
+        reason: Creating new roles in Teal is not automated
+      reorderRoles:
+        routable: deferred
+        reason: Role reordering is not automated
+      mergeCompanies:
+        routable: deferred
+        reason: Structural company merge is manual
+      setLocation:
+        routable: apply
+        description: Record location text fix for company+role; step 10 also auto-fixes non-canonical text (WE17)
+      askUser:
+        routable: deferred
+        field: other
+        category: work_experience_decision
+
+  preview.workExperience.bullets:
+    label: Work experience achievement bullets (Teal /preview)
+    applyKeys: [bullets_add, bullets_rewrite, bullets_reorder]
+    behavior: |
+      Teal **achievement** rows under a **company + position** (`[data-testid="Achievement"]`).
+      Automation maps block ops → `apply.bullets_add`, `apply.bullets_rewrite`, `apply.bullets_reorder`, or
+      `apply.work_experience[].bullets[]` for include/exclude (same as toggleBullet on the parent block).
+      Apply runtime: `teal-resume-experience.cjs` + `teal/blocks/work-experience-bullets.cjs`.
+      **Not** the same as `preview.workExperience` company/role toggles (WE1–WE2) or batch `patchBullets` (WE4 on parent block).
+    tealCapabilities:
+      automated_apply:
+        - add new achievement text under a position
+        - rewrite achievement text by prefix match
+        - hide achievement on resume (checkbox off)
+        - show achievement on resume (checkbox on) via enableBullet / showBullet
+        - reorder achievements within one position (drag) via reorderBullet → bullets_reorder.moveAfter
+      manual_or_deferred:
+        - split one achievement into two roles (structural)
+        - merge two employers' bullets
+        - edit employment dates (see preview.workExperience editDates)
+    edgePolicy:
+      not_ask_user:
+        - id WB1_add_bullet — op addBullet → apply.bullets_add
+        - id WB2_rewrite_bullet — op rewriteBullet → apply.bullets_rewrite
+        - id WB3_delete_bullet — op deleteBullet → wx bullet included false (alias toggleBullet)
+        - id WB4_reorder_bullet — op reorderBullet → apply.bullets_reorder.moveAfter
+        - id WB5_enable_bullet — op enableBullet / showBullet → wx bullet included true
+        - id WB6_disable_bullet — op disableBullet or toggleBullet included false on bullets block → wx bullet included false
+      when:
+        - id WB7_move_bullet_deferred — op moveBullet to another role → deferred_v1.other
+        - id WB99_novel_uncatalogued — uncatalogued bullet change → askUser deferred
+    edgeCatalog:
+      resolved:
+        - id: WB1_add_bullet
+          situation: Add a new achievement under company+role on Teal preview
+          resolution: op addBullet → apply.bullets_add row
+        - id: WB2_rewrite_bullet
+          situation: Change existing achievement wording (prefix match)
+          resolution: op rewriteBullet → apply.bullets_rewrite
+        - id: WB3_delete_bullet
+          situation: Hide achievement on resume/PDF (checkbox off)
+          resolution: op deleteBullet with included false → work_experience bullets[] on matching row
+        - id: WB4_reorder_bullet
+          situation: Put achievement A immediately after achievement B within the same position
+          resolution: op reorderBullet → apply.bullets_reorder.moveAfter { text_match_prefix, after_text_match_prefix }
+        - id: WB5_enable_bullet
+          situation: Re-enable a hidden achievement by prefix
+          resolution: op enableBullet or showBullet → work_experience bullets[] included true
+        - id: WB6_disable_bullet
+          situation: Hide achievement on resume (disabled bullet / checkbox off)
+          resolution: op disableBullet, deleteBullet alias, or toggleBullet with included false on bullets block
+      deferred_practice:
+        - id: WB7_move_bullet_other_role_deferred
+          situation: Move bullet text to another company/role
+          resolution: op moveBullet → deferred_v1.other; manual cut/paste or add+delete in Teal
+        - id: WB99_novel_uncatalogued
+          situation: Bullet change not in catalog
+          resolution: op askUser + edge_id WB99_novel_uncatalogued → deferred_v1.other
+    ops:
+      addBullet:
+        routable: apply
+      rewriteBullet:
+        routable: apply
+      deleteBullet:
+        routable: apply
+        mapsTo: toggleBullet
+        description: Alias for disableBullet (included false)
+      disableBullet:
+        routable: apply
+        mapsTo: toggleBullet
+        description: Hide achievement on resume (included false)
+      toggleBullet:
+        routable: apply
+        description: Include or exclude bullet on bullets block (included true/false)
+      reorderBullet:
+        routable: apply
+        description: Drag achievement so text_match_prefix row sits directly after after_text_match_prefix
+      enableBullet:
+        routable: apply
+        mapsTo: toggleBullet
+        description: Show bullet on resume (included true)
+      showBullet:
+        routable: apply
+        mapsTo: enableBullet
+      moveBullet:
+        routable: deferred
+        reason: Cross-role bullet move is manual in Teal
+      askUser:
+        routable: deferred
+        field: other
+        category: work_experience_bullets_decision
+
+  preview.skills:
+    label: Skills (Teal /preview #skills)
+    applyKeys:
+      [
+        skills_add,
+        skills_remove,
+        skills_toggle,
+        skills_edit,
+        skills_reorder,
+        skills_category_add,
+        skills_category_rename,
+        skills_category_toggle
+      ]
+    behavior: |
+      Skill **chips** and **categories** on resume preview (`#skills`, `[data-testid="resume-tags"]`).
+      **CRUD chips:** addSkill (create), extract/read verify, editSkill (update), deactivateSkill/activateSkill (toggle), removeSkill (uncheck — step 10 deactivates chip, library kept).
+      **CRUD categories:** addCategory, extract/read, editCategory, deactivateCategory/activateCategory (all chips in row), deleteCategory → deferred.
+      **Duplicates:** never removeSkill first — deactivateSkill + askUser (SK19 same category, SK20 cross category). Roman decides delete in Teal if needed.
+      Permanent library delete / merge / delete whole category → deferred.
+    tealCapabilities:
+      chips_automated:
+        - add skill chip (optional target category)
+        - remove/uncheck skill from resume
+        - reorder category to top or after another
+        - reorder chip within category
+      categories_automated:
+        - add new category row (Add category menu)
+        - rename category label (Edit category)
+      categories_manual:
+        - delete whole category container
+        - merge two categories into one
+        - delete skill from global library (see deleteFromLibrary)
+    edgePolicy:
+      not_ask_user:
+        - id SK1_add_skill — create chip → skills_add
+        - id SK2_read_skill — verify via extract (gate/tests; not an op)
+        - id SK3_edit_skill — editSkill → skills_edit
+        - id SK4_deactivate_skill — deactivateSkill/toggleSkill included false → skills_toggle
+        - id SK5_activate_skill — activateSkill/toggleSkill included true → skills_toggle
+        - id SK6_remove_skill — removeSkill → skills_remove (uncheck; prefer SK4 for duplicates)
+        - id SK7_add_category — addCategory → skills_category_add
+        - id SK8_read_category — verify category in extract
+        - id SK9_edit_category — editCategory → skills_category_rename
+        - id SK10_deactivate_category — deactivateCategory → skills_category_toggle false
+        - id SK11_activate_category — activateCategory → skills_category_toggle true
+        - id SK13_reorder_category_first — skills_reorder.moveCategoryFirst
+        - id SK14_reorder_category_after — skills_reorder.moveCategoryAfter
+        - id SK15_reorder_chip — skills_reorder.chipOrder[]
+      when:
+        - id SK12_delete_category_deferred — delete whole category container
+        - id SK16_delete_from_library_deferred — permanent library delete
+        - id SK17_merge_categories_deferred — merge two categories
+        - id SK19_duplicate_same_category — duplicate chip in one category → deactivate + askUser
+        - id SK20_duplicate_wrong_category — same skill in two categories → deactivate wrong block + askUser
+        - id SK99_novel_uncatalogued — uncatalogued skills change → askUser deferred
+    edgeCatalog:
+      resolved:
+        - id: SK1_add_skill
+          situation: Add skill chip to resume (optional category)
+          resolution: op addSkill → apply.skills_add
+        - id: SK3_edit_skill
+          situation: Rename or fix skill chip label on resume
+          resolution: op editSkill → apply.skills_edit
+        - id: SK4_deactivate_skill
+          situation: Hide skill on resume (checkbox off); default for duplicates and noise
+          resolution: op deactivateSkill → apply.skills_toggle included false
+        - id: SK5_activate_skill
+          situation: Show skill on resume (checkbox on)
+          resolution: op activateSkill → apply.skills_toggle included true
+        - id: SK6_remove_skill
+          situation: Explicit remove/uncheck path (step 10 still deactivates chip in Teal)
+          resolution: op removeSkill → apply.skills_remove
+        - id: SK7_add_category
+          situation: Create a new skills category on resume
+          resolution: op addCategory → apply.skills_category_add; alias createCategory
+        - id: SK9_edit_category
+          situation: Rename category label in Teal
+          resolution: op editCategory → apply.skills_category_rename
+        - id: SK10_deactivate_category
+          situation: Turn off all chips in a category row
+          resolution: op deactivateCategory → skills_category_toggle included false
+        - id: SK11_activate_category
+          situation: Turn on chips in a category row
+          resolution: op activateCategory → skills_category_toggle included true
+        - id: SK13_reorder_category_first
+          situation: Move skill category to top
+          resolution: op reorderCategoryFirst → skills_reorder.moveCategoryFirst
+        - id: SK14_reorder_category_after
+          situation: Move category after another
+          resolution: op reorderCategoryAfter → moveCategoryAfter
+        - id: SK15_reorder_chip
+          situation: Reorder chip within/between categories
+          resolution: op reorderChip → skills_reorder.chipOrder
+        - id: SK19_duplicate_same_category
+          situation: Two identical chips in one category
+          resolution: deactivateSkill on extra + askUser; do not removeSkill first
+        - id: SK20_duplicate_wrong_category
+          situation: Same skill enabled in multiple categories
+          resolution: deactivate in non-canonical category + askUser
+      deferred_practice:
+        - id: SK12_delete_category_deferred
+          situation: Delete entire skills category from resume
+          resolution: op deleteCategory → deferred_v1.other
+        - id: SK16_delete_from_library_deferred
+          situation: Delete skill from Teal library permanently
+          resolution: op deleteFromLibrary → deferred_v1.other
+        - id: SK17_merge_categories_deferred
+          situation: Merge two categories
+          resolution: op mergeCategories → deferred_v1.other
+        - id: SK99_novel_uncatalogued
+          situation: Skills change outside SK1–SK20 catalog
+          resolution: op askUser + edge_id SK99_novel_uncatalogued → deferred_v1.other + chat
+    ops:
+      addSkill:
+        routable: apply
+      editSkill:
+        routable: apply
+      deactivateSkill:
+        routable: apply
+      activateSkill:
+        routable: apply
+      toggleSkill:
+        routable: apply
+        description: included true/false → skills_toggle
+      removeSkill:
+        routable: apply
+        description: Explicit uncheck; duplicates should use deactivateSkill
+      reorderCategoryFirst:
+        routable: apply
+      reorderCategoryAfter:
+        routable: apply
+      reorderChip:
+        routable: apply
+      addCategory:
+        routable: apply
+      createCategory:
+        routable: apply
+        mapsTo: addCategory
+      editCategory:
+        routable: apply
+      deactivateCategory:
+        routable: apply
+      activateCategory:
+        routable: apply
+      deleteCategory:
+        routable: deferred
+      deleteFromLibrary:
+        routable: deferred
+      mergeCategories:
+        routable: deferred
+      askUser:
+        routable: deferred
+        field: other
+        category: skills_decision
+
+  preview.resumeLayout:
+    label: Resume layout (certs, projects, interests, skill category profiles)
+    applyKeys: [layout]
+    behavior: |
+      All ops populate `apply.layout` consumed by teal-apply-layout.cjs (skills category profile, cert trim, projects trim, interests remove all).
+    edgePolicy:
+      not_ask_user:
+        - id LY1_skills_category_layout — layout.skills_category_layout.profile
+        - id LY2_certifications_trim — layout.certifications role_allowlist
+        - id LY3_projects_trim — layout.projects trim/max_on_resume
+        - id LY4_interests_remove_all — layout.interests.remove_all
+    edgeCatalog:
+      resolved:
+        - id: LY1_skills_category_layout
+          situation: Reorder skill categories for data/AI PM profile
+          resolution: op skillsCategoryLayout → apply.layout.skills_category_layout
+        - id: LY2_certifications_trim
+          situation: Trim certifications to role allowlist profile
+          resolution: op certificationsTrim → apply.layout.certifications
+        - id: LY3_projects_trim
+          situation: Cap projects on resume (e.g. max 3)
+          resolution: op projectsTrim → apply.layout.projects mode trim
+        - id: LY4_interests_remove_all
+          situation: Remove entire interests section from resume
+          resolution: op interestsRemoveAll → layout.interests.remove_all true
+      deferred_practice:
+        - id: LY99_novel_uncatalogued
+          situation: Layout change outside LY1–LY4 catalog (manual Teal drag)
+          resolution: op askUser + edge_id LY99_novel_uncatalogued → deferred_v1.other
+    ops:
+      skillsCategoryLayout:
+        routable: apply
+      certificationsTrim:
+        routable: apply
+      projectsTrim:
+        routable: apply
+      interestsRemoveAll:
+        routable: apply
+      askUser:
+        routable: deferred
+        field: other
+        category: layout_decision
+
+  preview.blurbs:
+    label: Blurbs / highlights
+    applyKeys: [resume_sections]
+    edgePolicy:
+      not_ask_user:
+        - id BL1_add_blurb — addBlurb → apply.resume_sections
+      when:
+        - id BL2_edit_blurb_deferred — inline edit not automated
+        - id BL3_remove_blurb_deferred — removal not automated
+    edgeCatalog:
+      resolved:
+        - id: BL1_add_blurb
+          situation: Add highlight/blurb section row on resume
+          resolution: op addBlurb → apply.resume_sections push
+      deferred_practice:
+        - id: BL2_edit_blurb_deferred
+          situation: Edit existing blurb text in place
+          resolution: op editBlurb → deferred_v1.other; manual Teal
+        - id: BL3_remove_blurb_deferred
+          situation: Remove blurb from resume
+          resolution: op removeBlurb → deferred_v1.other; manual Teal
+        - id: BL99_novel_uncatalogued
+          situation: Blurb change outside BL1–BL4 catalog
+          resolution: op askUser + edge_id BL99_novel_uncatalogued → deferred_v1.other
+    ops:
+      addBlurb:
+        routable: apply
+        description: Adds resume_sections row when supported
+      editBlurb:
+        routable: deferred
+        reason: Inline blurbs edit is not automated
+      removeBlurb:
+        routable: deferred
+        reason: Blurbs removal is not automated
+      askUser:
+        routable: deferred
+        field: other
+        category: blurbs_decision
+
+  preview.projects:
+    label: Projects section
+    applyKeys: [layout.projects]
+    edgePolicy:
+      not_ask_user:
+        - id PR1_toggle_project — per-project include via layout.projects.toggles
+        - id PR2_trim_projects — layout.projects trim profile
+    edgeCatalog:
+      resolved:
+        - id: PR1_toggle_project
+          situation: Include or exclude one project row on resume
+          resolution: op toggleProject → layout.projects.toggles[]
+        - id: PR2_trim_projects
+          situation: Trim projects section to max_on_resume
+          resolution: op trimProjects → layout.projects mode trim
+      deferred_practice:
+        - id: PR99_novel_uncatalogued
+          situation: Projects change outside PR1–PR3 catalog
+          resolution: op askUser + edge_id PR99_novel_uncatalogued → deferred_v1.other
+    ops:
+      toggleProject:
+        routable: apply
+        via: layout.projects
+      trimProjects:
+        routable: apply
+        via: layout.projects
+      askUser:
+        routable: deferred
+        field: other
+        category: projects_decision
+
+  preview.certifications:
+    label: Certifications
+    applyKeys: [layout.certifications]
+    edgePolicy:
+      not_ask_user:
+        - id CT1_trim_certifications — trimCertifications via layout (or resumeLayout alias)
+      when:
+        - id CT2_toggle_certification_deferred — per-cert checkbox not automated
+    edgeCatalog:
+      resolved:
+        - id: CT1_trim_certifications
+          situation: Trim certs to role allowlist (data PM / generic profile)
+          resolution: op trimCertifications → apply.layout.certifications
+      deferred_practice:
+        - id: CT2_toggle_certification_deferred
+          situation: Toggle single certification on/off outside allowlist trim
+          resolution: op toggleCertification → deferred_v1.other; use certificationsTrim profile
+        - id: CT99_novel_uncatalogued
+          situation: Certifications change outside CT1–CT3 catalog
+          resolution: op askUser + edge_id CT99_novel_uncatalogued → deferred_v1.other
+    ops:
+      toggleCertification:
+        routable: deferred
+        reason: Per-cert toggle not automated; use certificationsTrim profile
+      trimCertifications:
+        routable: apply
+        via: layout.certifications
+      askUser:
+        routable: deferred
+        field: other
+        category: certifications_decision
+
+  preview.interests:
+    label: Interests
+    applyKeys: [layout.interests]
+    edgePolicy:
+      not_ask_user:
+        - id IN1_remove_all — removeAll → layout.interests.remove_all
+      when:
+        - id IN2_remove_chip_deferred — single chip removal not automated
+    edgeCatalog:
+      resolved:
+        - id: IN1_remove_all
+          situation: Clear entire interests section
+          resolution: op removeAll → layout.interests.remove_all (same as resumeLayout interestsRemoveAll)
+      deferred_practice:
+        - id: IN2_remove_chip_deferred
+          situation: Remove one interest chip but keep section
+          resolution: op removeChip → deferred_v1.other; manual Teal or removeAll
+        - id: IN99_novel_uncatalogued
+          situation: Interests change outside IN1–IN3 catalog
+          resolution: op askUser + edge_id IN99_novel_uncatalogued → deferred_v1.other
+    ops:
+      removeAll:
+        routable: apply
+        via: layout.interests
+      removeChip:
+        routable: deferred
+        reason: Single interest chip removal is not automated
+      askUser:
+        routable: deferred
+        field: other
+        category: interests_decision
+
+  preview.education:
+    label: Education
+    applyKeys: []
+    edgePolicy:
+      when:
+        - id ED1_any_deferred — any education op → deferred; nothing in apply
+    edgeCatalog:
+      deferred_practice:
+        - id: ED1_any_deferred
+          situation: Any education edit (dates, school, degree)
+          resolution: all ops routable deferred via `any`; applyKeys empty; manual Teal
+        - id: ED99_novel_uncatalogued
+          situation: Education askUser outside ED1–ED2 catalog
+          resolution: op askUser + edge_id ED99_novel_uncatalogued → deferred_v1.other
+    ops:
+      any:
+        routable: deferred
+        reason: Education block automation is planned, not shipped
+      askUser:
+        routable: deferred
+        field: other
+        category: education_decision
+
+  manual.deferred:
+    label: Manual-only (never apply)
+    applyKeys: []
+    edgePolicy:
+      when:
+        - id MD1_new_section — newSection → deferred_v1.new_sections
+        - id MD2_apply_logistics — applyLogistics → deferred_v1.other
+        - id MD3_role_fit_decision — roleFitDecision → deferred_v1.other
+        - id MD4_tone_note — toneNote → deferred_v1.other
+        - id MD5_other — other → deferred_v1.other
+    edgeCatalog:
+      deferred_practice:
+        - id: MD1_new_section
+          situation: Request new resume section not in Teal automation
+          resolution: op newSection → deferred_v1.new_sections; never apply
+        - id: MD2_apply_logistics
+          situation: Logistics note (relocation, notice period, etc.)
+          resolution: op applyLogistics → deferred_v1.other
+        - id: MD3_role_fit_decision
+          situation: Role fit / should-apply decision for Roman
+          resolution: op roleFitDecision → deferred_v1.other
+        - id: MD4_tone_note
+          situation: Tone/style note not mapped to Teal fields
+          resolution: op toneNote → deferred_v1.other
+        - id: MD5_other
+          situation: Catch-all manual bucket
+          resolution: op other → deferred_v1.other
+        - id: MD99_novel_uncatalogued
+          situation: Manual bucket askUser outside MD1–MD5 catalog
+          resolution: op askUser + edge_id MD99_novel_uncatalogued → deferred_v1.other
+    ops:
+      newSection:
+        routable: deferred
+        field: new_sections
+      applyLogistics:
+        routable: deferred
+        field: other
+      roleFitDecision:
+        routable: deferred
+        field: other
+      toneNote:
+        routable: deferred
+        field: other
+      other:
+        routable: deferred
+        field: other
+      askUser:
+        routable: deferred
+        field: other
+        category: manual_decision
+
+# Ops on unknown blocks or unknown op names → deferred_v1.other with reason "unsupported_op"
+
+coverage:
+  # Stored on feedback after normalize (meta.feedback_coverage)
+  reportKeys:
+    - total_actions
+    - apply_actions
+    - deferred_actions
+    - unsupported_actions
+    - coverage_pct

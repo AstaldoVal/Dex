@@ -23,7 +23,7 @@ All original sources are linked below. This repo only curates and syncs PM-relat
    This creates an `External/` folder (git-ignored) with clones and copies only the PM skills into the folders above.
 
 3. **Point Cursor at this folder:**  
-   - If your project uses a path like `.cursor/skills/` or `.claude/skills/`, copy or symlink the contents of this repo into a subfolder, e.g. `.claude/skills/pm/` or `.cursor/skills/pm/`, so that each skill subfolder (e.g. `deanpeters/`, `pop/`, `pmprompt/`) is visible as skills.  
+   - If your project uses a path like `.cursor/skills/` or `.claude/skills/`, copy or symlink the contents of this repo into a subfolder, e.g. `Skills_library/pm/` or `.cursor/skills/pm/`, so that each skill subfolder (e.g. `deanpeters/`, `pop/`, `pmprompt/`) is visible as skills.  
    - Alternatively, configure your Cursor/Claude setup to use `product-management-skills` as the root skills directory; then the subfolders `deanpeters/`, `pop/`, `pmprompt/`, etc. are the skill roots.
 
 4. Restart Cursor (or reload the window) so skills are picked up. Invoke skills by name, e.g. `/product-brief`, `/discovery-process`, `/deliver-prd`, `/pmprompt-jobs-to-be-done`.
@@ -32,8 +32,8 @@ All original sources are linked below. This repo only curates and syncs PM-relat
 
 1. Clone the repo and run the update script as above.
 2. Copy or symlink this folder (or its contents) into Claude Code’s skills directory. Typical locations:
-   - **macOS/Linux:** `~/.claude/skills/pm/` — copy the contents of this repo into `~/.claude/skills/pm/` (so that `~/.claude/skills/pm/deanpeters/`, `~/.claude/skills/pm/pop/`, etc. exist).
-   - Or set your project’s vault root and place the repo at `<vault>/.claude/skills/pm/`.
+   - **macOS/Linux:** `~/Skills_library/pm/` — copy the contents of this repo into `~/Skills_library/pm/` (so that `~/Skills_library/pm/deanpeters/`, `~/Skills_library/pm/pop/`, etc. exist).
+   - Or set your project’s vault root and place the repo at `<vault>/Skills_library/pm/`.
 3. Restart Claude Code. Use skills via `/skill-name` (e.g. `/product-brief`, `/prioritization`).
 
 ### Other providers

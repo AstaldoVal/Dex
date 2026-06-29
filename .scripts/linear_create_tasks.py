@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Create Linear issues for Dex tasks. Uses certifi for SSL."""
-import asyncio
+"""Create Linear issues for Dex tasks."""
 import json
 import os
 from pathlib import Path
@@ -14,12 +13,7 @@ if env_file.exists():
     except ImportError:
         pass
 
-# Force SSL certs
-import ssl
-import certifi
-ssl.create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
-
-import aiohttp
+import requests
 
 API_URL = "https://api.linear.app/graphql"
 API_KEY = os.environ.get("LINEAR_API_KEY") or os.environ.get("LINEAR_TOKEN")
@@ -46,28 +40,26 @@ mutation($input: IssueCreateInput!) {
 
 
 
-async def graphql(query: str, variables: dict = None):
+def graphql(query: str, variables: dict | None = None):
     payload = {"query": query}
     if variables:
         payload["variables"] = variables
-    connector = aiohttp.TCPConnector(ssl=ssl.create_default_context(cafile=certifi.where()))
-    async with aiohttp.ClientSession(connector=connector) as session:
-        async with session.post(
-            API_URL,
-            json=payload,
-            headers={"Authorization": API_KEY, "Content-Type": "application/json"},
-            timeout=aiohttp.ClientTimeout(total=30),
-        ) as resp:
-            return await resp.json()
+    r = requests.post(
+        API_URL,
+        json=payload,
+        headers={"Authorization": API_KEY, "Content-Type": "application/json"},
+        timeout=30,
+    )
+    return r.json()
 
 
-async def main():
+def main():
     if not API_KEY:
         print("ERROR: LINEAR_API_KEY not set in .env")
         return 1
 
     # Get viewer and teams
-    out_v = await graphql(QUERY_VIEWER)
+    out_v = graphql(QUERY_VIEWER)
     if out_v.get("errors"):
         print("ERROR:", out_v["errors"])
         return 1
@@ -76,7 +68,7 @@ async def main():
         print("ERROR: viewer not found")
         return 1
 
-    out_t = await graphql(QUERY_TEAMS)
+    out_t = graphql(QUERY_TEAMS)
     if out_t.get("errors"):
         print("ERROR:", out_t["errors"])
         return 1
@@ -91,7 +83,7 @@ async def main():
         inp = {"teamId": team_id, "title": title, "assigneeId": viewer_id}
         if desc:
             inp["description"] = desc
-        out = await graphql(MUTATION_CREATE, {"input": inp})
+        out = graphql(MUTATION_CREATE, {"input": inp})
         if out.get("errors"):
             print(f"ERROR creating '{title}':", out["errors"])
             continue
@@ -108,4 +100,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    exit(asyncio.run(main()))
+    raise SystemExit(main())

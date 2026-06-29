@@ -59,17 +59,32 @@ async function doTealLogin(page, options = {}) {
   await page.goto(TEAL_SIGN_IN_URL, { waitUntil: 'domcontentloaded', timeout: 20000 });
   await sleep(2000);
 
-  const emailLink = page.locator('a:has-text("Email"), button:has-text("Email"), [data-testid*="email"], a:has-text("Continue with email")').first();
-  if ((await emailLink.count()) > 0) {
-    try {
-      await emailLink.click();
-      await sleep(1500);
-    } catch (_) {}
-  }
+  const emailLinkSel =
+    'a:has-text("Email"), button:has-text("Email"), [data-testid*="email"], a:has-text("Continue with email"), button:has-text("Continue with email")';
+  const emailInputSel =
+    'input[type="email"], input[name*="email" i], input[placeholder*="email" i], input[id*="email" i]';
+  const passwordInputSel = 'input[type="password"], input[name*="password" i]';
 
-  const emailInput = page.locator('input[type="email"], input[name*="email" i], input[placeholder*="email" i]').first();
-  const passwordInput = page.locator('input[type="password"], input[name*="password" i]').first();
+  let emailInput = page.locator(emailInputSel).first();
+  let passwordInput = page.locator(passwordInputSel).first();
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const emailLink = page.locator(emailLinkSel).first();
+    if ((await emailLink.count()) > 0) {
+      try {
+        await emailLink.click({ timeout: 5000 });
+        await sleep(1200);
+      } catch (_) {}
+    }
+    emailInput = page.locator(emailInputSel).first();
+    passwordInput = page.locator(passwordInputSel).first();
+    if ((await emailInput.count()) > 0 && (await passwordInput.count()) > 0) break;
+    await sleep(1000);
+  }
   if ((await emailInput.count()) === 0 || (await passwordInput.count()) === 0) {
+    if (isTealAuthenticated(page)) {
+      console.log('[Teal login] Уже авторизован (форма email не требуется).');
+      return;
+    }
     console.error('[Teal login] Форма входа по email не найдена (возможно, только Google). Задайте TEAL_EMAIL/TEAL_PASSWORD в .env.');
     process.exit(1);
   }
@@ -115,4 +130,53 @@ function isTealAuthenticated(page) {
   return url.includes('app.tealhq.com') && !url.includes('sign-up') && !url.includes('sign-in') && !url.includes('/login') && !url.includes('accounts.google.com');
 }
 
-module.exports = { loadTealEnv, doTealLogin, isTealAuthenticated, TEAL_SIGN_IN_URL };
+/**
+ * Login when on sign-in/sign-up (or any unauthenticated Teal URL), then open targetUrl if given.
+ * Retries login once after navigation. Exits process on failure.
+ * @param {import('playwright').Page} page
+ * @param {{ tealDir?: string, targetUrl?: string, log?: Function, sleepMs?: number }} [opts]
+ */
+async function ensureTealAuthenticated(page, opts = {}) {
+  const tealDir = opts.tealDir || path.join(process.env.VAULT_PATH || path.resolve(__dirname, '../..'), '00-Inbox', 'Job_Search', 'teal');
+  const log = opts.log || ((m) => console.log(m));
+  const sleepMs = opts.sleepMs ?? 3000;
+
+  const authNeeded = () => !isTealAuthenticated(page);
+
+  // Navigate first so a persisted Chrome profile can reuse cookies (about:blank is not "logged in").
+  if (opts.targetUrl) {
+    await page.goto(opts.targetUrl, { waitUntil: 'domcontentloaded', timeout: 25000 });
+    await sleep(sleepMs);
+  }
+
+  if (authNeeded()) {
+    log(`[Teal auth] Auth required (${page.url()}) — running email login…`);
+    await doTealLogin(page, { tealDir });
+    if (opts.targetUrl) {
+      await page.goto(opts.targetUrl, { waitUntil: 'domcontentloaded', timeout: 25000 });
+      await sleep(sleepMs);
+    }
+  }
+
+  if (authNeeded()) {
+    log(`[Teal auth] Still on auth page (${page.url()}) — retry login…`);
+    await doTealLogin(page, { tealDir });
+    if (opts.targetUrl) {
+      await page.goto(opts.targetUrl, { waitUntil: 'domcontentloaded', timeout: 25000 });
+      await sleep(sleepMs);
+    }
+  }
+
+  if (authNeeded()) {
+    console.error('[Teal auth] Login failed. Still at: ' + page.url());
+    process.exit(1);
+  }
+}
+
+module.exports = {
+  loadTealEnv,
+  doTealLogin,
+  isTealAuthenticated,
+  ensureTealAuthenticated,
+  TEAL_SIGN_IN_URL
+};

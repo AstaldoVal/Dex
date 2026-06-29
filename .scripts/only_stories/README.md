@@ -1,6 +1,6 @@
 # Only Stories — Google Sheets automation
 
-Оба скрипта используют один OAuth-поток: `credentials.json` в корне репо, токен `google_drive_token.json`, включены **Google Sheets API** и **Google Drive API** в GCP, скоупы `spreadsheets` и `drive.file`.
+Оба скрипта используют один OAuth-поток: `Credentials/personal/credentials.json`, токен `Credentials/personal/google_drive_token.json`, включены **Google Sheets API** и **Google Drive API** в GCP, скоупы `spreadsheets` и `drive.file`.
 
 ## Feature matrix (US competitive)
 

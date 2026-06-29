@@ -22,7 +22,7 @@ description: PM diagrams — user journey, journey map, flows. Structure first; 
 
 ### 1. Уточнить тип и контекст
 
-- **User journey / journey map:** этапы от первого касания до лояльности (Awareness → Consideration → Decision → Service → Loyalty или свой набор); для каждого этапа: действия, touchpoints, эмоции, метрики. При необходимости опереться на структуру из `.claude/skills/pm/deanpeters/customer-journey-map/SKILL.md`.
+- **User journey / journey map:** этапы от первого касания до лояльности (Awareness → Consideration → Decision → Service → Loyalty или свой набор); для каждого этапа: действия, touchpoints, эмоции, метрики. При необходимости опереться на структуру из `Skills_library/pm/deanpeters/customer-journey-map/SKILL.md`.
 - **Flow / сценарий:** последовательность шагов, решений, экранов (линейный или с ветвлениями).
 - **Персона/продукт:** для кого journey, какой продукт или фича — чтобы формулировки и этапы были релевантны.
 
@@ -54,7 +54,7 @@ description: PM diagrams — user journey, journey map, flows. Structure first; 
 
 ## Dependencies
 
-- **User journey / journey map:** при глубокой рамке можно использовать `.claude/skills/pm/deanpeters/customer-journey-map/SKILL.md` (шаблон, этапы, вертикальная структура).
+- **User journey / journey map:** при глубокой рамке можно использовать `Skills_library/pm/deanpeters/customer-journey-map/SKILL.md` (шаблон, этапы, вертикальная структура).
 - **Картинка:** Nano Banana MCP (`nanobanana_generate`), Gemini-based. См. `.claude/reference/mcp-servers.md` (Nano Banana MCP) и `.claude/reference/nanobanana-figma-mcp.md`.
 
 ## Notes

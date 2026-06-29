@@ -25,7 +25,13 @@ import os
 import json
 import logging
 import re
+import sys
 from pathlib import Path
+
+_CORE_DIR = Path(__file__).resolve().parent.parent
+if str(_CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(_CORE_DIR))
+from credentials_paths import default_personal_credentials_json, default_personal_calendar_token
 from datetime import datetime, date, timedelta
 from typing import Optional
 
@@ -66,14 +72,14 @@ def _credentials_path() -> Path:
     path = os.environ.get("GOOGLE_CALENDAR_CREDENTIALS_PATH")
     if path:
         return Path(path).expanduser()
-    return Path.cwd() / "credentials.json"
+    return default_personal_credentials_json()
 
 
 def _token_path() -> Path:
     path = os.environ.get("GOOGLE_CALENDAR_TOKEN_PATH")
     if path:
         return Path(path).expanduser()
-    return _credentials_path().parent / "google_calendar_token.json"
+    return default_personal_calendar_token()
 
 
 def get_credentials():

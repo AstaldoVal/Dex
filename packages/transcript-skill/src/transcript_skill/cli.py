@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from typing import TextIO
 
-from transcript_skill.tty_util import interactive_tty_available, open_tty_mirror
+from transcript_skill.tty_util import open_tty_mirror
 from transcript_skill.engine import (
     MAX_CHUNK_MINUTES,
     MIN_CHUNK_MINUTES,
@@ -21,6 +21,36 @@ from transcript_skill.engine import (
     output_json,
     transcribe_from_input,
 )
+
+
+def _parse_speaker_map_cli(args: argparse.Namespace) -> dict[str, str]:
+    """Merge --speaker-map-json and repeated --speaker-map KEY=VAL (CLI overrides file on key clash)."""
+    merged: dict[str, str] = {}
+    raw_path = (getattr(args, "speaker_map_json", None) or "").strip()
+    if raw_path:
+        p = Path(raw_path).expanduser()
+        if not p.is_file():
+            raise RuntimeError(f"--speaker-map-json: file not found: {p}")
+        data = json.loads(p.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise RuntimeError("--speaker-map-json: root must be a JSON object")
+        for k, v in data.items():
+            ks = str(k).strip()
+            if ks:
+                merged[ks] = str(v).strip()
+    for pair in getattr(args, "speaker_map", None) or []:
+        s = str(pair).strip()
+        if not s:
+            continue
+        if "=" not in s:
+            raise RuntimeError(
+                f"Invalid --speaker-map (expected SPEAKER_00=Name): {pair!r}"
+            )
+        a, b = s.split("=", 1)
+        ks = a.strip()
+        if ks:
+            merged[ks] = b.strip()
+    return merged
 
 
 def _stderr_should_mirror_to_tty() -> bool:
@@ -220,13 +250,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--progress-format",
         choices=("auto", "rewrite", "lines", "rich"),
-        default="auto",
+        default="rich",
         metavar="MODE",
         help=(
-            "Progress: rich = bar + spinner + percent (uses stderr TTY or /dev/tty when stderr is a file); "
-            "rewrite = one updating line; lines = one line per update; "
-            "auto = rich bar when an interactive terminal is available, else lines. "
-            "With 2>log, stderr is not a TTY but bar still works if /dev/tty or stdin tty is available."
+            "Progress: rich (default) and auto = Rich bar on TTY, or ASCII bar + ETA when stderr is a pipe/file; "
+            "rewrite = one updating line (carriage return, no bar); "
+            "lines = throttled separate lines (plain logs only). "
+            "auto is an alias of rich (same behavior)."
         ),
     )
     p.add_argument(
@@ -250,6 +280,26 @@ def build_parser() -> argparse.ArgumentParser:
         default="",
         metavar="TOKEN",
         help="Hugging Face token for pyannote (optional if HF_TOKEN / HUGGINGFACE_HUB_TOKEN is set).",
+    )
+    p.add_argument(
+        "--speaker-map-json",
+        default="",
+        metavar="PATH",
+        help=(
+            "JSON file mapping pyannote ids to display names, e.g. "
+            '{"SPEAKER_00": "Alexei", "SPEAKER_01": "Roman"}. '
+            "Merged with repeated --speaker-map; CLI wins on duplicate keys."
+        ),
+    )
+    p.add_argument(
+        "--speaker-map",
+        action="append",
+        default=[],
+        metavar="KEY=VAL",
+        help=(
+            "Map one diarization speaker id to a display name. Repeatable. "
+            "Example: --speaker-map SPEAKER_00=Alexei --speaker-map SPEAKER_01=Roman"
+        ),
     )
     p.add_argument(
         "--plan-only",
@@ -345,22 +395,18 @@ def main(argv: list[str] | None = None) -> None:
             )
             sys.exit(1)
 
-    fmt = (args.progress_format or "auto").strip()
-    tty_ok = interactive_tty_available()
-    if fmt == "auto":
-        use_rich_progress = tty_ok
-        use_lines = not use_rich_progress
+    fmt = (args.progress_format or "rich").strip()
+    # rich + auto: always bar path (Rich live on TTY, or progress_cb_rich_textbar when stderr is not a TTY).
+    # No TTY-detection fallback to rewrite/lines (avoids spam with tee/2>file).
+    if fmt in ("auto", "rich"):
+        use_rich_progress = True
+        use_lines = False
     elif fmt == "lines":
         use_lines = True
         use_rich_progress = False
     elif fmt == "rewrite":
         use_lines = False
         use_rich_progress = False
-    elif fmt == "rich":
-        # Explicit rich: always use Rich Progress (Console on stderr TTY or /dev/tty via _progress_console).
-        # Do not fall back to lines when stderr is a pipe/file; tty_ok can be wrong before mirror fix.
-        use_rich_progress = True
-        use_lines = False
     else:
         use_lines = False
         use_rich_progress = False
@@ -402,6 +448,26 @@ def main(argv: list[str] | None = None) -> None:
     eff_progress = f"{fmt}->{eff_inner}" if fmt == "auto" else eff_inner
     lang_disp = lang if lang else "∅ (авто)"
     show_progress = bool(getattr(args, "progress", True))
+    try:
+        speaker_map_merged = _parse_speaker_map_cli(args)
+    except (RuntimeError, OSError, json.JSONDecodeError) as exc:
+        print(
+            json.dumps(
+                {"ok": False, "error": str(exc).strip() or "Invalid speaker map."},
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if speaker_map_merged:
+        _prev = ", ".join(
+            f"{k}->{v}" for k, v in list(speaker_map_merged.items())[:6]
+        )
+        if len(speaker_map_merged) > 6:
+            _prev += "…"
+        speaker_map_display = f"да ({len(speaker_map_merged)} пар): {_prev}"
+    else:
+        speaker_map_display = "нет"
     emit_stderr_cli_summary(
         input_display=input_display,
         model=model,
@@ -417,6 +483,7 @@ def main(argv: list[str] | None = None) -> None:
         eff_progress=eff_progress,
         show_progress=show_progress,
         plan_only=bool(getattr(args, "plan_only", False)),
+        speaker_map_display=speaker_map_display,
     )
     use_rich_ok = show_progress and use_rich_progress
     if use_rich_ok:
@@ -543,6 +610,7 @@ def main(argv: list[str] | None = None) -> None:
                     _bar_state["last_phase"] = phase
                     _bar_state["last_emit_t"] = now
 
+                _sm = speaker_map_merged if speaker_map_merged else None
                 out = transcribe_from_input(
                     raw,
                     whisper_model=model,
@@ -556,6 +624,7 @@ def main(argv: list[str] | None = None) -> None:
                     hf_token=hf,
                     youtube_audio=bool(getattr(args, "youtube_audio", False)),
                     plan_only=bool(getattr(args, "plan_only", False)),
+                    speaker_map=_sm,
                 )
                 if getattr(args, "progress", True):
                     sys.stderr.write("\n")
@@ -587,6 +656,7 @@ def main(argv: list[str] | None = None) -> None:
                                 description=phase,
                             )
 
+                        _sm = speaker_map_merged if speaker_map_merged else None
                         out = transcribe_from_input(
                             raw,
                             whisper_model=model,
@@ -600,6 +670,7 @@ def main(argv: list[str] | None = None) -> None:
                             hf_token=hf,
                             youtube_audio=bool(getattr(args, "youtube_audio", False)),
                             plan_only=bool(getattr(args, "plan_only", False)),
+                            speaker_map=_sm,
                         )
                 finally:
                     if tty_for_progress is not None:
@@ -608,6 +679,7 @@ def main(argv: list[str] | None = None) -> None:
                         except Exception:
                             pass
         else:
+            _sm = speaker_map_merged if speaker_map_merged else None
             out = transcribe_from_input(
                 raw,
                 whisper_model=model,
@@ -621,6 +693,7 @@ def main(argv: list[str] | None = None) -> None:
                 hf_token=hf,
                 youtube_audio=bool(getattr(args, "youtube_audio", False)),
                 plan_only=bool(getattr(args, "plan_only", False)),
+                speaker_map=_sm,
             )
         print(output_json(out))
         if show_progress and not use_rich_ok:

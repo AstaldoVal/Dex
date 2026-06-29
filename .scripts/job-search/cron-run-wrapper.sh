@@ -4,7 +4,7 @@
 # Cron calls this script; this script writes "Cron started" then runs schedule-linkedin-teal-flow.sh (all output to same log).
 # REPO is set by install-cron-linkedin-teal.sh when it writes this file.
 
-REPO="${VAULT_PATH:-/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex}"
+REPO="${VAULT_PATH:-/Users/admin.roman.matsukatov/Development/DEX}"
 TEAL_LOG_DIR="$REPO/00-Inbox/Job_Search/teal"
 mkdir -p "$TEAL_LOG_DIR"
 

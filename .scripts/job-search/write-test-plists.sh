@@ -1,5 +1,5 @@
 #!/bin/bash
-REPO="/Users/admin.roman.matsukatov/Documents/Development/DEX/Dex"
+REPO="/Users/admin.roman.matsukatov/Development/DEX"
 URL="https://www.linkedin.com/jobs/search/?currentJobId=4372738622&distance=25.0&f_TPR=r86400&f_WT=2&geoId=91000007&keywords=senior%20product%20manager&origin=JOBS_HOME_KEYWORD_HISTORY"
 URL_IGAMING="https://www.linkedin.com/jobs/search/?currentJobId=4373265511&f_TPR=r86400&f_WT=2&geoId=91000007&keywords=product%20manager%20igaming"
 NODE_SCRIPT="$REPO/.scripts/job-search/run-incremental-linkedin-teal-flow.cjs"

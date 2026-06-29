@@ -7,7 +7,7 @@
 **Шаг 1.** Один раз залогинить Teal в профиле для «каждый час» (из корня репо, нужны TEAL_EMAIL и TEAL_PASSWORD в `.env`):
 
 ```bash
-cd /Users/admin.roman.matsukatov/Documents/Development/DEX/Dex
+cd /Users/admin.roman.matsukatov/Development/DEX
 VAULT_PATH="$PWD" TEAL_CHROME_PROFILE="$PWD/00-Inbox/Job_Search/teal/.chrome-profile-hourly" node .scripts/job-search/teal-login.cjs
 ```
 
@@ -16,7 +16,7 @@ VAULT_PATH="$PWD" TEAL_CHROME_PROFILE="$PWD/00-Inbox/Job_Search/teal/.chrome-pro
 **Шаг 2.** Включить запуск по расписанию — одной командой (crontab добавится сам):
 
 ```bash
-cd /Users/admin.roman.matsukatov/Documents/Development/DEX/Dex
+cd /Users/admin.roman.matsukatov/Development/DEX
 chmod +x .scripts/job-search/install-cron-linkedin-teal.sh
 .scripts/job-search/install-cron-linkedin-teal.sh
 ```
@@ -26,7 +26,7 @@ chmod +x .scripts/job-search/install-cron-linkedin-teal.sh
 Альтернатива (без cron, через launchd):
 
 ```bash
-cd /Users/admin.roman.matsukatov/Documents/Development/DEX/Dex
+cd /Users/admin.roman.matsukatov/Development/DEX
 .scripts/job-search/install-cron-linkedin-teal.sh --launchd
 ```
 

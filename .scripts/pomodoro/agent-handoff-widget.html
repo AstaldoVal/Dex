@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent handoff</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1e1e1e; }
+    #widget {
+      position: fixed;
+      left: 16px;
+      top: 80px;
+      width: 360px;
+      max-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      font-size: 12px;
+    }
+    #header {
+      padding: 10px 12px;
+      background: #1e293b;
+      border-radius: 12px 12px 0 0;
+      cursor: grab;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #header strong { font-size: 13px; }
+    #body { padding: 10px 12px; overflow: auto; flex: 1; }
+    .hint { color: #94a3b8; font-size: 11px; margin-bottom: 10px; line-height: 1.4; }
+    form label { display: block; margin: 6px 0 2px; color: #94a3b8; font-size: 11px; }
+    input {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      background: #020617;
+      color: #f1f5f9;
+      font-size: 12px;
+    }
+    button {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 6px;
+      background: #3b82f6;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button.secondary { background: #334155; margin-top: 4px; }
+    .card {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .card .line { font-weight: 500; margin-bottom: 4px; word-break: break-word; }
+    .card .meta { color: #64748b; font-size: 10px; }
+    .card button { width: auto; margin: 6px 0 0; padding: 4px 8px; font-size: 11px; background: #475569; }
+    #empty { color: #64748b; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div id="widget">
+    <div id="header">
+      <strong>Агенты — карта</strong>
+      <span style="color:#64748b;font-size:10px">каждые 5 с</span>
+    </div>
+    <div id="body">
+      <p class="hint">Перед сменой агента — одна строка. Переход A→B нормален; здесь фиксируем, что поручено и где смотреть ответ.</p>
+      <form id="add-form">
+        <label>Агент</label>
+        <input name="agent" placeholder="Cursor чат 2 / Claude / …" required>
+        <label>Поручил</label>
+        <input name="assigned" placeholder="что сделать" required>
+        <label>Жду</label>
+        <input name="waiting" placeholder="черновик / diff / ответ" required>
+        <label>Смотреть</label>
+        <input name="where" placeholder="вкладка / файл / ветка" required>
+        <button type="submit">Добавить на доску</button>
+      </form>
+      <button type="button" class="secondary" id="paste-line">Вставить из буфера (A | B | C | D)</button>
+      <hr style="border:none;border-top:1px solid #334155;margin:12px 0">
+      <div id="list"></div>
+    </div>
+  </div>
+  <script>
+    const widget = document.getElementById('widget');
+    const header = document.getElementById('header');
+    let drag = null;
+    header.addEventListener('mousedown', (e) => {
+      drag = { x: e.clientX - widget.offsetLeft, y: e.clientY - widget.offsetTop };
+      header.style.cursor = 'grabbing';
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!drag) return;
+      widget.style.left = (e.clientX - drag.x) + 'px';
+      widget.style.top = (e.clientY - drag.y) + 'px';
+    });
+    document.addEventListener('mouseup', () => {
+      drag = null;
+      header.style.cursor = 'grab';
+    });
+
+    async function loadBoard() {
+      const r = await fetch('/api/board');
+      const data = await r.json();
+      const list = document.getElementById('list');
+      if (!data.active || !data.active.length) {
+        list.innerHTML = '<p id="empty">Пока пусто.</p>';
+        return;
+      }
+      list.innerHTML = data.active.map((e) => `
+        <div class="card">
+          <div class="line">${escapeHtml(e.agent)} | ${escapeHtml(e.assigned)}</div>
+          <div class="line" style="font-weight:400;color:#cbd5e1">жду: ${escapeHtml(e.waiting)} · смотреть: ${escapeHtml(e.where)}</div>
+          <div class="meta">${escapeHtml(e.ts)}</div>
+          <button type="button" data-done="${escapeHtml(e.id)}">Готово</button>
+        </div>
+      `).join('');
+      list.querySelectorAll('[data-done]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          await fetch('/api/done/' + btn.dataset.done, { method: 'POST' });
+          loadBoard();
+        });
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    }
+
+    document.getElementById('add-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      await fetch('/api/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(fd)),
+      });
+      e.target.reset();
+      loadBoard();
+    });
+
+    document.getElementById('paste-line').addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        const parts = text.split('|').map((s) => s.trim());
+        if (parts.length < 4) {
+          alert('В буфере: Агент | поручил | жду | смотреть');
+          return;
+        }
+        await fetch('/api/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            agent: parts[0], assigned: parts[1], waiting: parts[2], where: parts[3],
+          }),
+        });
+        loadBoard();
+      } catch (err) {
+        alert('Буфер: ' + err.message);
+      }
+    });
+
+    loadBoard();
+    setInterval(loadBoard, 5000);
+  </script>
+</body>
+</html>

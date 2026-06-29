@@ -55,6 +55,18 @@ When MCP health check fails for a server, match by server name and error pattern
 
 ---
 
+## Cursor UI red, but `mcp-health-check.cjs` passes
+
+**Symptom:** Tavily, Open WebSearch, Brave, Exa, Claude Code MCP, Mac Messages, etc. show red in **Settings → Tools and MCP**, while `node .claude/skills/mcp-health-check-custom/scripts/mcp-health-check.cjs` reports all OK.
+
+**Cause:** The health check runs under your login shell and inherits a full `PATH` (Homebrew in `/opt/homebrew/bin`, etc.). **Cursor.app** is often started from the Dock with a **minimal `PATH`**, so `npx` / `uvx` are not found and the MCP process exits immediately.
+
+**Fix:**
+1. From Dex repo root run `python3 .scripts/cursor-sync-mcp.py` — it resolves `npx` / `uvx` / `node` to absolute paths and sets `PATH` on those servers.
+2. **Fully quit Cursor** (Cmd+Q) and reopen so it reloads `~/.cursor/mcp.json`.
+
+---
+
 ## Generic
 
 **If no known fix matches:**

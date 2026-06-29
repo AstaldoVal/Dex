@@ -18,7 +18,7 @@ description: Показать список категорий PM-скиллов 
    - Нумерованный список всех категорий из раздела **«1. По типу задачи (категории)»** — только названия подразделов (строки уровня `### …`), без таблиц.
    - Одну строку про типы: Component (один артефакт), Interactive (совет + выполнение), Workflow (многошаговый процесс).
    - Одну строку про источники: Dex, deanpeters, pop, pmprompt, BMAD, alirezarezvani (product-team), ralph.
-   - Подсказку: «Полный индекс: `.claude/reference/pm-skills-index.md`. Папка PM: `.claude/skills/pm/`; обновление: `./.claude/skills/pm/update.sh`. Вызов скилла: `/имя-скилла` (например `/product-brief`, `/prioritization`). BMAD: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`.»
+   - Подсказку: «Полный индекс: `.claude/reference/pm-skills-index.md`. Папка PM: `Skills_library/pm/`; обновление: `./Skills_library/pm/update.sh`. Вызов скилла: `/имя-скилла` (например `/product-brief`, `/prioritization`). BMAD: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`.»
 
 3. **При рекомендации скилла под задачу пользователя:** учитывать BMAD наравне с остальными PM-скиллами. Если задача подходит под BMAD (инициализация проекта, PRD/tech-spec по уровню проекта, пофазный воркфлоу, «что делать дальше»), предлагать соответствующую команду: инициализация → `/workflow-init`; PRD или tech-spec → `/prd`, `/tech-spec`; статус и следующие шаги → `/workflow-status`. Не перечислять BMAD отдельно «в конце» — рассматривать его в одном наборе с product-brief, prioritization, discovery и т.д.
 
@@ -47,4 +47,4 @@ description: Показать список категорий PM-скиллов 
 
 Типы: Component | Interactive | Workflow. Источники: Dex, deanpeters, pop, pmprompt, BMAD.
 
-Полный индекс: `.claude/reference/pm-skills-index.md`. PM-скиллы в `.claude/skills/pm/`; источники и обновление: `pm/SOURCES.md`, команда: `./.claude/skills/pm/update.sh`. Вызов: `/имя-скилла`; BMAD: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`.
+Полный индекс: `.claude/reference/pm-skills-index.md`. PM-скиллы в `Skills_library/pm/`; источники и обновление: `pm/SOURCES.md`, команда: `./Skills_library/pm/update.sh`. Вызов: `/имя-скилла`; BMAD: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`.

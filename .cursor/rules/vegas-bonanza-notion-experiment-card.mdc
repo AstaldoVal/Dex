@@ -1,0 +1,193 @@
+---
+description: Vegas Bonanza EXP-NNN — карточка эксперимента для Notion (продуктовое описание, 11 секций, без GrowthBook в теле). Эталон — EXP-004 после правок 2026-06.
+globs:
+  - 04-Projects/Vegas_Bonanza/**
+alwaysApply: false
+---
+
+# Vegas Bonanza: карточка эксперимента для Notion
+
+Применять при **создании, правке или заливке** EXP-NNN в Notion / локальный draft / ответ Roman «опиши эксперимент по шаблону Vegas Bonanza».
+
+**Канон структуры:** `04-Projects/Vegas_Bonanza/Experiment_Description_Template.md`  
+**Эталон заполнения:** `04-Projects/Vegas_Bonanza/drafts/EXP-004_PWA_Push_Opt_in_SC_Incentive_DRAFT.md` (после утверждения Roman)
+
+---
+
+## Что такое тикет (граница scope)
+
+Карточка в Notion = **продуктовое описание** для PM, дизайна, QA и dev: гипотеза, сегмент, варианты, метрики, правило решения, UX, аналитика, acceptance.
+
+**Не входит в тело карточки:**
+
+- Настройка **GrowthBook** (property, hash, dev/prod enable) — отдельный JSON/CLI по запросу «+ GrowthBook»; см. `04-Projects/Vegas_Bonanza/growthbook-automation/`
+- **Pre go-live check**, QA-чеклисты, отчёты верификации в prod — в комментарии/тело страницы **после** разработки, не в описании эксперимента
+- Служебные блоки агента: open questions, `[TBD]`, «Section writing rules», quality checklist, agent contract
+- Дублирование пошагового UX в §2, §4, §5, §10, §11 — только **§9**
+
+**Язык карточки:** English (как EXP-001–004 в Notion).
+
+---
+
+## Заголовок и метаданные (шапка карточки)
+
+**Формат title:** `EXP-NNN - [AREA] Short Name`  
+**AREA:** MAIN, PWA, PUSH, POPUP, EMAIL, ONBOARDING, INFRA
+
+В блоке между `--- START EXP CARD ---` / `--- END EXP CARD ---`:
+
+- `Ticket identifier:` VB-XXX (после создания в Notion; до — не выдумывать)
+- `EXP-ID:` NNN (три цифры, как в title)
+- `Priority:` high | medium | low
+- `State:` **Backlog** | Todo | In progress | In Review | On HOLD — поле Notion называется **State**, не Status; значений `idea` / `ready` / `live` **нет**
+- `Notion:` URL — только **после** заливки в Notion (не обязательно в первом черновике)
+
+**ICE:** числа из [VB ICE backlog sheet](https://docs.google.com/spreadsheets/d/1Ah5pV3QYGOlhSpkskDmehSB6eUxBTszUXGUpVcXrJ50/edit?gid=1165681538#gid=1165681538)
+
+- Одна строка backlog → `**ICE Score:**` (число, как EXP-002)
+- Две строки (iOS + Android) → `**ICE Score iOS:**` и `**ICE Score Android:**`
+- **Не** вставлять разбор Impact / Confidence / Easiness в карточку
+
+---
+
+## 11 секций (порядок жёсткий)
+
+| § | Название | Суть |
+|---|----------|------|
+| 1 | Hypothesis | Одна строка If we … then … because … |
+| 2 | Rationale | 1–3 предложения: данные/наблюдение; **без** пошагового UX |
+| 3 | Funnel step and North Star link | Шаг воронки + категория теста |
+| 4 | Segment and eligibility | Кто входит / исключён; срезы для readout |
+| 5 | Variants | Control + variant(s); конфликты с live-тестами |
+| 6 | Metrics | Ровно **одна** primary + secondary + guardrails |
+| 7 | Decision rule (lock before launch) | Трафик, бар успеха, ship/stop — **короткими блоками** |
+| 8 | Analytics (Mixpanel) | Уже есть / dev добавить / dev расширить placement |
+| 9 | User flow / UX | **Единственное** место для пошагового UX |
+| 10 | Acceptance criteria | 4–6 чекбоксов, со ссылками на §4, §6, §8, §9 |
+| 11 | Implementation notes | Только если есть нетривиальная техника; иначе опустить |
+
+**GrowthBook — отдельная секция в карточке не используется** (бывшая §8 удалена по решению Roman).
+
+---
+
+## §6 Metrics
+
+- **Primary — одна:** исход для **обеих** рук одной и той же формулой (например opt-in rate control vs variant B, а не «modal viewed» как launch primary)
+- Primary: Name, Events, Formula, Direction, Arms (если A/B)
+- Secondary: 2–5 диагностических метрик
+- Guardrails: смежные продуктовые риски (daily bonus, purchase, activation)
+- Имена событий — только из [Mixpanel tracking plan](https://docs.google.com/spreadsheets/d/1VqicSOpuze5njYfYjeuT0irpjFd9dQag6qauWJgOxTM/edit?gid=242151754#gid=242151754); новые — явно в §8
+
+---
+
+## §7 Decision rule
+
+Пиши **plain English**, короткими блоками (как EXP-004):
+
+1. **Traffic** — факты из Mixpanel (окно 7d): installs, eligible cohort, users per variant
+2. **What we measure** — та же primary, что §6, одной строкой
+3. **Success bar** — для **планирования до старта** допустим lift в **percentage points (pp)** или absolute % в калькуляторе; для **апдейтов Roman и постов в тред после данных** — lead с **relative lift %** и ставками control → variant (канон: `.cursor/rules/experiment-updates-relative-lift.mdc`). Минимум users **per variant**, минимум **days**, confidence (90% или p &lt; 0.05 — без жаргона «powered n»)
+4. **Ship / stop** — когда катим variant B vs control vs продлеваем; **после старта** readout по `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc` (2–3 полных дня стабильного тренда, purchase guardrails, аппрув Ihor перед prod)
+5. **Guardrails** — порог регрессии (например not &gt;3 pp below control)
+
+**Запрещено в §7 без пояснения:** MDE, ITT, powered n, relative +15% «на микроскопическом baseline» без перевода в pp и срок.
+
+**Обязательно:** перед финалом §7 по возможности **запросить трафик Mixpanel** (как для EXP-004), не оставлять placeholder «21 days / +15% relative» без расчёта.
+
+---
+
+## §8 Analytics (Mixpanel)
+
+Три подблока по **событиям** — **не** смешивать:
+
+1. **Already in Mixpanel (dev must fire them in …)** — существующие события, которые dev должен слать в нужной поверхности (PWA/web)
+2. **Dev must add** — **новые** event names в коде + tracking plan
+3. **Dev must extend** — те же события, **новые значения property** (например `placement`: `pwa_onboarding`, `pwa_first_lobby`)
+
+**Четвёртый блок (обязателен для каждого EXP) — Mixpanel board layout:**
+
+4. **Board readout settings** — на **каждой** метрике дашборда EXP: **Relative uplifts** (baseline = **control**) и **Stat. sig.** Канон: `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md`; скриншоты Adnan: https://share.zight.com/E0u12qRm , https://share.zight.com/wbulZmDv . В §8 или в **Links** §9 — URL board после создания.
+
+**Suggested properties** в Mixpanel UI (gc_amount, placement, …) — это **поля одного события**, не отдельные «приоритетные события».
+
+**Не включать:** Pre go-live check, GrowthBook.
+
+---
+
+## §9 User flow / UX (canonical)
+
+- Первая строка блока: **Canonical UX for this experiment — other sections refer here.**
+- Весь пошаговый flow: порядок модалок, onboarding vs lobby, migration cohort, reward rules, ссылки на дизайн
+- §2, §4, §5, §10, §11: только **«flow: §9»** / **«UX: §9»** / **«see §9»** — не копировать шаги
+- Порядок модалок при конфликте live-тестов (EXP-001 + EXP-004) — **только в §9**
+
+---
+
+## §10 Acceptance criteria
+
+- Короткий список `- [ ]` (4–6 пунктов)
+- Ссылайся на §4 / §6 / §8 / §9, не дублируй UX текстом
+- **Без** пунктов про GrowthBook / «experiment property in events» как отдельный AC, если это не продуктовый критерий
+
+---
+
+## Notion: заливка в VB Work items
+
+**Когда:** после утверждения Roman локального draft; в **том же turn**, если он просит «залить в Notion».
+
+**База:** VB Work items (`collection://34250979-0d9a-8190-a7c1-000bc7658fec`), родитель Plane board → Product.
+
+**Свойства страницы:**
+
+| Property | Значение |
+|----------|----------|
+| Work items | Title: `EXP-NNN - [AREA] Short Name` |
+| EXP-ID | NNN (строка, напр. `004`) |
+| Priority | high / medium / low |
+| State | Backlog (новый EXP до старта dev) |
+| Labels | `A/B test` |
+| Link | URL Mixpanel board, если уже создан |
+| Description | **Краткое** HTML-описание для списка (как EXP-002): hypothesis, segments, split, primary, decision bar, design links, acceptance, ICE — **не** полный §1–§11 |
+| Identifier | VB-XXX — **auto**, не задавать вручную |
+
+**Тело страницы (content):** полные §1–§11 из draft; **без** дублирования title в content; **без** маркеров START/END EXP CARD.
+
+**После create:** `notion-fetch` → обновить локальный draft: `Ticket identifier: VB-XXX`, строка `Notion:` URL.
+
+**Эталон sibling:** EXP-002 `37c50979-0d9a-8017-ab99-c0fa0360378e`, EXP-003 `37d50979-0d9a-8019-ad99-f5b5848b7a5f`.
+
+---
+
+## Workflow агента
+
+1. Идея Roman → заполнить **только** START–END block в `04-Projects/Vegas_Bonanza/drafts/EXP-NNN_*.md` → **не** Notion до «утверждаю / залей»
+2. §7: при возможности Mixpanel traffic **до** финализации
+3. Self-check по **Anti-patterns** ниже перед показом Roman
+4. По «залей в Notion» → create-pages + ссылка + обновление draft
+
+---
+
+## Anti-patterns (EXP-004 — не повторять)
+
+- Секция **GrowthBook** внутри карточки
+- **Pre go-live check** в § Analytics
+- **Primary = modal viewed / accepted** когда launch decision = **opt-in rate** на eligible cohort
+- **Дублирование UX** в §2, §4, §5 вместо §9
+- **Status: idea** вместо **State: Backlog**
+- **ICE** как Impact/Confidence/Easiness paragraph
+- **§7** простыня с MDE, powered n, 47 weeks без привязки к реальному трафику
+- **Open questions / TBD** внутри карточки вместо вопроса Roman в чате
+- **Assignment userId / sticky** в §4 Segment (GrowthBook — вне карточки)
+- Смешение **event** и **event property** в §8
+- Заливка в Notion **без** полного §1–§11 в body (только Description)
+
+---
+
+## Связанные артефакты
+
+- Шаблон: `04-Projects/Vegas_Bonanza/Experiment_Description_Template.md`
+- GrowthBook JSON (отдельно): `04-Projects/Vegas_Bonanza/growthbook-automation/examples/`
+- Slash: `/growthbook-create-experiment`
+- **Live rollout / stop:** только с аппрувом Ihor + явным «делай» от Roman — `.cursor/rules/vegas-bonanza-experiment-rollout-approval.mdc`
+- **Readout после старта:** `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc`, справочник `04-Projects/Vegas_Bonanza/Experiment_Readout_Conclusion_Guide.md`
+- **Mixpanel board:** `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md` (Relative uplifts + Stat. sig., vs control)

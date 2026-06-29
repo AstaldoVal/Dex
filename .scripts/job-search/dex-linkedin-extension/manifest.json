@@ -1,13 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Dex LinkedIn Job Capture",
-  "version": "1.5.15",
-  "description": "Capture job details from LinkedIn in your browser for Dex digest. Supports job view pages and search results with auto-capture, plus Booking car price capture.",
+  "version": "1.9.43",
+  "description": "Capture job details from LinkedIn for Dex digest, Booking car capture, ATS autofill, plus optional side panel for LLM chat reply suggestions (dating or any site; local server).",
   "permissions": [
     "storage",
     "nativeMessaging",
-    "contextMenus"
+    "contextMenus",
+    "sidePanel",
+    "tabs",
+    "notifications",
+    "alarms"
   ],
+  "side_panel": {
+    "default_path": "sidepanel-chat.html"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -19,9 +26,13 @@
     "http://127.0.0.1/*",
     "http://localhost:8766/*",
     "http://127.0.0.1:8766/*",
+    "http://127.0.0.1:8777/*",
+    "http://localhost:8777/*",
     "https://*.myworkdayjobs.com/*",
     "https://jobs.gem.com/*",
-    "https://*.recruitmentplatform.com/*"
+    "https://*.recruitmentplatform.com/*",
+    "https://match-club.club/*",
+    "https://*.match-club.club/*"
   ],
   "content_scripts": [
     {
@@ -82,6 +93,15 @@
     },
     {
       "matches": [
+        "https://www.booking.com/*"
+      ],
+      "js": [
+        "booking-cars-lis-bootstrap.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
         "https://www.booking.com/cars/*"
       ],
       "js": [
@@ -92,7 +112,7 @@
     },
     {
       "matches": [
-        "https://cars.booking.com/search-results*"
+        "https://cars.booking.com/*"
       ],
       "js": [
         "dex-error-guard.js",
@@ -144,9 +164,21 @@
       ],
       "run_at": "document_idle",
       "all_frames": true
+    },
+    {
+      "matches": [
+        "https://match-club.club/*",
+        "https://*.match-club.club/*"
+      ],
+      "js": [
+        "match-club-inventory.js",
+        "match-club-chat.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
   "action": {
-    "default_title": "Dex Job Capture"
+    "default_title": "Dex: открыть панель ответов в чатах (или ПКМ по странице)"
   }
 }

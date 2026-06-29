@@ -1,0 +1,1008 @@
+{
+  "presentationId": "1HZqNeguvT0bqJ-mjnh3QYOM_i-3KQNsYHKrSivEOZe8",
+  "requests": [
+    {
+      "insertText": {
+        "objectId": "i0",
+        "text": "AI CMS - Программа развития AI-лидерства",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "i1",
+        "text": "Подготовил: Roman Matsukatov | Дата: 08 апреля 2026",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_2",
+        "insertionIndex": 1,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_3",
+        "insertionIndex": 2,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_4",
+        "insertionIndex": 3,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_5",
+        "insertionIndex": 4,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_6",
+        "insertionIndex": 5,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_7",
+        "insertionIndex": 6,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_8",
+        "insertionIndex": 7,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_9",
+        "insertionIndex": 8,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_10",
+        "insertionIndex": 9,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_11",
+        "insertionIndex": 10,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_12",
+        "insertionIndex": 11,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_13",
+        "insertionIndex": 12,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "slide_14",
+        "insertionIndex": 13,
+        "slideLayoutReference": {
+          "predefinedLayout": "BLANK"
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide2_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_2",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide2_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_2",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide2_title",
+        "text": "Обо мне",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide2_body",
+        "text": "12+ лет в Product Management на позициях Senior/Lead/CPO.\nЗапуск AI-продуктов с нуля.\nВнедрение Agile-практик в командах.\nОпыт запуска Compliance-направления в iGaming (UKGC, MGA, Curacao, Ontario, Anjouan, Tobique, New Jersey).\nДля вашей компании это обучение с фокусом на внедрение, governance и измеримый бизнес-результат.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide_2c_title",
+        "text": "Целевая модель AI CMS: недели 3-4",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide_2c_body",
+        "text": "01. Направления бизнеса и owner’ы воркфлоу: HR и Support — первая волна, далее Finance/Ops с закрепленными владельцами.\n02. Слои внедрения (из серии): policy по данным -> рабочие воркфлоу -> единый формат управленческих решений.\n03. Операционный ритм: еженедельные review по кейсам, KPI adoption/качества, эскалация спорных случаев через Program Owner и Risk Owner.\n04. Специфика компании: короткие демо (2-5 минут), связка с календарем/почтой/чатами, база знаний и rollout 2 недели -> 1 месяц -> 2 месяца.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide3_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_3",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide3_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_3",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide3_title",
+        "text": "Целевая модель AI CMS: недели 1-2",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide3_body",
+        "text": "• C-level alignment и единый словарь решений.\n• Классы данных и правила использования AI по уровням риска.\n• Допустимые AI-среды и сценарии для руководителей.\n• Адаптивный AI workflow для C-level: от приоритизации реальных кейсов к единому циклу анализа, риск-контроля, решения и внедрения.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide4_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_4",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide4_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_4",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide4_title",
+        "text": "Целевая модель AI CMS: недели 3-4",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide4_body",
+        "text": "• Запуск HR и Support воркфлоу на реальных кейсах.\n• Короткие демо 2-5 минут в рабочем ритме команд.\n• Связка с календарем, почтой, чатами и базой знаний.\n• Фиксация обратной связи и корректировка playbook по итогам недели.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide5_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_5",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide5_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_5",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide5_title",
+        "text": "Целевая модель AI CMS: месяц 1-2",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide5_body",
+        "text": "• Масштабирование в Finance/Ops после подтверждения первых кейсов.\n• Owner'ы по воркфлоу в каждом направлении бизнеса.\n• KPI adoption и качества на регулярном review.\n• Эскалация спорных кейсов по данным/compliance через Program Owner и Risk Owner.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide6_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_6",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide6_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_6",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide6_title",
+        "text": "Волна 2: функциональные треки",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide6_body",
+        "text": "Каждая функция получает сценарии на своих процессах, с общим стандартом качества и безопасности.\nНа выходе, руководители функций самостоятельно проходят типовой кейс и подтверждают готовность команды.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide7_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_7",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide7_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_7",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide7_title",
+        "text": "Волна 3: пилоты и масштабирование",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide7_body",
+        "text": "Запускаем 1-2 пилота со сквозной ответственностью и измеримым бизнес-эффектом.\nТиражируем только подтверждённые практики, что даёт масштаб без хаоса.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide8_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_8",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide8_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_8",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide8_title",
+        "text": "KPI и контроль эффекта",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide8_body",
+        "text": "Метрики: скорость решений, время на типовые задачи, качество артефактов, adoption, риск-инциденты.\nC-level смотрит на результат по KPI, а не на количество экспериментов или инструментов.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide9_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_9",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide9_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_9",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide9_title",
+        "text": "Операционная модель: кто за что отвечает",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide9_body",
+        "text": "Sponsor (C-level), Program Owner, Function Leads, Risk Owner, с четкой зоной ответственности каждого.\nCadence: еженедельный операционный ритм и ежемесячный управленческий review с решениями по масштабу.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide10_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_10",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide10_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_10",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide10_title",
+        "text": "Риски и контрмеры",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide10_body",
+        "text": "Риски: утечки данных, неуправляемые расходы, низкий adoption, локальная автоматизация без эффекта для бизнеса.\nКонтрмеры: policy-by-default, бюджетные лимиты, KPI-гейты, обязательная эскалация спорных кейсов.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide11_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_11",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide11_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_11",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide11_title",
+        "text": "Первые 30 дней: план запуска",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide11_body",
+        "text": "Неделя 1: утвердить рамку и владельцев. Неделя 2: запустить C-level alignment сессию.\nНедели 3-4: старт функциональных треков, сбор baseline KPI, запуск первого пилота.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide12_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_12",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide12_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_12",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide12_title",
+        "text": "Решение, которое нужно принять сегодня",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide12_body",
+        "text": "Утвердить программу на 3 волны, назначить владельцев и зафиксировать календарь первой волны.\nПодтвердить KPI и формат ежемесячного управленческого review по внедрению AI.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide13_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_13",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide13_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_13",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide13_title",
+        "text": "AI Literacy и AI-Thinking — дополнительный модуль",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide13_body",
+        "text": "Зачем: ясная цель и собранный контекст, согласованный план и предсказуемый цикл до результата, а не бесконечные разовые чаты.\nФокус: откуда берётся контекст (тулы, чаты, внешние системы), планирование до имплементации, цикл со сверкой и апрувом, повторяемое оформляем в артефакты, чтобы не платить токены за одни и те же факты в каждом запросе.",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide14_title",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_14",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1000000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 400000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "slide14_body",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "slide_14",
+          "size": {
+            "width": {
+              "magnitude": 8000000,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 3500000,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "translateX": 400000,
+            "translateY": 1600000,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide14_title",
+        "text": "Что разбираем в модуле",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "slide14_body",
+        "text": "Цель: зафиксировать, что делаем и зачем.\nКонтекст: собрать релевантную информацию в одном месте; для этого подключаем нужные тулы, чаты и внешние системы.\nПланирование: сначала описание намерения и шагов, без немедленного прыжка в имплементацию.\nЦикл с AI: план → сверка → апрув → выполнение → уточнение и правки → финальная версия.\nПовторяемое превращаем в артефакты: шаблоны, инструкции, база знаний — сильнее контекст, меньше токенов на повтор одних и тех же фактов.",
+        "insertionIndex": 0
+      }
+    }
+  ]
+}

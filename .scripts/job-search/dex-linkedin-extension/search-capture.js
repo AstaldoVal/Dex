@@ -691,7 +691,8 @@
     if (!title || typeof title !== 'string') return false;
     return /\bproduct\s+category\s+manager\b/i.test(title) ||
       /\bproduct\s+line\s+manager\b/i.test(title) ||
-      /\b(?:technical\s+)?sales\s*(?:&|and|\s*[-–—])\s*product\s+manager\b/i.test(title);
+      /\b(?:technical\s+)?sales\s*(?:&|and|\s*[-–—])\s*product\s+manager\b/i.test(title) ||
+      /\bux\s+lead\s*\(\s*product\s*&\s*growth\s*\)/i.test(title);
   }
 
   // Automotive sector: user does not consider. Keep in sync with job-search-utils.cjs AUTOMOTIVE_EXCLUDED_COMPANIES
@@ -706,6 +707,7 @@
   // Non-English language required (e.g. Arabic Speaker): user considers only English-language roles. Keep in sync with job-search-utils.cjs requiresNonEnglishLanguage.
   var REQUIRES_NON_ENGLISH = [
     /fluent\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)/i,
+    /\bproficient\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i,
     /\bfluency\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i,
     /native\s+(German|Spanish|Portuguese|French|Italian|Arabic)\s+(speaker|language)?/i,
     /\bArabic\s+[Ss]peaker\b/i,
@@ -1203,7 +1205,16 @@
       return q.indexOf('dex-auto-capture=1') !== -1 || sessionStorage.getItem('dexAutoCaptureRequested') === '1';
     }
     function tryAutoStart() {
-      if (sessionStorage.getItem('dexAutoCaptureFired') || captureRunning) return;
+      if (sessionStorage.getItem('dexAutoCaptureFired')) {
+        if (hasAutoCaptureParam()) {
+          console.log(
+            '[Dex] Autostart skipped: this tab already ran dex-auto-capture (sessionStorage dexAutoCaptureFired). ' +
+              'Open a new tab with the same search URL, or run in console: sessionStorage.removeItem("dexAutoCaptureFired") then reload.'
+          );
+        }
+        return;
+      }
+      if (captureRunning) return;
       if (!hasAutoCaptureParam()) return;
       sessionStorage.removeItem('dexAutoCaptureRequested');
       sessionStorage.setItem('dexAutoCaptureFired', '1');

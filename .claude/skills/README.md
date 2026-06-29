@@ -187,6 +187,10 @@ Invoked with `/skill-name` - automatically discovered by Claude.
 
 Dex includes two categories of skills:
 
+### Cross-cutting: coding discipline
+
+- **`karpathy-guidelines`** — Karpathy-inspired defaults (think before coding, simplicity, surgical diffs, goal-driven verification). Not a slash-command tour; it is **loaded at session start for code tasks** per `CLAUDE.md` and `.claude/skills/session-bootstrap-custom/SKILL.md`. Upstream: [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills); vendored copy in `06-Resources/External/andrej-karpathy-skills/`, skill file at `.claude/skills/karpathy-guidelines/SKILL.md` (and `.agents/skills/karpathy-guidelines/SKILL.md` for distributable agent bundles).
+
 ### Dex Skills (PKM-Specific)
 
 Built specifically for personal knowledge management and productivity workflows in Dex:
@@ -241,6 +245,7 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/hooks-recommend` - When and for which flows to configure hooks (SessionStart, PostToolUse, etc.) in Claude Code
 - `/mcp-profiles` - Recommend which MCP servers to enable for a scenario (PM, job search, meetings)
 - `/mcp-health-check-custom` - Verify stdio MCP servers, apply known fixes (mac-messages FastMCP, google-slides jwa). Runs at chat start; invoke manually if MCPs fail
+- `/session-bootstrap-custom` - Обязательный старт нового чата: явный bootstrap-блок в первом ответе (`using-superpowers` status, MCP health-check status, readiness)
 - `/triage` - Organize inbox and extract tasks
 - `/industry-truths` - Define time-horizoned assumptions that ground strategic thinking
 
@@ -248,11 +253,11 @@ Built specifically for personal knowledge management and productivity workflows 
 - `/web-research` - Full internet research flow (Exa -> Brave/Tavily -> browser MCP -> claude_code enrichment)
 
 **Product Management (PM):**  
-Все PM-скиллы собраны в **`.claude/skills/pm/`** (по источникам: dex, deanpeters, pop, pmprompt, alirezarezvani, ralph). Полный индекс: **`.claude/reference/pm-skills-index.md`**. **Команда `/pm-skills`** выводит категории и подсказку по индексу.
+Все PM-скиллы собраны в **`Skills_library/pm/`** (по источникам: dex, deanpeters, pop, pmprompt, alirezarezvani, ralph). Полный индекс: **`.claude/reference/pm-skills-index.md`**. **Команда `/pm-skills`** выводит категории и подсказку по индексу.
 
-**BMAD (B-MAD) Method** — отдельный модуль, в общем списке скиллов отображается как несколько скиллов (BMad Master, architect, pm, scrum-master, developer, builder, ux-designer, analyst, creative-intelligence). Удобнее вызывать по **командам:** `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. Папки: `.claude/skills/bmad/`, `.claude/commands/bmad/`, `.claude/config/bmad/`. Подробнее: **`.claude/skills/PM_SKILLS_BMAD_README.md`**.
+**BMAD (B-MAD) Method** — отдельный модуль, в общем списке скиллов отображается как несколько скиллов (BMad Master, architect, pm, scrum-master, developer, builder, ux-designer, analyst, creative-intelligence). Удобнее вызывать по **командам:** `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. Папки: `Skills_library/bmad/`, `.claude/commands/bmad/`, `.claude/config/bmad/`. Подробнее: **`.claude/skills/PM_SKILLS_BMAD_README.md`**.
 
-Источники и атрибуция PM: **`.claude/skills/pm/SOURCES.md`**. Обновление из репозиториев: **`./.claude/skills/pm/update.sh`** (из корня vault).
+Источники и атрибуция PM: **`Skills_library/pm/SOURCES.md`**. Обновление из репозиториев: **`./Skills_library/pm/update.sh`** (из корня vault).
 
 **System Management:**
 - `/prompt-improver` - Transform vague prompts via Anthropic Messages API

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Один раз: переносит уже установленные PM-скиллы из .claude/skills/ в .claude/skills/pm/<источник>/.
+# Один раз: переносит уже установленные PM-скиллы из .claude/skills/ в Skills_library/pm/<источник>/.
 # После переноса вызов скиллов остаётся тем же (/discovery-process, /product-brief и т.д.), если загрузчик скиллов смотрит рекурсивно в .claude/skills/.
 # Запуск: из корня vault — ./.scripts/pm-skills-move-to-pm.sh
 

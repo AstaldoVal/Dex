@@ -6,7 +6,7 @@
 
 В этом vault BMAD уже разложен в `.claude/` и работает в Cursor без перезапуска:
 
-- **Скиллы:** `.claude/skills/bmad/` (core, bmm, bmb, cis)
+- **Скиллы:** `Skills_library/bmad/` (core, bmm, bmb, cis)
 - **Команды:** `.claude/commands/bmad/` (workflow-init, prd, tech-spec, workflow-status и др.)
 - **Конфиг и хелперы:** `.claude/config/bmad/` (config.yaml, helpers.md, templates)
 
@@ -16,7 +16,7 @@
 
 Для установки **вне vault** (например в `~/.claude/` для Claude Code):
 
-- **Скиллы:** `~/.claude/skills/bmad/`
+- **Скиллы:** `~/Skills_library/bmad/`
 - **Команды:** `~/.claude/commands/bmad/`
 - **Конфиг:** `~/.claude/config/bmad/`
 
@@ -40,7 +40,7 @@ chmod +x install-v6.sh
 - **/workflow-init** — инициализация BMAD в проекте (перед первым использованием)
 - **/workflow-status** — статус и рекомендации по следующим шагам
 
-Скилл PM: `~/.claude/skills/bmad/bmm/pm/SKILL.md`.  
+Скилл PM: `~/Skills_library/bmad/bmm/pm/SKILL.md`.  
 Опирается на `helpers.md` и конфиг из `~/.claude/config/bmad/`, поэтому для полной работы нужна установка через `install-v6.sh`, а не только копирование одного SKILL.md.
 
 ## Связка с другими агентами BMAD
@@ -50,7 +50,7 @@ chmod +x install-v6.sh
 
 ## Обновление
 
-Повторный клон и запуск `./install-v6.sh` перезаписывает файлы в `~/.claude/skills/bmad/`, `~/.claude/commands/bmad/` и `~/.claude/config/bmad/`.
+Повторный клон и запуск `./install-v6.sh` перезаписывает файлы в `~/Skills_library/bmad/`, `~/.claude/commands/bmad/` и `~/.claude/config/bmad/`.
 
 ## Ссылки
 

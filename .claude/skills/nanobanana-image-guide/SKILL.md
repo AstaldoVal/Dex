@@ -163,6 +163,28 @@ If MCP is not available, output the final prompt so the user can paste it into G
 
 ---
 
+## Logo marks (Type 7 — use with logo-mark-design)
+
+When the subject is a **logo, mark, or app icon** (not a scene or product photo):
+
+1. **Aspect ratio:** always `1:1`
+2. **Style:** flat vector, high contrast, no 3D, no mockup frame, no business-card presentation
+3. **Silhouette test:** describe the mark as readable at 32px in the prompt
+4. **Generate max 3 structurally different concepts** (geometric vs organic vs letterform), not color variations
+5. **Hard negatives in every prompt:** no rounded-square app-icon container, no generic SaaS tile, no purple/teal gradient orb, no sparkle, no meaningless abstract blobs
+6. **Prefer:** Roman reference images as input (Type 2) over pure text-to-image
+7. **Output:** PNG concepts → trace to SVG via vtracer/potrace (see **logo-mark-design** skill)
+
+**Do not** use Nano Banana as the only step for production logos without Roman approving AI direction first.
+
+**Example prompt fragment:**
+
+> Minimal logo mark for [brand], flat vector, single color on white, bold silhouette, no text, no gradient, readable at favicon size, [geometric monogram | organic flow | abstract symbol].
+
+Then follow **logo-mark-design** for trace, favicon tests, and wordmark lockups.
+
+---
+
 ## Notes
 
 - Ask **one question at a time** unless the user prefers multiple

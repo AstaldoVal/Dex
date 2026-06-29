@@ -6,7 +6,7 @@
 
 set -e
 VAULT_ROOT="${VAULT_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
-PM_SRC="${VAULT_ROOT}/.claude/skills/pm"
+PM_SRC="${VAULT_ROOT}/Skills_library/pm"
 DEST="${1:-${VAULT_ROOT}/../product-management-skills}"
 
 if [[ ! -d "$PM_SRC" ]]; then

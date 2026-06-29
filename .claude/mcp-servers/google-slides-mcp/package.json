@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node build/index.js",
     "lint": "eslint . --ext .ts",
-    "get-token": "npm run build && node build/getRefreshToken.js"
+    "get-token": "npm run build && node build/getRefreshToken.js",
+    "test-presentation-images-flow": "node scripts/test-presentation-images-flow.mjs"
   },
   "keywords": [],
   "author": "",

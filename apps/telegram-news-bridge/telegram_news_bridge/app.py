@@ -54,11 +54,16 @@ def _api_secret() -> str:
 
 
 def _session_path() -> str:
+    """Telethon session file base path (SQLite adds `.session`).
+
+    Default basename is `telegram_bridge` so Cursor Telegram MCP can keep
+    `…/telegram/telegram` without SQLite lock conflicts. Override with TELEGRAM_SESSION_PATH.
+    """
     p = _env("TELEGRAM_SESSION_PATH")
     if p:
         return p
     vault = Path(_env("VAULT_PATH") or os.getcwd())
-    return str(vault / ".claude" / "telegram" / "telegram")
+    return str(vault / ".claude" / "telegram" / "telegram_bridge")
 
 
 # Часті опечатки ключа в `NEWS_SOURCE_MAP` (другий канал порожній, якщо peer збігся з іншим ключем).
@@ -185,9 +190,20 @@ def _all_channel_specs() -> list[tuple[str, str]]:
         out.append((k, pe))
     for k, pe in _load_watchlist_entries():
         if k in seen_keys:
+            logger.warning(
+                "watchlist: skip key=%r peer=%r (duplicate key; env or earlier watchlist entry wins)",
+                k,
+                pe,
+            )
             continue
         np = _normalize_peer(pe)
         if np in seen_peers:
+            logger.warning(
+                "watchlist: skip key=%r peer=%r (duplicate Telegram chat vs env/earlier row; "
+                "use two keys in NEWS_SOURCE_MAP for fan-out, not two watchlist rows)",
+                k,
+                pe,
+            )
             continue
         seen_keys.add(k)
         seen_peers.add(np)
@@ -440,9 +456,12 @@ class BridgeState:
     ws_clients: set[WebSocket] = field(default_factory=set)
     lock: asyncio.Lock = field(default_factory=asyncio.Lock)
     telethon_client: Any = None
-    channel_entities: dict[int, tuple[str, str]] = field(
+    # One Telegram chat (peer_id) may be mapped under several dashboard keys (e.g. duplicate
+    # NEWS_SOURCE_* peers). Each entry receives the same posts (fan-out); never overwrite
+    # an earlier key — that used to leave the first column empty.
+    channel_entities: dict[int, list[tuple[str, str]]] = field(
         default_factory=dict
-    )  # chat_id -> (key, title)
+    )  # chat_id -> [(key, title), ...]
     key_to_entity: dict[str, Any] = field(default_factory=dict)  # channel_key -> Telethon entity
 
     def __post_init__(self) -> None:
@@ -511,6 +530,38 @@ async def telethon_loop() -> None:
         logger.exception("telethon_loop crashed")
 
 
+async def _try_entity_from_dialogs_by_username(client: Any, username: str) -> Any | None:
+    """If the account already has this channel in dialogs, return it without ResolveUsername."""
+    want = username.strip().lstrip("@").lower()
+    if not want or len(want) > 32:
+        return None
+    n = 0
+    try:
+        async for dialog in client.iter_dialogs():
+            n += 1
+            if n > 8000:
+                break
+            ent = getattr(dialog, "entity", None)
+            if ent is None:
+                continue
+            un = getattr(ent, "username", None)
+            if isinstance(un, str) and un.lower() == want:
+                logger.info("resolved @%s from dialogs (no ResolveUsername)", want)
+                return ent
+    except Exception:
+        logger.debug("dialog scan for @%s failed", want, exc_info=True)
+    return None
+
+
+def _stable_peer_id_string(ent: Any, tg_utils: Any) -> str:
+    """Persist numeric channel id so restarts use PeerChannel, not @username (avoids FloodWait)."""
+    pid = int(tg_utils.get_peer_id(ent))
+    s = str(pid)
+    if s.startswith("-100") and len(s) > 4 and s[4:].isdigit():
+        return s[4:]
+    return s
+
+
 async def _resolve_entity(client: Any, peer: str) -> Any:
     """Resolve @username / invite / numeric channel id (Telethon needs PeerChannel for raw ids)."""
     from telethon.tl.types import PeerChannel
@@ -521,6 +572,11 @@ async def _resolve_entity(client: Any, peer: str) -> Any:
     # Bare public usernames (e.g. NEWS_SOURCE_CHANNELS) must use @ so Telethon resolves a channel, not a contact string.
     if not p.startswith("@") and re.match(r"^[A-Za-z][A-Za-z0-9_]{3,31}$", p):
         p = "@" + p
+    if p.startswith("@"):
+        ent_d = await _try_entity_from_dialogs_by_username(client, p[1:])
+        if ent_d is not None:
+            return ent_d
+        return await client.get_entity(p)
     return await client.get_entity(p)
 
 
@@ -544,29 +600,43 @@ async def register_watched_channel(
     title = getattr(ent, "title", None) or getattr(ent, "username", None) or str(peer_id)
     title_s = str(title)
     async with state.lock:
-        existing = state.channel_entities.get(peer_id)
-        if existing and existing[0] == key:
-            return {
-                "channel_key": key,
-                "channel_title": existing[1],
-                "peer_id": peer_id,
-                "backfill_count": 0,
-                "already_watching": True,
-            }
-        if existing and existing[0] != key:
-            raise ValueError(f"channel already watched as {existing[0]!r}")
+        lst = state.channel_entities.setdefault(peer_id, [])
+        for k, t in lst:
+            if k == key:
+                return {
+                    "channel_key": key,
+                    "channel_title": t,
+                    "peer_id": peer_id,
+                    "backfill_count": 0,
+                    "already_watching": True,
+                }
         old_ent = state.key_to_entity.get(key)
         if old_ent is not None:
             old_pid = int(tg_utils.get_peer_id(old_ent))
             if old_pid != peer_id:
                 raise ValueError(f"key {key!r} is already used for another channel")
-        state.channel_entities[peer_id] = (key, title_s)
+        if lst:
+            logger.info(
+                "peer_id=%s shared by columns %r; adding %r (same chat, fan-out)",
+                peer_id,
+                [p[0] for p in lst],
+                key,
+            )
+        lst.append((key, title_s))
         state.key_to_entity[key] = ent
         state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
 
     lim = max(1, min(backfill_limit, state.max_posts, 500))
     msgs = await client.get_messages(ent, limit=lim)
     sorted_msgs = sorted([m for m in msgs if m and getattr(m, "id", None)], key=lambda m: int(m.id))
+    if not sorted_msgs:
+        logger.warning(
+            "register_watched_channel: backfill got 0 messages channel_key=%s peer=%s peer_id=%s title=%s",
+            key,
+            peer_stored,
+            peer_id,
+            title_s,
+        )
     async with state.lock:
         dq = state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
         for m in sorted_msgs:
@@ -594,7 +664,8 @@ async def register_watched_channel(
 
     if persist_watchlist and key not in _env_channel_keys():
         entries = [p for p in _load_watchlist_entries() if p[0] != key]
-        entries.append((key, peer_stored))
+        # Store numeric id so bridge restarts do not call ResolveUsername again (Telegram FloodWait).
+        entries.append((key, _stable_peer_id_string(ent, tg_utils)))
         await asyncio.to_thread(_save_watchlist_entries, entries)
 
     return {
@@ -640,14 +711,26 @@ async def _telethon_loop_impl(events: Any, tg_utils: Any) -> None:
     entities: list[Any] = []
     for key, peer in specs:
         try:
-            ent = await _resolve_entity(client, peer)
+            # Same resolution as POST /channels/watch (invites, t.me/+…, bare usernames, /c/… ids).
+            ent = await _resolve_entity_from_peer(client, peer)
         except Exception as e:
             logger.warning("Skip channel key=%s peer=%s: %s", key, peer, e)
             continue
         entities.append(ent)
         peer_id = int(tg_utils.get_peer_id(ent))
         title = getattr(ent, "title", None) or getattr(ent, "username", None) or str(peer_id)
-        state.channel_entities[peer_id] = (key, title)
+        lst = state.channel_entities.setdefault(peer_id, [])
+        if any(k == key for k, _ in lst):
+            logger.warning("Skip duplicate startup entry key=%s peer=%s", key, peer)
+            continue
+        if lst:
+            logger.warning(
+                "Startup: peer_id=%s already mapped to %r; adding %r (same Telegram chat — fan-out)",
+                peer_id,
+                [p[0] for p in lst],
+                key,
+            )
+        lst.append((key, str(title)))
         state.key_to_entity[key] = ent
         logger.info("Watching channel key=%s peer_id=%s title=%s", key, peer_id, title)
 
@@ -661,18 +744,17 @@ async def _telethon_loop_impl(events: Any, tg_utils: Any) -> None:
             msg = event.message
             chat = await event.get_chat()
             cid = int(tg_utils.get_peer_id(chat))
-            pair = state.channel_entities.get(cid)
-            if not pair:
+            pairs = state.channel_entities.get(cid) or []
+            if not pairs:
                 sch = getattr(msg, "sender_chat", None)
                 if sch is not None:
                     try:
                         cid2 = int(tg_utils.get_peer_id(sch))
-                        pair = state.channel_entities.get(cid2)
+                        pairs = state.channel_entities.get(cid2) or []
                     except Exception:
-                        pair = None
-            if not pair:
+                        pairs = []
+            if not pairs:
                 return
-            key, title = pair
             text = getattr(msg, "text", None) or ""
             text_html = _message_body_html(msg)
             media = _media_slots(msg)
@@ -680,22 +762,23 @@ async def _telethon_loop_impl(events: Any, tg_utils: Any) -> None:
             turl = _telegram_message_url(chat, int(msg.id), tg_utils)
             date = getattr(msg, "date", None)
             date_iso = date.astimezone(timezone.utc).isoformat() if date else datetime.now(timezone.utc).isoformat()
-            post = Post(
-                channel_key=key,
-                channel_title=title,
-                message_id=int(msg.id),
-                date_iso=date_iso,
-                text=text,
-                text_html=text_html,
-                telegram_url=turl,
-                media=media,
-                grouped_id=gid,
-                invert_media=invert_media,
-            )
-            async with state.lock:
-                dq = state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
-                dq.appendleft(post)
-            await broadcast_ws({"type": "new_post", "post": post.to_dict()})
+            for key, title in pairs:
+                post = Post(
+                    channel_key=key,
+                    channel_title=title,
+                    message_id=int(msg.id),
+                    date_iso=date_iso,
+                    text=text,
+                    text_html=text_html,
+                    telegram_url=turl,
+                    media=media,
+                    grouped_id=gid,
+                    invert_media=invert_media,
+                )
+                async with state.lock:
+                    dq = state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
+                    dq.appendleft(post)
+                await broadcast_ws({"type": "new_post", "post": post.to_dict()})
         except Exception:
             logger.exception("on_new_message failed")
 
@@ -705,36 +788,43 @@ async def _telethon_loop_impl(events: Any, tg_utils: Any) -> None:
     # backfill recent messages
     for ent in entities:
         cid = int(tg_utils.get_peer_id(ent))
-        pair = state.channel_entities.get(cid)
-        if not pair:
+        pairs = state.channel_entities.get(cid) or []
+        if not pairs:
             continue
-        key, title = pair
         msgs = await client.get_messages(ent, limit=30)
         sorted_msgs = sorted([m for m in msgs if m and getattr(m, "id", None)], key=lambda m: int(m.id))
-        async with state.lock:
-            dq = state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
-            for m in sorted_msgs:
-                text = getattr(m, "text", None) or ""
-                text_html = _message_body_html(m)
-                media = _media_slots(m)
-                gid, invert_media = _msg_group_meta(m)
-                turl = _telegram_message_url(ent, int(m.id), tg_utils)
-                d = getattr(m, "date", None)
-                date_iso = d.astimezone(timezone.utc).isoformat() if d else ""
-                dq.appendleft(
-                    Post(
-                        channel_key=key,
-                        channel_title=title,
-                        message_id=int(m.id),
-                        date_iso=date_iso,
-                        text=text,
-                        text_html=text_html,
-                        telegram_url=turl,
-                        media=media,
-                        grouped_id=gid,
-                        invert_media=invert_media,
+        if not sorted_msgs:
+            logger.warning(
+                "startup backfill: get_messages returned 0 peer_id=%s columns=%r "
+                "(session may lack access, or wrong chat; check NEWS_SOURCE_MAP key vs typo uasonli/uaonlii)",
+                cid,
+                [p[0] for p in pairs],
+            )
+        for key, title in pairs:
+            async with state.lock:
+                dq = state.posts_by_channel.setdefault(key, deque(maxlen=state.max_posts))
+                for m in sorted_msgs:
+                    text = getattr(m, "text", None) or ""
+                    text_html = _message_body_html(m)
+                    media = _media_slots(m)
+                    gid, invert_media = _msg_group_meta(m)
+                    turl = _telegram_message_url(ent, int(m.id), tg_utils)
+                    d = getattr(m, "date", None)
+                    date_iso = d.astimezone(timezone.utc).isoformat() if d else ""
+                    dq.appendleft(
+                        Post(
+                            channel_key=key,
+                            channel_title=title,
+                            message_id=int(m.id),
+                            date_iso=date_iso,
+                            text=text,
+                            text_html=text_html,
+                            telegram_url=turl,
+                            media=media,
+                            grouped_id=gid,
+                            invert_media=invert_media,
+                        )
                     )
-                )
 
     logger.info("Telethon running until disconnect")
     await client.run_until_disconnected()
@@ -791,14 +881,21 @@ async def get_feed(_: None = Depends(verify_bearer)) -> JSONResponse:
 
 
 @app.get("/channels")
-async def list_channels(_: None = Depends(verify_bearer)) -> JSONResponse:
-    """Watched channel keys + titles (for UI)."""
+async def list_channels(
+    _: None = Depends(verify_bearer),
+    include_post_counts: bool = Query(False, description="Add post_count per row from in-memory deque"),
+) -> JSONResponse:
+    """Watched channel keys + titles (for UI). Optional post_count for debugging empty columns."""
     async with state.lock:
         rows: list[dict[str, Any]] = []
-        for peer_id, (key, title) in sorted(
-            state.channel_entities.items(), key=lambda x: (x[1][0], x[0])
-        ):
-            rows.append({"channel_key": key, "channel_title": title, "peer_id": peer_id})
+        for peer_id, pairs in sorted(state.channel_entities.items(), key=lambda x: x[0]):
+            for key, title in pairs:
+                row: dict[str, Any] = {"channel_key": key, "channel_title": title, "peer_id": peer_id}
+                if include_post_counts:
+                    dq = state.posts_by_channel.get(key)
+                    row["post_count"] = len(dq) if dq is not None else 0
+                rows.append(row)
+        rows.sort(key=lambda r: (r["channel_key"], r["peer_id"]))
     return JSONResponse({"channels": rows})
 
 
@@ -831,6 +928,19 @@ async def watch_channel(body: WatchChannelBody, _: None = Depends(verify_bearer)
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
     except Exception as e:
+        from telethon.errors import FloodWaitError
+
+        if isinstance(e, FloodWaitError):
+            secs = int(getattr(e, "seconds", 0) or 0)
+            mins = max(1, (secs + 59) // 60)
+            raise HTTPException(
+                429,
+                detail=(
+                    f"Telegram обмежив запити на @username (~{mins} хв). "
+                    "Спробуйте посилання виду https://t.me/c/ID/123 (ID у веб-версії каналу) або числовий id каналу; "
+                    "після успішного додавання канал зберігається за id, повторний Resolve не потрібен."
+                ),
+            ) from e
         logger.exception("watch_channel resolve")
         raise HTTPException(502, f"cannot resolve channel: {e}") from e
 

@@ -216,7 +216,7 @@ async function main() {
       stepsDone.push('Сохранён resume-matching.html');
     } catch (e) {
       logStep(8, 'Matching резюме', 'fail', e && e.message ? e.message : String(e));
-      errors.push('Resume matching: ' + (e && e.message ? e.message : String(e));
+      errors.push('Resume matching: ' + (e && e.message ? e.message : String(e)));
     }
   } else {
     logStep(7, 'Preview резюме', 'fail', 'resumeId не найден');

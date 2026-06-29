@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { openUrlInDexChrome, closeDexOpenChrome } = require('./dex-chrome-open-background.cjs');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const EXTENSION_DIR = path.join(__dirname, 'dex-linkedin-extension');
@@ -59,10 +60,16 @@ function main() {
     return url;
   }
 
-  const MAX_TRIGGER_URL_LENGTH = 2000; // Long chrome-extension://...?url=... can be truncated → opens linkedin.com → redirect to /feed
+  // Trigger embeds the full jobs/search URL in a query param. If that string is truncated (OS limits,
+  // address bar, etc.), `url` decodes to a broken or root-only URL → LinkedIn sends you to /feed.
+  // Default: open the real jobs/search URL with dex-auto-capture=1 (correct page). Opt into trigger
+  // only when LinkedIn strips the param: DEX_LINKEDIN_USE_TRIGGER=1
+  const MAX_TRIGGER_URL_LENGTH = 2000;
+  const useTrigger =
+    process.env.DEX_LINKEDIN_USE_TRIGGER === '1' || process.env.DEX_LINKEDIN_USE_TRIGGER === 'true';
   let urlToOpen;
   const extId = getExtensionId();
-  if (extId) {
+  if (extId && useTrigger) {
     const triggerUrl = 'chrome-extension://' + extId + '/trigger.html?url=' + encodeURIComponent(linkedinUrl);
     if (triggerUrl.length <= MAX_TRIGGER_URL_LENGTH) {
       urlToOpen = triggerUrl;
@@ -73,8 +80,12 @@ function main() {
     }
   } else {
     urlToOpen = linkedinUrlWithCapture();
-    console.error('[Dex] Tip: LinkedIn may strip the param. For reliable auto-start, put your extension ID in');
-    console.error('[Dex]   ' + path.join(EXTENSION_DIR, 'extension-id.txt') + '  (one line, from chrome://extensions)');
+    if (!extId) {
+      console.error('[Dex] Default: LinkedIn jobs/search with dex-auto-capture=1 (no trigger). Put extension ID in');
+      console.error('[Dex]   ' + path.join(EXTENSION_DIR, 'extension-id.txt') + ' and set DEX_LINKEDIN_USE_TRIGGER=1 only if you need the trigger page.');
+    } else {
+      console.error('[Dex] Opening LinkedIn with dex-auto-capture=1 (set DEX_LINKEDIN_USE_TRIGGER=1 to use chrome-extension trigger).');
+    }
   }
 
   if (!fs.existsSync(DATA_DIR)) {
@@ -82,35 +93,16 @@ function main() {
   }
 
   const startTime = Date.now();
-  console.error('[Dex] Opening in browser:', urlToOpen.substring(0, 80) + (urlToOpen.length > 80 ? '...' : ''));
+  console.error('[Dex] Opening in browser (background, no focus steal):', urlToOpen.substring(0, 80) + (urlToOpen.length > 80 ? '...' : ''));
 
-  const openUrl = function (u) {
-    const quoted = '"' + u.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-    try {
-      execSync('open -a "Google Chrome" ' + quoted, { stdio: 'inherit' });
-      return true;
-    } catch (e1) {
-      try {
-        execSync('open ' + quoted, { stdio: 'inherit' });
-        return true;
-      } catch (e2) {
-        return false;
-      }
-    }
-  };
+  const logDex = (msg) => console.error(msg);
+  const dexOpenOpts = { log: logDex, runKey: 'linkedin-capture' };
+  process.on('exit', () => closeDexOpenChrome(dexOpenOpts));
 
-  if (urlToOpen.indexOf('chrome-extension://') === 0) {
-    // macOS: open with Chrome explicitly so it handles chrome-extension://
-    if (!openUrl(urlToOpen)) {
-      console.error('[Dex] Could not open extension URL. Paste this in Chrome address bar:');
-      console.error('[Dex] ' + urlToOpen);
-      process.exit(1);
-    }
-  } else {
-    if (!openUrl(urlToOpen)) {
-      console.error('[Dex] open failed');
-      process.exit(1);
-    }
+  if (!openUrlInDexChrome(urlToOpen, dexOpenOpts)) {
+    console.error('[Dex] Could not open browser. Paste in Chrome (profile with Dex):');
+    console.error('[Dex] ' + urlToOpen);
+    process.exit(1);
   }
 
   console.error('[Dex] Capture should auto-start in ~4s. Waiting for saved file (poll every 10s, timeout 30min)...');

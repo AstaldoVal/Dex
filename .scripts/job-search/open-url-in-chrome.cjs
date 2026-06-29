@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * Open a URL in the user's Google Chrome (default browser on macOS: open -a "Google Chrome").
- * Use this when the Dex extension or other Chrome-only flow must run (ATS autofill, LinkedIn capture, etc.).
+ * Open a URL in the user's Google Chrome (Dex extension). macOS default: open -g (no focus steal).
  *
  * Usage (from repo root):
- *   node .scripts/job-search/open-url-in-chrome.cjs "https://app.navero.me/..."
+ *   node .scripts/job-search/open-url-in-chrome.cjs "https://..."
  *   npm run job-search:open-in-chrome -- "https://..."
+ *
+ * Legacy foreground: DEX_CHROME_ALLOW_FOCUS_STEAL=1 or DEX_LINKEDIN_USE_OPEN=1
  */
 'use strict';
 
-const { execSync } = require('child_process');
+const { openUrlInDexChrome } = require('./dex-chrome-open-background.cjs');
 
 const url = process.argv[2] || process.env.OPEN_URL;
 if (!url || !url.startsWith('http')) {
@@ -18,14 +19,7 @@ if (!url || !url.startsWith('http')) {
   process.exit(1);
 }
 
-const quoted = '"' + url.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-try {
-  execSync('open -a "Google Chrome" ' + quoted, { stdio: 'inherit' });
-} catch (e1) {
-  try {
-    execSync('open ' + quoted, { stdio: 'inherit' });
-  } catch (e2) {
-    console.error('Could not open browser. Paste URL in Chrome:', url);
-    process.exit(1);
-  }
+if (!openUrlInDexChrome(url, { log: (m) => console.error(m) })) {
+  console.error('Could not open browser. Paste URL in Chrome:', url);
+  process.exit(1);
 }

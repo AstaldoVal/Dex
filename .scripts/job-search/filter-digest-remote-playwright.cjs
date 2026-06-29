@@ -112,6 +112,7 @@ function isGenericLinkText(linkText) {
 
 // Captures: prefix, link text, ](, url, )
 const JOB_LINE_RE = /^(- \[[ x\-]\] \[)([^\]]*)(\]\()(https?:[^)]+)(\))$/;
+const { launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 
 function question(prompt) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -128,7 +129,7 @@ async function runLogin() {
   const linkedinEmail = process.env.LINKEDIN_EMAIL && process.env.LINKEDIN_EMAIL.trim();
   const linkedinPassword = process.env.LINKEDIN_PASSWORD;
 
-  const context = await chromium.launchPersistentContext(PROFILE_EXTENSION, {
+  const context = await launchPersistentContextGuarded(chromium, PROFILE_EXTENSION, {
     headless: false,
     args: ['--no-sandbox']
   });
@@ -302,7 +303,7 @@ async function runFilter(filePath, batchSize) {
   console.log('Launching browser (saved LinkedIn session). Checking', remaining.length, 'jobs (', alreadyDone, 'already done)…');
   console.log('Browser window will open — LinkedIn often blocks headless, so we use a visible window.\n');
 
-  const context = await chromium.launchPersistentContext(PROFILE_EXTENSION, {
+  const context = await launchPersistentContextGuarded(chromium, PROFILE_EXTENSION, {
     headless: false,
     args: ['--no-sandbox']
   });

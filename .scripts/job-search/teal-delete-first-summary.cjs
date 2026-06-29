@@ -20,24 +20,17 @@ require('dotenv').config({ path: path.join(process.cwd(), '.env') });
 const fs = require('fs');
 const { TEAL_DIR } = require('./job-search-paths.cjs');
 const { launchTealContext, resolvePrimaryProfile, TEAL_CHROME_PROFILE_ALT } = require('./teal-chrome-profile.cjs');
+const { parseTealDeleteFirstSummaryArgs } = require('./teal-delete-first-summary-lib.cjs');
 const playwright = require('playwright');
-
-const DEFAULT_RESUME_ID = process.env.TEAL_RESUME_ID || 'c0ad3ea2-8d9e-4e84-8b60-eab3172de3d9'; // AI & Other
-const PREVIEW_BASE = 'https://app.tealhq.com/resume-builder/resumes';
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
 async function main() {
-  let resumeId = process.env.TEAL_RESUME_ID || DEFAULT_RESUME_ID;
-  let count = 1;
-  if (process.argv[2]) {
-    if (/^\d+$/.test(process.argv[2])) count = Math.min(500, Math.max(1, parseInt(process.argv[2], 10)));
-    else resumeId = process.argv[2];
-  }
-  if (process.argv[3] && /^\d+$/.test(process.argv[3])) count = Math.min(500, Math.max(1, parseInt(process.argv[3], 10)));
-  const url = `${PREVIEW_BASE}/${resumeId}/preview`;
+  const { resumeId, count, previewUrl: url } = parseTealDeleteFirstSummaryArgs(process.argv.slice(2), {
+    TEAL_RESUME_ID: process.env.TEAL_RESUME_ID
+  });
 
   if (!resolvePrimaryProfile() && !TEAL_CHROME_PROFILE_ALT) {
     console.error('Chrome profile not found.');
@@ -48,6 +41,87 @@ async function main() {
   console.log('URL:', url);
   console.log('Действие: удалить первые', count, 'пункт(ов) в блоке Professional Summary');
   console.log('');
+
+  const useHarness =
+    process.env.TEAL_DELETE_USE_HARNESS === '1' ||
+    process.env.TEAL_DELETE_USE_HARNESS !== '0' && count >= 15;
+
+  if (useHarness) {
+    const {
+      openTealPreviewSession,
+      closeTealPreviewSession
+    } = require('./feedback-blocks-live-teal-harness.cjs');
+    const {
+      ensureProfessionalSummaryEditorSane,
+      DEFAULT_MAX_SUMMARY_ITEMS
+    } = require('./feedback-blocks-live-preflight.cjs');
+    const { listProfessionalSummaryItems } = require('./professional-summary-teal-structure.cjs');
+    const {
+      acquireTealProfile,
+      releaseTealProfile,
+      killChromeForProfile
+    } = require('./teal-chrome-profile.cjs');
+    const log = (m) => console.log(m);
+    process.env.TEAL_PREVIEW_SINGLE_PROFILE = '1';
+    const profileHandle = acquireTealProfile({
+      runKey: `ps-bulk-delete-${resumeId.slice(0, 8)}`,
+      log
+    });
+    process.env.TEAL_CHROME_PROFILE = profileHandle.profileDir;
+    if (process.env.TEAL_PS_SKIP_PREKILL !== '1') {
+      killChromeForProfile(profileHandle.profileDir);
+      await sleep(1500);
+    }
+    let session;
+    let r = { itemCount: 9999, deleted: 0 };
+    try {
+      session = await openTealPreviewSession(resumeId, { log });
+      const info0 = await listProfessionalSummaryItems(session.page);
+      const finalTarget =
+        Number(process.env.FEEDBACK_BLOCKS_PS_MAX_ITEMS) || DEFAULT_MAX_SUMMARY_ITEMS;
+      const batchDeletes = Math.min(
+        count,
+        Number(process.env.FEEDBACK_BLOCKS_PS_MAX_DELETES) || count
+      );
+      log(
+        `Harness bulk prune: ${info0.itemCount} → target ≤${finalTarget} (batch delete up to ${batchDeletes})`
+      );
+      const runPreflightOnce = async () =>
+        ensureProfessionalSummaryEditorSane(session.page, {
+          log,
+          maxItems: finalTarget,
+          maxDeletes: batchDeletes,
+          strictDeleteBudget: true
+        });
+      try {
+        r = await runPreflightOnce();
+      } catch (passErr) {
+        log(`  preflight error: ${passErr.message || passErr}`);
+        if (session) await closeTealPreviewSession(session, log).catch(() => {});
+        await sleep(2000);
+        killChromeForProfile(profileHandle.profileDir);
+        await sleep(1000);
+        session = await openTealPreviewSession(resumeId, { log });
+        r = await runPreflightOnce();
+      }
+      await closeTealPreviewSession(session, log);
+      releaseTealProfile(profileHandle);
+      console.log('');
+      console.log('Итого удалено пунктов summary (bulk):', r.deleted, 'осталось:', r.itemCount);
+      const partialOk = r.deleted > 0;
+      const targetOk = r.itemCount <= finalTarget;
+      process.exit(partialOk || targetOk ? 0 : 1);
+    } catch (e) {
+      console.error('Harness bulk delete failed:', e && e.message ? e.message : String(e));
+      if (session) await closeTealPreviewSession(session, log).catch(() => {});
+      releaseTealProfile(profileHandle);
+      if (r.deleted > 0) {
+        console.log('Итого удалено пунктов summary (bulk, partial):', r.deleted, 'осталось:', r.itemCount);
+        process.exit(0);
+      }
+      process.exit(1);
+    }
+  }
 
   let context;
   try {
@@ -165,23 +239,86 @@ async function main() {
     }
 
     if (firstDeleteBtn && firstItem) {
-      // Кнопка Delete показывается только при наведении на блок summary — сначала hover, потом клик
+      // Кнопка Delete может появляться только после активации блока summary (click/focus).
       const block = firstItem;
       block.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, view: window }));
+      block.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, view: window }));
+      try { block.click(); } catch (_) {}
       return new Promise((resolve) => {
         setTimeout(() => {
           try {
-            firstDeleteBtn.click();
-            resolve({ ok: true, method: 'delete_button', text: text || '', firstItemHtml: null });
+            // После активации предпочитаем явную кнопку Delete summary;
+            // если нет — берём самую правую видимую кнопку в группе действий (обычно trash).
+            const visibleButtons = Array.from(block.querySelectorAll('button,[role="button"]'))
+              .filter((btn) => {
+                const cs = window.getComputedStyle(btn);
+                const r = btn.getBoundingClientRect();
+                return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0;
+              });
+            const explicitDelete = visibleButtons.find((btn) => /delete summary/i.test(btn.getAttribute('aria-label') || ''));
+            let targetBtn = explicitDelete || firstDeleteBtn;
+            if (!targetBtn && visibleButtons.length) {
+              targetBtn = visibleButtons
+                .slice()
+                .sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left)
+                .pop();
+            }
+            if (!targetBtn) throw new Error('Не удалось найти кнопку удаления после активации блока');
+            targetBtn.click();
+            resolve({ ok: true, method: 'delete_button_after_focus', text: text || '', firstItemHtml: null });
           } catch (e) {
-            resolve({ ok: false, reason: 'Клик после hover не сработал: ' + (e && e.message ? e.message : String(e)), text: text || null, firstItemHtml: null, containerHtml: null });
+            resolve({ ok: false, reason: 'Клик по delete после активации блока не сработал: ' + (e && e.message ? e.message : String(e)), text: text || null, firstItemHtml: null, containerHtml: null });
           }
-        }, 300);
+        }, 350);
       });
     }
     if (firstDeleteBtn && !firstItem) {
       firstDeleteBtn.click();
       return { ok: true, method: 'delete_button', text: text || '', firstItemHtml: null };
+    }
+    if (!firstDeleteBtn) {
+      // Фолбэк: в некоторых версиях UI кнопка удаления появляется только после клика
+      // по самому блоку summary и может отсутствовать в DOM до активации.
+      const sectionRoot = addSummaryBtn.closest('#blurbs') || addSummaryBtn.closest('section') || addSummaryBtn.parentElement || document.body;
+      const rawCandidates = Array.from(sectionRoot.querySelectorAll('div, li, p, article'));
+      const contentCandidates = rawCandidates
+        .map((el) => {
+          const t = (el.textContent || '').trim().replace(/\s+/g, ' ');
+          if (!t || t.length < 40) return null;
+          if (/^professional summary$/i.test(t)) return null;
+          if (/add a professional summary/i.test(t)) return null;
+          if (/loading blurbs/i.test(t)) return null;
+          const r = el.getBoundingClientRect();
+          if (r.width < 120 || r.height < 16) return null;
+          return { el, t, top: r.top, area: r.width * r.height };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.top - b.top || b.area - a.area);
+      const topBlock = contentCandidates.length ? contentCandidates[0].el : null;
+      if (topBlock) {
+        topBlock.scrollIntoView({ block: 'center' });
+        try { topBlock.click(); } catch (_) {}
+        topBlock.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, view: window }));
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const btns = Array.from(topBlock.querySelectorAll('button,[role="button"]'))
+              .filter((btn) => {
+                const cs = window.getComputedStyle(btn);
+                const r = btn.getBoundingClientRect();
+                return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0;
+              });
+            const explicitDelete = btns.find((btn) => /delete summary/i.test(btn.getAttribute('aria-label') || ''));
+            const rightmost = btns.slice().sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left).pop();
+            const targetBtn = explicitDelete || rightmost || null;
+            if (!targetBtn) {
+              resolve({ ok: false, reason: 'После активации первого summary блока кнопки действий не найдены', text: null, firstItemHtml: topBlock.innerHTML ? topBlock.innerHTML.substring(0, 8000) : null, containerHtml: containerHtmlForDebug, debug: debugCounts });
+              return;
+            }
+            targetBtn.click();
+            resolve({ ok: true, method: 'fallback_focus_then_rightmost', text: (topBlock.textContent || '').trim().replace(/\s+/g, ' '), firstItemHtml: null });
+          }, 350);
+        });
+      }
     }
     return { ok: false, reason: 'В блоке summary не найден элемент удаления первого пункта', text: text || null, firstItemHtml: firstItemHtml || containerHtmlForDebug, containerHtml: containerHtmlForDebug, debug: debugCounts };
     } // end runDeleteLogic
@@ -202,14 +339,41 @@ async function main() {
     if (i === 0) console.log('');
     const preview = (result.text || '(текст не извлечён)').slice(0, 80);
     if (result.ok) {
-      // Подтвердить удаление во всплывающем попапе (кнопка "Delete on ALL resumes")
+      // Подтвердить удаление во всплывающем попапе (кнопка "Delete on ALL resumes").
+      // В некоторых состояниях Playwright "click" зависает на ожидании навигации,
+      // поэтому используем noWaitAfter + JS fallback + Enter fallback.
+      let confirmed = false;
       try {
         await page.waitForSelector('button[type="submit"]', { timeout: 6000 });
-        await page.locator('button:has-text("Delete on ALL resumes")').first().click({ timeout: 3000 });
-        await sleep(1200);
-      } catch (e) {
-        if (i === 0) console.log('Попап подтверждения не найден или уже закрыт:', e && e.message ? e.message : String(e));
+        const confirmBtn = page.locator('button:has-text("Delete on ALL resumes")').first();
+        if (await confirmBtn.count()) {
+          await confirmBtn.click({ timeout: 3000, noWaitAfter: true });
+          confirmed = true;
+        }
+      } catch (_) {}
+      if (!confirmed) {
+        try {
+          confirmed = await page.evaluate(() => {
+            const btn = Array.from(document.querySelectorAll('button[type="submit"], button'))
+              .find((b) => /delete on all resumes/i.test((b.textContent || '').trim()));
+            if (!btn) return false;
+            btn.click();
+            return true;
+          });
+        } catch (_) {}
       }
+      if (!confirmed) {
+        try {
+          await page.keyboard.press('Enter');
+          confirmed = true;
+        } catch (_) {}
+      }
+      if (!confirmed) {
+        console.log('');
+        console.log('Остановка: не удалось подтвердить удаление в попапе (Delete on ALL resumes).');
+        break;
+      }
+      await sleep(700);
       deleted++;
       console.log('  [' + deleted + '/' + count + '] удалён:', preview + (result.text && result.text.length > 80 ? '…' : ''));
     } else {

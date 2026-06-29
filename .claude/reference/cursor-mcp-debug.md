@@ -53,7 +53,7 @@ Cursor подхватывает серверы из **двух мест**: гл�
 # Есть ли глобальный конфиг и пути к Dex
 cat ~/.cursor/mcp.json | head -50
 ```
-Должны быть пути вида `/Users/.../Documents/Development/DEX/Dex/...`, а не `${workspaceFolder}`.
+Должны быть **абсолютные** пути к корню репозитория (например `/Users/…/Development/DEX/core/mcp/...` и `VAULT_PATH` = тот же корень), а не `${workspaceFolder}` и не старый вариант `…/Documents/Development/DEX/Dex/...`.
 
 ---
 
@@ -61,8 +61,14 @@ cat ~/.cursor/mcp.json | head -50
 
 ### Google Calendar: "Credentials file not found: .../credentials.json"
 - **Причина:** у `google-calendar-mcp` в `env` не был задан `GOOGLE_CALENDAR_CREDENTIALS_PATH`, сервер искал файл в домашней папке.
-- **Исправлено в проекте:** в `.cursor/mcp.json` для `google-calendar-mcp` добавлены `GOOGLE_CALENDAR_CREDENTIALS_PATH` и `GOOGLE_CALENDAR_TOKEN_PATH`.
-- **Что сделать:** заново выполнить `python3 .scripts/cursor-sync-mcp.py` и полностью перезапустить Cursor. Проверить, что в корне Dex есть `credentials.json` и при первом вызове календаря создался `google_calendar_token.json`.
+- **Исправлено в проекте:** в `.cursor/mcp.json.source` для **личных** `google-calendar-mcp` и `google-drive-mcp` заданы отдельные `*_CREDENTIALS_PATH` и `*_TOKEN_PATH` в **`Credentials/personal/`**; для **рабочих** `*-work-mcp` — только **`Credentials/google-work/`** (symlink `.claude/google-work/`). Личный и Banda/work не делят один token-файл.
+- **Что сделать:** заново выполнить `python3 .scripts/cursor-sync-mcp.py` и полностью перезапустить Cursor. Проверить, что есть **`Credentials/personal/credentials.json`** и при первом вызове календаря создался **`Credentials/personal/google_calendar_token.json`** (или пути в `env` указывают на те же файлы).
+
+### Личный и рабочий Google (параллельно, без сброса токенов)
+- **Никогда не удалять** `Credentials/personal/*.json` или `Credentials/google-work/*.json` для «переподключения» — это ломает уже выданный OAuth и может затронуть второй аккаунт, если файлы перепутаны.
+- **Личные MCP:** `google-calendar-mcp`, `google-drive-mcp`, `gmail-mcp` → только **`Credentials/personal/`**.
+- **Рабочие MCP:** `google-calendar-work-mcp`, `google-drive-work-mcp`, `gmail-work-mcp` → только **`Credentials/google-work/`**.
+- Новый вход в браузере нужен только если **нет** нужного token-файла в **своей** папке; при входе выбирай аккаунт, соответствующий этому MCP (Gmail личный vs Banda work).
 
 ### Work MCP: "ModuleNotFoundError: No module named 'core'" / "NameError: name 'logger' is not defined"
 
@@ -73,7 +79,7 @@ Cursor запускает скрипт без установки текущей 
 Если в логе Cursor: `Client closed for command` и `Pending server creation failed: MCP error -32000: Connection closed` через 1–2 секунды после старта — процесс MCP падает до завершения handshake. Частая причина: сервер написан под старый API MCP и вызывает `stdio_server(app)` вместо корректного запуска через `async with stdio_server() as (read_stream, write_stream): await app.run(...)`. В таком случае нужно привести код к тому же формату, что в `work_server.py` или `granola_server.py` (async `_main()`, `app.run()` с `InitializationOptions`).
 
 ### Gmail: ошибки credentials / token
-- **Проверить файлы:** в корне репозитория Dex: `credentials.json`, `gmail_token.json`; для рабочей почты: `.claude/google-work/credentials.json`, `.claude/google-work/gmail_token.json`.
+- **Проверить файлы:** личные OAuth-файлы в **`Credentials/personal/`** (`credentials.json`, `gmail_token.json`, …); рабочая почта — **`Credentials/google-work/`** (тот же набор имён; в репозитории symlink **`.claude/google-work`** → туда).
 - В `~/.cursor/mcp.json` у `gmail-mcp` и `gmail-work-mcp` в `env` должны быть `GMAIL_CREDENTIALS_PATH` и `GMAIL_TOKEN_PATH` с абсолютными путями к этим файлам (sync подставляет их сам).
 
 ### Сервер в списке красный / "Failed to start"
@@ -91,7 +97,7 @@ Cursor запускает скрипт без установки текущей 
 - [ ] У каждого из них при раскрытии есть **Available Tools** (не пусто и не ошибка).
 - [ ] Выполнил из корня Dex: `python3 .scripts/cursor-sync-mcp.py`.
 - [ ] После sync полностью перезапустил Cursor (Quit и открыл снова).
-- [ ] В корне Dex есть `credentials.json` и `gmail_token.json` (и при необходимости файлы в `.claude/google-work/`).
+- [ ] Есть **`Credentials/personal/credentials.json`** и **`Credentials/personal/gmail_token.json`** (и при необходимости файлы в **`Credentials/google-work/`**).
 - [ ] В новом чате написал «покажи сегодняшние события календаря» или «покажи непрочитанные письма» — запрос выполняется без сообщения «инструменты недоступны».
 
 Если после этого какой-то сервер всё ещё не работает — пришли точный текст ошибки из Cursor Settings → MCP для этого сервера и (по желанию) вывод `cat ~/.cursor/mcp.json | grep -A5 "google-calendar-mcp\|gmail-mcp"` (без секретов).

@@ -84,8 +84,10 @@ For all operations, use helpers to reduce token usage:
 1. Create directory structure:
    ```
    bmad/
-   ├── config.yaml
-   └── agent-overrides/
+   └── config.yaml
+
+   .claude/config/bmad/
+   └── agent-overrides/   (optional)
 
    docs/
    ├── bmm-workflow-status.yaml

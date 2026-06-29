@@ -183,24 +183,24 @@
 
 Все PM-скиллы объединены в одной папке с указанием источников; единая точка входа — `/pm-skills` и этот файл.
 
-- **Единая папка PM-скиллов** — `.claude/skills/pm/`. Внутри подпапки по источнику: `pm/dex/`, `pm/deanpeters/`, `pm/pop/`, `pm/pmprompt/`, `pm/alirezarezvani/`, `pm/ralph/`. В каждой — скиллы по имени (например `pm/dex/product-brief`, `pm/deanpeters/discovery-process`). Вызов: `/имя-скилла` (как и раньше). Атрибуция и обновление из репозиториев: `.claude/skills/pm/README.md` и `.claude/skills/pm/SOURCES.md`.
-- **BMAD** — отдельный модуль в `.claude/skills/bmad/` с подпапками `core/`, `bmm/`, `bmb/`, `cis/`. Вызов через команды: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. Использует `.claude/commands/bmad/` и `.claude/config/bmad/`. **Не перемещать** BMAD в pm/ — структура обязательна для работы.
+- **Единая папка PM-скиллов** — `Skills_library/pm/`. Внутри подпапки по источнику: `pm/dex/`, `pm/deanpeters/`, `pm/pop/`, `pm/pmprompt/`, `pm/alirezarezvani/`, `pm/ralph/`. В каждой — скиллы по имени (например `pm/dex/product-brief`, `pm/deanpeters/discovery-process`). Вызов: `/имя-скилла` (как и раньше). Атрибуция и обновление из репозиториев: `Skills_library/pm/README.md` и `Skills_library/pm/SOURCES.md`.
+- **BMAD** — отдельный модуль в `Skills_library/bmad/` с подпапками `core/`, `bmm/`, `bmb/`, `cis/`. Вызов через команды: `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. Использует `.claude/commands/bmad/` и `.claude/config/bmad/`. **Не перемещать** BMAD в pm/ — структура обязательна для работы.
 
-**Обновление из исходных репозиториев:** скрипт в той же папке — из корня vault выполнить `./.claude/skills/pm/update.sh` (подтягивает все репо и копирует скиллы в `pm/<источник>/`).
+**Обновление из исходных репозиториев:** скрипт в той же папке — из корня vault выполнить `./Skills_library/pm/update.sh` (подтягивает все репо и копирует скиллы в `pm/<источник>/`).
 
-**Почему в списке скиллов нет одной строки «B-MAD»?** BMAD — это 9 отдельных скиллов в `.claude/skills/bmad/` (bmad-master, architect, pm, scrum-master, developer, builder, ux-designer, analyst, creative-intelligence). В Cursor/IDE они отображаются по имени папки или по `name` из SKILL.md (например, «BMad Master», «architect», «pm»). Основной способ использования BMAD — **команды:** `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. См. `.claude/skills/PM_SKILLS_BMAD_README.md`.
+**Почему в списке скиллов нет одной строки «B-MAD»?** BMAD — это 9 отдельных скиллов в `Skills_library/bmad/` (bmad-master, architect, pm, scrum-master, developer, builder, ux-designer, analyst, creative-intelligence). В Cursor/IDE они отображаются по имени папки или по `name` из SKILL.md (например, «BMad Master», «architect», «pm»). Основной способ использования BMAD — **команды:** `/workflow-init`, `/prd`, `/tech-spec`, `/workflow-status`. См. `.claude/skills/PM_SKILLS_BMAD_README.md`.
 
 ---
 
 ## 4. По источнику
 
-Все перечисленные ниже скиллы (кроме BMAD) расположены в `.claude/skills/pm/<источник>/`. Источники и обновление: `.claude/skills/pm/SOURCES.md`; одна команда обновления: `./.claude/skills/pm/update.sh` (скрипт лежит в папке pm).
+Все перечисленные ниже скиллы (кроме BMAD) расположены в `Skills_library/pm/<источник>/`. Источники и обновление: `Skills_library/pm/SOURCES.md`; одна команда обновления: `./Skills_library/pm/update.sh` (скрипт лежит в папке pm).
 
 - **Dex (нативные)** — product-brief, prioritization, roadmap, feature-decision, project-health, customer-intel. В vault: `pm/dex/`.
 - **deanpeters/Product-Manager-Skills** — 42 скилла. В vault: `pm/deanpeters/`. Репозиторий: `06-Resources/External/Product-Manager-Skills` (скрипт клонирует при отсутствии).
 - **product-on-purpose/pm-skills** — 24 скилла (discover-*, define-*, develop-*, deliver-*, measure-*, iterate-*). В vault: `pm/pop/`. Репозиторий: `06-Resources/External/pm-skills`.
 - **pmprompt/claude-plugin-product-management** — 28 скиллов (префикс `pmprompt-*`). В vault: `pm/pmprompt/`. Репозиторий: `06-Resources/External/claude-plugin-product-management`.
-- **BMAD (aj-geddes/claude-code-bmad-skills)** — 9 скиллов, 15 команд. В vault: `.claude/skills/bmad/`, `.claude/commands/bmad/`, `.claude/config/bmad/`. PM: /workflow-init, /prd, /tech-spec, /workflow-status. Репозиторий: `06-Resources/External/claude-code-bmad-skills`. Подробности: `.claude/skills/PM_SKILLS_BMAD_README.md`.
+- **BMAD (aj-geddes/claude-code-bmad-skills)** — 9 скиллов, 15 команд. В vault: `Skills_library/bmad/`, `.claude/commands/bmad/`, `.claude/config/bmad/`. PM: /workflow-init, /prd, /tech-spec, /workflow-status. Репозиторий: `06-Resources/External/claude-code-bmad-skills`. Подробности: `.claude/skills/PM_SKILLS_BMAD_README.md`.
 - **alirezarezvani/claude-skills (product-team)** — 5 скиллов. В vault: `pm/alirezarezvani/` (product-manager-toolkit, agile-product-owner, product-strategist, ux-researcher-designer, ui-design-system). Репозиторий: `06-Resources/External/claude-skills`.
 - **snarktank/ralph** — 2 скилла (ralph-prd, ralph). В vault: `pm/ralph/`. Репозиторий: `06-Resources/External/ralph`; скрипт цикла: `ralph.sh`.
 
@@ -271,4 +271,4 @@
 
 ---
 
-*Источники: Dex, deanpeters (42), product-on-purpose/pm-skills (24), pmprompt (28), BMAD (9), alirezarezvani (5), snarktank/ralph (2). Всё в одном месте: `.claude/skills/pm/` (кроме BMAD — `.claude/skills/bmad/`). Атрибуция и репозитории: `.claude/skills/pm/SOURCES.md`. Обновление одной командой: `./.claude/skills/pm/update.sh`.*
+*Источники: Dex, deanpeters (42), product-on-purpose/pm-skills (24), pmprompt (28), BMAD (9), alirezarezvani (5), snarktank/ralph (2). Всё в одном месте: `Skills_library/pm/` (кроме BMAD — `Skills_library/bmad/`). Атрибуция и репозитории: `Skills_library/pm/SOURCES.md`. Обновление одной командой: `./Skills_library/pm/update.sh`.*

@@ -38,6 +38,7 @@ const POLL_INTERVAL_MS = 8000;
 const DEFAULT_TIMEOUT_MS = 45 * 60 * 1000;
 const FILE_MTIME_TOLERANCE_MS = 15000;
 const SAVE_SERVER_PORT = 8765;
+const { launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -187,13 +188,13 @@ async function main() {
 
   let context;
   try {
-    context = await chromium.launchPersistentContext(userDataDir, {
+    context = await launchPersistentContextGuarded(chromium, userDataDir, {
       ...launchBase,
       channel: 'chrome'
     });
   } catch (e1) {
     process.stderr.write('[Dex Booking] channel:chrome failed, trying bundled Chromium: ' + (e1 && e1.message) + '\n');
-    context = await chromium.launchPersistentContext(userDataDir, launchBase);
+    context = await launchPersistentContextGuarded(chromium, userDataDir, launchBase);
   }
 
   const page = context.pages()[0] || (await context.newPage());

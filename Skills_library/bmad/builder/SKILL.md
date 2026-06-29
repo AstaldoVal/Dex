@@ -242,7 +242,7 @@ Per helpers.md#Update-Workflow-Status
    - Traceability
 
 4. **File Organization:**
-   - Skills: `~/.claude/skills/bmad/[module]/[role]/SKILL.md`
+   - Skills: `~/Skills_library/bmad/[module]/[role]/SKILL.md`
    - Commands: `~/.claude/config/bmad/commands/[command-name].md`
    - Templates: `~/.claude/config/bmad/templates/[template-name].md`
 
@@ -250,7 +250,7 @@ Per helpers.md#Update-Workflow-Status
 
 **After creating custom components:**
 
-1. **Skills:** Copy to `~/.claude/skills/bmad/[module]/[role]/`
+1. **Skills:** Copy to `~/Skills_library/bmad/[module]/[role]/`
 2. **Commands:** Copy to `~/.claude/config/bmad/commands/`
 3. **Templates:** Copy to `~/.claude/config/bmad/templates/`
 4. **Restart Claude Code** to load new skills
@@ -303,7 +303,7 @@ Let me generate these components...
 ✓ Custom Agent Created!
 
 Files generated:
-- ~/.claude/skills/bmad/bmb/qa-engineer/SKILL.md
+- ~/Skills_library/bmad/bmb/qa-engineer/SKILL.md
 - ~/.claude/config/bmad/commands/create-test-plan.md
 - ~/.claude/config/bmad/commands/execute-tests.md
 - ~/.claude/config/bmad/templates/test-plan.md

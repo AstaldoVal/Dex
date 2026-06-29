@@ -1,0 +1,117 @@
+await figma.setCurrentPageAsync(figma.root.children[0]);
+const fonts = await figma.listAvailableFontsAsync();
+function hasFont(family, style) {
+  return fonts.some((f) => f.fontName.family === family && f.fontName.style === style);
+}
+let baseFamily = "Inter";
+if (!fonts.some((f) => f.fontName.family === "Inter")) {
+  baseFamily = fonts[0]?.fontName.family || "Roboto";
+}
+const regularStyle = hasFont(baseFamily, "Regular")
+  ? "Regular"
+  : fonts.find((f) => f.fontName.family === baseFamily)?.fontName.style || "Regular";
+const mediumStyle = hasFont(baseFamily, "Medium")
+  ? "Medium"
+  : hasFont(baseFamily, "Semi Bold")
+    ? "Semi Bold"
+    : regularStyle;
+await figma.loadFontAsync({ family: baseFamily, style: regularStyle });
+await figma.loadFontAsync({ family: baseFamily, style: mediumStyle });
+function rgb(hex) {
+  const h = hex.replace("#", "");
+  return {
+    r: parseInt(h.slice(0, 2), 16) / 255,
+    g: parseInt(h.slice(2, 4), 16) / 255,
+    b: parseInt(h.slice(4, 6), 16) / 255,
+  };
+}
+const strokeGray = rgb("#D0D5DD");
+const textDark = rgb("#1F2937");
+const textSub = rgb("#4B5563");
+function alFrame(name, mode) {
+  const f = figma.createFrame();
+  f.name = name;
+  f.layoutMode = mode;
+  f.primaryAxisSizingMode = "AUTO";
+  f.counterAxisSizingMode = "AUTO";
+  f.primaryAxisAlignItems = "MIN";
+  f.counterAxisAlignItems = "MIN";
+  f.clipsContent = false;
+  return f;
+}
+function makeText(value, size = 14, style = regularStyle, color = textDark) {
+  const t = figma.createText();
+  t.fontName = { family: baseFamily, style };
+  t.characters = value;
+  t.fontSize = size;
+  t.fills = [{ type: "SOLID", color }];
+  return t;
+}
+function createCard(item) {
+  const card = figma.createFrame();
+  card.name = item.role + " — " + item.name;
+  card.layoutMode = "VERTICAL";
+  card.primaryAxisSizingMode = "AUTO";
+  card.counterAxisSizingMode = "FIXED";
+  card.resize(320, 10);
+  card.itemSpacing = 6;
+  card.paddingLeft = 14;
+  card.paddingRight = 14;
+  card.paddingTop = 12;
+  card.paddingBottom = 12;
+  card.cornerRadius = 12;
+  card.fills = [{ type: "SOLID", color: rgb("#FFFFFF") }];
+  card.strokes = [{ type: "SOLID", color: strokeGray }];
+  card.strokeWeight = 1;
+  card.effects = [
+    {
+      type: "DROP_SHADOW",
+      visible: true,
+      color: { r: 0, g: 0, b: 0, a: 0.08 },
+      offset: { x: 0, y: 2 },
+      radius: 4,
+      spread: 0,
+      blendMode: "NORMAL",
+    },
+  ];
+  const role = makeText(item.role, 14, mediumStyle, textDark);
+  const name = makeText(item.name, 13, regularStyle, textSub);
+  role.textAutoResize = "HEIGHT";
+  name.textAutoResize = "HEIGHT";
+  role.resize(292, role.height);
+  name.resize(292, name.height);
+  card.appendChild(role);
+  card.appendChild(name);
+  return card;
+}
+const root = figma.createFrame();
+root.name = "Оргструктура Banda (UA)";
+root.resize(4700, 3000);
+root.fills = [{ type: "SOLID", color: rgb("#F8FAFC") }];
+root.cornerRadius = 16;
+root.strokes = [{ type: "SOLID", color: rgb("#E5E7EB") }];
+root.strokeWeight = 1;
+root.x = 200;
+root.y = 120;
+figma.currentPage.appendChild(root);
+const founder = createCard({ role: "Founder", name: "Лобанов Павло" });
+const ceo = createCard({ role: "CEO", name: "Тураєв Кирило" });
+root.appendChild(founder);
+root.appendChild(ceo);
+founder.x = 2180;
+founder.y = 90;
+ceo.x = 2180;
+ceo.y = 250;
+const line = figma.createLine();
+line.name = "connector-founder-ceo";
+line.strokes = [{ type: "SOLID", color: rgb("#9CA3AF") }];
+line.strokeWeight = 1;
+const x1 = founder.x + founder.width / 2;
+const y1 = founder.y + founder.height;
+const x2 = ceo.x + ceo.width / 2;
+const y2 = ceo.y;
+line.x = x1;
+line.y = y1;
+line.resize(Math.max(1, x2 - x1), Math.max(1, y2 - y1));
+root.appendChild(line);
+return { success: true, rootFrameId: root.id };

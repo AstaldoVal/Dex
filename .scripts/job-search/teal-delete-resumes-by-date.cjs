@@ -18,7 +18,7 @@ require('dotenv').config({ path: path.join(VAULT, '.env') });
 require('dotenv').config({ path: path.join(process.cwd(), '.env') });
 const fs = require('fs');
 const { TEAL_DIR, ensureDirs } = require('./job-search-paths.cjs');
-const { getTealProfileCandidates } = require('./teal-chrome-profile.cjs');
+const { getTealProfileCandidates, launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 
 const LOG_FILE = path.join(TEAL_DIR, 'teal-delete-by-date.log');
 
@@ -157,7 +157,7 @@ async function main() {
   let profileDir = null;
   for (const p of profileCandidates) {
     try {
-      context = await playwright.chromium.launchPersistentContext(p, launchOptions);
+      context = await launchPersistentContextGuarded(playwright.chromium, p, launchOptions);
       profileDir = p;
       log('[Teal delete-by-date] Using Chrome profile: ' + profileDir);
       break;

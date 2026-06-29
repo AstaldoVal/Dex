@@ -1,0 +1,223 @@
+// Append CFO/CBDO/Marketing/HR clusters + bus lines (root id 2:2 from step1).
+await figma.setCurrentPageAsync(figma.root.children[0]);
+const fonts = await figma.listAvailableFontsAsync();
+function hasFont(family, style) {
+  return fonts.some((f) => f.fontName.family === family && f.fontName.style === style);
+}
+let baseFamily = "Inter";
+if (!fonts.some((f) => f.fontName.family === "Inter")) {
+  baseFamily = fonts[0]?.fontName.family || "Roboto";
+}
+const regularStyle = hasFont(baseFamily, "Regular")
+  ? "Regular"
+  : fonts.find((f) => f.fontName.family === baseFamily)?.fontName.style || "Regular";
+const mediumStyle = hasFont(baseFamily, "Medium")
+  ? "Medium"
+  : hasFont(baseFamily, "Semi Bold")
+    ? "Semi Bold"
+    : regularStyle;
+await figma.loadFontAsync({ family: baseFamily, style: regularStyle });
+await figma.loadFontAsync({ family: baseFamily, style: mediumStyle });
+
+function rgb(hex) {
+  const h = hex.replace("#", "");
+  return {
+    r: parseInt(h.slice(0, 2), 16) / 255,
+    g: parseInt(h.slice(2, 4), 16) / 255,
+    b: parseInt(h.slice(4, 6), 16) / 255,
+  };
+}
+const palette = { marketing: "#E7D2DC", hr: "#DCCDE5", finance: "#E7E8D8", sales: "#CCDFEA" };
+const strokeGray = rgb("#D0D5DD");
+const textDark = rgb("#1F2937");
+const textSub = rgb("#4B5563");
+
+function alFrame(name, mode) {
+  const f = figma.createFrame();
+  f.name = name;
+  f.layoutMode = mode;
+  f.primaryAxisSizingMode = "AUTO";
+  f.counterAxisSizingMode = "AUTO";
+  f.primaryAxisAlignItems = "MIN";
+  f.counterAxisAlignItems = "MIN";
+  f.clipsContent = false;
+  return f;
+}
+
+function makeText(value, size = 14, style = regularStyle, color = textDark) {
+  const t = figma.createText();
+  t.fontName = { family: baseFamily, style };
+  t.characters = value;
+  t.fontSize = size;
+  t.fills = [{ type: "SOLID", color }];
+  return t;
+}
+
+function statusColor(status) {
+  if (!status) return rgb("#E5E7EB");
+  const s = status.toLowerCase();
+  if (s.includes("full-time")) return rgb("#D1FAE5");
+  if (s.includes("part-time")) return rgb("#DBEAFE");
+  return rgb("#EEF2FF");
+}
+
+function createCard(item) {
+  const card = figma.createFrame();
+  card.name = `${item.role} — ${item.name}`;
+  card.layoutMode = "VERTICAL";
+  card.primaryAxisSizingMode = "AUTO";
+  card.counterAxisSizingMode = "FIXED";
+  card.resize(320, 10);
+  card.itemSpacing = 6;
+  card.paddingLeft = 14;
+  card.paddingRight = 14;
+  card.paddingTop = 12;
+  card.paddingBottom = 12;
+  card.cornerRadius = 12;
+  card.fills = [{ type: "SOLID", color: rgb("#FFFFFF") }];
+  card.strokes = [{ type: "SOLID", color: strokeGray }];
+  card.strokeWeight = 1;
+  card.effects = [
+    {
+      type: "DROP_SHADOW",
+      visible: true,
+      color: { r: 0, g: 0, b: 0, a: 0.08 },
+      offset: { x: 0, y: 2 },
+      radius: 4,
+      spread: 0,
+      blendMode: "NORMAL",
+    },
+  ];
+  const role = makeText(item.role, 14, mediumStyle, textDark);
+  const name = makeText(item.name, 13, regularStyle, textSub);
+  role.textAutoResize = "HEIGHT";
+  name.textAutoResize = "HEIGHT";
+  role.resize(292, role.height);
+  name.resize(292, name.height);
+  card.appendChild(role);
+  card.appendChild(name);
+  if (item.status) {
+    const pill = alFrame(`status-${item.status}`, "HORIZONTAL");
+    pill.paddingLeft = 8;
+    pill.paddingRight = 8;
+    pill.paddingTop = 4;
+    pill.paddingBottom = 4;
+    pill.cornerRadius = 999;
+    pill.fills = [{ type: "SOLID", color: statusColor(item.status) }];
+    const st = makeText(item.status, 10, mediumStyle, rgb("#374151"));
+    pill.appendChild(st);
+    card.appendChild(pill);
+  }
+  return card;
+}
+
+function createCluster(parent, { title, color, x, y, items }) {
+  const cluster = alFrame(`cluster-${title}`, "VERTICAL");
+  cluster.resize(360, 10);
+  cluster.primaryAxisSizingMode = "AUTO";
+  cluster.counterAxisSizingMode = "FIXED";
+  cluster.itemSpacing = 12;
+  cluster.paddingLeft = 12;
+  cluster.paddingRight = 12;
+  cluster.paddingTop = 12;
+  cluster.paddingBottom = 12;
+  cluster.cornerRadius = 14;
+  cluster.fills = [{ type: "SOLID", color: rgb(color) }];
+  cluster.strokes = [{ type: "SOLID", color: strokeGray }];
+  cluster.strokeWeight = 1;
+  if (items) for (const item of items) cluster.appendChild(createCard(item));
+  const chip = alFrame(`title-${title}`, "HORIZONTAL");
+  chip.paddingLeft = 10;
+  chip.paddingRight = 10;
+  chip.paddingTop = 6;
+  chip.paddingBottom = 6;
+  chip.cornerRadius = 999;
+  chip.fills = [{ type: "SOLID", color: rgb("#FFFFFF") }];
+  chip.strokes = [{ type: "SOLID", color: strokeGray }];
+  chip.strokeWeight = 1;
+  const chipText = makeText(title, 11, mediumStyle, rgb("#374151"));
+  chip.appendChild(chipText);
+  cluster.appendChild(chip);
+  parent.appendChild(cluster);
+  cluster.x = x;
+  cluster.y = y;
+  return cluster;
+}
+
+const root = figma.getNodeById("2:2");
+if (!root || root.type !== "FRAME") return { success: false, error: "root" };
+const founder = root.findOne((n) => n.type === "FRAME" && n.name && n.name.startsWith("Founder"));
+const ceo = root.findOne((n) => n.type === "FRAME" && n.name && n.name.startsWith("CEO"));
+if (!founder || !ceo) return { success: false, error: "cards" };
+
+function makeLine(x1, y1, x2, y2, name) {
+  const line = figma.createLine();
+  line.name = name;
+  line.strokes = [{ type: "SOLID", color: rgb("#9CA3AF") }];
+  line.strokeWeight = 1;
+  line.x = x1;
+  line.y = y1;
+  line.resize(Math.max(1, x2 - x1), Math.max(1, y2 - y1));
+  root.appendChild(line);
+  return line;
+}
+
+const yStart = 560;
+const clusters = [];
+clusters.push(
+  createCluster(root, {
+    title: "CFO",
+    color: palette.finance,
+    x: 120,
+    y: yStart,
+    items: [{ role: "CFO", name: "Римарук Олена" }],
+  }),
+);
+clusters.push(
+  createCluster(root, {
+    title: "CBDO",
+    color: palette.sales,
+    x: 560,
+    y: yStart,
+    items: [{ role: "CBDO", name: "Гриневич Алекс" }],
+  }),
+);
+clusters.push(
+  createCluster(root, {
+    title: "Marketing",
+    color: palette.marketing,
+    x: 1000,
+    y: yStart,
+    items: [
+      { role: "CMO (консультант)", name: "Толмачов Микита", status: "part-time, ~5h/week" },
+      { role: "Middle Marketing Specialist", name: "Сидорова Галина", status: "full-time" },
+    ],
+  }),
+);
+clusters.push(
+  createCluster(root, {
+    title: "HR / Recruiting / Operations",
+    color: palette.hr,
+    x: 1440,
+    y: yStart,
+    items: [
+      { role: "Senior HR", name: "Маслова Олена", status: "full-time" },
+      { role: "Senior Рекрутинг", name: "Савченко Людмила", status: "part-time" },
+      { role: "Junior Operation Manager", name: "Сіромаха Юлія", status: "full-time" },
+    ],
+  }),
+);
+
+const ceoCenterX = ceo.x + ceo.width / 2;
+const ceoBottomY = ceo.y + ceo.height;
+const busY = 500;
+makeLine(ceoCenterX, ceoBottomY, ceoCenterX, busY, "connector-ceo-drop");
+const leftMost = clusters[0].x + clusters[0].width / 2;
+const rightMost = clusters[clusters.length - 1].x + clusters[clusters.length - 1].width / 2;
+makeLine(leftMost, busY, rightMost, busY, "connector-bus");
+for (const cl of clusters) {
+  const cx = cl.x + cl.width / 2;
+  makeLine(cx, busY, cx, cl.y, `connector-${cl.name}`);
+}
+
+return { success: true, rootFrameId: root.id, clusterIds: clusters.map((c) => c.id) };

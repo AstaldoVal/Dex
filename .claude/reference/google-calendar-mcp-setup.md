@@ -65,11 +65,11 @@
 ### Шаг 2.1. Установить Python-библиотеки для Google Calendar MCP
 
 1. Открой **Терминал** (на Mac: Spotlight → введи `Terminal` и открой приложение).
-2. Перейди в папку своего репозитория Dex, например:
+2. Перейди в **корень** своего репозитория Dex (там же, где лежат `core/`, `.claude/`), например:
    ```bash
-   cd /Users/твой_логин/Documents/Development/DEX/Dex
+   cd ~/Development/DEX
    ```
-   (подставь свой путь к папке Dex).
+   (подставь свой фактический путь; не используй устаревший вариант `…/Documents/Development/DEX/Dex` — в текущей структуре Dex код лежит прямо под корнем репо).
 3. Выполни команду:
    ```bash
    pip install -r core/mcp/requirements-google-calendar.txt
@@ -78,37 +78,28 @@
 
 ### Шаг 2.2. Положить credentials.json в проект
 
-**Вариант А — в корень репозитория (проще):**
+**Рекомендуемый путь (канон Dex):** положи **`credentials.json`** в **`Credentials/personal/`** рядом с другими личными OAuth-файлами. Сервер `google_calendar_server.py` по умолчанию ищет его там (см. `core/credentials_paths.py`). Каталог **`Credentials/`** целиком в `.gitignore`, кроме **`Credentials/README.md`**.
 
-1. Найди скачанный и переименованный файл **`credentials.json`**.
-2. Перемести или скопируй его **в корень репозитория Dex** (туда, где лежат папки `04-Projects`, `05-Areas`, файл `CLAUDE.md` и т.д.).
-3. В корне Dex должен появиться файл: `Dex/credentials.json`.
+1. Создай папку при необходимости: `Credentials/personal/`.
+2. Перемести или скопируй скачанный и переименованный файл как **`Credentials/personal/credentials.json`**.
 
-**Вариант Б — в любую другую папку:**
+**Альтернатива — произвольный путь:**
 
-1. Положи **`credentials.json`** в любую удобную папку (например, `Dex/.claude/` или отдельную папку для ключей).
-2. Запомни **полный путь** к файлу, например:  
-   `/Users/твой_логин/Documents/Development/DEX/Dex/.claude/credentials.json`
-3. Открой или создай файл **`.env`** в корне Dex (см. блок ниже про файл `.env`).
-4. Добавь строку (подставь свой путь):
+1. Положи **`credentials.json`** в любую папку и запомни **полный путь**.
+2. В **`.env`** в корне репозитория Dex добавь:
    ```
    GOOGLE_CALENDAR_CREDENTIALS_PATH=/полный/путь/к/credentials.json
    ```
-   Пример:
-   ```
-   GOOGLE_CALENDAR_CREDENTIALS_PATH=/Users/roman/Documents/Development/DEX/Dex/.claude/credentials.json
-   ```
-5. Сохрани `.env`.
 
-**Важно:** файл `credentials.json` содержит секреты. Не выкладывай его в публичный репозиторий. В `.gitignore` Dex уже добавлены `credentials.json` и `google_calendar_token.json`.
+**Важно:** файл `credentials.json` содержит секреты. Не коммить его в git. В `.gitignore` Dex учтены и корневые имена (`credentials.json`, `google_calendar_token.json`), и весь **`Credentials/**`** (кроме README).
 
-**Если файл называется иначе (например, `Credentials.json` с большой буквы):** либо переименуй его в точности в `credentials.json` (маленькими буквами), либо в **Варианте Б** укажи в `.env` полный путь к этому файлу.
+**Если файл называется иначе (например, `Credentials.json` с большой буквы):** переименуй в **`credentials.json`** или задай **`GOOGLE_CALENDAR_CREDENTIALS_PATH`** в `.env`.
 
 ---
 
 ### Про файл `.env` (когда он нужен и как его увидеть)
 
-- **Когда нужен:** только если ты выбрал **Вариант Б** (credentials лежат не в корне Dex) и хочешь указать путь к ним. Если положил `credentials.json` в **корень** репозитория (Вариант А), файл `.env` для Google Calendar **не обязателен**.
+- **Когда нужен:** если `credentials.json` лежит **не** в `Credentials/personal/` и не по умолчанию — укажи путь через **`GOOGLE_CALENDAR_CREDENTIALS_PATH`** в `.env`. Если файл уже в **`Credentials/personal/credentials.json`**, отдельная переменная для календаря **не обязательна**.
 - **Почему не видно `.env` в проекте:** файл **`.env`** в проекте есть, но он может не отображаться в дереве файлов Cursor, потому что:  
   (1) имя начинается с точки (такие файлы иногда скрывают);  
   (2) он указан в `.gitignore`, и редактор по умолчанию может скрывать игнорируемые файлы.
@@ -202,7 +193,7 @@
 
 ## Подключение рабочего аккаунта (отдельный credentials)
 
-Для **рабочей** почты (например, roman.matsukatov@mindera.com) используется **отдельный** OAuth-клиент и папка `.claude/google-work/` (не корневой `credentials.json`).
+Для **рабочей** почты (например, roman.matsukatov@mindera.com) используется **отдельный** OAuth-клиент и папка **`Credentials/google-work/`** (в репозитории есть symlink **`.claude/google-work`** → туда же; не смешивай с личным **`Credentials/personal/`**).
 
 Пошаговая инструкция только с ручными шагами: **`.claude/reference/google-work-account-setup.md`**.
 
@@ -210,7 +201,7 @@
 
 ## Удаление событий (gcal_delete_event)
 
-MCP поддерживает удаление события по **точному названию** и **дате** (YYYY-MM-DD). Если раньше использовался доступ только на чтение (calendar.readonly), после обновления нужно **повторно авторизоваться**: удали файл токена (например `google_calendar_token.json` в той же папке, что и credentials), затем при следующем вызове MCP снова войди в Google и разреши доступ к календарю (полный, не только чтение).
+MCP поддерживает удаление события по **точному названию** и **дате** (YYYY-MM-DD). Если раньше использовался доступ только на чтение (calendar.readonly), после обновления нужно **повторно авторизоваться**: удали файл токена (например **`Credentials/personal/google_calendar_token.json`** для личного аккаунта), затем при следующем вызове MCP снова войди в Google и разреши доступ к календарю (полный, не только чтение).
 
 ---
 
@@ -220,7 +211,7 @@ MCP поддерживает удаление события по **точном
 - [ ] Настроен OAuth consent screen (Internal или External).
 - [ ] Создан OAuth client ID типа **Desktop app**, скачан JSON и переименован в **credentials.json**.
 - [ ] Выполнено: `pip install -r core/mcp/requirements-google-calendar.txt` из корня Dex.
-- [ ] Файл **credentials.json** лежит в корне Dex **или** задан путь в **GOOGLE_CALENDAR_CREDENTIALS_PATH** в `.env`.
+- [ ] Файл **credentials.json** лежит в **`Credentials/personal/`** **или** задан путь в **GOOGLE_CALENDAR_CREDENTIALS_PATH** в `.env`.
 - [ ] В настройках MCP Cursor добавлен сервер **google-calendar** (из `.claude/mcp/google-calendar.json` или вручную).
 - [ ] Cursor перезапущен; при первом запросе к календарю выполнен вход в Google и выдано разрешение.
 

@@ -9,6 +9,24 @@ Run from the Dex repo root: python3 .scripts/cursor-sync-mcp.py
 from pathlib import Path
 import json
 import os
+import shutil
+
+
+def load_env_file(path: Path) -> dict:
+    """Parse KEY=VALUE lines from a dotenv-style file (no export prefix)."""
+    out = {}
+    if not path.exists():
+        return out
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip().strip('"').strip("'")
+        if key and value:
+            out[key] = value
+    return out
+
 
 def main():
     script_dir = Path(__file__).resolve().parent
@@ -89,6 +107,15 @@ def main():
             if "EXA_API_KEY" in env_vars:
                 env["EXA_API_KEY"] = env_vars["EXA_API_KEY"]
 
+    # LangSmith (Applicator genufit-staging, EU) — keys stay in Credentials/, not .env
+    langsmith_env_path = repo_root / "Credentials/applicator-staging/langsmith-staging.env"
+    langsmith_vars = load_env_file(langsmith_env_path)
+    if "langsmith-mcp" in servers and isinstance(servers["langsmith-mcp"], dict):
+        env = servers["langsmith-mcp"].setdefault("env", {})
+        for k in ("LANGSMITH_API_KEY", "LANGSMITH_ENDPOINT", "LANGSMITH_PROJECT", "LANGSMITH_WORKSPACE_ID"):
+            if k in langsmith_vars:
+                env[k] = langsmith_vars[k]
+
     if "tavily-mcp" in servers and isinstance(servers["tavily-mcp"], dict):
         tav_env = servers["tavily-mcp"].get("env") or {}
         if not (tav_env.get("TAVILY_API_KEY") or "").strip():
@@ -103,6 +130,29 @@ def main():
         ex_env = servers["exa-mcp"].get("env") or {}
         if not (ex_env.get("EXA_API_KEY") or "").strip():
             servers["exa-mcp"]["disabled"] = True
+
+    if "langsmith-mcp" in servers and isinstance(servers["langsmith-mcp"], dict):
+        ls_env = servers["langsmith-mcp"].get("env") or {}
+        if not (ls_env.get("LANGSMITH_API_KEY") or "").strip():
+            servers["langsmith-mcp"]["disabled"] = True
+
+    # Cursor often starts with a minimal PATH (no Homebrew), so bare "npx" / "uvx" / "node" are not found
+    # and MCPs show red in the UI while the same config works in a full shell (e.g. mcp-health-check.cjs).
+    path_hints = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+    enriched_path = path_hints + ":" + os.environ.get("PATH", "")
+    for _name, s in servers.items():
+        if not isinstance(s, dict):
+            continue
+        orig = s.get("command")
+        if not isinstance(orig, str) or orig not in ("npx", "uvx", "node"):
+            continue
+        resolved = shutil.which(orig, path=enriched_path)
+        if resolved:
+            s["command"] = resolved
+        if orig in ("npx", "uvx"):
+            env = s.setdefault("env", {})
+            if "PATH" not in env:
+                env["PATH"] = enriched_path
 
     cursor_home = Path.home() / ".cursor"
     cursor_home.mkdir(parents=True, exist_ok=True)

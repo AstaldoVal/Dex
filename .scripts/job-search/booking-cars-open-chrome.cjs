@@ -18,46 +18,59 @@
 'use strict';
 
 const { spawn } = require('child_process');
+const { buildFirstLisScanOpenUrl } = require('./booking-cars-lis-url.cjs');
 
 function parseArgs(argv) {
-  const out = { noAutostart: false, url: null };
+  const out = { noAutostart: false, lisScan: false, url: null };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--no-autostart') out.noAutostart = true;
+    else if (a === '--lis-scan') out.lisScan = true;
     else if (!a.startsWith('--')) out.url = a;
   }
-  if (!out.url) out.url = process.env.BOOKING_CARS_URL || null;
+  if (!out.url) {
+    out.url =
+      process.env.BOOKING_CARS_URL ||
+      (out.lisScan ? buildFirstLisScanOpenUrl() : null);
+  }
   return out;
 }
 
-function appendAutoStartParams(urlStr, enable) {
-  if (!enable) return urlStr;
+function appendAutoStartParams(urlStr, enable, lisScan) {
+  if (!enable && !lisScan) return urlStr;
   const n = process.env.DEX_BOOKING_N != null ? String(parseInt(process.env.DEX_BOOKING_N, 10) || 7) : '7';
   try {
     const u = new URL(urlStr);
-    u.searchParams.set('dex-booking-autostart', '1');
-    if (!u.searchParams.has('dex-booking-n')) u.searchParams.set('dex-booking-n', n);
-    // Keep a hash fallback so autostart survives cases where Booking rewrites search params.
+    if (lisScan) {
+      u.searchParams.set('dex-booking-lis-scan', '1');
+    }
+    if (enable) {
+      u.searchParams.set('dex-booking-autostart', '1');
+      if (!u.searchParams.has('dex-booking-n')) u.searchParams.set('dex-booking-n', n);
+    }
     const hp = new URLSearchParams((u.hash || '').replace(/^#/, ''));
-    hp.set('dex-booking-autostart', '1');
-    if (!hp.has('dex-booking-n')) hp.set('dex-booking-n', n);
+    if (lisScan) hp.set('dex-booking-lis-scan', '1');
+    if (enable) {
+      hp.set('dex-booking-autostart', '1');
+      if (!hp.has('dex-booking-n')) hp.set('dex-booking-n', n);
+    }
     u.hash = '#' + hp.toString();
     return u.href;
   } catch (e) {
     const hashSep = urlStr.includes('#') ? '&' : '#';
     const sep = urlStr.includes('?') ? '&' : '?';
-    return (
-      urlStr +
-      sep + 'dex-booking-autostart=1&dex-booking-n=' + encodeURIComponent(n) +
-      hashSep + 'dex-booking-autostart=1&dex-booking-n=' + encodeURIComponent(n)
-    );
+    let extra = '';
+    if (lisScan) extra += sep + 'dex-booking-lis-scan=1';
+    if (enable) extra += (extra ? '&' : sep) + 'dex-booking-autostart=1&dex-booking-n=' + encodeURIComponent(n);
+    return urlStr + extra + hashSep + (lisScan ? 'dex-booking-lis-scan=1' : '') + (enable ? '&dex-booking-autostart=1' : '');
   }
 }
 
-const { noAutostart, url: rawUrl } = parseArgs(process.argv);
+const { noAutostart, lisScan, url: rawUrl } = parseArgs(process.argv);
 if (!rawUrl || !rawUrl.startsWith('http')) {
   process.stderr.write(
     'Usage: npm run booking-cars:open -- "https://www.booking.com/cars/..."\n' +
+      '       npm run booking-cars:open -- --lis-scan\n' +
       '       npm run booking-cars:open -- --no-autostart "<url>"\n' +
       '   or: BOOKING_CARS_URL="https://..." npm run booking-cars:open\n'
   );
@@ -68,10 +81,14 @@ if (!rawUrl.includes('booking.com')) {
   process.stderr.write('[Dex Booking] Warning: URL does not look like booking.com\n');
 }
 
-const url = appendAutoStartParams(rawUrl, !noAutostart);
+const url = appendAutoStartParams(rawUrl, !noAutostart && !lisScan, lisScan);
 
 process.stderr.write('[Dex Booking] Opening in your Chrome (your session, not a separate Playwright profile).\n');
-if (!noAutostart) {
+if (lisScan) {
+  process.stderr.write(
+    '[Dex Booking] LIS list scan — opens cars.booking.com/search-results (LIS, 2 date pairs 20:00), not Stays.\n'
+  );
+} else if (!noAutostart) {
   process.stderr.write('[Dex Booking] URL includes dex-booking-autostart=1 — capture should start in ~1–2 s after overlay loads.\n');
 } else {
   process.stderr.write('[Dex Booking] --no-autostart: open overlay and press Start yourself.\n');

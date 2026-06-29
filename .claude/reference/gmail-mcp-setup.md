@@ -16,8 +16,8 @@ Cursor не всегда подхватывает проектный `.cursor/mc
 
 **Доступны три аккаунта:**
 - **gmail-mcp** — личная почта (r.matsukatov@gmail.com)
-- **gmail-work-mcp** — рабочая почта: тот аккаунт, под которым был выполнен последний OAuth в `.claude/google-work/`. Может быть roman.matsukatov@mindera.com (Mindera) или другой — см. ниже «Переключение рабочей почты».
-- **gmail-glorium-mcp** — почта **Glorium** (roman.matsukatov@gloriumtech.com). Токен в `.claude/google-glorium/gmail_token.json`; первый запрос к «почте Glorium» откроет OAuth в браузере.
+- **gmail-work-mcp** — рабочая почта: тот аккаунт, под которым был выполнен последний OAuth в **`Credentials/google-work/`** (symlink **`.claude/google-work/`**). Может быть roman.matsukatov@mindera.com (Mindera) или другой — см. ниже «Переключение рабочей почты».
+- **gmail-glorium-mcp** — почта **Glorium** (roman.matsukatov@gloriumtech.com). Токен в **`Credentials/google-glorium/gmail_token.json`** (symlink **`.claude/google-glorium/`**); первый запрос к «почте Glorium» откроет OAuth в браузере.
 
 ## Что уже сделано автоматически
 
@@ -57,7 +57,7 @@ Cursor не всегда подхватывает проектный `.cursor/mc
    - Нажми **Go to Dex (unsafe)** / **Перейти на Dex (небезопасно)**
 6. На экране разрешений отметь доступ к **Gmail** (чтение, отправка и управление письмами) и нажми **Allow** / **Разрешить**
 7. После успешного входа браузер может показать страницу "The authentication flow has completed" — можно закрыть вкладку
-8. В корне проекта появится файл **`gmail_token.json`**. Больше входить для личной почты не нужно
+8. В **`Credentials/personal/`** появится файл **`gmail_token.json`**. Больше входить для личной почты не нужно
 
 ### Шаг 3. Первый вход (OAuth) для рабочей почты
 
@@ -70,7 +70,7 @@ Cursor не всегда подхватывает проектный `.cursor/mc
    - Нажми **Go to Dex (unsafe)** / **Перейти на Dex (небезопасно)**
 5. На экране разрешений отметь доступ к **Gmail** (чтение, отправка и управление письмами) и нажми **Allow** / **Разрешить**
 6. После успешного входа браузер может показать страницу "The authentication flow has completed" — можно закрыть вкладку
-7. В папке `.claude/google-work/` появится файл **`gmail_token.json`**. Больше входить для этой рабочей почты не нужно
+7. В папке **`Credentials/google-work/`** появится файл **`gmail_token.json`**. Больше входить для этой рабочей почты не нужно
 
 ### Шаг 3b. Первый вход (OAuth) для почты Glorium (gmail-glorium-mcp)
 
@@ -78,15 +78,15 @@ Cursor не всегда подхватывает проектный `.cursor/mc
 
 1. В чате с Dex попроси, например: **«Покажи последние 5 писем из почты Glorium»** или **«Письма из Glorium»**.
 2. Откроется браузер — войди в **roman.matsukatov@gloriumtech.com** и выдай разрешения Gmail.
-3. Токен сохранится в **`.claude/google-glorium/gmail_token.json`**. Дальше gmail-glorium-mcp будет использовать Glorium параллельно с личной и рабочей почтой.
+3. Токен сохранится в **`Credentials/google-glorium/gmail_token.json`**. Дальше gmail-glorium-mcp будет использовать Glorium параллельно с личной и рабочей почтой.
 
 ### Переключение рабочей почты (gmail-work-mcp)
 
 Если в gmail-work-mcp привязан не тот аккаунт (например нужен Mindera вместо Glorium или наоборот):
 
-1. Удали или переименуй файл **`.claude/google-work/gmail_token.json`**.
+1. Удали или переименуй файл **`Credentials/google-work/gmail_token.json`**.
 2. В чате попроси: **«Покажи последние 5 писем из рабочей почты»**.
-3. В браузере войди под нужным Google-аккаунтом и выдай разрешения. Новый токен сохранится в `.claude/google-work/gmail_token.json`.
+3. В браузере войди под нужным Google-аккаунтом и выдай разрешения. Новый токен сохранится в **`Credentials/google-work/gmail_token.json`**.
 
 ---
 
@@ -168,7 +168,7 @@ Cursor не всегда подхватывает проектный `.cursor/mc
 
 | Проблема | Что проверить |
 |----------|----------------|
-| «Credentials file not found» | Файл `credentials.json` должен лежать в `.claude/google-work/credentials.json` |
+| «Credentials file not found» | Для рабочего MCP: **`Credentials/google-work/credentials.json`** (или symlink **`.claude/google-work/credentials.json`**) |
 | «API has not been used in project before» | В Google Cloud Console в проекте **DEX Calendar** включи **Gmail API** |
 | Браузер не открывается при первом запросе | Убедись, что после добавления MCP в `.mcp.json` ты **полностью перезапустил Cursor** |
 | «Access blocked» / «This app isn't verified» | На экране предупреждения нажми **Advanced** → **Go to Dex (unsafe)** |
@@ -193,9 +193,9 @@ Cursor не всегда подхватывает проектный `.cursor/mc
 - [ ] В этом проекте включён **Gmail API** (APIs & Services → Library → Gmail API → Enable)
 - [ ] Cursor перезапущен после добавления MCP
 - [ ] Выполнен первый запрос к Gmail в чате для личной почты; в браузере выполнен вход под личным аккаунтом и выдано разрешение
-- [ ] Файл токена создан: `gmail_token.json` (в корне проекта)
+- [ ] Файл токена создан: **`Credentials/personal/gmail_token.json`**
 - [ ] Выполнен первый запрос к Gmail в чате для рабочей почты; в браузере выполнен вход под рабочим аккаунтом и выдано разрешение
-- [ ] Файл токена создан: `.claude/google-work/gmail_token.json`
-- [ ] (Опционально) Для Glorium: запрос «письма из Glorium» → OAuth → создан `.claude/google-glorium/gmail_token.json`
+- [ ] Файл токена создан: **`Credentials/google-work/gmail_token.json`**
+- [ ] (Опционально) Для Glorium: запрос «письма из Glorium» → OAuth → создан **`Credentials/google-glorium/gmail_token.json`**
 
 После этого все операции с почтой (чтение, поиск, управление, отправка) можно делать через запросы в чате — вручную больше ничего настраивать не нужно.

@@ -1,0 +1,67 @@
+---
+description: Обязательный eval ответа в чат перед отправкой Roman; stop-hook догоняет переписыванием
+alwaysApply: true
+---
+
+# Eval ответа Cursor перед чатом (Roman)
+
+Дополняет `.cursor/rules/dex-cognitive-load-budget.mdc`. **Каждый** ответ Roman в чате (кроме исключений ниже) проходит eval **до** финального текста в UI.
+
+## Ограничение Cursor (честно)
+
+Cursor **не блокирует** первый черновик до показа пользователю. Два уровня:
+
+1. **Агент (обязательно):** черновик → eval → переписать → снова eval (до 3 попыток) → **в чат только прошедший текст**. Eval JSON Roman **не** показывать.
+2. **Hook `stop`:** после показа ответа читает transcript, при fail шлёт `followup_message` на автопереписывание (до 4 циклов). Лог: `System/logs/chat-response-eval.jsonl`.
+
+## Алгоритм агента (каждый turn)
+
+1. Собрать черновик ответа по `dex-cognitive-load-budget.mdc` (мета-команда Roman: `вердикт` / `действия` / `разверни`).
+2. Запустить из корня DEX:
+
+```bash
+npm run dex:eval-chat-response -- --stdin --user-message "<последняя реплика Roman одной строкой>"
+```
+
+Черновик передать в stdin (heredoc или temp file `--file`).
+
+3. **Exit 0** — отправить этот текст Roman.
+4. **Exit 1** — прочитать JSON `failures` / `checks`, исправить черновик, повторить (макс. **3** попытки). Если после 3 не pass — отправить **самую близкую** версию + одна строка: «формат частично не прошёл автопроверку; напиши разверни или уточни».
+
+## Исключения (exempt, eval не гонять)
+
+- Session bootstrap + Karpathy echo (первые строки нового чата по enforcer).
+- Roman: только `ок`, `спасибо`, `ping`, `привет` (≤3 символа).
+- Явный режим `разверни` — eval в режиме `expanded` (допускает слой 3).
+- Внутренние tool-only ходы без текста пользователю.
+
+## Что проверяет eval (кратко)
+
+- Вердикт **до** списка действий — без `.scripts/`, `npm run`, `.cjs`.
+- Нет «сначала суть» + сразу пути.
+- Слои 1–2 без английских вставок смысла (DOM, routing-only, Live Aggregate, …).
+- FAQ (PS на live и т.п.) — не начинается с кодов PS12/REGEN.
+- **Коды gate (WE18, PS12, T3, …) в слоях 1–2** — только вместе с русским названием проверки в той же фразе (`gate_id_requires_label`). Пример fail: «добавил WE18»; pass: «**WE18** — политика „опыт не на резюме“ (Mindera)». Канон: `.cursor/rules/dex-cognitive-load-budget.mdc` § «Коды gate».
+- Режим `вердикт` — без длинного списка и таблиц.
+- Режим по умолчанию — нет простыни с путями без секции **Детали**.
+- **`file_refs_full_relative_path`** — любое упоминание файла репозитория только с полным относительным путём от корня DEX, не голое имя (`RICE_Prioritized_Hypotheses.md` → fail). Канон: `.cursor/rules/dex-chat-file-paths.mdc`.
+- **A/B readout:** при рекомендации ship/закрытия эксперимента — упоминание аппрува Ihor в слоях 1–2 (`experiment_ship_needs_ihor`). Канон: `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc`.
+
+Полная логика: `.scripts/dex/eval-chat-response-lib.cjs`.
+
+## Эталон FAQ «PS на live» (слой 1 — копировать структуру)
+
+**Вердикт:** когда запускаешь live-проверку summary, Chrome уже на резюме в Teal. Скрипт прогоняет много мелких проверок подряд; **только три** реально трогают текст summary в интерфейсе. Остальные на live снова проверяют правила «применить или отложить» без отдельной вставки. Блок REGEN — симуляция перегенерации, страницу не меняет.
+
+**Действия:** (1) легенда — `.claude/reference/feedback-blocks-gates-test-legend.md`; (2) полная таблица — только по «разверни».
+
+**Детали:** коды PS12, PS1, PS14, REGEN — только здесь.
+
+## Hook
+
+`.cursor/hooks/stop-chat-response-eval.cjs` в `.cursor/hooks.json` (`stop`, `loop_limit: 4`). После правки hooks — перезапуск Cursor или сохранение hooks.json.
+
+## Согласованность
+
+- `dex-chat-session-log.mdc` — лог сессии после ответа, как раньше.
+- `dex-flow-results-format.mdc` — таблицы full-flow в слое 3; вердикт ≤3 предложения.

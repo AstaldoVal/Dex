@@ -4,9 +4,21 @@ FastAPI + Telethon: лента з каналів, WebSocket push, публіка
 
 Див. [README у `telegram-news-dashboard`](../telegram-news-dashboard/README.md) для повного флоу деплою (Vercel + Cloudflare Tunnel).
 
-## Сесія Telethon і конфлікт з MCP
+## Сесія Telethon і MCP (розведено за замовчуванням)
 
-- Один файл `*.session` (SQLite) не можуть одночасно тримати **Telegram MCP у Cursor** і **bridge**. Якщо бачите `database is locked`, вимкніть MCP або задайте **`TELEGRAM_SESSION_PATH`** на інший уже авторизований файл (наприклад окремий після `telegram_login.py` з цим env).
+- **Telegram MCP** (`.claude/mcp/user-telegram.json`) використовує **`…/.claude/telegram/telegram`** (`TELEGRAM_SESSION_PATH` заданий явно).
+- **Bridge** без `TELEGRAM_SESSION_PATH` у `.env` використовує **`…/.claude/telegram/telegram_bridge`** — інший файл, **паралельний запуск з MCP можливий**.
+- Перший запуск bridge після оновлення: скопіювати вже авторизовану сесію MCP або залогінитись окремо:
+  ```bash
+  # З кореня vault (Dex), якщо вже є telegram.session від MCP:
+  cp .claude/telegram/telegram.session .claude/telegram/telegram_bridge.session
+  ```
+  Або окремий логін тільки для bridge (з кореня репозиторію Dex, `TELEGRAM_API_*` у кореневому `.env`):
+  ```bash
+  cd /path/to/Dex
+  TELEGRAM_SESSION_PATH="$PWD/.claude/telegram/telegram_bridge" uv run python core/mcp/telegram_login.py
+  ```
+- Якщо все ж потрібен **один** файл сесії на обидва — задайте **`TELEGRAM_SESSION_PATH`** у `apps/telegram-news-bridge/.env` вручну; тоді не тримайте MCP і bridge одночасно або використовуйте різні машини.
 - Числовий id каналу в `NEWS_SOURCE_*` резолвиться через **`PeerChannel`** (рядок `"1181169156"`, не `-100…`).
 - Якщо для `@username` прилітає **FloodWait** від Telegram, тимчасово приберіть цей канал зі списку або задайте лише id каналів, до яких акаунт має доступ.
 

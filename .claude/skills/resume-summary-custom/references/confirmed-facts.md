@@ -25,8 +25,8 @@ Use only these facts when they are not explicitly in the user's CV. Do not inven
 - Led a project at **AlphaPrompt** — AI knowledge-management system in real estate.
 - Used **Azure OpenAI** and **Milvus** for semantic search.
 - Built **React** interface and prompt pipeline.
-- Delivered a working NDP in 4 weeks.
-- Reduced manual document analysis time by **60%**.
+- Delivered the first working version in 4 weeks.
+- Over roughly 6 months, the product reduced manual document analysis time by **60%**.
 - **AI workflow automation & prototyping:** Python, n8n, Make.com for AI agents and process automation.
 - Familiar with **Next.js, React, Ant Design, Material UI, Shadcn**; builds custom AI prototypes and MVPs.
 
@@ -74,6 +74,7 @@ Use only these facts when they are not explicitly in the user's CV. Do not inven
 
 ## Language / metrics
 
+- **English level:** Always write **C1** in all CV/summary outputs. Do not use variants like "B2+/C1" or "B2+".
 - **Pin-Up Live Games metric:** Always use "turnover" (not "conversion") for the 7% result — e.g. "increased Live Games turnover by 7%".
 - **Pin-Up verticals:** When listing what you owned at Pin-Up, always include all four: Live Casino, Bingo, Lottery, and TV Games (not just "Live Casino, Bingo, and Lottery").
 - **Pin-Up analytics:** At Pin-Up we used Tableau (among other tools) for product and behavioral data analysis.

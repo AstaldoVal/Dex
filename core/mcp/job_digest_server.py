@@ -57,6 +57,7 @@ CV_IGAMING_PATH = VAULT_PATH / "CV Examples" / "Product Manager (Gambling Platfo
 CONFIRMED_FACTS_PATH = VAULT_PATH / ".claude" / "skills" / "resume-summary-custom" / "references" / "confirmed-facts.md"
 SHORT_SUMMARIES_PATH = VAULT_PATH / ".claude" / "skills" / "resume-summary-custom" / "references" / "short-summaries-examples.md"
 JOB_SUMMARY_KEYWORD_RULES_PATH = VAULT_PATH / ".claude" / "reference" / "job-summary-keyword-rules.md"
+SUMMARY_WRITING_CHECKLIST_PATH = VAULT_PATH / ".claude" / "reference" / "summary-writing-checklist.md"
 JOB_SUMMARY_SKILL_PATH = VAULT_PATH / ".claude" / "skills" / "job-summary" / "SKILL.md"
 JOB_SEARCH_DIR = VAULT_PATH / "00-Inbox" / "Job_Search"
 SUMMARY_ERROR_LOG = JOB_SEARCH_DIR / "teal" / "summary-errors.log"
@@ -481,6 +482,7 @@ def _build_summary_prompt(
     confirmed_facts: str,
     short_summaries_ref: str,
     keyword_rules: str,
+    summary_writing_rules: str,
     skill_rules: str,
     skills_report: Optional[Dict[str, List[str]]],
     focus_gap: bool,
@@ -495,6 +497,7 @@ def _build_summary_prompt(
     cf = _truncate(confirmed_facts, MAX_CONFIRMED_FACTS_FOR_AI)
     short_ref = _truncate(short_summaries_ref, MAX_SHORT_SUMMARIES_FOR_AI)
     kw_rules = _truncate(keyword_rules, MAX_KEYWORD_RULES_FOR_AI)
+    sw_rules = _truncate(summary_writing_rules, MAX_KEYWORD_RULES_FOR_AI)
     sk_rules = _truncate(skill_rules, MAX_SKILL_RULES_FOR_AI)
 
     system = f"""You are an expert resume writer. Your task is to write a short resume summary (professional summary) tailored to a specific job vacancy. Output only the summary and suggested questions; no commentary.
@@ -506,6 +509,10 @@ def _build_summary_prompt(
 ## Keyword strategy (Red / Yellow / Green)
 
 {kw_rules}
+
+## Centralized summary writing checklist (single source of truth)
+
+{sw_rules}
 
 ## Format and tone reference
 
@@ -524,6 +531,7 @@ def _build_summary_prompt(
 
 - Write in natural, human prose. The reader must feel they are reading a person's summary, not a list of keywords. Weave required phrases (Green/Red/Yellow) into flowing, readable sentences. Do not stuff keywords at the cost of readability.
 - **No tautology or keyword laundry lists:** In one sentence or two adjacent short sentences, do not express the same concept twice with overlapping words (bad: "lifecycles" and "the full development lifecycle" together; bad: stacking "roadmap", "vision", "planning" as three parallel nouns with no verb). Use one clear formulation per idea. Avoid sentences that are only a comma-separated run of JD keywords; every sentence needs normal grammar (subject + predicate).
+- **No repeated stem variants in the same clause:** Do not repeat the same root word with a slight variation (bad: "strong leadership, leadership skills, and team-building experience"). Choose one strongest form per root and keep the rest non-overlapping (good: "strong leadership and team-building experience").
 - **Candidate as subject, not a job posting:** When describing what the person does, use "I", "I have", "my experience", or "In my roles" as appropriate. Do not use impersonal lines that read like copied responsibilities (e.g. "Work connects business needs…" with no I/my). Do not fake a paragraph as "Experience spans A and B: noun, noun, noun, noun" after a colon; use full sentences with verbs. Avoid vague "stronger" or "better" without a baseline; prefer concrete verbs (tightened, aligned, delivered). Avoid ambiguous stacks like "reporting people can trust"; use "reporting that stakeholders rely on" or "reliable reporting for decisions".
 - **No repeated paragraph openers or duplicated blocks:** Do not begin two or more paragraphs with the same first word or the same stock opener (e.g. "Solid professional experience…" twice). Vary how each paragraph starts. Do not copy-paste the same theme into two paragraphs (e.g. data governance described twice with overlapping wording). Each paragraph = one distinct angle (role and scope; then e.g. data/domain; then delivery and Agile impact).
 - **Capitalization:** Write like a normal person. Do NOT capitalize words mid-sentence for emphasis. Only capitalize: (1) the first word of a sentence, (2) proper nouns (company names, product names). Keep common terms lowercase: revenue growth, portfolio, conversions, retention, LTV, ARPU, churn, product initiatives, forecasting, etc. Wrong: "Revenue Growth", "Conversions", "Retention". Right: "revenue growth", "conversions", "retention".
@@ -586,7 +594,7 @@ Company: {company or 'N/A'}
     avoid_block = ""
     if previous_eval_notes and previous_eval_notes.strip():
         avoid_block = "\n**Avoid (from previous attempt):** " + previous_eval_notes.strip() + "\n\n"
-    user += avoid_block + """Write the resume summary (3 paragraphs max, no bold, NO em dash — never use the character —; use comma or period instead, exact JD phrasing for skills where it fits prose). Put a blank line between each paragraph (double newline). Use natural, readable prose; do not keyword-stuff. Do not use tautology (e.g. lifecycles + full development lifecycle in one sentence). Do not start two paragraphs with the same first word (ignore leading articles the/a/an) or reuse the same stock phrase as a paragraph opener. Do not duplicate a whole idea across paragraphs. Use normal capitalization only (sentence start and proper nouns); do not capitalize words mid-sentence (e.g. write "revenue growth", "retention", "conversions", not "Revenue Growth", "Retention", "Conversions"). Then on a new line write exactly: ---SUGGESTED_QUESTIONS---
+    user += avoid_block + """Write the resume summary (3 paragraphs max, no bold, NO em dash — never use the character —; use comma or period instead, exact JD phrasing for skills where it fits prose). Put a blank line between each paragraph (double newline). Use natural, readable prose; do not keyword-stuff. Do not use tautology (e.g. lifecycles + full development lifecycle in one sentence). Do not repeat the same root in one clause with slight variants (e.g. "leadership, leadership skills"); keep one strongest wording per root. Do not start two paragraphs with the same first word (ignore leading articles the/a/an) or reuse the same stock phrase as a paragraph opener. Do not duplicate a whole idea across paragraphs. Use normal capitalization only (sentence start and proper nouns); do not capitalize words mid-sentence (e.g. write "revenue growth", "retention", "conversions", not "Revenue Growth", "Retention", "Conversions"). Then on a new line write exactly: ---SUGGESTED_QUESTIONS---
 Then list 2–4 suggested interview questions (one per line). Do not output anything else."""
 
     return system, user
@@ -863,10 +871,11 @@ def _generate_job_summary_impl(
             "job_type": job_type
         }
 
-    # All four sources: confirmed-facts, short-summaries, keyword-rules, SKILL (for AI prompt).
+    # All sources used for prompt assembly.
     confirmed_facts = _read_file(CONFIRMED_FACTS_PATH) or ""
     short_summaries_ref = _read_file(SHORT_SUMMARIES_PATH) or ""
     keyword_rules = _read_file(JOB_SUMMARY_KEYWORD_RULES_PATH) or ""
+    summary_writing_rules = _read_file(SUMMARY_WRITING_CHECKLIST_PATH) or ""
     skill_rules = _read_file(JOB_SUMMARY_SKILL_PATH) or ""
 
     # Extract keywords (for template fallback and output)
@@ -892,6 +901,7 @@ def _generate_job_summary_impl(
         confirmed_facts,
         short_summaries_ref,
         keyword_rules,
+        summary_writing_rules,
         skill_rules,
         skills_report,
         focus_gap,
@@ -946,6 +956,7 @@ def _generate_job_summary_impl(
                 confirmed_facts,
                 short_summaries_ref,
                 keyword_rules,
+                summary_writing_rules,
                 skill_rules,
                 skills_report,
                 focus_gap,

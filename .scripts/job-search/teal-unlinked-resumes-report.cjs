@@ -49,6 +49,7 @@ function sleep(ms) {
 }
 
 const TEAL_SIGN_IN_URL = 'https://app.tealhq.com/sign-in?r=%2Fresume-builder%2Fresumes';
+const { launchPersistentContextGuarded } = require('./teal-chrome-profile.cjs');
 
 async function tealLoginIfNeeded(page) {
   const tealEmail = process.env.TEAL_EMAIL && process.env.TEAL_EMAIL.trim();
@@ -107,7 +108,7 @@ async function main() {
   let context;
   for (const profileDir of profileCandidates) {
     try {
-      context = await playwright.chromium.launchPersistentContext(profileDir, launchOptions);
+      context = await launchPersistentContextGuarded(playwright.chromium, profileDir, launchOptions);
       log('[Teal unlinked-report] Using Chrome profile: ' + profileDir);
       break;
     } catch (e) {

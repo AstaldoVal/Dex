@@ -30,8 +30,10 @@ Create the following directories using Write/Bash tool:
 
 ```
 bmad/
-├── config.yaml
-└── agent-overrides/
+└── config.yaml
+
+.claude/config/bmad/
+└── agent-overrides/   (optional; project-specific agent template overrides)
 
 docs/
 ├── bmm-workflow-status.yaml

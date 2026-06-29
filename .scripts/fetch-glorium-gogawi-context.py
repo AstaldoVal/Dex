@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch all Gogawi/EBET/BetConstruct context from Glorium Gmail (roman.matsukatov@gloriumtech.com).
-On first run opens browser for OAuth; token is saved to .claude/google-glorium/gmail_token.json.
+On first run opens browser for OAuth; token is saved to Credentials/google-glorium/gmail_token.json.
 Output: 00-Inbox/Job_Search/gogawi-ebet-context-from-glorium-mail.md (or path from --out).
 """
 import os
@@ -20,8 +20,8 @@ def main():
 
     # Set Glorium Gmail env before importing gmail_server
     os.environ["VAULT_PATH"] = str(REPO_ROOT)
-    os.environ["GMAIL_CREDENTIALS_PATH"] = str(REPO_ROOT / "credentials.json")
-    os.environ["GMAIL_TOKEN_PATH"] = str(REPO_ROOT / ".claude" / "google-glorium" / "gmail_token.json")
+    os.environ["GMAIL_CREDENTIALS_PATH"] = str(REPO_ROOT / "Credentials" / "personal" / "credentials.json")
+    os.environ["GMAIL_TOKEN_PATH"] = str(REPO_ROOT / "Credentials" / "google-glorium" / "gmail_token.json")
 
     sys.path.insert(0, str(REPO_ROOT))
     from core.mcp.gmail_server import _service, format_message

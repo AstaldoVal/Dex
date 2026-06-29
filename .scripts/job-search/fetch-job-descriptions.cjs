@@ -18,6 +18,7 @@
 const path = require('path');
 const fs = require('fs');
 const { spawn, spawnSync } = require('child_process');
+const { openUrlInDexChrome, closeDexOpenChrome } = require('./dex-chrome-open-background.cjs');
 
 const { VAULT, LINKEDIN_DIGESTS_DIR, DATA_DIR, JOBS_DIR } = require('./job-search-paths.cjs');
 
@@ -84,6 +85,8 @@ const POLL_INTERVAL_MS = 20000;
 const TIMEOUT_MS = 35 * 60 * 1000;
 const FILE_MTIME_TOLERANCE_MS = 10000;
 const LOG_FILE = path.join(DATA_DIR, 'fetch-descriptions.log');
+const dexChromeOpenOpts = { runKey: 'fetch-descriptions' };
+process.on('exit', () => closeDexOpenChrome(dexChromeOpenOpts));
 
 function log(...args) {
   const line = args.map(String).join(' ');
@@ -93,6 +96,7 @@ function log(...args) {
     fs.appendFileSync(LOG_FILE, ts + ' ' + line + '\n', 'utf8');
   } catch (_) {}
 }
+dexChromeOpenOpts.log = (...a) => log(...a);
 
 function resolveDigestPath(arg) {
   if (!arg) {
@@ -114,39 +118,9 @@ function resolveDigestPath(arg) {
   return path.join(linkedinDir, normalized);
 }
 
-/** Shell-escape URL for passing to osascript (single-quote style so URL can contain double-quotes). */
-function shellEscapeForOsascript(url) {
-  return "'" + String(url).replace(/'/g, "'\"'\"'") + "'";
-}
-
-/**
- * Open URL in Google Chrome. Tries AppleScript first (reliable new-tab open), then open -a Chrome.
- * Returns true if any method succeeded.
- */
+/** Open URL in Chrome (pool profile + open -g, no focus steal). */
 function openBrowser(url) {
-  const { execSync } = require('child_process');
-  const quoted = '"' + url.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-  // 1) AppleScript: open location in Chrome (usually opens in new tab even if Chrome was already open)
-  try {
-    const arg = shellEscapeForOsascript(url);
-    execSync(
-      'osascript -e \'on run argv\' -e \'tell application "Google Chrome" to open location (item 1 of argv)\' -e \'end run\' -- ' + arg,
-      { stdio: 'pipe', timeout: 5000 }
-    );
-    return true;
-  } catch (_) {}
-  // 2) macOS open -a "Google Chrome" URL
-  try {
-    execSync('open -a "Google Chrome" ' + quoted, { stdio: 'inherit' });
-    return true;
-  } catch (_) {
-    try {
-      execSync('open ' + quoted, { stdio: 'inherit' });
-      return true;
-    } catch (_2) {
-      return false;
-    }
-  }
+  return openUrlInDexChrome(url, dexChromeOpenOpts);
 }
 
 /** Wait until the open-links server responds with 200 for the given URL (max ~15s). */

@@ -349,10 +349,19 @@ function requiresHighTravel(title = '', description = '') {
 function requiresRelocation(title = '', location = '', description = '') {
   const text = [title, location, description].filter(Boolean).join(' ');
   if (!text) return false;
-  if (/\brelocation\s+to\b/i.test(text)) return true;
+  // Optional relocation should not exclude remote roles:
+  // "relocation is possible", "possible relocation", etc.
+  if (/\brelocation\b.{0,40}\b(?:possible|optional|available)\b/i.test(text)) return false;
+  if (/\b(?:possible|optional|available)\b.{0,40}\brelocation\b/i.test(text)) return false;
+  if (/\b(?:relocate|relocation)\b.{0,40}\b(?:if desired|if you wish)\b/i.test(text)) return false;
   if (/\brelocate\s+to\b/i.test(text)) return true;
   if (/\brelocation\s+required\b/i.test(text)) return true;
   if (/\bmust\s+relocate\b/i.test(text)) return true;
+  if (/\brelocation\s+to\b/i.test(text)) {
+    // Optional path: "business trips or relocation to Cyprus" — not mandatory relocation
+    if (/\bor\s+relocation\s+to\b/i.test(text)) return false;
+    return true;
+  }
   return false;
 }
 
@@ -616,6 +625,7 @@ function normalizeSearchUrl(url) {
 /** Patterns indicating the role requires a non-English language (German, Spanish, Arabic, etc.). User has English; we filter when German or other non-English is required. "Englischkenntnisse" alone is OK. */
 const REQUIRES_NON_ENGLISH_PATTERNS = [
   /fluent\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)/i,
+  /\bproficient\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i, // e.g. "Proficient in German (...)" (not caught by proficiency\s+in)
   /\bfluency\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i,  // e.g. "Fluency in German (written and verbal)"
   /native\s+(German|Spanish|Portuguese|French|Italian|Arabic)\s+(speaker|language)?/i,
   /(German|Spanish|Portuguese|French|Italian|Arabic)\s+(language\s+)?(proficiency|required|essential|fluent)/i,

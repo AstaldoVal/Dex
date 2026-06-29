@@ -380,7 +380,7 @@ if (document.getElementById('taplioChart')) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.raw} of ${taplioFilesLoaded} days` } }
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + ' of ${taplioFilesLoaded} days' } }
       },
       scales: {
         x: {

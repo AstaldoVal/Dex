@@ -144,6 +144,8 @@ function main() {
     /Product\s+Adoption\s*&\s*Experience\s+Manager/i,
     /Adoption\s*&\s*Experience\s+Manager/i,
     /Product\s+Adoption\s+Manager/i,
+    // UX leadership (design track), not PM
+    /\bUX\s+Lead\s*\(\s*Product\s*&\s*Growth\s*\)/i,
     // Only product roles (PM, PO); not business analyst
     /\bBusiness\s+Analyst\b/i,
     /\bSenior\s+Business\s+Analyst\b/i,
@@ -181,6 +183,7 @@ function main() {
   ];
   const REQUIRES_NON_ENGLISH = [
     [/fluent\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)/i, 'fluent in (German|Spanish|...)'],
+    [/\bproficient\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i, 'proficient in (German|Spanish|...)'],
     [/\bfluency\s+in\s+(German|Spanish|Portuguese|French|Italian|Arabic)\b/i, 'fluency in (German|Spanish|...)'],
     [/native\s+(German|Spanish|Portuguese|French|Italian|Arabic)\s+(speaker|language)?/i, 'native (German|Spanish|...) speaker/language'],
     [/(German|Spanish|Portuguese|French|Italian|Arabic)\s+(language\s+)?(proficiency|required|essential|fluent)/i, '(Language) proficiency/required/essential/fluent'],
