@@ -4,7 +4,28 @@
   var DEFAULT_SUCCESS =
     "You're on the list. Check your inbox for a confirmation email from Genufit.";
 
-  function readMeta(name) {
+  /** preview-people inlines page CSS and does not load waitlist.css — modal needs these rules in JS. */
+  var SUCCESS_DIALOG_STYLE_ID = 'waitlist-success-dialog-styles';
+  var SUCCESS_DIALOG_CSS =
+    'body.waitlist-success-dialog-open{overflow:hidden}' +
+    '.waitlist-success-dialog{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:1.25rem}' +
+    '.waitlist-success-dialog[hidden]{display:none!important}' +
+    '.waitlist-success-dialog__backdrop{position:absolute;inset:0;background:rgba(15,23,42,.55);border:0;padding:0;cursor:pointer}' +
+    '.waitlist-success-dialog__panel{position:relative;z-index:1;width:min(100%,28rem);padding:1.75rem 1.5rem 1.5rem;border-radius:1rem;background:#fff;box-shadow:0 24px 60px rgba(15,23,42,.22);text-align:center}' +
+    '.waitlist-success-dialog__eyebrow{margin:0 0 .35rem;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#1e6b58}' +
+    '.waitlist-success-dialog__title{margin:0 0 .75rem;font-family:Fraunces,Georgia,serif;font-size:1.5rem;line-height:1.2;color:#0f172a}' +
+    '.waitlist-success-dialog__body{margin:0 0 .75rem;font-size:1rem;line-height:1.5;color:#334155}' +
+    '.waitlist-success-dialog__hint{margin:0 0 1.25rem;font-size:.875rem;line-height:1.45;color:#64748b}' +
+    '.waitlist-success-dialog__close{width:100%;justify-content:center}' +
+    '.form-message.success{font-weight:600;color:#166534}';
+
+  function ensureSuccessDialogStyles() {
+    if (document.getElementById(SUCCESS_DIALOG_STYLE_ID)) return;
+    var style = document.createElement('style');
+    style.id = SUCCESS_DIALOG_STYLE_ID;
+    style.textContent = SUCCESS_DIALOG_CSS;
+    document.head.appendChild(style);
+  }
     var el = document.querySelector('meta[name="' + name + '"]');
     return el && el.getAttribute('content') ? el.getAttribute('content').trim() : '';
   }
@@ -96,6 +117,7 @@
   var successDialogLastFocus = null;
 
   function ensureSuccessDialog() {
+    ensureSuccessDialogStyles();
     if (successDialog) return successDialog;
 
     var overlay = document.createElement('div');
@@ -375,6 +397,8 @@
   }
 
   function bootstrap() {
+    ensureSuccessDialogStyles();
+
     if (isPostHogEnabled()) {
       var host = (readMeta('posthog-host') || EU_HOST).replace(/\/$/, '');
       var script = document.createElement('script');
