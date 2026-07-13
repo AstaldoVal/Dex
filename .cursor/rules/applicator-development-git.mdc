@@ -1,8 +1,8 @@
 ---
-description: Applicator (04-Projects/Applicator) — git, коммиты и качество при правках из корня Dex
+description: Applicator (04-Projects/Applicator) — git, коммиты, staging deploy и качество при правках из корня Dex
 globs:
   - 04-Projects/Applicator/**
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Applicator: разработка из Dex vault
@@ -36,6 +36,23 @@ alwaysApply: false
 
 - Запуск: `npm run dev:no-ngrok` из `04-Projects/Applicator` (веб :3000, API :8000).
 - API venv: Python **3.12** через `uv` в `apps/api/venv` (не полагаться на системный 3.14 для PyMuPDF).
+
+## Staging deploy (обязательно после правок Applicator)
+
+Roman смотрит результат на **staging**. **Агент деплоит сам** в том же turn после коммита. **Запрещено** писать Roman: «задеплой», «обнови staging», «сделай hard refresh после деплоя у себя», «скажи, если задеплоить», «хочешь deploy?».
+
+После **любой** логически завершённой правки под `04-Projects/Applicator/**`, которую Roman должен проверить в браузере или через API на staging:
+
+1. Commit в Applicator git (см. выше).
+2. **Сразу** из `04-Projects/Applicator`:
+   - UI / `packages/web/**` → `./scripts/deploy-staging-pages.sh`
+   - API / `apps/api/**` → `./scripts/deploy-staging-api.sh`
+   - оба затронуты → **сначала API**, затем Pages (в том же turn).
+3. Дождаться exit code; в ответе Roman — только **факт деплоя** (URL, revision/sha, exit 0), **без** инструкции «запусти deploy сам».
+
+**Не спрашивать** разрешение на deploy. **Исключения:** Roman явно написал в **этом** сообщении «без deploy» / «не деплой» / «только локально»; deploy упал — ошибка + self-heal + повтор deploy (не перекладывать на Roman).
+
+Канон внутри Applicator: `04-Projects/Applicator/.cursor/rules/staging-deploy/RULE.md`.
 
 ## Согласованность
 
