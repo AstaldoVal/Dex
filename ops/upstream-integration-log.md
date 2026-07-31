@@ -8,23 +8,28 @@
 
 ## 1. Список того, что ещё осталось перенести с `upstream/main`
 
-**Опорная точка** (последний first-parent на `upstream/main`, который уже учтён в разделе 2 ниже): `a3422e3`.
+**Опорная точка cherry-pick (§2):** `a3422e3` (последний first-parent, учтённый как отдельные коммиты в §2).
 
-**Сколько коммитов висит в очереди:** **0** (ни одного first-parent коммита после `a3422e3` на текущем tip `upstream/main`).
+**Цель дерева (пакетные волны §6):** tip `upstream/main` = `c18485d6` (**v1.81.5**), снимок 2026-07-31. Бэкап перед волнами: `backup/integrate-upstream-20260731-0852` @ `deb139c3`.
 
-**Сам список (SHA + тема; сюда вручную дописывать или вставлять вывод команды из блока ниже):**
+**Сколько first-parent коммитов в очереди после опоры:** **267** (историческая дистанция cherry-pick; не «0»).
 
-1. *(пусто — переносить нечего, пока Dave не запушит новые коммиты на `main` после `a3422e3`)*
+**Missing-path после волн 3A–3D (2026-07-31):** **0** vs индекс (`git ls-files`). Tip дерева: **v1.81.5** / `c18485d6`.
 
-**Обновить список из git** (скопировать вывод и заменить пункты 1, 2, … выше, или дописать новые):
+**Полный список SHA + тема:** `ops/upstream-queue-a3422e3-to-v1.81.5.txt` (не дублируем 267 строк здесь).
+
+**Стратегия догона (2026-07-31):** не cherry-pick всех 267 подряд и не `git merge upstream/main`. Пакетные волны **missing-path only** (`git checkout upstream/main -- <path>` только для путей, которых нет в `HEAD`) — волны 3A–3D в §6. Общие файлы — только точечное слияние.
+
+**Обновить снимок очереди:**
 
 ```bash
 cd /path/to/Dex
-git fetch upstream
-git log --first-parent --reverse a3422e3..upstream/main --format="%h %s"
+git fetch upstream --tags
+git log --first-parent --reverse a3422e3..upstream/main --format="%h %s" > ops/upstream-queue-a3422e3-to-v1.81.5.txt
+comm -23 <(git ls-tree -r --name-only upstream/main | sort) <(git ls-tree -r --name-only HEAD | sort) | wc -l
 ```
 
-Если команда ничего не вывела — очередь пустая, в списке оставляем одну строку «пусто». Когда перенесёшь новые коммиты и допишешь их в раздел 2 — **поменяй опору** в первой строке этого раздела на новый tip `upstream/main` и снова сгенерируй список.
+Когда пакетные волны закроют «только upstream» пути до tip — обнови этот раздел: счётчик missing-path → 0 (или остаток с причиной), tip SHA/tag.
 
 ---
 
@@ -109,6 +114,52 @@ git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)
 
 **Пакет 2E (2026-04-05):** шаблоны vault `00-`…`07-` (README и заготовки PARA), гайды в `06-Resources/Dex_System/`, `06-Resources/Intel/.gitkeep`, `System/Beta_Communications/`, `System/Session_Learnings/*`, `System/integrations/*`, `System/pillars.example.yaml`, `System/scripts/*.sh` — всего **39** путей с `git checkout upstream/main -- <paths>`. Перед checkout сделан бэкап в `/tmp/dex-2e-backup-<pid>/` для `System/pillars.yaml`, `System/usage_log.md` и датированных файлов в `System/Session_Learnings/`; после импорта шаблонов рабочие копии восстановлены из бэкапа, чтобы в коммит ушли **локальные** столпы и usage_log (не пустые шаблоны upstream). Скрипты `System/scripts/*.sh` на диске и в индексе с правами **100755** (как на upstream).
 
-**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108**; после пакета 2B — **98**; после пакета 2C — **76**; после пакета 2D — **73**; после пакета 2F — **39**; после пакета 2E — **0** (пересчёт: `comm -23 <(git ls-tree -r --name-only upstream/main) <(git ls-tree -r --name-only HEAD)`).
+**Счётчик «только upstream»** (пути есть на `upstream/main`, нет в `HEAD` форка): после пакета 1 было 142; после пакета 2A — **108**; после пакета 2B — **98**; после пакета 2C — **76**; после пакета 2D — **73**; после пакета 2F — **39**; после пакета 2E — **0** (на тот момент tip). После долгого разрыва (2026-07-31, tip **v1.81.5**): снова **~560** missing-path — см. волны 3A–3D ниже.
 
-**Следующие кандидаты (позже):** при появлении новых коммитов на `upstream/main` — раздел 1 и очередной пакетный импорт по необходимости; для путей, общих с форком, только трёхстороннее сравнение, не `git checkout` целых крупных каталогов без списка файлов.
+---
+
+## 6b. Волны 3A–3D (2026-07-31) — догон до v1.81.5 missing-path
+
+Бэкап: `backup/integrate-upstream-20260731-0852`. Цель tip: `c18485d6` / **v1.81.5**.
+
+Правило то же: `git checkout upstream/main -- <paths>` **только** для путей из `comm -23`. Не трогать `CLAUDE.md`, `package.json`, `.scripts/job-search/`, `Credentials/`, живые PARA.
+
+**Волна 3A — doctor + customization migration (~40 путей):** `.claude/skills/dex-doctor/`, `core/customization_migration/`, `core/mcp/customization_migration_server.py` + тесты, `core/utils/doctor.py`, `docs/dex-doctor-spec.md`, `docs/customization-migration-threat-model.md`, …
+
+**Волна 3B — lifecycle + update/bridge (~33 путей):** `core/lifecycle/`, `core/update/`, `scripts/dex_update_bridge.py`, `scripts/generate-update-journey-protocol.py`, `core/tests/test_dex_update_bridge.py`, …
+
+**Волна 3C — connection-manager (~36 путей):** `core/integrations/connection-manager/**`
+
+**Волна 3D — остальной хвост missing-path (~450 путей):** hooks/adapters, `_available` capabilities, docs, scripts, packages, System shims — всё, что ещё только на upstream после 3A–3C.
+
+**Статус 2026-07-31:** волны 3A–3D выполнены (560 путей в индексе с `upstream/main` @ **v1.81.5** / `c18485d6`). `comm` missing vs `git ls-files` → **0**. Бэкап: `backup/integrate-upstream-20260731-0852`. Smoke доработок: `job-search:test-feedback-block-gates-coverage` PASS (починен индекс SK22–SK25). `USER_EXTENSIONS`, `.scripts/job-search/`, fork-скрипты в `package.json` сохранены.
+
+---
+
+## 7. Постоянный синк (параллельно с релизами Dave)
+
+**Зачем:** не залипать на одной версии месяцами; после каждого нового tip апстрима — короткая волна missing-path + проверка, что доработки vault на месте.
+
+**Ритм:** после нового тега `v*` на `upstream` **или** еженедельный `git fetch upstream` (что раньше).
+
+**Шаги:**
+
+1. `git fetch upstream --tags`
+2. Снимок бэкапа: `git branch backup/integrate-upstream-$(date +%Y%m%d-%H%M)`
+3. Пересчитать missing: `comm -23 <(git ls-tree -r --name-only upstream/main | sort) <(git ls-tree -r --name-only HEAD | sort)`
+4. Если >0 — пакетный checkout только этих путей (или поднабор по кластеру); общие файлы не затирать
+5. Проверка доработок (§7 smoke)
+6. Обновить §1 (tip SHA/tag, remaining count) и дописать строку в §6b
+
+**Статус очереди (helper):** `npm run ops:upstream-sync-status` → `.scripts/ops/upstream-sync-status.cjs` (fetch optional, print tip/tag, first-parent count since anchor, missing-path count). Без авто-merge.
+
+**Smoke «доработки живы» (минимум):**
+
+```bash
+npm run job-search:test-feedback-block-gates-coverage
+node -e "const p=require('./package.json').scripts; for (const k of ['job-search:full-flow','job-search:full-flow-v2']) { if(!p[k]) process.exit(1) }"
+```
+
+Если волна трогала Teal/Chrome-хелперы: `npm run job-search:teal-chrome-focus-smoke`.
+
+**Не делать в ритме синка:** `git merge upstream/main`, `/dex-update` как единственный путь этого форка, checkout целых `core/` / `.claude/skills/` / `package.json`.

@@ -1,0 +1,267 @@
+77161da4 Merge pull request #65 from davekilleen/audit/public-cleanup
+5a25844e Merge pull request #66 from davekilleen/fix/ci-gates
+f2ba8740 Merge pull request #67 from davekilleen/fix/ci-calibration
+673a81f8 Merge pull request #64 from linusnikander/fix/granola-requests-dep
+ccc89629 Merge pull request #33 from harryjohn-dev/main
+463aa78f Merge pull request #37 from caleb-love/fix/command-injection-os-system
+22900ddf Adopt community PRs #38, #55, #56, #63 (#68)
+4fde92c6 chore: remove internal dev-comment block from public CLAUDE.md (#69)
+cf3f0201 fix(preflight): correct MCP server path to core/mcp (#70)
+affb4851 fix work task priority limits (#54)
+f97d6d70 fix(ai): upgrade budget model to google/gemini-2.5-flash (#71)
+9e6f35d3 chore(release): v1.20.1 (#72)
+f37bb904 feat: auto-process meetings, Dex Inbox triage, and date accuracy protocol (#43)
+4fb61b90 fix(install): silence upstream Node deprecation warnings during setup (#73)
+95aebef4 docs(readme): fix Python troubleshooting to reinstall into .venv; note system Python is untouched
+8add1c7b Merge pull request #81 from davekilleen/feat/dexdiff-command-surface
+4043f9e8 chore: remove unreachable ScreenPipe, beta-gate, commitment, and demo mode (#89)
+3a89557f chore: remove Pi integration from the core distributable (#90)
+1c636aa2 fix: instruction layer tells the truth — 10 audited wrong-instruction defects (#93)
+a8698b14 fix: revive Dex's health system — three audited watchdog defects (#94)
+4b3e6412 Honest task completion, opt-in qmd registration, calendar guidance, live safety guard (#95)
+919947b7 Fix Granola connector silently returning zero meetings (#79) (#92)
+65e0158c Dead-config purge: ship the concierge, pause auto-linking, delete unread config (#96)
+a7e03300 feat: add /dex-doctor — honest whole-system checkup, replaces /health-check (#97)
+fc265c7a Testing rigor: real e2e journeys, startup checks, three distribution bugs fixed (#98)
+c92fafd7 Fix: task creation works again — repair the create_task import crash + production-path regression tests (#100)
+c374373d feat: session-start surfaces stale background jobs (#101)
+674f92dc feat: onboarding calendar picker — choose from real calendars, not a guess (#102)
+30889d39 feat: two CI honesty gates — instructed tools + referenced scripts (#103)
+18728781 feat: uniform feature-status contract for MCP servers (#104)
+35e0c12d feat: auto-link-people — the feature CLAUDE.md promised (closes #46) (#105)
+3f72ee9a Tasks remember what you told them: metadata round-trips, validated links, due/project/goal fields (#106)
+d40fa6c8 fix: diff gates no longer shallow local clones; merge-base failures say why (#107)
+0eb3be97 fix(tasks): every task promise is one the code keeps (#108)
+1d1d3647 Entity engine: people and company pages that build themselves (v1.37.0) (#109)
+519764fd feat(tasks): one ID authority for meeting tasks + entity-resolved creation (#110)
+37d79a8a fix: protect user data on rollback; stop silent meeting/task loss (round 2 batch) (#111)
+cbb7859c fix: Granola setup tells the truth end-to-end (closes #78, round 2 batch) (#112)
+b3c23113 fix: doctor and preflight stop lying to fresh installs (round 2 batch) (#114)
+309e50e9 fix: purge instructions for features that no longer ship (round 2 batch) (#115)
+18ced0ff fix: priority limits warn instead of blocking; pillar keywords never crash (round 2 batch) (#117)
+d81fae49 The gardener: person pages get smarter, not just longer (v1.44.0) (#116)
+ee0fdf13 The doctor learns to test: smoke journeys, customization diagnosis, verified updates (#99)
+a140fc33 fix: harden two round-2 fixes flagged by independent review (v1.46.0) (#118)
+a1d6bbc0 fix(ci): diff gates must not --depth=1 the base ref (breaks merge-base) (#120)
+88525634 feat(tasks): daily-plan meeting-task review surface + confirm_goal_link tool (#121)
+72cd7933 Phase 3a: nightly self-checks + blame attribution (#122)
+9cef0e38 Task-sync bridge: real Todoist two-way sync on the unified v1 API (#123)
+116de154 Lane P: canonical vault provisioner + pinned bundle (Desktop provisioning foundation) (#124)
+930adabf fix(ci): vault-bundle release upload was silently failing (#125)
+c8069c90 feat(tasks): Things 3 + Trello two-way sync on the shipped engine (v1.51.0) (#126)
+0b843163 Phase 3b: bless your own MCP servers for real health-checks (#127)
+a0bbd82d feat(discovery): surface task-app integrations so users actually find them (v1.53.0) (#129)
+3956d371 Phase 3 (health page): public per-release proof + changelog repair (#130)
+a023581a Phase 3 (contributor safety): PII gate + PR report + fixture/flake hardening (#131)
+69505741 feat(discovery): concierge notices installed apps + configured connectors (v1.56.0) (#132)
+e5220bf7 Phase 3 (fleet verdicts): opt-in anonymous release-health signal (#133)
+b001eb40 Coverage session → 8 task/priority bugs found and fixed (#134)
+c565d7a5 docs: trust-engine pattern + verification methodology (#135)
+0b19523b test: deflake load-sensitive timing assertions (#136)
+f3a4413d fix: MCP handshake timeout was 1.5s — false-BROKENs slow machines (#137)
+6c986d80 Release-channel foundation: channel-aware trust engine (#138)
+b7c74d87 Beta build infrastructure + immutable release tags (v1.61.0) — internal groundwork (#142)
+998ca416 security: remove Tau Mirror from distributions (#147)
+1e6a18d7 fix: preserve local files and repair Atlassian routing (#148)
+270a0d97 security: replace SessionStart pull with bounded release awareness (#149)
+265a60df security: credential migration + structural .mcp.json residual detector (SR1) (#150)
+77c4a15a release: v1.62.0
+543c45b8 fix(tests): release tests no longer self-break on every release cut (#151)
+336f625e chore: strip founder content from the shipped tree + full-tree founder-content gate (#153)
+e1d1dcc3 feat: portable-vault ownership contract — the shared spine (PR-0) (#154)
+b8ecbe5f feat: capability rooms — optional career/companies/quarter-goals, spine always on (#155)
+aa6206b5 chore(ci): one quality run per PR push + cancel superseded runs (#156)
+e3245fba feat: crash-safe transaction core — snapshot, apply, verify, exact undo (PR-1) (#157)
+6718e9af feat: dual-baseline preservation bridge (release N of the legacy-file retirement) (#158)
+c28a3528 release: v1.63.0
+e5fe7c2c chore(ci): merge-queue support, dependency caching, fail-fast lint (#159)
+8297c9aa feat: retire the legacy founder files — v2 baseline (release N+1 of the two-step plan) (#160)
+e2c0aa02 feat: the Brain/Vault migrator — one-time vault conversion, contract-authorized (PR-2) (#161)
+89152def feat(lifecycle): release-catalog contract, schema, model, handler registry (cathedral B1) (#162)
+b386e096 feat(paths): lifecycle + session-memory path constants (cathedral B3) (#163)
+dc4f9e81 feat: the split-aware updater on the crash-safe engine (PR-3) (#164)
+441f0ad3 feat: fresh-install convergence + docs bridge (PR-4) (#165)
+47c5c4c9 release: v1.64.0
+d9fb0b8e feat: read-only vault inventory + classifier (cathedral B4) (#166)
+9e5e65c2 feat(lifecycle): release-catalog generator + distribution wiring (cathedral B2) (#167)
+98c394c6 feat(lifecycle): adoption plan + Doctor read-only probes (cathedral B5) (#168)
+0f4dc4ed docs: changelog for v1.65.0
+01fd7225 release: v1.65.0
+a0a264d5 feat(lifecycle): double-authorized adoption engine on transaction core (cathedral C1) (#169)
+95da9a52 feat(lifecycle): rewind-by-receipt + lean retention report (cathedral C3) (#170)
+6bf2ab3c feat(lifecycle): SQLite online-backup snapshot adapter + sync-folder gate (cathedral C2) (#171)
+28e0cdb7 docs: changelog for v1.66.0
+ff7c41f9 release: v1.66.0
+72b06506 feat(lifecycle): tamper-evident lifecycle ledger + CLI (cathedral D1) (#172)
+2396a4c3 feat: Doctor five-group adoption UX + renderer contract (cathedral D2) (#173)
+35d1d8f7 feat: leadership trio catalog items + session-start plist fix (cathedral D3) (#174)
+9950d468 test+harden: Phase D gate — hostile-vault journey, 100k benchmark, symlink-parent containment (D-GATE) (#175)
+1ba366b6 docs: changelog for v1.67.0
+549a4486 release: v1.67.0
+9f50e317 feat: frozen lifecycle API + one-release compatibility bridge (cathedral E1c) (#176)
+e8c8583c feat: route all lifecycle paths through one executor — closes the §4 seam (cathedral E2c) (#177)
+0af1a853 feat(lifecycle): official capability adoption via catalog — retires dex-level-up raw copies (cathedral E3c) (#178)
+f4a1fd2f docs: changelog for v1.68.0
+3da970b9 release: v1.68.0
+309055ad feat(docs): code-derived architecture inventory + CI drift gate (grounding foundation) (#179)
+83f14885 fix: restore silently-dead career capture + hooks input-contract test + cleanup (#180)
+f180b851 docs(architecture): add DEX-CORE-MAP grounding narrative (#181)
+4af295e9 feat(grounding): live state ledger + /dex-orient + auto session digest (chunk 2) (#182)
+71ebd511 feat(skills): add /skill-score — shape-aware skill quality gate (overhaul PR-1) (#183)
+68bf2e1c feat(skills): rewrite 49 skill descriptions for discoverability (overhaul PR-2) (#184)
+affd207d release: v1.69.0
+2c5ed563 feat(entities): field/block-level ownership + format foundation (entity v2 Build 1) (#187)
+72c41725 feat(entities): canonical Python entity write-engine (engine 3A — foundation) (#188)
+0d5e5b3f feat(release): beta lane publishes vault bundle as prerelease asset (#143)
+7e803fed fix(gardener): never clobber user prose on a malformed summary region (#144)
+ea89a497 feat(entities): SQLite-backed people/company index (engine 3B — disposable projection) (#191)
+f2801a98 docs(changelog): one voice across the July releases, plain language throughout (#190)
+a125c4d9 release: v1.70.0
+e9bbfc7d feat(skills): create-skill v2 — collision-check, origin-aware, score-gated authoring (overhaul PR-2) (#192)
+11d55882 fix(update): keep personal instructions alive across a split update (#193)
+8a42d700 docs(plans): brain/vault split — PR #141 reconciliation and readiness plan (#199)
+a384aff5 feat(skills): add /initiative-kickoff — turn a new bet into a real project (overhaul, founder skill) (#200)
+c5b95d4d chore(skills): land 4 reviewed founder/overhaul skills in one merge (escape INVENTORY churn) (#204)
+ef80ad93 feat(entities): JS↔Python write bridge + never-lose-a-write reliability (engine 3B bridge) (#196)
+dc7f2be2 feat(entities): touch-logging + relationship temperature + "what's going cold" surface (#207)
+28eeb639 feat(lifecycle): conflict-resolution keep-both writer + choice layer (frozen op pair) (#205)
+49aa8e41 docs(instructions): repoint the Learning Capture section to /daily-review (HELD for sign-off) (#203)
+8a678841 fix(update): reconcile data-safety guard with #205 conflict-resolution route (#208)
+eda9518e feat(work): soft-promise capture v2 — shared detector + live hook + process-meetings (replaces #201) (#206)
+1e7ce777 release: v1.71.0
+cc18de58 fix(migrator): refuse to convert a vault inside a cloud-synced folder (#194)
+fe542423 feat(entities): typed relationships — map-first, suggested-until-confirmed (#210)
+69c6be52 release: v1.72.0
+88ed018c feat(integrations): connection-manager engine — Phase 0+0.5, live-account gate PASSED (#209)
+f80311f3 ci: pin GitHub Actions to commit SHAs (8 pin(s)) (#186)
+61535cd9 feat(entities): relationships fast-follow — edge-key ownership + tombstones + mode:off gate + confirm affordance
+93e2ef8c docs(changelog): v1.73.0 entry in house voice
+c316cd9f release: v1.73.0
+1fd729ae feat(integrations): Phase 2 — desktop judgment layer lifted into the shared engine (#211)
+daba0adf feat(integrations): Phase 3 — connections contract + engine manifest (#212)
+4a555cea fix(privacy): no personal-machine layout ships; founder gate gains path-shaped detection (#213)
+19408624 ci: finish the Actions pinning, and docs: fill the v1.63.0 gap (#214)
+f7c84cac Merge pull request #220 from davekilleen/codex/daily-session-health-20260724
+a3c5ae67 fix(integrations): harden connection-manager release readiness (#221)
+f6cf70b4 release: v1.74.0
+8ea40365 fix(integrations): polish connection-manager failure UX from live-gate findings (#223)
+087592ad feat(lifecycle): manage the pre-split undo archive + make migration recovery obvious (Lanes C+D) (#222)
+5449b9fd Customization migration Lane A: sealed write authority + content-write preconditions + threat model (#224)
+ec1cde93 feat(lifecycle): guided brain/vault upgrade wired into /dex-update (Lane E) (#225)
+ff02b4ee feat(doctor): read-only customization assessment — Doctor inventories your customizations (plan §23 slice) (#227)
+5e734815 release: v1.75.0
+45d88b67 sec(integrations): Phase 5a connection-manager hardening (#228)
+37a0bdf5 docs(changelog): retitle 1.75.0 entry to 1.75.1 (incomplete cut superseded)
+a7e07c1a release: v1.75.1
+1c0b2629 fix(migrator): four real-vault rehearsal findings before switch-on (#229)
+7a28fd98 sec(integrations): Phase 5b — origin pinning + tamper-proof trust (#230)
+87b8c07a fix(integrations): close the Phase 5 security gate on the credential store (#226)
+97fc6463 Customization migration Lane A2: capsule, state, sensitivity, and behaviour contracts (v0) (#233)
+24f60a86 feat(customization-migration): deepen the read-only assessment (Lane B) (#234)
+7c438cb1 Customization migration Lane C: capsule creation through the sealed transaction (#235)
+60c66fb7 sec(integrations): Phase 5c — credential broker (#232)
+eb778d17 sec(integrations): Phase 5d — B1 user-presence gate (#237)
+4d45c5cf Customization migration Lane D: read-only MCP + human-confirmed CLI (#236)
+d6c3dd5b feat(customization-migration): validate regeneration candidates (#238)
+4e0981c6 sec(integrations): fail closed on untrusted presence configuration (#239)
+e1ac5f9b fix(dexdiff): CLI publishes to DexDiff's backend, not the Desktop domain (#245)
+a8f9acf8 sec(integrations): Phase 5f — close refresh-steering + default-routing criticals (#243)
+76186f0c feat(update): guided journey for deeply customised setups (Lane H, capsule-scoped) (#244)
+00d97e9b feat(customization-migration): private staging + honest verification (Lane E-staging + F) (#246)
+ec4c49a9 sec(integrations): Phase 5g — presence op-scoping, broker auth, timeouts, honest docs (#247)
+facb9dfa docs(changelog): v1.75.2 — guided brain/vault upgrade, proven on a real vault
+5beda5e7 release: v1.75.2
+fa1fcd3d docs(changelog): v1.75.2 — one honest entry: proven vault move + guided customization journey + security groundwork
+10c1ece0 docs: point new users at the Dex Guide (heydex.ai/help) (#249)
+9afb582c feat(customization-migration): activation + rewind — make a verified rebuild live, reversibly (Lane G) (#248)
+919dc258 docs: full documentation refresh to v1.75.2 ground truth (#251)
+6bf854fc docs(readme): put the Dex Guide front and center (#254)
+297e099d docs(readme): red-team pass — fix stale claims, add story tie-ins + beta signup (#258)
+708c6bcc docs: the CFO test — plain-language bar for the (now public) changelog (#255)
+0f4ab221 docs(readme): hero GIF — Dex answering 'plan my day' and 'what do I owe people?' (#260)
+207fd6a2 feat(customization-migration): the rebuild doorway — reversible carry-forward, live in /dex-update (#261)
+3384dfcd docs(changelog): v1.76.0 — the customization rebuild goes live
+528e983d release: v1.76.0
+09036169 fix(agents): re-sync skill adapters + delete superseded FAQ draft (#262)
+21ba5a2c ci: parallelize the pytest suite — checks drop from ~16 to ~8 min, no gate touched (#263)
+822454e4 fix(lifecycle): route the customization rebuild through the one safe door (adversarial Blocker 2) (#265)
+6543521c release: v1.76.1
+1fd857bb fix(connections): #259 — presence-provider injection seam + fail-closed/one-shot fixes (#259)
+46324aab fix(onboarding): domain normalization, solo-user path, company name, honest timing (#264)
+ad980fba ci: shard tests across 3 runners — checks ~8 min → ~5, gates recombined and enforced on the whole (#266)
+ecff4845 fix(connections): recover from the broker idle-exit race instead of a spurious exit 1 (#268)
+e5a715aa feat(onboarding): make the first-week reveal real, automatic and honest (#269)
+7b7b7707 feat(connect): /connect skill + daily health hook (rebuilt fresh off main) (#267)
+df1b1653 docs(changelog): v1.77.0 — /connect, onboarding fixes, and a workload count that adds up
+6cf51027 release: v1.77.0
+4d82a50d fix(connections): certified graceful broker idle shutdown — closes the race class behind the CI flakes (#271)
+095666b7 fix: old installs can find updates again, and Doctor stops reporting fixed errors as current (#273)
+c7d1fa56 release: v1.77.1
+bda80edd feat(onboarding): calendar first, one confirmation instead of three questions, and a kinder role step (#274)
+dfb4da7d build(release): warn when the last release never reached the public page (#276)
+635f293a docs(changelog): correct the connectable tool counts in the 1.77.0 entry (#277)
+5a93ee38 fix(release-awareness): one artifact per version, and stop giving up when many releases exist (#278)
+8bf34cff docs(changelog): v1.77.2 — Dex can tell you about updates again
+4fabb033 release: v1.77.2
+6f1e73aa feat(onboarding): recognise more of what people actually use, and tell them /connect exists (#280)
+92e1121b feat(onboarding): offer meeting notes early, and move Granola onto the catalog (#283)
+b64d613a feat(companies): on by default for new vaults, existing users left exactly as they are (#284)
+0a4cf896 feat: Dex learns which days you actually work (#282)
+7add2191 fix(connect): correct false Slack "reviewed" claim + inflated provider counts (source of the live-page errors) (#275)
+7780bcae feat: an opt-in calendar that teaches Dex over your first few weeks (#287)
+35d4f543 fix(tests): correct a disproved comment, and stop the real-install safeguard skipping after a release (#281)
+db7c2200 feat(rooms): Quarter Goals and Career on by default again — the shipped seeds return (#288)
+3fa61178 docs(rooms): changelog, folder docs, and a setup step with nothing left to ask (#289)
+248f5329 ci(seeds): make the shipped-starter guard binding, and ship the last missing one (#290)
+c6173e3e docs(readme): lead with the one-line install (#279)
+92d3e491 fix(updates): the trust release — engine un-killed, health checks truthful, no version left deaf (#292)
+942d1181 docs(changelog): v1.78.0 — the trust release, the whole story
+1c2f6a82 release: v1.78.0
+4f0531a3 fix(release): the cut stamps the engine's version label too (#294)
+23ef491b docs: the update rescue page — what Dex follows when the normal route refuses (#295)
+edc136ee fix: Companies joins Career and Quarter Goals, and a broken Python stops blocking updates (#291)
+95a32c36 Session start notices waiting meetings and has them processed in the background (#285)
+88dd8b1a fix(profile): the blank template said Career and Quarter Goals were off (#296)
+c7a2aff0 fix(deps): pin mcp below 2.0 in CI and the plugin requirements (#301)
+92f61311 feat(meetings): the sweep watches the landing zone — any meeting note counts, no Granola required (#297)
+402e47b5 release: v1.79.0
+a64a9bb8 feat(onboarding): offer pages for the people you actually work with (#293)
+1edda311 install.sh: run lifecycle adoption with the venv Python it just built (#303)
+f522294a ci: stop duplicate release tags from silently deafening old installs (#306)
+25c589af fix(onboarding): one onboarding, enforced by the MCP — the fossil setup flow is gone (#305)
+cc620dbf Merge pull request #309 from davekilleen/codex/recover-pr300-first-run-guard
+93dd4fc4 Merge pull request #308 from davekilleen/codex/delivery-release-fetch
+667385e1 fix(reset): route role changes through canonical onboarding
+5abc3d64 docs: add v1.80.0 updater foundation notes
+0c0fb9ed release: v1.80.0
+4e40527e fix(release): publish only the new release tag
+ace6f64e release: v1.80.1
+86d1d9ea Merge pull request #313 from davekilleen/codex/updater-bridge-acceptance-v2
+bc44bf67 Merge pull request #314 from davekilleen/codex/mcp-registration-bridge
+3988b5fd release: v1.80.2
+20d64a34 Merge pull request #315 from davekilleen/codex/distribution-checklist-bridge
+ec2875b2 release: v1.80.3
+700c2580 Merge pull request #316 from davekilleen/codex/no-user-profile-migration-write
+3e637e50 release: v1.80.4
+f34894ff fix(update): keep user profile out of releases
+de8c53fc release: v1.80.5
+28e96491 fix: discover archived release fleet trees
+f651b351 fix(connect): do not confirm OAuth before token exchange
+3732db94 fix(doctor): isolate launch agents by vault
+c7a7d623 fix: make release changelog insertion portable
+19815caf fix(lifecycle): register MCP from delivered definition
+b83fec6d fix(capabilities): align legacy company defaults
+5824073b Merge pull request #329 from davekilleen/codex/fleet-journey-runner
+b7415b43 Merge pull request #328 from davekilleen/codex/updater-bridge-resume-safety
+7dba2908 Merge pull request #332 from davekilleen/codex/onboarding-context-lifecycle
+ae0815fd Merge pull request #331 from davekilleen/codex/fleet-journey-runner
+7edae25d Merge pull request #333 from davekilleen/codex/release-owned-journey-protocol
+85ed9657 Merge pull request #334 from davekilleen/codex/release-owned-journey-executor
+db9a4711 Merge pull request #335 from davekilleen/codex/fleet-acceptance-aggregation
+31425ce2 fix: unblock real-user updates and workflow dead ends (#336)
+0f23787a release: v1.81.0 updater bridge foundation (#337)
+6e747437 Merge pull request #342 from davekilleen/codex/release-v1.81.1
+578a3c12 Merge pull request #343 from davekilleen/codex/v1811-bridge-channel-pin
+fa2eb5f8 Merge pull request #344 from davekilleen/codex/v1813-fleet-file-transport
+92ad3ae9 Merge pull request #345 from davekilleen/codex/v1814-tagless-legacy-topology
+c18485d6 fix(update): match legacy transition metadata (#346)

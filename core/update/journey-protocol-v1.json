@@ -1,0 +1,58 @@
+{
+  "controller": "release-fleet-v1",
+  "evidence": [
+    "historic-update-surface",
+    "historic-route-refusal",
+    "bridge-foundation",
+    "foundation-update-surface",
+    "foundation-preview",
+    "foundation-approval",
+    "foundation-receipt",
+    "follow-up-installed",
+    "follow-up-doctor",
+    "follow-up-smoke"
+  ],
+  "executor": {
+    "sha256": "cd574fc09138bdc251537fb4759f559a2d11f376ed08807d815459f8cdf0ceb4",
+    "source_path": "scripts/release_fleet_executor.py"
+  },
+  "foundation_to_follow_up": {
+    "adapter": "lifecycle-delivered-release-v1",
+    "approval": {
+      "count": 1,
+      "word": "APPLY"
+    },
+    "operations": [
+      "deliver_latest_release",
+      "build_and_preview_delivered_release",
+      "execute_approved_delivered_release"
+    ]
+  },
+  "historic_to_foundation": {
+    "adapter": "pinned-foundation-bridge-v1",
+    "approval": {
+      "count": 3,
+      "word": "APPLY"
+    },
+    "artifact": {
+      "sha256": "c17e0372f78aa38904f18e60831651d4b37613bd6376fc18bb4cb49e20e29715",
+      "source_path": "scripts/dex_update_bridge.py"
+    },
+    "foundation": {
+      "channel": "stable",
+      "commit": "6bc490e7caec22f60f097c6b54bb563382f542b8",
+      "tag": "dist/release/v1.81.0-6bc490e",
+      "tag_object": "54b1ceef8b1f7ad4f67e4d4d045a134ea443ab53",
+      "tree": "dad3e43774e772dfc42df698f8a9818956346d78",
+      "version": "1.81.0"
+    }
+  },
+  "platforms": [
+    "darwin"
+  ],
+  "runner": {
+    "sha256": "bc1ed084a3248a5bc98e91dc20a74b0caed66d22525357f7d4480657ca07e5ce",
+    "source_path": "scripts/release_fleet.py"
+  },
+  "schema_version": 1
+}

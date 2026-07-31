@@ -1,0 +1,7 @@
+# Dex development and CI requirements
+pytest
+pytest-cov
+pytest-xdist
+ruff
+hypothesis
+pytest-split
