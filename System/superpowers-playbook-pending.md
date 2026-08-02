@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 383
+- Repeats in window: 384
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -59,7 +59,7 @@
 ## Candidate 5
 
 - Pattern key: `executor|heartbeat|paperclip|sonnet`
-- Repeats in window: 225
+- Repeats in window: 226
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Sonnet (таймер Paperclip).
  - [2026-07-22] heartbeat Executor Sonnet (Paperclip), продолжить работу.
@@ -215,7 +215,7 @@
 ## Candidate 17
 
 - Pattern key: `head|heartbeat|paperclip|продолжить`
-- Repeats in window: 75
+- Repeats in window: 76
 - Sample user requests:
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по процедуре.
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по процедуре.
@@ -1059,6 +1059,19 @@
 
 ## Candidate 82
 
+- Pattern key: `fetch|inbox|задачи|итог`
+- Repeats in window: 6
+- Sample user requests:
+ - [2026-07-23] кратко сообщить итог фоновой задачи Fetch CM inbox
+ - [2026-07-24] кратко сообщить итог фоновой задачи fetch inbox.
+ - [2026-07-31] кратко сообщить итог упавшей фоновой задачи fetch inbox
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 83
+
 - Pattern key: `inbox-lite|итог|команды|кратко`
 - Repeats in window: 6
 - Sample user requests:
@@ -1070,7 +1083,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 83
+## Candidate 84
 
 - Pattern key: `fetch|heartbeat-context|кратко|сообщить`
 - Repeats in window: 6
@@ -1083,7 +1096,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 84
+## Candidate 85
 
 - Pattern key: `inbox-lite|итог|кратко|сообщить`
 - Repeats in window: 6
@@ -1096,7 +1109,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 85
+## Candidate 86
 
 - Pattern key: `billing|design|friday|handoff`
 - Repeats in window: 6
@@ -1109,7 +1122,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 86
+## Candidate 87
 
 - Pattern key: `checked|hir-1412|issue|wake`
 - Repeats in window: 6
@@ -1122,7 +1135,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 87
+## Candidate 88
 
 - Pattern key: `brief|full|progress|refresh`
 - Repeats in window: 6
@@ -1135,7 +1148,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 88
+## Candidate 89
 
 - Pattern key: `agent|fetch|identity|inbox-lite`
 - Repeats in window: 5
@@ -1148,7 +1161,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 89
+## Candidate 90
 
 - Pattern key: `heartbeat|paperclip|очереди|продолжить`
 - Repeats in window: 5
@@ -1161,7 +1174,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 90
+## Candidate 91
 
 - Pattern key: `curl|inbox-lite|завершении|уведомление`
 - Repeats in window: 5
@@ -1169,19 +1182,6 @@
  - [2026-07-22] уведомление о завершении фонового curl inbox-lite.
  - [2026-07-27] уведомление о завершении фонового curl inbox-lite
  - [2026-07-30] уведомление о завершении фонового curl inbox-lite.
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 91
-
-- Pattern key: `fetch|inbox|задачи|итог`
-- Repeats in window: 5
-- Sample user requests:
- - [2026-07-23] кратко сообщить итог фоновой задачи Fetch CM inbox
- - [2026-07-24] кратко сообщить итог фоновой задачи fetch inbox.
- - [2026-07-31] кратко сообщить итог упавшей фоновой задачи fetch inbox
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
