@@ -39,18 +39,18 @@ alwaysApply: true
 
 ## Staging deploy (обязательно после правок Applicator)
 
-Roman смотрит результат на **staging**. **Канон на `main`:** commit → **push** → дождаться workflow **Deploy Staging** в GitHub Actions (проверка → выкат по путям → дым). **Запрещено** писать Roman: «задеплой», «обнови staging», «хочешь deploy?».
+Roman смотрит результат на **staging**. **Канон GitFlow:** ветка от `develop` → **PR в `develop`** → merge → workflow **Deploy Staging** в GitHub Actions (проверка → выкат по путям → дым). `main` — продакшен, не точка выката staging. **Запрещено** писать Roman: «задеплой», «обнови staging», «хочешь deploy?».
 
 После **любой** логически завершённой правки под `04-Projects/Applicator/**`, которую Roman должен проверить на staging:
 
-1. Commit в Applicator git (см. выше).
-2. **Push в `main`** (из корня репозитория Applicator).
-3. Дождаться зелёного прогона [Actions → Deploy Staging](https://github.com/AstaldoVal/applicator/actions); в ответе — ссылка на run + staging URL.
-4. **Локальные** `./scripts/deploy-staging-pages.sh` / `deploy-staging-api.sh` — только если Roman просит «быстрее прямо сейчас», Actions недоступен, или нужен preview до merge; после merge в `main` история всё равно должна появиться в Actions.
+1. Commit в Applicator git (см. выше) на ветке `feature/HIR-…` или `defect/HIR-…` от `develop`.
+2. **Push + PR в `develop`**: `git push -u origin HEAD && gh pr create --base develop` (из корня репозитория Applicator).
+3. После merge дождаться зелёного [Actions → Deploy Staging](https://github.com/AstaldoVal/applicator/actions); в ответе — ссылка на PR/run + staging URL (`https://staging.genufit.app` / `https://applicator-staging.pages.dev`).
+4. **Локальные** `./scripts/deploy-staging-pages.sh` / `deploy-staging-api.sh` — **отказывают** вне CI (`assert-ci-deploy.sh`). Авария: `ALLOW_LOCAL_STAGING_DEPLOY=1` и явная строка в отчёте. Перевыкат без merge: `gh workflow run deploy-staging.yml --ref develop`.
 
 **Не спрашивать** разрешение на deploy. **Исключения:** Roman явно написал в **этом** сообщении «без deploy» / «не деплой» / «только локально»; deploy/Actions упал — ошибка + self-heal + повтор (не перекладывать на Roman).
 
-Канон внутри Applicator: `04-Projects/Applicator/.cursor/rules/staging-deploy/RULE.md`.
+Канон внутри Applicator: `04-Projects/Applicator/.cursor/rules/staging-deploy/RULE.md`, `04-Projects/Applicator/docs/engineering/GITFLOW_RELEASE_PROCESS.md`.
 
 ## Согласованность
 
