@@ -1,1 +1,1 @@
-{"date": "2026-08-02", "fired_fp": "Sunday, 02 August 2026 at 14:00:00^^Sunday, 02 August 2026 at 15:30:00", "fired_kind": "peak", "delivered": true, "pending": null, "last_reason": "peak_sync_disabled", "last_session_title": "—"}
+{"date": "2026-08-02", "fired_fp": "Sunday, 02 August 2026 at 15:30:00^^Sunday, 02 August 2026 at 15:50:00", "fired_kind": "trough", "delivered": true, "pending": null, "last_reason": "trough_sync_disabled", "last_session_title": "—"}
