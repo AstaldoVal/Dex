@@ -397,7 +397,7 @@
 ## Candidate 31
 
 - Pattern key: `shell-задач|итог|кратко|сообщить`
-- Repeats in window: 21
+- Repeats in window: 22
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновых shell-задач
  - [2026-07-22] кратко сообщить итог фоновых shell-задач.
