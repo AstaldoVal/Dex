@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-02T11:31:48.003409+00:00",
+  "journeys": [
+    {
+      "id": "topology",
+      "verdict": "OK",
+      "detail": "combined topology is intact and remains on the merge updater path",
+      "duration_ms": 692
+    },
+    {
+      "id": "configs",
+      "verdict": "OFF",
+      "detail": "not set up yet \u2014 complete onboarding first",
+      "duration_ms": 494
+    },
+    {
+      "id": "task_lifecycle",
+      "verdict": "OFF",
+      "detail": "not set up yet \u2014 complete onboarding first",
+      "duration_ms": 525
+    },
+    {
+      "id": "mcp_startup",
+      "verdict": "OFF",
+      "detail": "not set up yet \u2014 complete onboarding first",
+      "duration_ms": 489
+    },
+    {
+      "id": "skills",
+      "verdict": "OK",
+      "detail": "validated 177 skills (9 user, 168 shipped)",
+      "duration_ms": 1114
+    },
+    {
+      "id": "hooks",
+      "verdict": "OK",
+      "detail": "structurally validated 12 hook commands",
+      "duration_ms": 1609
+    }
+  ],
+  "summary": {
+    "ok": 3,
+    "broken": 0,
+    "unknown": 0,
+    "off": 3
+  }
+}

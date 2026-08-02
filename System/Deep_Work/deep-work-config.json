@@ -1,0 +1,25 @@
+{
+  "timezone": "Europe/Lisbon",
+  "calendar_name": "r.matsukatov@gmail.com",
+  "notification_title": "Dex Deep Work",
+  "open_cursor_on_start": true,
+  "open_file_on_start": "05-Areas/Cognitive_Performance/baseline.md",
+  "session_mac_sync": {
+    "open_on_deep_work_start": false,
+    "use_calendar_event_for_session": false,
+    "calendar_event_title": "Deep Work [DEX]",
+    "intent": "Dex Deep Work",
+    "notes_prefix": "[DEX_DEEPWORK]",
+    "_note": "2026-07-24: Session sync off (memory). Ultradian calendar slots remain; Session is not auto-opened."
+  },
+  "schedule": {
+    "mon": { "start": "14:00", "end": "15:30", "enabled": false },
+    "tue": { "start": "14:00", "end": "15:30", "enabled": false },
+    "wed": { "start": "14:00", "end": "15:30", "enabled": false },
+    "thu": { "start": "14:00", "end": "15:30", "enabled": false },
+    "fri": { "start": "14:00", "end": "15:30", "enabled": false },
+    "sat": { "start": "14:00", "end": "15:30", "enabled": false },
+    "sun": { "start": "12:00", "end": "13:30", "enabled": false }
+  },
+  "_schedule_note": "Ultradian peaks: 05-Areas/Cognitive_Performance/ultradian-rhythm-config.json + npm run cognitive:ultradian-calendar-sync"
+}

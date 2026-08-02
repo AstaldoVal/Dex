@@ -1,0 +1,466 @@
+{
+  "generated_at": "2026-08-02T10:49:48.918000+00:00",
+  "mode": "quick",
+  "instruments": {
+    "attempted": 23,
+    "completed": 23,
+    "failed": []
+  },
+  "checks": [
+    {
+      "id": "vault.structure",
+      "feature": "Vault structure",
+      "verdict": "OK",
+      "detail": "All standard PARA directories exist.",
+      "heal": null
+    },
+    {
+      "id": "vault.configs",
+      "feature": "Vault configuration",
+      "verdict": "OK",
+      "detail": "user-profile.yaml, pillars.yaml, and .claude/settings.json all parse.",
+      "heal": null
+    },
+    {
+      "id": "vault.git",
+      "feature": "Vault history",
+      "verdict": "OFF",
+      "detail": "The separate vault history is not active; the topology check reports the current layout.",
+      "heal": null
+    },
+    {
+      "id": "brain.git",
+      "feature": "Dex brain history",
+      "verdict": "OFF",
+      "detail": "The separate Dex brain history is not active.",
+      "heal": null
+    },
+    {
+      "id": "topology.pre-split-archive",
+      "feature": "Pre-split undo archive",
+      "verdict": "OFF",
+      "detail": "No pre-split undo archive is present.",
+      "heal": null
+    },
+    {
+      "id": "vault.auto-commit",
+      "feature": "Vault auto-commit",
+      "verdict": "OFF",
+      "detail": "Vault auto-commit is off by default; local files remain untouched.",
+      "heal": null
+    },
+    {
+      "id": "topology.migration-pending",
+      "feature": "Brain/vault topology",
+      "verdict": "OFF",
+      "detail": "Optional one-time upgrade available \u2014 run /dex-update when you want it; notes stay in place either way.",
+      "heal": null
+    },
+    {
+      "id": "release.catalog",
+      "feature": "Release catalog",
+      "verdict": "OK",
+      "detail": "Release catalog 1.0.0 is valid (27 items).",
+      "heal": null
+    },
+    {
+      "id": "adoption.plan",
+      "feature": "Adoption plan",
+      "verdict": "OK",
+      "detail": "27 adoptable / 0 adopted / 0 conflicts.",
+      "heal": null
+    },
+    {
+      "id": "smoke.history",
+      "feature": "Nightly smoke results",
+      "verdict": "UNKNOWN",
+      "detail": "last nightly check at 2026-08-02T02:28:42.439660+00:00 was inconclusive.",
+      "heal": null
+    },
+    {
+      "id": "mcp.registered",
+      "feature": "MCP registration",
+      "verdict": "OK",
+      "detail": "All 30 registered MCP entries have valid targets.",
+      "heal": null
+    },
+    {
+      "id": "mcp.orphans",
+      "feature": "MCP server registration",
+      "verdict": "OK",
+      "detail": "All 25 core MCP server files are registered.",
+      "heal": null
+    },
+    {
+      "id": "python.env",
+      "feature": "Python environment",
+      "verdict": "OK",
+      "detail": "The vault Python and required packages are importable.",
+      "heal": null
+    },
+    {
+      "id": "hooks.wired",
+      "feature": "Claude hooks",
+      "verdict": "OK",
+      "detail": "Every configured hook command points at an existing file.",
+      "heal": null
+    },
+    {
+      "id": "jobs.loaded",
+      "feature": "Background jobs",
+      "verdict": "OK",
+      "detail": "All 18 installed launch agents for this vault are loaded with valid interpreters; 5 Dex launch agents from other Dex products were skipped.",
+      "heal": null
+    },
+    {
+      "id": "jobs.fresh",
+      "feature": "Background job freshness",
+      "verdict": "OK",
+      "detail": "All 4 installed job logs are within their freshness thresholds.",
+      "heal": null
+    },
+    {
+      "id": "preflight.queue",
+      "feature": "Preflight health",
+      "verdict": "UNKNOWN",
+      "detail": "Preflight did not check registered core servers: analytics-mcp, confluence-multi, customization-migration-mcp, gmail-glorium-mcp, gmail-mcp, gmail-work-mcp, google-calendar-mcp, google-calendar-work-mcp, google-drive-mcp, google-drive-work-mcp, job-digest-mcp, linkedin-mcp, nanobanana-mcp, reminders-mcp, session-memory, session-pomodoro-mcp, telegram-mcp, user-ai-updates, wise-mcp.",
+      "heal": null
+    },
+    {
+      "id": "capabilities.rooms",
+      "feature": "Capability rooms",
+      "verdict": "OK",
+      "detail": "Enabled room folders, shipped skills, and seed files match the saved room choices.",
+      "heal": null
+    },
+    {
+      "id": "entity.engine",
+      "feature": "Entity engine",
+      "verdict": "OK",
+      "detail": "Entity engine tracks 0 contacts and 0 observations; creation is suggest (default \u2014 key missing); 0 suggestions pending; last verification never / 0 unresolved; 0 quarantined pages; people index missing; gardener off (no LLM key); 0 dead-lettered writes.",
+      "heal": null
+    },
+    {
+      "id": "customizations.skills",
+      "feature": "Skill customizations",
+      "verdict": "OK",
+      "detail": "Validated 9 user customizations and 168 shipped skills.",
+      "heal": null
+    },
+    {
+      "id": "customizations.mcp",
+      "feature": "MCP customizations",
+      "verdict": "OK",
+      "detail": ".mcp.json is structurally valid; 0 custom MCP entries checked and not executed for safety.",
+      "heal": null
+    },
+    {
+      "id": "core.drift",
+      "feature": "Shipped-file drift",
+      "verdict": "UNKNOWN",
+      "detail": "Modified shipped files: .agents/skills/getting-started/SKILL.md, .agents/skills/industry-truths/SKILL.md, .agents/skills/process-meetings/SKILL.md, .claude/flows/onboarding.md, .claude/guides/README.md, .claude/hooks/README.md, .claude/hooks/career-evidence-capture.cjs, .claude/hooks/company-context-injector.cjs, .claude/hooks/dex-safety-guard.sh, .claude/hooks/meeting-cache-builder.cjs, .claude/hooks/paths.cjs, .claude/hooks/person-context-injector.cjs, .claude/hooks/post-meeting-person-update.cjs, .claude/hooks/session-start.sh, .claude/plugins/compound-engineering/skills/compound-docs/SKILL.md, .claude/reference/README.md, .claude/reference/beta-templates/README.md, .claude/reference/beta-templates/analytics/README.md, .claude/reference/integration-patterns.md, .claude/reference/level-up-test.md, .claude/reference/level-up-verification.md, .claude/reference/mcp-servers.md, .claude/reference/meeting-intel.md, .claude/settings.json, .claude/skills/MIGRATION_SUMMARY.md, .claude/skills/README.md, .claude/skills/anthropic-pdf/SKILL.md, .claude/skills/atlassian-setup/SKILL.md, .claude/skills/calendar-setup/SKILL.md, .claude/skills/create-mcp/SKILL.md, .claude/skills/create-skill/SKILL.md, .claude/skills/daily-plan/SKILL.md, .claude/skills/daily-review/SKILL.md, .claude/skills/dex-add-mcp/SKILL.md, .claude/skills/dex-backlog/SKILL.md, .claude/skills/dex-improve/SKILL.md, .claude/skills/dex-level-up/SKILL.md, .claude/skills/dex-obsidian-setup/SKILL.md, .claude/skills/dex-rollback/SKILL.md, .claude/skills/dex-update/SKILL.md, .claude/skills/dex-whats-new/SKILL.md, .claude/skills/enable-semantic-search/SKILL.md, .claude/skills/getting-started/SKILL.md, .claude/skills/google-workspace-setup/SKILL.md, .claude/skills/identity-snapshot/SKILL.md, .claude/skills/industry-truths/SKILL.md, .claude/skills/integrate-mcp/SKILL.md, .claude/skills/integrations/README.md, .claude/skills/integrations/integrate-google.md, .claude/skills/integrations/integrate-notion.md, .claude/skills/integrations/integrate-slack.md, .claude/skills/journal/SKILL.md, .claude/skills/meeting-prep/SKILL.md, .claude/skills/ms-teams-setup/SKILL.md, .claude/skills/process-meetings/SKILL.md, .claude/skills/product-brief/SKILL.md, .claude/skills/project-health/SKILL.md, .claude/skills/prompt-improver/SKILL.md, .claude/skills/reset/SKILL.md, .claude/skills/review/SKILL.md, .claude/skills/save-insight/SKILL.md, .claude/skills/scrape/SKILL.md, .claude/skills/setup/SKILL.md, .claude/skills/things-setup/SKILL.md, .claude/skills/todoist-setup/SKILL.md, .claude/skills/trello-setup/SKILL.md, .claude/skills/triage/SKILL.md, .claude/skills/week-plan/SKILL.md, .claude/skills/week-review/SKILL.md, .claude/skills/xray/SKILL.md, .claude/skills/zoom-setup/SKILL.md, .cursor/rules/search-routing.mdc, .gitignore, .scripts/com.dex.changelog-checker.plist, .scripts/com.dex.learning-review.plist, .scripts/install-learning-automation.sh, .scripts/lib/llm-client.cjs, .scripts/meeting-intel/install-automation.sh, .scripts/meeting-intel/sync-from-granola.cjs, 06-Resources/Dex_System/Calendar_Setup.md, 06-Resources/Dex_System/Dex_Jobs_to_Be_Done.md, 06-Resources/Dex_System/Dex_System_Guide.md, 06-Resources/Dex_System/Dex_Technical_Guide.md, 06-Resources/Dex_System/Distribution_Checklist.md, 06-Resources/Dex_System/Distribution_Strategy.md, 06-Resources/Dex_System/Folder_Structure.md, 06-Resources/Dex_System/Updating_Dex.md, CHANGELOG.md, CLAUDE.md, LICENSE, README.md, System/.installed-files.manifest, System/.release-catalog.json, System/Beta_Communications/2026-02-04_hardcoded_paths_fix.md, System/README.md, core/integrations/BUILD_TRACKER.md, core/integrations/google/setup.py, core/integrations/notion/setup.py, core/integrations/post_update_check.py, core/integrations/slack/setup.py, core/lifecycle/catalog/bridge-release.json, core/mcp/analytics_helper.py, core/mcp/analytics_server.py, core/mcp/calendar_server.py, core/mcp/career_parser.py, core/mcp/career_server.py, core/mcp/dex_improvements_server.py, core/mcp/granola_server.py, core/mcp/onboarding_server.py, core/mcp/requirements.txt, core/mcp/resume_parser.py, core/mcp/resume_server.py, core/mcp/update_checker.py, core/mcp/work_server.py, core/migrations/README.md, core/migrations/v1-to-v2-example.sh, core/obsidian/generate_obsidian_config.py, core/obsidian/migrate_to_wikilinks.py, core/obsidian/sync_daemon.py, core/paths.py, core/ritual_intelligence/calendar_ingest.py, core/ritual_intelligence/cli.py, core/ritual_intelligence/contact_promote.py, core/ritual_intelligence/service.py, core/ritual_intelligence/transcript_ingest.py, core/utils/dex_logger.py, core/utils/doctor.py, core/utils/page_generators.py, core/utils/preflight.py, core/utils/reference_formatter.py, docs/merge-gates.md, docs/testing-governance.md, docs/testing-hardening-merge-runbook.md, install.sh, package-lock.json, package.json, packages/dex-contracts/README.md, packages/dex-contracts/dist/paths.contract.json, packages/dex-contracts/package.json, requirements.txt, uv.lock; updates may conflict; the doctor can't vouch for modified shipped files.",
+      "heal": null
+    },
+    {
+      "id": "doctor.self",
+      "feature": "Doctor instruments",
+      "verdict": "OK",
+      "detail": "All 23 probes completed and the last-run report target is writable.",
+      "heal": null
+    }
+  ],
+  "summary": {
+    "ok": 15,
+    "off": 5,
+    "broken": 0,
+    "unknown": 3
+  },
+  "adoption": {
+    "report_version": 1,
+    "verdict": "OK",
+    "groups": [
+      {
+        "id": "new-and-safe",
+        "verdict": "OK",
+        "count": 0,
+        "items": [],
+        "surface": "Here's exactly what this changes for you: 0 item(s) are new and safe to adopt."
+      },
+      {
+        "id": "needs-your-review",
+        "verdict": "OK",
+        "count": 0,
+        "items": [],
+        "surface": "0 item(s) need your review because installed files differ from the release or could not be verified."
+      },
+      {
+        "id": "preserved-for-now",
+        "verdict": "OK",
+        "count": 0,
+        "held_back_items": [],
+        "customized_files": [],
+        "surface": "0 held-back item(s) and 0 customized file(s) are preserved for now."
+      },
+      {
+        "id": "continue-or-recover",
+        "verdict": "OK",
+        "count": 0,
+        "transactions": [],
+        "ledger": null,
+        "inspection_error": null,
+        "surface": "No interrupted update or ledger recovery is waiting."
+      },
+      {
+        "id": "receipts-and-rewind",
+        "verdict": "OK",
+        "count": 27,
+        "receipts": [
+          {
+            "item_id": "weekly-reflection",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "variance-analysis",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "tech-debt",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "roadmap",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "renewal-prep",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "process-audit",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "pipeline-health",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "metrics-review",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "messaging-audit",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "incident-review",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "health-score",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "feature-decision",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "expansion-opportunities",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "design-system-audit",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "design-review",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "delegate-check",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "decision-log",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "deal-review",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "customer-intel",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "content-calendar",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "close-status",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "campaign-review",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "call-prep",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "board-prep",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "audience-intel",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "architecture-decision",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          },
+          {
+            "item_id": "account-plan",
+            "item_version": "1.0.0",
+            "status": "adopted",
+            "transaction_id": "20260801T014439-11b8f5ce",
+            "when": "2026-08-01T01:44:39",
+            "rewindable": true,
+            "rewind_verdict": "OK"
+          }
+        ],
+        "surface": "27 adopted item receipt record(s); 27 pass the receipt-backed rewind preflight."
+      }
+    ]
+  }
+}

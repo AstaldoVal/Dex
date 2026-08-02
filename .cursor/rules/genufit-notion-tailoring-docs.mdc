@@ -1,0 +1,36 @@
+---
+description: После смены логики блока тейлоринга Genufit — обновить BA-документацию в Notion (тот же turn).
+globs:
+  - 04-Projects/Applicator/apps/api/app/services/resume_optimization.py
+  - 04-Projects/Applicator/apps/api/app/services/optimization_*.py
+  - 04-Projects/Applicator/apps/api/app/services/summary_*.py
+  - 04-Projects/Applicator/apps/api/app/services/work_experience_*.py
+  - 04-Projects/Applicator/apps/api/app/services/skills_*.py
+  - 04-Projects/Applicator/apps/api/app/services/certifications_*.py
+  - 04-Projects/Applicator/apps/api/app/services/tailoring_policy.py
+  - 04-Projects/Applicator/apps/api/app/services/actionable_feedback_policy.py
+  - 04-Projects/Applicator/apps/api/app/routers/optimization.py
+  - 04-Projects/Applicator/packages/web/src/hooks/useResumeOptimization.ts
+  - 04-Projects/Applicator/packages/web/src/lib/optimization/**
+  - 04-Projects/Applicator/packages/web/src/components/ResumeDetail/optimization/**
+  - 04-Projects/Applicator/CONTEXT.md
+  - 04-Projects/Applicator/docs/product/**
+  - 04-Projects/Applicator/docs/adr/**
+alwaysApply: false
+---
+
+# Genufit: синк документации тейлоринга в Notion
+
+Канон внутри репозитория Genufit/Applicator: `04-Projects/Applicator/.cursor/rules/notion-tailoring-docs/RULE.md`.
+
+## Hard
+
+После изменения **логики** любого блока тейлоринга резюме (Contact, Title, Summary, Work Experience, Skills, Education, Certifications / Interests / Languages, оркестратор волн, риски процесса) — **в том же turn** обновить актуальным описанием страницы в Notion:
+
+**Genufit Workspace → Product → Product Specs → Resume Tailoring — Process Documentation**
+
+Хаб: https://app.notion.com/p/3a495be3dfbe8144baf6d7d4836af996
+
+Не закрывать задачу без Notion-апдейта (кроме чистого рефактора без смены поведения или явного «без Notion» от Roman).
+
+В ответе Roman — ссылка на обновлённую страницу.

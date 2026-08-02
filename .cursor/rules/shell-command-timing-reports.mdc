@@ -1,0 +1,47 @@
+---
+description: Shell/background runs — always state time limit and ETA (never vague "waiting")
+alwaysApply: true
+---
+
+# Shell commands: лимит и ETA обязательны
+
+Перед **любой** shell-командой, subagent/background shell или делегированием, если ожидаемо **>10 с** **или** задан явный лимит (`block_until_ms`, timeout, watched wrapper), отправь **одну** короткую строку пользователю **до** старта:
+
+1. **Цель** — что делаем (не «running command»).
+2. **Лимит** — число + единица (`block_until_ms: 180000` → 3 min; npm watched → см. env; stall → kill).
+3. **ETA** — локальное время окончания = сейчас + лимит (`HH:MM` или ISO; timezone: Europe/Lisbon, иначе системный local).
+
+Шаблон: `→ <цель> | лимит: <N> | готово ~<HH:MM> (<TZ>)`
+
+## Запрещено без лимита и ETA
+
+- «Waiting for one command to finish»
+- «Running command» / «Executing…»
+- «This may take a while» (без цифр)
+- Любой абстрактный статус «жду / выполняю» без тайминга
+
+## Примеры
+
+❌ `Waiting for one command to finish.`  
+❌ `Running npm install — this may take a while.`
+
+✅ `→ Сборка проекта (npm run build) | лимит: 5 min (block_until_ms: 300000) | готово ~16:42 (Europe/Lisbon)`  
+✅ `→ Teal apply feedback (job-search) | лимит: 25 min pipeline / 2 min stall | готово ~17:05 | см. job-search-teal-timeouts.mdc`
+
+## Background / subagent
+
+Тот же формат при делегировании: цель, лимит ожидания родителя, ETA. Если лимит неизвестен — оцени консервативно и укажи «оценка».
+
+## После завершения
+
+Если закончилось раньше лимита — одна фраза с фактической длительностью допустима (`готово за 42 с`).
+
+## Job-search Teal
+
+Для `.scripts/job-search/**` и Teal / Claude Code review — лимиты из `job-search-teal-timeouts.mdc` (`RESUME_PIPELINE_WAIT_MS`, `JOB_SEARCH_STALL_MS`).
+
+**Завершение по exit, не «спать N минут»:** `npm run job-search:full-flow` и `npm run job-search:test-skills-gates-live` обёрнуты watchdog; shell возвращается, когда дочерний процесс завершился. `block_until_ms` = `npm run job-search:full-flow-total-ms` (или `block-live-total-ms` для Skills) **+ ~2 min запас**, не «45 min ожидания».
+
+**Прогресс:** `00-Inbox/Job_Search/teal/full-flow-progress.json` или `skills-gates-live/progress.json`; опрос `wait-full-flow-progress.cjs --once` / `wait-block-live-progress.cjs --once`.
+
+**Упавший тест:** `.cursor/rules/dex-failed-test-remediation.mdc` — правка теста или кода, затем повтор.

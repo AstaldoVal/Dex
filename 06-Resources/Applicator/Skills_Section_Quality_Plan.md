@@ -1,0 +1,1 @@
+../../04-Projects/Applicator/docs/product/Skills_Section_Quality_Plan.md

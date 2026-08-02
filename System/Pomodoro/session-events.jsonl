@@ -1,0 +1,556 @@
+{"event":"session_start","ts":"2026-05-09T21:22:14.668Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-09T21:27:10.807Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-09T21:27:16.285Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-09T21:32:31.628Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-09T21:36:10.786Z","source":"session","outcome":"Pomodoro-блок закрыт по session_end. В этом ходе выполнена фиксация итога в Dex: обновлена строка в session-events.jsonl по CURSOR_SESSION_OUTCOME_PROMPT."}
+{"event":"session_end","ts":"2026-05-09T21:44:31.486Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-10T16:23:02.811Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-10T16:48:32.382Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-10T20:43:39.228Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-11T09:28:18.802Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-05-11T09:28:28.045Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-11T09:28:35.408Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-11T09:53:45.953Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-11T09:53:55.285Z","source":"session","outcome":null}
+{"event":"session_end","ts":"2026-05-11T10:26:53.310Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-05-11T10:27:48.115Z","source":"session","outcome":null}
+{"notes":"Доделать Legal Checklist и дособрать все артефакты в папку","session_notes":"Доделать Legal Checklist и дособрать все артефакты в папку","session_id":"20260511102653.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_start","ts":"2026-05-11T10:35:19.529Z","source":"session","outcome":null}
+{"notes":"Short sesion test","session_notes":"Short sesion test","session_id":"20260511103612.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-11T10:36:12.658Z","source":"session","outcome":null}
+{"notes":"Short sesion test","session_notes":"Short sesion test","session_id":"20260511103612.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-11T11:08:15.989Z","source":"session","outcome":null}
+{"session_id":"20260511120318.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-11T12:03:18.574Z","source":"session","outcome":"За помидор с коротким тестом partialFocus довели сессию до штатного завершения: в журнале Session видны старт и конец с одним session_id и согласованным session_type."}
+{"session_id":"20260511120318.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-11T12:42:35.539Z","source":"session","outcome":null}
+{"session_id":"20260511120318.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-11T12:42:38.376Z","source":"session","outcome":null}
+{"session_id":"20260511120318.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-11T13:58:49.967Z","source":"session","outcome":null}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-11 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-11 14:00-15:30 Europe/Lisbon","session_id":"20260511201513.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-11T20:15:13.856Z","source":"session","outcome":null}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-11 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-11 14:00-15:30 Europe/Lisbon","session_id":"20260511201513.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-12T09:38:46.804Z","source":"session","outcome":null}
+{"notes":"Закончить писать ответ Глебу\nЗаполнить трекинг времени за вчера","session_notes":"Закончить писать ответ Глебу\nЗаполнить трекинг времени за вчера","session_id":"20260512115729.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-12T11:57:29.958Z","source":"session","outcome":null}
+{"notes":"Закончить писать ответ Глебу\nЗаполнить трекинг времени за вчера","session_notes":"Закончить писать ответ Глебу\nЗаполнить трекинг времени за вчера","session_id":"20260512115729.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-12T13:00:45.696Z","source":"session","outcome":null}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-12 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-12 14:00-15:30 Europe/Lisbon","session_id":"20260512132342.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-12T13:23:43.054Z","source":"session","outcome":null}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-12 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-12 14:00-15:30 Europe/Lisbon","session_id":"20260512132342.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-13T09:57:22.466Z","source":"session","outcome":null}
+{"notes":"1. Создать календарь для бабушки с занятыми временными слотами\n2. Спланировать звонок с Андреем\n3. Создать резюме для вакансии Evotym","session_notes":"1. Создать календарь для бабушки с занятыми временными слотами\n2. Спланировать звонок с Андреем\n3. Создать резюме для вакансии Evotym","session_id":"20260513102255.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_end","ts":"2026-05-13T10:22:55.967Z","source":"session","outcome":null}
+{"notes":"1. Создать календарь для бабушки с занятыми временными слотами\n2. Спланировать звонок с Андреем\n3. Создать резюме для вакансии Evotym","session_notes":"1. Создать календарь для бабушки с занятыми временными слотами\n2. Спланировать звонок с Андреем\n3. Создать резюме для вакансии Evotym","session_id":"20260513102255.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_start","ts":"2026-05-13T11:15:04.545Z","source":"session","outcome":null}
+{"notes":"1. Заонбордиться по использованию календаря и Слака\n2. Продолжить читать Playbook","session_notes":"1. Заонбордиться по использованию календаря и Слака\n2. Продолжить читать Playbook","session_id":"20260513140519.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-13T14:05:19.788Z","source":"session","outcome":"За помидор занимались онбордингом в календаре и Слаку и продолжили читать Playbook. Утренний план с календарём для бабушки, звонком с Андреем и резюме Evotym отложен на следующие блоки."}
+{"notes":"1. Заонбордиться по использованию календаря и Слака\n2. Продолжить читать Playbook","session_notes":"1. Заонбордиться по использованию календаря и Слака\n2. Продолжить читать Playbook","session_id":"20260513140519.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-13T19:48:06.498Z","source":"session","outcome":null}
+{"notes":"1. Анализ ответов от Юрия Скибы для Банды","session_notes":"1. Анализ ответов от Юрия Скибы для Банды","session_id":"20260513201322.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_end","ts":"2026-05-13T20:13:22.770Z","source":"session","outcome":null}
+{"session_id":"20260513212130.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"session_start","ts":"2026-05-13T21:21:36.092Z","source":"session","outcome":null}
+{"session_id":"20260513214637.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-13T21:46:38.167Z","source":"session","outcome":null}
+{"session_id":"20260513214637.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-14T11:44:59.831Z","source":"session","outcome":null}
+{"notes":"1. Пройти Daily Plan\n2. Проанализировать комментарии от Кирилла\n3. Спланировать задачи от Кирилла","session_notes":"1. Пройти Daily Plan\n2. Проанализировать комментарии от Кирилла\n3. Спланировать задачи от Кирилла","session_id":"20260514121231.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_end","ts":"2026-05-14T12:12:31.588Z","source":"session","outcome":null}
+{"session_id":"20260514122429.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"session_start","ts":"2026-05-14T12:24:31.571Z","source":"session","outcome":null}
+{"session_id":"20260514135504.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-14T13:55:04.581Z","source":"session","outcome":null}
+{"session_id":"20260514152935.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"session_start","ts":"2026-05-15T10:55:18.248Z","source":"session","outcome":null}
+{"notes":"1. Отписал Андрею фидбек по резюме\n2. Отписал Елене по своей позиции\n3. Начал собирать фидбеки от технической команды для юристов","session_notes":"1. Отписал Андрею фидбек по резюме\n2. Отписал Елене по своей позиции\n3. Начал собирать фидбеки от технической команды для юристов","session_id":"20260515112113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_end","ts":"2026-05-15T11:21:13.558Z","source":"session","outcome":"За fullFocus-блок закрыли коммуникации по найму и legal: отправил Андрею фидбек по резюме, отписал Елене по своей позиции, начал собирать фидбеки от технической команды для юристов."}
+{"notes":"1. Отписал Андрею фидбек по резюме\n2. Отписал Елене по своей позиции\n3. Начал собирать фидбеки от технической команды для юристов","session_notes":"1. Отписал Андрею фидбек по резюме\n2. Отписал Елене по своей позиции\n3. Начал собирать фидбеки от технической команды для юристов","session_id":"20260515112113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"fullFocus","event":"session_start","ts":"2026-05-15T12:28:11.638Z","source":"session","outcome":null}
+{"notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_id": "20260515130644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8", "session_type": "partialFocus", "event": "session_end", "ts": "2026-05-15T13:06:44.837Z", "source": "session", "outcome": "За partialFocus сконвертировал четыре playbook Banda (Short, General, Marketing, Technical) из Notion и локальных .md в Google Docs на r.matsukatov@banda.io — без сырого markdown, с нормальным форматированием. Slack, оплата аренды и оставшиеся пункты legal-чеклиста к отправке перенесены на следующий блок."}
+{"notes":"1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке","session_notes":"1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке","session_id":"20260515130644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-16T21:10:06.072Z","source":"session","outcome":null}
+{"notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_id": "20260515130644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8", "session_type": "partialFocus", "event": "session_end", "ts": "2026-05-16T21:23:52.025Z", "source": "session", "outcome": "Все три пункта из заметки Session закрыты: Slack проверен, оплата аренды отправлена, оставшиеся пункты legal-чеклиста собраны, пакет подготовлен к отправке."}
+{"notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_id": "20260515130644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8", "session_type": "partialFocus", "event": "stop_working", "ts": "2026-05-16T21:50:44.641Z", "source": "session", "outcome": "Все три пункта из заметки Session закрыты: Slack проверен, оплата аренды отправлена, оставшиеся пункты legal-чеклиста собраны, пакет подготовлен к отправке."}
+{"notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_notes": "1. Проверить Слак на непрочитанные\n2. Отправить деньги за аренду квартиры\n3. Продолжить собирать осставшиеся пункты по чеклисту и готовить к отправке", "session_id": "20260515130644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8", "session_type": "partialFocus", "event": "stop_working", "ts": "2026-05-16T22:29:40.731Z", "source": "session", "outcome": "Все три пункта из заметки Session закрыты: Slack проверен, оплата аренды отправлена, оставшиеся пункты legal-чеклиста собраны, пакет подготовлен к отправке."}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-16T22:38:28.654Z","source":"session","outcome":"Затянувшийся partialFocus (~1,5 ч): фокус Slack, аренда, legal-чеклист — три пункта из заметки Session уже были закрыты раньше; session_end в 22:38 — позднее завершение сессии после того, как помидор забыли вовремя остановить."}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-17T12:09:06.965Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-17T20:14:21.747Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-18T10:21:43.803Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-18T12:16:52.018Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-18T13:00:28.115Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-18T13:48:43.008Z","source":"session","outcome":null}
+{"session_id":"20260516223828.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-19T09:21:45.798Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы для отчета за 2025\n2. Продолжить дорабатывать автоматизацию резюме по AI Lead","session_notes":"1. Продолжить собирать инвойсы для отчета за 2025\n2. Продолжить дорабатывать автоматизацию резюме по AI Lead","session_id":"20260519094804.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-19T09:48:04.803Z","source":"session","outcome":"За partialFocus (~27 мин) по плану Session продолжил сбор инвойсов для отчёта 2025 и доработку автоматизации резюме AI Lead (Teal/Cowork, skills pipeline); оба пункта к концу блока остаются в работе."}
+{"notes":"1. Продолжить собирать инвойсы для отчета за 2025\n2. Продолжить дорабатывать автоматизацию резюме по AI Lead","session_notes":"1. Продолжить собирать инвойсы для отчета за 2025\n2. Продолжить дорабатывать автоматизацию резюме по AI Lead","session_id":"20260519094804.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-19T09:50:07.288Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы за 2025\n2. Дать фидбек по структуре папок Андрею","session_notes":"1. Продолжить собирать инвойсы за 2025\n2. Дать фидбек по структуре папок Андрею","session_id":"20260519101838.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-19T10:18:38.551Z","source":"session","outcome":"За partialFocus (~28 мин): сформулировал для Андрея масштабируемую систему папок задания — один README (статус, исполнитель, путь к результату + описание задачи), три папки 01-in / 02-work / 03-deliver; шаблон README, без TASK/LOG, журнала и автоматизации; пояснил опциональный _index.md. Сбор инвойсов за 2025 в этом блоке не трогал."}
+{"notes":"1. Продолжить собирать инвойсы за 2025\n2. Дать фидбек по структуре папок Андрею","session_notes":"1. Продолжить собирать инвойсы за 2025\n2. Дать фидбек по структуре папок Андрею","session_id":"20260519101838.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-19T10:24:08.772Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519105036.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-19T10:50:37.313Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519105036.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-19T10:52:33.289Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519114137.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-19T11:41:37.799Z","source":"session","outcome":"За partialFocus (~49 мин, 10:52–11:41) по плану Session: пункт 2 — обновлён чеклист трекинга оркестрации агентов для чата «Суть нейронауки» (pinned-week1-checklist, правки Week01). Инвойсы за 2025, резюме AI Consultant и список покупок для Мии в Dex за этот интервал не отражены."}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519114137.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-19T12:26:17.542Z","source":"session","outcome":null}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519114137.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-20T10:11:39.503Z","source":"session","outcome":"Между session_start 19.05 12:26 UTC и stop_working 20.05 10:12 UTC прошло ~22 ч при неизменном четырёхпунктовом фокусе Session — похоже, partialFocus оставался включённым между реальными блоками работы. Пункт 2 по чату «Суть нейронауки» уже зафиксирован в предыдущем session_end того же дня; по инвойсам за 2025, резюме AI Consultant и списку покупок для Мии за этот длинный интервал отдельных зафиксированных шагов в Dex нет — их логично вынести в следующий сфокусированный помидор."}
+{"notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_notes":"1. Продолжить собирать инвойсы\n2. Обновить задачу по трекингу эффективности в чате “Суть нейронауки”\n3. Доработать резюме AI Consultant\n4. Сформировать список покупок для Мии с помощью агента","session_id":"20260519114137.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-20T13:02:52.846Z","source":"session","outcome":null}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-20 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-20 14:00-15:30 Europe/Lisbon","session_id":"20260520144307.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-05-20T14:43:07.968Z","source":"session","outcome":"Dex Deep Work (~40 мин): довели резюме Adwa PM/PO в Teal — шаги 9–10 (Cowork feedback, apply v1, PDF в Applied), универсальный step-10-eval и скрипт deferred-apply; interests, rewrites EBET/Pin-Up, skills iGaming и шапка без Substack/GitHub внедрены, два новых буллета и порядок Product Management выше AI остались на ручную доводку в Teal."}
+{"session_title":"Dex Deep Work","title":"Dex Deep Work","notes":"[DEX_DEEPWORK] 2026-05-20 14:00-15:30 Europe/Lisbon","session_notes":"[DEX_DEEPWORK] 2026-05-20 14:00-15:30 Europe/Lisbon","session_id":"20260520144307.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-21T10:18:07.508Z","source":"session","outcome":null}
+{"notes": "1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent", "session_notes": "1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent", "session_id": "20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8", "session_type": "partialFocus", "event": "session_end", "ts": "2026-05-21T11:27:14.294Z", "source": "session", "outcome": "За partialFocus ~69 мин (Dex Deep Work) довели Powertalent и Adwa из заметки Session: Powertalent — шаги 9–10 Cowork→apply с eval PASS, hotfix по семи пунктам ревью (summary без B2, MGA/Curaçao из AI, Glorium, LATAM, EBET wording), PDF в Applied; Adwa — step 10 apply PASS, обновлён CV в Applied, девять пунктов deferred_v1 (Languages, iGaming callout, ATS) остаются вне автоматики. Сжатие Product Management до 12–15 в Teal запрошено в конце помидора — к session_end не закрыто."}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-21T13:02:01.182Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-21T13:02:04.612Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-22T13:32:21.517Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-23T13:51:52.306Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-25T06:25:04.443Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-25T14:24:20.623Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-26T13:01:49.107Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-26T13:01:49.321Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-26T14:32:06.933Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-27T13:01:04.741Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-27T13:01:19.372Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-27T13:01:23.261Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-28T10:30:45.706Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-28T13:02:37.960Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-28T20:45:22.925Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-05-29T13:05:21.914Z","source":"session","outcome":null}
+{"notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_notes":"1. Доделать резбме для Adwa\n2. Доделать резюме для Powertalent","session_id":"20260521112713.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-05-31T11:26:00.054Z","source":"session","outcome":null}
+{"session_id":"20260606090819.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"session_start","ts":"2026-06-06T09:08:56.697Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-06-06T11:51:13.727Z","source":"session","outcome":"Пик 2 [DEX-RHYTHM] (~10:05–11:35 Lisbon): собрали персональное недельное расписание BRAIN в brain-activity-schedule.md (садик Мии 8:30–10:30, бассейн пн/чт 17:30–18:15, силовые вт 18:00–19:30 и сб 11:30–12:30 при Мие в Арт Хоуме, холодный душ утром, язык — после садика). Добавили memory-log.md с пошаговой тренировкой памяти, обновили brain-protocol-config и Google Calendar BRAIN; починили sync серий по id (субботний зал не создавался) и зафиксировали обе силовые в календаре."}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T12:01:16.541Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-06T12:01:30.007Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T12:01:31.817Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-06T14:45:18.453Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T14:50:36.974Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-06T16:20:23.435Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T16:40:47.758Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-06T18:11:24.797Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T18:31:54.543Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-06T20:02:32.719Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-06T20:22:57.778Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T07:02:06.411Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T07:17:53.787Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T08:48:33.514Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T10:34:42.956Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T10:39:49.637Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T10:55:15.092Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T12:25:58.592Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T13:01:52.149Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T14:32:37.014Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T14:53:03.455Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-07T16:23:51.765Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-07T16:44:24.215Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T07:14:00.526Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T07:19:30.772Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T08:45:17.211Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T09:05:50.064Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T10:36:37.975Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T10:57:13.498Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T12:28:51.766Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T13:05:01.023Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T14:31:39.545Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T14:52:22.764Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T16:23:55.425Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T16:44:38.550Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T18:10:46.463Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T18:31:22.900Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-08T20:02:32.967Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-08T20:23:10.576Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-10T12:09:02.591Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-16T08:23:02.150Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-21T16:12:23.941Z","source":"session","outcome":null}
+{"session_title":"Пик 2 [DEX-RHYTHM]","title":"Пик 2 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_notes":"[DEX_RHYTHM] kind=peak date=2026-06-06 10:05-11:35 Europe/Lisbon","session_id":"20260606115113.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-06-21T16:23:37.608Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-21T16:44:09.723Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-21T18:09:57.186Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-21T18:09:58.817Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-21T18:15:06.910Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-21T18:30:25.480Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-21T20:01:11.563Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-21T20:21:44.056Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-21T21:52:34.311Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T07:34:41.651Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T08:45:28.313Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T09:05:56.630Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T10:37:11.435Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T10:57:38.314Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T12:28:29.474Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T13:04:26.719Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T14:30:25.096Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T14:50:57.390Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T16:21:59.721Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T16:42:36.006Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T18:13:32.470Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T18:33:58.660Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T20:04:49.452Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-22T20:20:19.312Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-22T21:51:11.590Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T07:16:34.787Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T08:45:56.484Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T09:06:31.920Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T10:37:23.891Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T10:57:51.285Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T12:28:46.401Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T13:16:26.677Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T14:46:30.745Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T15:37:14.871Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T16:37:59.562Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T16:43:10.427Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T18:13:59.332Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T18:34:32.546Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T20:00:24.640Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-23T20:20:52.784Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-23T21:51:46.996Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T07:17:17.564Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T08:48:11.809Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T09:08:43.982Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T10:39:32.898Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T10:59:59.723Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T12:25:48.081Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T13:01:45.270Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T14:32:43.582Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T14:53:13.326Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T16:24:08.237Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T16:44:41.345Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T18:10:31.723Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T18:31:04.504Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-24T20:01:54.403Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-24T20:22:24.951Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T08:00:20.594Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T08:00:32.795Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T09:40:46.712Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T09:40:46.712Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T10:47:15.303Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T10:57:34.839Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T12:28:28.410Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T13:04:26.020Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T14:30:22.420Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T14:50:55.729Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T16:21:54.319Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T16:42:27.611Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T18:13:18.758Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T18:33:47.322Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T20:04:40.123Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-25T20:25:10.614Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-25T21:50:54.820Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T07:16:17.071Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T08:47:12.385Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T09:07:45.319Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T10:38:39.650Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T10:59:11.494Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T12:24:59.644Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T12:25:01.321Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T12:30:10.120Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T13:00:59.451Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T14:58:10.497Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T14:58:13.327Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T16:25:59.708Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T16:56:28.246Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T18:26:49.752Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T19:33:37.269Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T20:20:30.753Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-26T20:20:32.318Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-26T21:52:57.427Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T07:42:37.652Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T08:48:22.776Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T10:00:09.129Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T11:01:45.854Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T11:01:47.350Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T13:05:38.817Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T13:05:39.359Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T15:50:13.357Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T16:51:55.328Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T16:51:56.695Z","source":"session","outcome":null}
+{"session_title":"Пик 4 [DEX-RHYTHM]","title":"Пик 4 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] peak Пик 4 [DEX-RHYTHM]","session_notes":"[DEX_RHYTHM] peak Пик 4 [DEX-RHYTHM]","session_id":"20260627144148.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-06-27T17:38:18.734Z","source":"session","outcome":"Пик 4 [DEX-RHYTHM] (~15:41–18:38 Lisbon, затянутый partialFocus): фоновые heartbeat Applicator — Content Writer подтвердил Post 19 (255 слов, drift v6.3.3 PASS), Community Manager прогнал конкурентный batch #90, CTO перевёл HIR-70 (waitlist) в in_review после 6 passed unit-тестов и staging probe без регрессии; exec/CPO/Design — idle, board gates на Roman (HIR-65, HIR-457, HIR-562, Accept HIR-70)."}
+{"event":"stop_working","ts":"2026-06-27T18:10:13.469Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T18:30:46.609Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T20:01:32.057Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-27T20:22:02.254Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-27T21:52:44.414Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T07:17:04.667Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T08:47:50.146Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T09:08:16.757Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T11:02:39.077Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T11:02:40.352Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T12:26:55.381Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T13:34:27.573Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T14:49:14.804Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T16:01:30.583Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T16:56:08.959Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T16:56:10.541Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T18:52:24.138Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-28T18:52:25.208Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-28T20:00:02.370Z","source":"session","outcome":null}
+{"session_title":"Пик 4 [DEX-RHYTHM]","title":"Пик 4 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] peak Пик 4 [DEX-RHYTHM]","session_notes":"[DEX_RHYTHM] peak Пик 4 [DEX-RHYTHM]","session_id":"20260627144148.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_start","ts":"2026-06-28T21:53:21.176Z","source":"session","outcome":null}
+{"session_title":"Пик 8 [DEX-RHYTHM]","title":"Пик 8 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] peak Пик 8 [DEX-RHYTHM]","session_notes":"[DEX_RHYTHM] peak Пик 8 [DEX-RHYTHM]","session_id":"20260628215644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"session_end","ts":"2026-06-28T21:56:44.901Z","source":"session","outcome":"Пик 8 [DEX-RHYTHM] (~22:53–22:56 Lisbon, короткий partialFocus): фоновый мониторинг Applicator — CTO heartbeat подтвердил HIR-70 in_review и staging без регрессии; Head of Design — inbox пуст, idle; board gates на Roman без сдвига."}
+{"event":"session_start","ts":"2026-06-29T07:32:16.052Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T08:47:55.518Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T09:08:26.846Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T10:39:12.295Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T10:59:39.273Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T12:25:47.336Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T13:01:42.630Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T14:32:39.167Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T14:53:14.379Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T16:24:15.005Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T16:44:48.875Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T18:10:47.055Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T18:31:19.117Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T20:02:11.788Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-29T20:22:44.105Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-29T21:53:33.587Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T07:19:59.522Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T08:46:02.426Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T09:06:37.802Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T10:37:41.778Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T10:58:19.566Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T10:58:35.707Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T11:03:27.739Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T12:24:30.469Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T12:24:32.065Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T12:29:39.379Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T13:48:39.186Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T14:47:34.633Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T15:16:03.381Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-06-30T20:48:45.269Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-06-30T20:48:46.901Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-01T07:03:07.176Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-01T16:14:23.594Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-02T09:32:30.643Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-02T09:32:32.301Z","source":"session","outcome":null}
+{"session_title":"Пик 8 [DEX-RHYTHM]","title":"Пик 8 [DEX-RHYTHM]","notes":"[DEX_RHYTHM] peak Пик 8 [DEX-RHYTHM]","session_notes":"[DEX_RHYTHM] peak Пик 8 [DEX-RHYTHM]","session_id":"20260628215644.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"partialFocus","event":"stop_working","ts":"2026-07-06T10:27:31.370Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-07T16:42:09.654Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-07T18:12:36.406Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-07T18:33:03.461Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-07T20:03:53.304Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-07T20:24:26.902Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-07T21:50:17.339Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T07:15:14.110Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T11:49:12.085Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T11:49:13.024Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T11:54:00.285Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T11:54:02.074Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T12:29:29.782Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T13:00:20.314Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T14:31:15.273Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T14:51:43.842Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T16:22:38.783Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T16:43:12.209Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T18:09:36.100Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T18:09:37.909Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T18:14:44.852Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T18:30:03.971Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T20:13:07.086Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-08T20:23:25.512Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-08T21:53:26.249Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T08:00:15.432Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T09:31:49.024Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T09:31:50.625Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T10:37:53.245Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T10:58:26.881Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T12:27:14.641Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T13:03:16.169Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T14:34:12.179Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T14:54:44.653Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T16:20:37.141Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T16:41:07.407Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T18:12:01.843Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T18:32:34.145Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T20:03:26.231Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-09T20:23:54.456Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-09T21:54:51.122Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T07:15:39.221Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T08:46:38.213Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T09:07:08.047Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T10:38:01.866Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T10:58:34.728Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T12:24:44.460Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T12:24:46.054Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T12:29:53.625Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T13:00:52.047Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T15:27:02.658Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T15:27:04.102Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T16:53:16.096Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T16:53:17.801Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T19:17:51.407Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T19:17:52.946Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T20:50:53.400Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-10T20:50:54.756Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-10T21:53:03.354Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T08:35:58.479Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T09:40:36.516Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T09:40:38.130Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T10:37:46.687Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T10:58:18.161Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T12:29:24.739Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T13:00:13.531Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T14:30:26.166Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T14:51:01.940Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T16:22:07.194Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T16:42:42.670Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T18:13:46.331Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T18:34:22.137Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T20:00:26.670Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-11T20:21:02.497Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-11T21:52:10.081Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T08:21:05.854Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T08:46:24.167Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T09:06:56.263Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T13:08:52.565Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T13:08:54.022Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T15:25:35.579Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T15:25:37.139Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T16:21:16.412Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T16:41:44.388Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T18:12:33.618Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T18:33:01.032Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T20:03:48.268Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-12T20:24:20.113Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-12T21:50:07.547Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T07:15:18.938Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T08:46:10.346Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T09:06:43.325Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T10:37:34.066Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T10:58:01.513Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T12:28:55.136Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T13:04:48.954Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T14:30:54.960Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T14:51:24.886Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T16:22:29.039Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T19:55:20.053Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T20:03:52.182Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-13T20:24:25.660Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-13T21:50:16.954Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T07:15:59.150Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T08:46:53.448Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T09:07:28.927Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T10:38:24.468Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T10:58:57.786Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T12:29:51.452Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T13:00:47.110Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T14:32:31.857Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T14:52:59.830Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T16:44:31.435Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T18:10:23.519Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T18:30:51.216Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T20:01:42.214Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-14T20:22:00.935Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-14T21:54:25.147Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-15T09:08:54.845Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-15T10:39:53.972Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-15T10:55:17.683Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-15T12:26:19.619Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-15T13:03:40.792Z","source":"session","outcome":null}
+{"session_id":"20260714202200.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"stop_working","ts":"2026-07-15T22:00:18.170Z","source":"session","outcome":null}
+{"session_id":"20260714202200.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"stop_working","ts":"2026-07-15T22:00:18.211Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T07:01:29.343Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T08:58:37.705Z","source":"session","outcome":null}
+{"session_id":"20260714202200.00000@BF79202C-1A25-4959-B0E4-11EEAB162FE8","session_type":"rest","event":"session_start","ts":"2026-07-16T08:58:56.301Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T09:07:39.992Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T10:38:26.514Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T10:58:57.713Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T12:27:25.941Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T13:03:26.324Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T14:34:15.623Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T14:54:47.487Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T16:20:43.085Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T16:41:19.711Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T18:12:15.267Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T18:32:46.357Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T20:03:30.168Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-16T20:23:56.967Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-16T21:54:40.711Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T07:50:46.214Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T08:46:18.122Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T10:55:14.997Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T13:52:17.116Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T13:52:18.153Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T14:32:42.156Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T14:53:17.230Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T16:24:09.167Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T16:44:42.803Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T18:10:31.862Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T18:31:03.167Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T20:01:49.785Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-17T20:22:22.537Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-17T21:53:07.901Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T07:19:45.286Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T08:46:12.734Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T09:06:38.643Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T10:37:19.479Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T11:13:16.897Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T12:56:04.805Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T14:22:49.088Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T15:29:43.157Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T15:29:44.386Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T17:27:33.580Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T17:27:34.640Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T18:54:26.706Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T18:54:27.958Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T20:28:40.338Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-18T20:28:41.524Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-18T21:50:27.757Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T07:19:42.742Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-19T08:45:31.137Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T09:05:56.719Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T10:57:14.960Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-19T10:57:16.991Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T11:02:23.088Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-19T12:28:05.228Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T15:40:10.594Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-19T18:42:59.091Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-19T18:43:00.053Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-19T21:52:14.858Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T07:18:55.203Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T08:49:40.029Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T09:05:03.323Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T09:05:06.832Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T09:10:11.559Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T13:04:47.799Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T14:30:51.895Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T14:51:19.505Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T16:22:13.598Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T18:30:10.404Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T20:03:23.094Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T20:23:40.325Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T21:49:59.419Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-20T21:50:00.851Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-20T21:55:09.331Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T07:19:52.439Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T07:19:54.369Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T07:25:01.262Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T07:25:03.244Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T07:30:10.014Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T07:30:21.396Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T07:35:18.814Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T07:35:22.249Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T07:40:27.332Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T08:46:01.343Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:06:32.663Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T09:06:34.083Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:11:42.266Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T09:11:46.991Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:16:50.336Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T09:16:51.830Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:21:58.153Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T09:22:00.094Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:27:08.048Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T09:27:12.571Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T09:32:15.958Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T10:37:50.005Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T10:58:22.410Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T12:29:19.558Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T13:00:09.238Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T14:31:04.302Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T14:51:37.267Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T16:22:28.613Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T16:42:55.955Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T18:13:43.970Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T18:34:16.949Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T19:59:59.643Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T20:00:01.089Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T20:05:07.578Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T20:20:29.553Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T20:20:33.413Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-21T20:25:38.280Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-21T21:51:26.076Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T07:18:30.668Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T08:49:26.100Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T09:09:58.571Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T10:35:47.321Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T10:56:14.575Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T12:27:00.963Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T13:02:55.591Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T14:54:08.201Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T19:20:57.476Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T19:21:05.562Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T20:20:23.085Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T20:20:25.409Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-22T20:25:31.322Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-22T21:51:12.924Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T07:15:18.487Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T08:46:16.844Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T09:06:49.090Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T10:37:37.323Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T10:58:29.167Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T12:29:19.680Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T13:05:08.336Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T14:30:54.909Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T14:51:31.365Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T16:22:22.439Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T16:42:54.729Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T18:13:40.107Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T18:34:07.958Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T19:59:54.564Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T19:59:56.023Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T20:00:01.274Z","source":"session","outcome":null}
+{"event":"session_start","ts":"2026-07-23T20:20:23.924Z","source":"session","outcome":null}
+{"event":"stop_working","ts":"2026-07-23T21:51:16.957Z","source":"session","outcome":null}

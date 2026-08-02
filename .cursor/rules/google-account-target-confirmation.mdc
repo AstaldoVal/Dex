@@ -1,0 +1,18 @@
+# Google target account confirmation (mandatory)
+
+Before any write operation to Google services, the agent must explicitly confirm the target account with the user unless the user already specified it in the same request.
+
+Applies to all Google outputs:
+- Google Docs
+- Google Sheets / Spreadsheets
+- Google Slides
+- Google Drive files/folders
+- Any other Google artifact created or uploaded through MCP/API/scripts
+
+Required flow:
+1. Ask user target account (`personal` or `work`) if not explicitly stated.
+2. Verify active OAuth account identity (email) via MCP/API before write.
+3. If active account does not match selected target, stop and request re-auth.
+4. Only then create/upload/update the artifact.
+
+Do not silently write to whichever account is currently authorized.

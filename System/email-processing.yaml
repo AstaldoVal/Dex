@@ -1,0 +1,45 @@
+accounts:
+  - personal
+
+auto_mark_read:
+  security_notifications: true
+  financial_digest: true
+  services_tools: true
+  calendar_notifications: true
+
+auto_archive:
+  security_notifications: false
+  marketing: false
+  digest_labelled: true
+  digest_older_than_days: 7
+
+priority_exclude:
+  senders:
+    - revolut.com
+    - kucoin.com
+    - binance.com
+    - whitebit.com
+  subject_patterns:
+    - security
+    - payment
+    - sign-in
+    - signed in
+    - new login
+    - verification code
+    - "notification:"
+
+auto_extract_tasks:
+  enabled: true
+  require_confirmation: false
+
+digest:
+  enabled: true
+  output_path: 00-Inbox/Email/daily-digest.md
+  priority_path: 00-Inbox/Email/daily-priority.md
+  feeds_manifest: System/email-newsletters.yaml
+  log_path: System/logs/email-digest.jsonl
+  max_digest_items: 25
+  link_to_gmail_labels: true
+  action_query: 'label:Dex/Action is:unread newer_than:2d'
+  read_ai_query: 'label:Dex/Read-AI is:unread newer_than:2d'
+  job_query: 'label:Dex/Job is:unread newer_than:1d'

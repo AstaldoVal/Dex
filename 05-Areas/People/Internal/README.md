@@ -1,3 +1,21 @@
+---
+type: guide
+domain: areas
+area: people
+cluster: areas-people
+status: active
+review: '2026-05-01'
+moc: '[[05-Areas/People/_MOC_People]]'
+change_log: '[[System/Change_Log/2026-04#2026-04-22-batch-areas]]'
+tags:
+- dex/note
+- dex/domain/areas
+- dex/area/people
+parent_moc: '[[05-Areas/_MOC_Areas]]'
+---
+
+Graph links: [[05-Areas/_MOC_Areas]] | [[05-Areas/People/_MOC_People]] | [[System/Change_Log/2026-04#2026-04-22-batch-areas]]
+
 # Internal
 
 Colleagues, teammates, and internal stakeholders.

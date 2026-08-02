@@ -1,3 +1,22 @@
+---
+type: guide
+domain: projects
+project: root
+cluster: projects-root
+status: active
+review: '2026-05-01'
+moc: '[[04-Projects/_MOC_Projects]]'
+change_log: '[[System/Change_Log/2026-04#2026-04-22-batch-projects]]'
+tags:
+- dex/note
+- dex/domain/projects
+- dex/project/root
+parent_moc: '[[04-Projects/_MOC_Projects]]'
+project_hub: '[[04-Projects/_Vault_Root_Projects_Hub]]'
+---
+
+Graph links: [[04-Projects/_MOC_Projects]] | [[04-Projects/_Vault_Root_Projects_Hub]] | [[System/Change_Log/2026-04#2026-04-22-batch-projects]]
+
 # Projects
 
 Time-bound initiatives with clear goals and deliverables.

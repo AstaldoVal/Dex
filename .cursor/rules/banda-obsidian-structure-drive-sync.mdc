@@ -1,0 +1,44 @@
+---
+description: Після змін структури або вмісту Obsidian у трьох пакетах Banda (Board, Presentations Bundle, External Audits) — у тому ж ході залити на Google Drive; винятки як у content-only
+globs:
+alwaysApply: true
+---
+
+# Banda: Obsidian → Google Drive одразу після змін
+
+Це правило стосується **локальних** дерев у репозиторії:
+
+1. **`04-Projects/Banda/banda-drive-import/1. Board/`** (Obsidian-структура та картки, як описано в README цього пакета)
+2. **`04-Projects/Banda/banda-drive-import/2. Banda Presentations Bundle/`** — **`Obsidian/`** поруч із контентом у кожній секції, як у Board (індекси + `.board-card.md`); заливка на Drive усіх **`**/Obsidian/**/*.md`** з повним шляхом від кореня bundle
+3. **`04-Projects/Banda/banda-drive-import/3. External_Audits/`** — тек **`Obsidian/`** з контентними `.md`
+
+## Обов’язкова дія агента
+
+Після **будь-якого** кроку, де ти **додаєш, перейменовуєш, видаляєш** файли або папки в межах **структури Obsidian** у цих трьох коренях (або оновлюєш контент `.md` у `Obsidian/`, якщо це частина «структури» для користувача на Drive), **в тому ж turn** запусти відповідний синк на Google Drive і перевір успіх (exit code / звіт JSON), **не відкладаючи** на «потім».
+
+**Заборонено** завершувати таку задачу **лише** `--dry-run` і пояснювати «реальний синк не робив». За замовчуванням — **повний** синк (команда **без** `--dry-run`). Прапор `--dry-run` і npm-суфікс `:dry-run` — **тільки** якщо користувач **явно** просить перегляд без запису на Drive або ти діагностуєш помилку API; це **не** заміна фінального заливу після змін структури.
+
+## Drive = локалка (видалення застарілого)
+
+Після зміни архітектури на диску репозиторію **Google Drive для відповідного пакета має відповідати локалці**, а не накопичувати артефакти старої схеми. Скрипти синку **зобов’язані** робити автоматичне прибирання там, де воно вже реалізоване:
+
+- **Board** (як і раніше): у корзину йдуть застарілі **`Индекс Board.md`** і **дублікати** `*.md` у тій самій теці на Drive, що й підпапка **`Obsidian/`**, якщо однойменний `.md` уже є всередині **`Obsidian/`**.
+- **Presentations Bundle** та **External Audits**: ті самі **дублікати** `*.md` поруч з **`Obsidian/`**; додатково — **коренева** тека **`Obsidian/`** на Drive під коренем bundle / пакета External Audits відправляється в кошик, **якщо локально** в корені цього пакета **немає** теки **`Obsidian/`** (залишок попередньої викладки в один корінь).
+
+У звітах JSON див. поля **`drive_duplicate_root_md_trashed`**, **`drive_stale_root_obsidian_folder_trashed`** (де застосовується). Інші сирі «хвости» на Drive без локального аналога — прибирати окремими cleanup-скриптами або вручну в UI, доки не додано правило в репо.
+
+## Команди (з кореня репозиторію)
+
+- **Board:** `npm run banda:board-drive-sync` (або `python3 .scripts/banda/generate_board_obsidian_cards_and_drive_upload.py` **без** `--dry-run`). Діагностика без запису: `npm run banda:board-drive-sync:dry-run`.
+- **Presentations Bundle:** `npm run banda:presentations-bundle-drive-sync` (або той самий скрипт з потрібними прапорами: `--skip-docx-xlsx`, `--skip-media-decks`, `--legacy-auto-office-folders` за README пакета). Контентні ноти **`Obsidian/**/*.md`** заливаються **за замовчуванням**; вимкнути лише їх: **`--skip-obsidian-notes-drive`**. Тільки ноти + media без office: `npm run banda:presentations-bundle-drive-sync:obsidian-only`. Діагностика: `npm run banda:presentations-bundle-drive-sync:dry-run`.
+- **External Audits:** `npm run banda:external-audits-drive-sync` або `python3 .scripts/banda/external_audits_drive_upload.py` **без** `--dry-run`. Діагностика: `npm run banda:external-audits-drive-sync:dry-run`.
+
+## Винятки (не заливати на ці три Drive-корені)
+
+Узгоджено з **`.cursor/rules/banda-google-drive-content-only.mdc`**:
+
+- **`.obsidian/`**, **`00-Index.md`**, **`README.md`** у **корені** bundle (і подібна vault-мета) — **не** на Drive без явного legacy **`--upload-vault-meta-to-drive`** у скрипті презентацій.
+- У теці **`Obsidian/`** для **контентних** `.md` **не** заливаються файли з базовими іменами **`README.md`**, **`CHANGELOG.md`**, **`AGENTS.md`**, **`00-Index.md`** на будь-якій глибині (скрипти їх пропускають).
+- Решта **системних** артефактів репо (`.cursor/`, `.scripts/` як окремі заливки тощо) — не в цих Drive-деревах.
+
+Якщо синк **неможливий** (немає credentials, помилка API після self-heal): коротко напиши в чаті причину та що зробити людині один кроком (OAuth / env), без перенесення «залий сам».

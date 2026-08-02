@@ -39,18 +39,16 @@ alwaysApply: true
 
 ## Staging deploy (обязательно после правок Applicator)
 
-Roman смотрит результат на **staging**. **Агент деплоит сам** в том же turn после коммита. **Запрещено** писать Roman: «задеплой», «обнови staging», «сделай hard refresh после деплоя у себя», «скажи, если задеплоить», «хочешь deploy?».
+Roman смотрит результат на **staging**. **Канон на `main`:** commit → **push** → дождаться workflow **Deploy Staging** в GitHub Actions (проверка → выкат по путям → дым). **Запрещено** писать Roman: «задеплой», «обнови staging», «хочешь deploy?».
 
-После **любой** логически завершённой правки под `04-Projects/Applicator/**`, которую Roman должен проверить в браузере или через API на staging:
+После **любой** логически завершённой правки под `04-Projects/Applicator/**`, которую Roman должен проверить на staging:
 
 1. Commit в Applicator git (см. выше).
-2. **Сразу** из `04-Projects/Applicator`:
-   - UI / `packages/web/**` → `./scripts/deploy-staging-pages.sh`
-   - API / `apps/api/**` → `./scripts/deploy-staging-api.sh`
-   - оба затронуты → **сначала API**, затем Pages (в том же turn).
-3. Дождаться exit code; в ответе Roman — только **факт деплоя** (URL, revision/sha, exit 0), **без** инструкции «запусти deploy сам».
+2. **Push в `main`** (из корня репозитория Applicator).
+3. Дождаться зелёного прогона [Actions → Deploy Staging](https://github.com/AstaldoVal/applicator/actions); в ответе — ссылка на run + staging URL.
+4. **Локальные** `./scripts/deploy-staging-pages.sh` / `deploy-staging-api.sh` — только если Roman просит «быстрее прямо сейчас», Actions недоступен, или нужен preview до merge; после merge в `main` история всё равно должна появиться в Actions.
 
-**Не спрашивать** разрешение на deploy. **Исключения:** Roman явно написал в **этом** сообщении «без deploy» / «не деплой» / «только локально»; deploy упал — ошибка + self-heal + повтор deploy (не перекладывать на Roman).
+**Не спрашивать** разрешение на deploy. **Исключения:** Roman явно написал в **этом** сообщении «без deploy» / «не деплой» / «только локально»; deploy/Actions упал — ошибка + self-heal + повтор (не перекладывать на Roman).
 
 Канон внутри Applicator: `04-Projects/Applicator/.cursor/rules/staging-deploy/RULE.md`.
 
@@ -58,4 +56,5 @@ Roman смотрит результат на **staging**. **Агент депл�
 
 - `.cursor/rules/applicator-resume-section-feedback.mdc` — full-flow-v2 step 9–10.
 - `.cursor/rules/dex-flow-v2-applicator-report.mdc` — отчёт Roman после apply.
+- `.cursor/rules/genufit-notion-tailoring-docs.mdc` — после смены логики блока тейлоринга обновить Notion (канон в Applicator: `.cursor/rules/notion-tailoring-docs/RULE.md`).
 - `action-first-outcomes.mdc` — git-команды выполняет агент сам.

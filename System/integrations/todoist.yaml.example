@@ -1,0 +1,4 @@
+# Copy to todoist.yaml (gitignored) or pass token to setup script.
+enabled: true
+api_token: YOUR_TOKEN_HERE
+project_name: Brain Protocol

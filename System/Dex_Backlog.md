@@ -111,6 +111,59 @@ The ideas below demonstrate the level of detail you'll see when you capture your
 
 *Example ideas provided above to show the level of detail and clarity expected.*
 
+
+
+
+- **[idea-005]** Всегда показывать результаты сабагентов на русском
+  - **Score:** 0 (not yet ranked - run `/dex-backlog` to calculate)
+  - **Category:** workflows
+  - **Captured:** 2026-05-28
+  - **Description:** Для этого пользователя все итоги работы сабагентов нужно автоматически публиковать в основном чате на русском языке, без просьбы повторять. Это должно применяться по умолчанию в новых чатах как персональное правило коммуникации.
+
+- **[idea-004]** EBET official markets and payment systems evidence
+  - **Score:** 0 (not yet ranked - run `/dex-backlog` to calculate)
+  - **Category:** knowledge
+  - **Captured:** 2026-05-28
+  - **Description:** Research snapshot for CV fact-checking (official sources only).
+
+Company: EBET, Inc. (formerly Esports Technologies; NASDAQ ticker historical EBET).
+
+OFFICIAL EVIDENCE - MARKETS:
+1) PRNewswire (EBET press release, Dec 9, 2022): states EBET brands had "over 1.4 million deposited customers in more than 15 countries".
+Source: https://www.prnewswire.com/news-releases/ebet-anticipates-england-vs-france-to-be-companys-largest-wagered-on-soccer-game-301698990.html
+
+2) SEC Form 10-K (filed Jan 2023, fiscal year Sep 30, 2022):
+- "allows us to accept wagers from residents of more than 160 jurisdictions"
+- focus regions: "Western Europe, Asia and Latin America"
+- key regulated markets include "United Kingdom, Germany, Ireland, Malta, and Denmark"
+- revenue mention includes UK, Germany, Denmark, Ireland, Austria (and other regulated markets).
+Source index: https://www.sec.gov/Archives/edgar/data/1829966/000168316823000186/0001683168-23-000186-index.htm
+Primary filing doc: https://www.sec.gov/Archives/edgar/data/1829966/000168316823000186/ebet_i10k-093022.htm
+
+3) SEC Post-Effective Amendment (Aug 1, 2024): EBET states foreclosure sale completed and company ceased further business operations.
+Source: https://www.sec.gov/Archives/edgar/data/1829966/000168316824005204/ebet_posam.htm
+
+OFFICIAL EVIDENCE - PAYMENT SYSTEMS:
+SEC 10-K provides payment categories but not named PSP/APM brands:
+- funding/payment methods include EFT and credit/debit cards
+- reliance on third-party payment processors
+- references to accepting/holding cryptocurrencies
+- strategic partnership with Aspire for managed services including payment processing.
+
+IMPORTANT LIMITATION:
+No official EBET SEC/PR source found that explicitly names PSP/APM brands like AstroPay, Nuvei, Boleto, PagoEfectivo, Pay4Fun, PIX, Interac, UPI. Those should be treated as role-specific integration experience (resume claims), not public-company official disclosure unless additional primary evidence is found.
+
+Practical CV-safe output from official statements:
+- Markets: >15 countries (PR), >160 jurisdictions (SEC), focus on Western Europe/Asia/Latin America, examples incl. UK, Germany, Ireland, Malta, Denmark (+ revenue mention incl. Austria).
+- Payments: EFT, cards, crypto, third-party processors, Aspire-managed payment processing (no named PSP list in official filings).
+
+
+- **[idea-003]** DEX blacklist: блокувати РФ/Росія/Москва варіанти
+  - **Score:** 0 (not yet ranked - run `/dex-backlog` to calculate)
+  - **Category:** system
+  - **Captured:** 2026-05-27
+  - **Description:** Додати в DEX blacklist слова та форми, пов’язані з РФ, для фільтрації артефактів у цьому контексті. Рекомендований набір для точних match-правил з межами слова: РФ, рф, Росія, Россия, росія, россия, російський, российский, російська, российская, російське, российское, російські, российские, Москвa/Москва, москвa/москва, московський, московская, moscow, russia, russian, rossiia, rossiya, rossiysk*, rf. Уникати overblocking: не матчити частини інших слів; використовувати нормалізацію регістру, латиниця/кирилиця, окремі токени.
+
 **When you capture your own ideas, explain:**
 - What problem you're trying to solve (be specific!)
 - What you imagine the solution looking like

@@ -1,0 +1,117 @@
+---
+description: Ruby Labs / Vegas Bonanza — когда закрывать A/B, как формировать выводы (2–3 дня тренда, relative uplift, purchase guardrails, аппрув Ihor).
+alwaysApply: true
+---
+
+# Выводы по экспериментам Ruby Labs (Vegas Bonanza)
+
+Применять при **статусе running A/B**, **рекомендации ship/stop**, **закрытии эксперимента**, **черновике поста в Slack**, **апдейте Roman** по любому EXP Vegas Bonanza / Ruby Labs.
+
+**Связанные правила:** относительный lift — `.cursor/rules/experiment-updates-relative-lift.mdc`; live rollout в GrowthBook — `.cursor/rules/vegas-bonanza-experiment-rollout-approval.mdc`; карточка EXP §7 — `.cursor/rules/vegas-bonanza-notion-experiment-card.mdc`.
+
+**Справочник для команды (English):** `04-Projects/Vegas_Bonanza/Experiment_Readout_Conclusion_Guide.md`  
+**Mixpanel boards:** `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md` (Relative uplifts + Stat. sig., baseline = control)
+
+---
+
+## Когда **не** закрываем эксперимент (слои 1–2)
+
+Не рекомендовать ship winner, stop с rollout или «эксперимент можно закрывать», если выполняется **хотя бы одно**:
+
+1. **Нет статистической значимости** и выборка ещё мала (мало пользователей на вариант). В Mixpanel — колонка/бейдж **Stat. sig.** на EXP-доске (не значимо → не закрываем, если нет ещё и 2–3 стабильных дней по договорённости ниже).
+2. Тренд по primary появился **только что** и **не повторялся несколько полных дней подряд**.
+3. Есть риск **просадки по guardrails**, особенно:
+   - **purchase success** (`purchaseSuccess`)
+   - **conversion to purchase** / доля пользователей с покупкой (`purchaseSuccess` / purchases в readout)
+
+В этих случаях вердикт: **продолжаем наблюдение** или **рано для вывода** — с конкретным сроком (ещё N полных дней) и что смотрим дальше.
+
+---
+
+## Когда **можно думать** о закрытии
+
+1. Эксперимент смотрим **минимум 2–3 полных календарных дня подряд** после подтверждения технической корректности.
+2. Если в течение этих **2–3 дней направление тренда по primary стабильно** (каждый день в одну сторону относительно контроля), это **достаточный сигнал для рекомендации**, даже если в «большой картине» ещё нет полной статистической значимости по всему окну.
+3. Рекомендация ≠ выкат: финальный **production rollout** — только после аппрува Ihor (см. ниже).
+
+---
+
+## Обязательные проверки перед выводом
+
+Перед формулировкой «ship variant / ship control / готовы закрывать» агент **явно проходит** (в ответе Roman или в черновике для команды):
+
+| # | Проверка | Как |
+|---|----------|-----|
+| 1 | **Относительный прирост** | С доски Mixpanel (**Relative uplifts**, baseline = control) + ставки control → variant — `.cursor/rules/experiment-updates-relative-lift.mdc`, `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md` |
+| 2 | **Статистическая значимость** | **Stat. sig.** на той же EXP-доске (значимо / нет / мало данных) |
+| 3 | **Стабильность тренда** | Primary по **каждому** из последних 2–3 полных дней: направление совпадает |
+| 4 | **Purchase guardrails** | `purchaseSuccess` и конверсия в покупку: нет регрессии variant vs control (порог из §7 карточки или «не хуже контроля»); на доске — те же настройки Relative uplifts + Stat. sig. |
+| 5 | **Full feature experiments** | Если тест = **полный фичер** (не только копия/тайминг), оценить **общий impact** при выкате в 100% prod, не только lift на primary |
+| 6 | **Техника** | Сплит, события, сегмент eligibility — эксперимент **корректно работает** (нет очевидного bias / сломанной аналитики) |
+
+**Запрещено в слоях 1–2:** рекомендовать закрытие только по одному дню данных или только по абсолютным п.п. без relative % и без проверки purchase-метрик.
+
+---
+
+## Практическое правило (из продуктовой договорённости)
+
+- После **2–3 полных дней** стабильного тренда команда **может переходить к рекомендации** (ship B / ship control / продлить).
+- **Ничего не уходит в production** (GrowthBook stop + temporary rollout, force winner) **без аппрува Ihor Herasymov** — даже если по данным всё «готово». См. `.cursor/rules/vegas-bonanza-experiment-rollout-approval.mdc`.
+- Roman в чате должен **явно** разрешить агенту выполнить rollout **после** аппрува Ihor.
+
+---
+
+## Decision flow (порядок для агента)
+
+1. Эксперимент **запущен** в prod.
+2. Проверить **техническую корректность** (сплит, события, сегмент).
+3. Дождаться **2–3 полных дней** данных (календарных, не «72 часа с момента клика»).
+4. По **каждому дню**: primary и направление vs control.
+5. Снять с EXP-доски Mixpanel **relative uplift** (vs control) и **stat. sig.** по primary.
+6. Проверить **purchase success** и **purchase conversion** — нет ли негатива у variant (те же настройки на доске).
+7. Для **full feature** — оценить **общий impact** при 100% выкате.
+8. Сформулировать **рекомендацию** (ship B / control / продлить N дней) — **без** автоматического GB API.
+9. **Ihor approves / rejects** → при approve + явная команда Roman → только тогда rollout.
+
+---
+
+## Шаблон апдейта Roman (слои 1–2)
+
+**Вердикт (одно предложение):** ранняя рекомендация / рано закрывать / готовы рекомендовать ship B — с оговоркой про Ihor для prod.
+
+**Обязательные факты в том же ответе (буллеты, не таблица):**
+
+- Дней данных: N (≥2–3 или меньше → «рано»)
+- Primary: relative % vs control + ставки (с доски Mixpanel)
+- Стат. значимость: да / нет / мало данных (Stat. sig. на доске)
+- Тренд по дням: стабилен / скачет / один день
+- Purchase guardrails: ок / риск / регрессия
+- Следующий шаг: ждём N дней / готовим пост для Ihor / не трогаем GB до аппрува
+
+**Черновик Slack (English):** relative % vs control first, stat sig yes/no, daily direction 2–3d, purchase guardrails, recommendation, «pending Ihor approval for prod rollout».
+
+---
+
+## Mixpanel EXP board (обязательно для каждого эксперимента)
+
+При **создании или обновлении** board для EXP в Mixpanel (и в §8 / Notion `Link`):
+
+1. На **каждой** метрике (primary, secondary, guardrails) включить **Relative uplifts** — сравнение **только с control**.
+2. На **каждой** метрике включить **Stat. sig.** (статистическая значимость в UI Mixpanel).
+
+Эталон настроек (Adnan): https://share.zight.com/E0u12qRm (relative), https://share.zight.com/wbulZmDv (stat. sig.). Полный чеклист: `04-Projects/Vegas_Bonanza/Mixpanel_Experiment_Board_Standard.md`.
+
+**Агент:** при запросе «собери дашборд» / «статус EXP» — проверить или напомнить про оба флага; в readout не подменять доску ручным lift без причины.
+
+---
+
+## Согласованность с §7 карточки EXP
+
+§7 в Notion-карточке задаёт **бар до старта** (MDE, min users, confidence). Это правило задаёт **как читать данные после старта** и **когда не спешить закрывать**. При конфликте «§7 требует 7 дней, но 3 дня стабильного тренда» — в апдейте Roman явно назвать оба критерия и рекомендовать **продление** или **эскалацию к Ihor**, не молча игнорировать §7.
+
+---
+
+## Исключения
+
+- Roman явно просит **только технический** статус GB без вывода.
+- **Экстренный откат** по guardrail (резкая просадка purchase) — рекомендация **остановить/откатить** без ожидания 3 дней; rollout всё равно только с явной командой Roman (откат — по `vegas-bonanza-experiment-rollout-approval.mdc`).

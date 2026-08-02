@@ -1,0 +1,1 @@
+../../04-Projects/Applicator/docs/product/Certifications_Section_Quality_Plan.md

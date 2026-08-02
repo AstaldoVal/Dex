@@ -1,0 +1,43 @@
+---
+description: При збої Google Slides OAuth (invalid_grant, відкликаний refresh token) агент сам запускає цикл відновлення; браузерний OAuth — єдиний крок Human-in-the-Loop
+globs: .claude/mcp-servers/google-slides-mcp/**,.scripts/cursor-sync-mcp.py
+alwaysApply: false
+---
+
+# Google Slides — самовідновлення refresh token (без хуків)
+
+Це **правила поведінки агента**, не хуки Cursor. Якщо контекст задачі стосується Google Slides MCP, скриптів у `.claude/mcp-servers/google-slides-mcp/`, або в логах/чаті з’являється помилка OAuth — застосовуй цей блок.
+
+## Коли спрацьовує
+
+- `invalid_grant`, «Token has been expired or revoked», 401 після refresh;
+- користувач каже, що **знову** злетів refresh token / не працює Slides MCP;
+- після зміни `GOOGLE_SLIDES_*` у `.env` потрібно підхопити MCP у Cursor.
+
+## Що робить агент сам (shell з кореня репозиторію Dex)
+
+1. **Перевірити**, що в кореневому `.env` є `GOOGLE_SLIDES_CLIENT_ID` і `GOOGLE_SLIDES_CLIENT_SECRET` (або `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`). Якщо їх немає — коротко сказати, що додати в Google Cloud OAuth-клієнті; **не** розписувати зайві кроки.
+2. **Запустити перевипуск refresh token** (скрипт читає `.env` з кореня Dex і після успіху **сам дописує** `GOOGLE_SLIDES_REFRESH_TOKEN` у `.env`):
+   ```bash
+   cd .claude/mcp-servers/google-slides-mcp && npm run get-token
+   ```
+3. **Human-in-the-loop (тільки це вручну):** один раз пройти OAuth у браузері (відкриється автоматично). Без цього Google не видасть новий refresh token — це не обійти скриптом.
+4. Після успішного callback у терміналі має з’явитися підтвердження; скрипт **вже** оновив `.env`. Якщо `get-token` **не** викликав sync (або для впевненості), з **кореня Dex**:
+   ```bash
+   python3 .scripts/cursor-sync-mcp.py
+   ```
+5. **Перевірка (за потреби):**
+   ```bash
+   node .claude/mcp-servers/google-slides-mcp/scripts/test-presentation-images-flow.mjs
+   ```
+   Успіх — у виводі є `presentationId` і посилання на Google Slides.
+
+## Чого агент не робить
+
+- Не каже «скопіюйте токен у `.env` вручну» — після успішного `get-token` запис у `.env` уже зроблено в коді `getRefreshToken`.
+- Не вимагає хуків SessionStart/PreToolUse для цього флоу — достатньо цих правил + shell.
+- Не обіцяє повне «самовідновлення без браузера» при `invalid_grant` — це обмеження Google OAuth.
+
+## Коротко для користувача після відновлення
+
+Нагадати: повний перезапуск Cursor, якщо MCP усе ще старий після `cursor-sync-mcp.py`.

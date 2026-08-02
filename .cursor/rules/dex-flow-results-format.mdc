@@ -1,0 +1,109 @@
+---
+description: Dex job-search — отчёты full-flow / Claude Code review / Teal только в сравнительных таблицах статуса (не простыни текста)
+alwaysApply: true
+---
+
+# Формат отчёта: full-flow / Claude Code / Teal
+
+Это правило **обязательно** при отчёте результатов job-search pipeline в чате (одна вакансия за ответ).
+
+## Когда применять
+
+- Пользователь просит **результаты**, **summary**, **status**, «что сделано», итог **full-flow**, статистику шагов, завершение **Claude Code review** (шаг 9) / **Teal** pipeline.
+- Агент сам подводит итог после `npm run job-search:full-flow`, Claude Code review (шаг 9), apply feedback (шаг 10), или ручного прогона шагов 6–10.
+
+## Структура ответа (порядок жёсткий)
+
+**Не более 3 предложений** вводного текста (смысл + что проверить дальше), затем **сразу таблицы**. Длинные абзацы и буллет-дампы **до** таблиц запрещены.
+
+### 1. Заголовок (одна строка)
+
+`{job_title} — {company}` + источник: `LinkedIn` | `pasted` | `digest`
+
+Пример: `Senior PM — Acme Corp` · источник: pasted
+
+### 2. Master status table (обязательна)
+
+Колонки:
+
+| Step | Status | Eval | Reason | Artifact |
+|------|--------|------|--------|----------|
+
+**Step** — номер 1–8 по [job-search-full-flow-steps.md](.claude/reference/job-search-full-flow-steps.md) **или** именованные пост-8 шаги для **одной** вакансии:
+
+| Имя в таблице | Смысл |
+|---------------|--------|
+| 1 Capture … 8 Match-score | Как в reference (кратко: Digest, Descriptions, Teal job, Resume, Match-score) |
+| Claude Code S9 | `teal-cowork-resume-review.cjs` (CLI), `feedback.md` / `feedback.json`, `step-9-eval.json` |
+| Apply S10 | `teal-apply-resume-feedback.cjs`, `step-10-eval.json`, `feedback-not-applied.md` |
+
+**Status** — ровно один маркер:
+
+- ✅ **PASS** — шаг выполнен, критерии соблюдены
+- ⚠️ **PARTIAL** — есть артефакт, но не все критерии (score &lt; порога, часть apply, skipped с причиной)
+- ❌ **FAIL** — шаг не выполнен или eval fail
+- ⏭ **SKIP** — шаг намеренно пропущен (`--no-teal`, `--no-cowork-review`, `--from-text`, single-job и т.д.); в Reason — **конкретная** причина из evidence/state
+
+**Eval** — явно из JSON eval, не «на глаз»:
+
+- `pass` / `fail` из `step-9-eval.json` или `step-10-eval.json`
+- при отсутствии eval: `N/A`
+- если в eval есть score (например `jd_alignment_score`, match %): `pass (87)` или `fail (62)`
+
+**Reason** — одна строка, проверяемый факт (не «вроде ок»).
+
+**Artifact** — относительный путь от корня DEX или кликабельная ссылка (Teal URL, `cowork-review/<date>_<resumeId>/`).
+
+Для batch full-flow (несколько вакансий) — **отдельная master-таблица на каждую вакансию**; не смешивать UST и Powertalent в одной строке Step.
+
+### 3. Deliverables table (обязательна)
+
+| File | Exists | Path |
+
+Типичные строки (только релевантные этому прогону):
+
+- `full-flow-state.md` / `.json`
+- `step-6-evidence.json` … `step-8-evidence.json`
+- `step-9-eval.json`, `step-10-eval.json`
+- `feedback.md`, `feedback.json`, `feedback-not-applied.md`
+- PDF / cover letter в `~/Documents/Applied/<Company>/` (если шаг 8 проходил)
+
+**Exists:** `yes` | `no` | `partial` (файл есть, но пустой / неполный).
+
+### 4. Manual follow-up table (только если есть ⚠️ или ❌)
+
+| Action | Why |
+
+Конкретное действие для Roman (Teal UI, повтор шага 9 Claude Code после сброса `/usage`, ручной skill chip и т.д.). **Не** писать «Cowork» в отчётах — шаг 9 = **Claude Code** (CLI); папка `cowork-review/` — только путь на диске.
+
+### 5. Детали после таблиц
+
+- Разбор `feedback.md` / списка правок — **после** таблиц, сжато (таблица или короткий список полей `apply` vs `deferred_v1`).
+- **PS12 fail (summary preview/PDF mismatch):** после таблиц **обязательно** вставить текст из `step-10-summary-verify-chat.md` в package (или блок между `STEP10_PS12_CHAT_REPORT_START/END` в логе step 10) — Roman должен видеть причину в чате, не только meta в JSON.
+- **PS7/PS9/PS10 regen fail:** после таблиц **обязательно** вставить текст из `step-10-summary-regen-chat.md` (или `STEP10_SUMMARY_REGEN_FAIL_CHAT_*` в логе). Apply summary в Teal **не выполнялся**; step-10-eval fail.
+- **PS11 CV tools mismatch (report-only):** apply **уже выполнен**; если `needs_chat_attention` — после таблиц **обязательно** вставить `step-10-summary-cv-evidence-chat.md` (или `STEP10_PS11_CV_EVIDENCE_CHAT_*`). Не fail eval; Roman решает оставить или править.
+- Сырые JSON — только по явному запросу пользователя; в обычном отчёте достаточно колонки Eval.
+
+## Откуда брать факты
+
+Читать evidence/state **для текущей вакансии** (один `jobId` / один `resumeId` / один package dir):
+
+- `00-Inbox/Job_Search/teal/full-flow-state.json`, `full-flow-evidence.json`
+- `00-Inbox/Job_Search/teal/step-*-evidence.json`, `step-9-eval.json`, `step-10-eval.json`
+- `00-Inbox/Job_Search/teal/cowork-review/<date>_<resumeId>/`
+
+Канон шагов 1–10: `.claude/reference/job-search-full-flow-steps.md`.
+
+## Анти-паттерны (запрещено)
+
+- Вываливать буллеты из `feedback.md` **без** master status table.
+- Смешивать в одной таблице **разные** вакансии или package dirs.
+- Писать «eval прошёл» без `pass`/`fail` из `step-9-eval.json` / `step-10-eval.json`.
+- Открывать ответ длинным prose-блоком про каждый шаг; статус шага — только в таблице.
+- Дублировать одну и ту же информацию в intro и в Reason (согласовано с `dex-plain-language-structure.mdc`).
+
+## Согласованность
+
+- `dex-plain-language-structure.mdc` — краткий intro по-русски, затем таблицы; жаргон и пути — в колонках Artifact.
+- `dex-task-skill-router.mdc` — category `job_search` при full-flow / Teal / Claude Code review.
+- `roman-contact-links.mdc` — не подменяет этот формат отчёта.

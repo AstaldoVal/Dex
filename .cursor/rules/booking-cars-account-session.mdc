@@ -1,0 +1,27 @@
+---
+description: Booking Cars LIS — only Roman Chrome account prices; fresh scrape; no Cursor-browser fallback
+alwaysApply: true
+---
+
+# Booking Cars: только аккаунт Roman + свежий прогон
+
+## Hard
+
+1. **Цены и таблица для Roman** — только из **его** залогиненного Google Chrome (скидки Genius / аккаунт). Команда: **`npm run booking-cars:open`** (+ `--lis-scan` / даты) и расширение Dex на этой вкладке. Нужен **`npm run dex-save-server`**.
+2. **Запрещено** выдавать Roman как «текущие цены»:
+   - съём через **Cursor IDE browser** / CDP fallback;
+   - **`npm run booking-cars:capture-run`** (пустой профиль Playwright без его сессии);
+   - пересказ **старого** JSON без нового прогона, если он просит актуальные цифры.
+3. Если автосохранение из Chrome не пришло — **не** подменять Cursor-браузером. Сказать: Reload Dex + снова `booking-cars:open`, дождаться файла в `00-Inbox/Job_Search/data/`.
+
+## Свежесть
+
+- На «запусти / пересними / какие цены» — **новый** LIS-прогон, затем таблица из **нового** файла (`exportedAt` / mtime).
+- Фильтр низкого залога по умолчанию: бакет «€ 0 – € 300» (`filterCriteria_depositBuckets=BUCKET_1`).
+
+## Ряд снимков (когда цены плывут в течение дня)
+
+- Каждый успешный финальный LIS из расширения также пишет файл серии: `dex-booking-cars-lis-series-<ISO-stamp>.json` в `00-Inbox/Job_Search/data/`.
+- Анализ «в какое время суток дешевле» — по этим снимкам (расписание launchd/cron — только по явной просьбе Roman).
+
+Канон в README: `.scripts/job-search/dex-linkedin-extension/README.md` (секция Booking). Preference: `AGENTS.md`.

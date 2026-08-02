@@ -1,0 +1,54 @@
+---
+description: Teal resume skills automation must never add parenthetical comma lists as a single chip; split before apply.
+globs:
+  - .scripts/job-search/teal-resume-skills.cjs
+  - .scripts/job-search/step-10-eval.cjs
+  - .scripts/job-search/teal-apply-resume-feedback.cjs
+  - 00-Inbox/Job_Search/teal/**
+alwaysApply: false
+---
+
+# Teal skills — no parenthetical lists
+
+Teal’s bulk **Add Skills** field splits on commas. A single chip like `Open-source LLMs (Llama, Mistral)` becomes mangled fragments (orphan `)`, missing tokens, wrong nesting).
+
+## Rule
+
+**Never add or enable a skill whose name contains a comma-separated parenthetical list.** Always expand first via `expandSkillNameForTeal()` in `teal-resume-skills.cjs`:
+
+| Cowork / source string | Teal chips to add (each saved separately) |
+|------------------------|-------------------------------------------|
+| `Open-source LLMs (Llama, Mistral)` | Open-source LLMs, Llama, Mistral |
+| `Vector databases (Pinecone, Weaviate, Chroma, pgvector)` | Vector databases, Pinecone, Weaviate, Chroma, pgvector |
+| `AI evaluation (LLM-as-judge, Ragas)` | AI evaluation, LLM-as-judge, Ragas |
+| `AI prototyping (v0.dev, Replit, Lovable)` | AI prototyping, v0.dev, Replit, Lovable (dedupe v0.dev) |
+
+Single-term parentheses without commas (e.g. `RAG (Retrieval-Augmented Generation)`) may stay one chip.
+
+## Apply pipeline
+
+1. `buildSkillsPlanFromFeedback` — expand all `deferred_v1.skills_add` entries; track originals in `deactivateOnResume` to uncheck combined chips.
+2. `addSkillsToCategory` — one skill per Save; re-expand defensively.
+3. `deleteMangledSkillChips` — delete library chips with unbalanced `(` / `)`.
+4. Uncheck noise skills (`Artificial Intelligence`) via `RESUME_NOISE_SKILLS`.
+5. `dedupeSkillDuplicates` — delete extra chips (confirm dialog); one normKey per library.
+6. `ensureCollateralLibrarySkills` — restore iOS (Swift), Android (Kotlin), Data Warehouse (Redshift), Diagrams.net if deleted.
+7. `SKILLS_ENSURE_ON_RESUME` — always enable `v0.dev`, `Lovable`; deactivate combined `AI prototyping (...)` chip.
+8. `exportResumePdfFromPreview` — force re-export PDF after skills apply; `verifySkillsPdfText` via `pdftotext`.
+
+## Eval (step-10)
+
+After apply, eval must fail if:
+
+- Any planned (expanded) Cowork skill is missing or `included !== true` (strict).
+- Any skill name has unbalanced parentheses or mangled fragments in library.
+- Any **enabled** skill still matches a parenthetical comma list.
+- More than one library chip per normKey (strict dedupe).
+- PDF-critical groups missing on extract: Azure OpenAI; AI evaluation or LLM-as-judge+Ragas; open-source LLMs or Llama+Mistral; vector DBs or Pinecone+Weaviate+Chroma; `v0.dev`; `Lovable`.
+- Collateral library skills missing.
+- Exported PDF (`pdftotext`) missing same critical tokens or contains orphan `Mistral)`, nested Vendor-agnostic in Vector DB parens, duplicate `v0.dev`.
+- `Artificial Intelligence` enabled on resume.
+
+Cowork **skills_remove** = uncheck only (not delete). Dedupe duplicates = delete with confirm.
+
+Do **not** rewrite `feedback.json` Cowork output; expansion is automation-only.

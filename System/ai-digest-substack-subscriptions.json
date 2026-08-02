@@ -1,0 +1,76 @@
+{
+  "description": "Roman Substack subscriptions for AI digest (separate section). Edit this list to add/remove. Seeded from Gmail from:substack.com (180d) on 2026-07-30.",
+  "updated": "2026-07-30",
+  "publications": [
+    {
+      "id": "bytebytego",
+      "name": "ByteByteGo",
+      "feed": "https://bytebytego.substack.com/feed"
+    },
+    {
+      "id": "aakashgupta",
+      "name": "Product Growth (Aakash Gupta)",
+      "feed": "https://aakashgupta.substack.com/feed"
+    },
+    {
+      "id": "aibyaakash",
+      "name": "AI by Aakash",
+      "feed": "https://aibyaakash.substack.com/feed"
+    },
+    {
+      "id": "dpereira",
+      "name": "David Pereira",
+      "feed": "https://dpereira.substack.com/feed"
+    },
+    {
+      "id": "aisupremacy",
+      "name": "AI Supremacy",
+      "feed": "https://aisupremacy.substack.com/feed"
+    },
+    {
+      "id": "alexmcfarland",
+      "name": "Alex McFarland",
+      "feed": "https://alexmcfarland.substack.com/feed"
+    },
+    {
+      "id": "productsthatcount",
+      "name": "Products That Count",
+      "feed": "https://productsthatcount.substack.com/feed"
+    },
+    {
+      "id": "ruben",
+      "name": "Ruben Hassid",
+      "feed": "https://ruben.substack.com/feed"
+    },
+    {
+      "id": "pietromontaldo",
+      "name": "Pietro Montaldo — AI for non-techies",
+      "feed": "https://pietromontaldo.substack.com/feed"
+    },
+    {
+      "id": "arquiteturadevida",
+      "name": "Arquitetura de Vida",
+      "feed": "https://arquiteturadevida.substack.com/feed"
+    },
+    {
+      "id": "marily",
+      "name": "Marily",
+      "feed": "https://marily.substack.com/feed"
+    },
+    {
+      "id": "growthexe",
+      "name": "GrowthExe",
+      "feed": "https://growthexe.substack.com/feed"
+    },
+    {
+      "id": "charliehills",
+      "name": "Charlie Hills",
+      "feed": "https://charliehills.substack.com/feed"
+    },
+    {
+      "id": "careerflow",
+      "name": "Careerflow",
+      "feed": "https://careerflow.substack.com/feed"
+    }
+  ]
+}

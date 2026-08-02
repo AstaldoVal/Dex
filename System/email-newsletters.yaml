@@ -1,0 +1,249 @@
+# Реестр рассылок личного Gmail → метки Dex/Feeds/<имя> (левое меню).
+# Bootstrap: npm run email:newsletters-bootstrap
+
+parent_label: Dex/Feeds
+
+service_labels:
+  action: Dex/Action
+  job: Dex/Job
+  receipts: Dex/Receipts
+  read_ai: Dex/Read-AI
+
+# Приоритетное чтение (не Action): AI / продукт / обучение. Финансы и недвижимость сюда не кладём.
+read_ai_queries:
+  - id: read-ai-substack
+    query: from:substack.com
+  - id: read-ai-beehiiv
+    query: from:beehiiv
+  - id: read-ai-maven
+    query: from:courses.maven.com
+  - id: read-ai-gopractice
+    query: from:gopractice
+  - id: read-ai-productschool
+    query: from:productschool.com
+  - id: read-ai-anthropic
+    query: from:anthropic.com
+  - id: read-ai-cerebralvalley
+    query: from:cerebralvalley.ai
+  - id: read-ai-innovating
+    query: from:innovatingwithai.com
+  - id: read-ai-ideabrowser
+    query: from:ideabrowser.com
+  - id: read-ai-posthog
+    query: from:posthog.com
+  - id: read-ai-similarweb
+    query: from:similarweb.com
+  - id: read-ai-claude
+    query: from:claude.com
+  - id: read-ai-linkedin-digest
+    query: 'from:linkedin.com from:newsletters-noreply -from:jobalerts-noreply'
+  - id: read-ai-authority
+    query: from:authority-figures.com
+  - id: read-ai-subject-ai
+    query: 'subject:(AI OR Claude OR ChatGPT OR LLM OR "machine learning" OR Anthropic OR OpenAI) -from:interactivebrokers.com -from:kucoin -from:okx.com -from:bitfinex -from:kyero.com -from:jobalerts-noreply -from:jobs-noreply -label:Dex/Job'
+
+service_filters:
+  - id: calendar-notifications
+    label: Dex/Feeds/_Calendar
+    query: 'from:google.com subject:Notification'
+    skip_inbox: false
+    mark_read: true
+  - id: action-linkedin-messages
+    label: Dex/Action
+    query: 'from:linkedin.com (subject:"Message replied" OR subject:"messaged you" OR subject:"just messaged" OR from:hit-reply OR from:messaging-digest OR from:inmail-hit-reply) -from:newsletters-noreply -from:invitations@linkedin.com -subject:"You have an invitation"'
+    skip_inbox: false
+    mark_read: false
+  - id: action-interviews
+    label: Dex/Action
+    query: 'subject:(interview OR "application received" OR "job offer") -from:linkedin.com -from:google.com -from:todoist.com -from:substack.com -from:beehiiv -from:udemy -subject:Notification -subject:"How to Crack" -category:promotions'
+    skip_inbox: false
+    mark_read: false
+  - id: job-linkedin-alerts
+    label: Dex/Job
+    query: 'from:linkedin.com (jobs OR "job alert" OR recommended OR newsletters-noreply OR subject:invitation)'
+    skip_inbox: true
+    mark_read: false
+  - id: job-thank-you
+    label: Dex/Job
+    query: 'subject:("thank you for applying" OR "thank you for your interest" OR "application received") -from:substack.com -category:promotions'
+    skip_inbox: true
+    mark_read: false
+  - id: job-ats-alerts
+    label: Dex/Job
+    query: 'subject:("New jobs posted" OR "is hiring" OR "are hiring") OR from:jobs2web.com OR from:glassdoor.com OR from:survale.com'
+    skip_inbox: true
+    mark_read: false
+  - id: job-direct-recruiter
+    label: Dex/Action
+    query: 'from:helpmeetjob.com OR from:toogeza.tech OR (subject:(ваканс OR vacancy) -from:linkedin.com -from:glassdoor.com -from:udemy -category:promotions)'
+    skip_inbox: false
+    mark_read: false
+  - id: receipts-shopping
+    label: Dex/Receipts
+    query: 'from:(amazon.com OR miio OR comparaja.pt OR apple.com OR fnac.pt)'
+    skip_inbox: true
+    mark_read: false
+  - id: gov-finance
+    label: Dex/Receipts
+    query: 'from:at.gov.pt OR subject:"Portal das Finanças"'
+    skip_inbox: false
+    mark_read: false
+  - id: security-noise
+    label: Dex/Feeds/_Security-Noise
+    query: 'subject:(security OR payment OR sign-in OR "signed in" OR "new login" OR "verification code") -from:google.com'
+    skip_inbox: true
+    mark_read: true
+    also_label_parent: true
+
+feeds:
+  - id: blinkist
+    label: Dex/Feeds/Blinkist
+    from_query: from:blinkist
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: substack
+    label: Dex/Feeds/Substack
+    from_query: from:substack.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: beehiiv
+    label: Dex/Feeds/Beehiiv
+    from_query: from:beehiiv
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: maven
+    label: Dex/Feeds/Maven
+    from_query: from:courses.maven.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: similarweb
+    label: Dex/Feeds/Similarweb
+    from_query: from:digital.similarweb.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: mindvalley
+    label: Dex/Feeds/Mindvalley
+    from_query: from:hello.mindvalley.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: ideabrowser
+    label: Dex/Feeds/Ideabrowser
+    from_query: from:mail.ideabrowser.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: revolut
+    label: Dex/Feeds/Revolut
+    from_query: from:revolut.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: kucoin
+    label: Dex/Feeds/KuCoin
+    from_query: from:kucoin
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: todoist
+    label: Dex/Feeds/Todoist
+    from_query: from:todoist.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: babysits
+    label: Dex/Feeds/Babysits
+    from_query: from:babysits
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: daily-dad
+    label: Dex/Feeds/Daily-Dad
+    from_query: from:thedailydad.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: daily-stoic
+    label: Dex/Feeds/Daily-Stoic
+    from_query: from:dailystoic.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: megogo
+    label: Dex/Feeds/MEGOGO
+    from_query: from:email.megogo.net
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: gopractice
+    label: Dex/Feeds/GoPractice
+    from_query: from:gopractice
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: classdojo
+    label: Dex/Feeds/ClassDojo
+    from_query: from:classdojo.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: linkedin-digest
+    label: Dex/Feeds/LinkedIn-Digest
+    from_query: 'from:linkedin.com (subject:TechCrunch OR subject:"Learning Spotlight" OR subject:newsletter OR from:newsletters-noreply)'
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: rozetka
+    label: Dex/Feeds/Rozetka
+    from_query: from:rozetka.com.ua
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: sentry
+    label: Dex/Feeds/Sentry
+    from_query: from:getsentry.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: ibkr
+    label: Dex/Feeds/IBKR
+    from_query: from:interactivebrokers.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: kyero
+    label: Dex/Feeds/Kyero
+    from_query: from:kyero.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: productschool
+    label: Dex/Feeds/ProductSchool
+    from_query: from:productschool.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: posthog
+    label: Dex/Feeds/PostHog
+    from_query: from:posthog.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: udemy
+    label: Dex/Feeds/Udemy
+    from_query: from:udemy
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: cerebralvalley
+    label: Dex/Feeds/CerebralValley
+    from_query: from:cerebralvalley.ai
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: anthropic
+    label: Dex/Feeds/Anthropic
+    from_query: from:anthropic.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: innovating-ai
+    label: Dex/Feeds/InnovatingAI
+    from_query: from:innovatingwithai.com
+    show_in_sidebar: true
+    show_if_unread: true
+  - id: okx
+    label: Dex/Feeds/OKX
+    from_query: from:okx.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: bitfinex
+    label: Dex/Feeds/Bitfinex
+    from_query: from:bitfinex.com
+    show_in_sidebar: true
+    show_if_unread: false
+  - id: new-unknown
+    label: Dex/Feeds/_New
+    from_query: 'category:promotions OR category:updates OR category:social OR category:forums OR category:personal'
+    show_in_sidebar: true
+    show_if_unread: true
+    catch_all: true

@@ -1,3 +1,21 @@
+---
+type: guide
+domain: areas
+area: general
+cluster: areas-general
+status: active
+review: '2026-05-01'
+moc: '[[05-Areas/_MOC_Areas]]'
+change_log: '[[System/Change_Log/2026-04#2026-04-22-batch-areas]]'
+tags:
+- dex/note
+- dex/domain/areas
+- dex/area/general
+parent_moc: '[[05-Areas/_MOC_Areas]]'
+---
+
+Graph links: [[05-Areas/_MOC_Areas]] | [[System/Change_Log/2026-04#2026-04-22-batch-areas]]
+
 # Areas
 
 Ongoing responsibilities and areas of focus that don't have an end date.
