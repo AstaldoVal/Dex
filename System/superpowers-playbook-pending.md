@@ -2200,3 +2200,16 @@
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 170
+
+- Pattern key: `vault|одной|повтори|снимок`
+- Repeats in window: 3
+- Sample user requests:
+ - [2026-08-02] повтори сообщение про снимок vault одной строкой.
+ - [2026-08-03] повтори снимок vault одной строкой
+ - [2026-08-03] повтори снимок vault одной строкой
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
