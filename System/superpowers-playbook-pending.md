@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 390
+- Repeats in window: 392
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -58,12 +58,12 @@
 
 ## Candidate 5
 
-- Pattern key: `analyst|data|heartbeat|paperclip`
+- Pattern key: `executor|heartbeat|paperclip|sonnet`
 - Repeats in window: 234
 - Sample user requests:
- - [2026-07-22] heartbeat Paperclip Data Analyst — продолжить работу по контракту.
- - [2026-07-22] продолжить heartbeat агента Data Analyst (Paperclip)
- - [2026-07-22] Paperclip Data Analyst heartbeat — продолжить работу по контракту.
+ - [2026-07-22] heartbeat Executor Sonnet (таймер Paperclip).
+ - [2026-07-22] heartbeat Executor Sonnet (Paperclip), продолжить работу.
+ - [2026-07-22] heartbeat Executor Sonnet (Paperclip timer wake).
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -71,12 +71,12 @@
 
 ## Candidate 6
 
-- Pattern key: `executor|heartbeat|paperclip|sonnet`
-- Repeats in window: 233
+- Pattern key: `analyst|data|heartbeat|paperclip`
+- Repeats in window: 234
 - Sample user requests:
- - [2026-07-22] heartbeat Executor Sonnet (таймер Paperclip).
- - [2026-07-22] heartbeat Executor Sonnet (Paperclip), продолжить работу.
- - [2026-07-22] heartbeat Executor Sonnet (Paperclip timer wake).
+ - [2026-07-22] heartbeat Paperclip Data Analyst — продолжить работу по контракту.
+ - [2026-07-22] продолжить heartbeat агента Data Analyst (Paperclip)
+ - [2026-07-22] Paperclip Data Analyst heartbeat — продолжить работу по контракту.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -124,7 +124,7 @@
 ## Candidate 10
 
 - Pattern key: `community|heartbeat|manager|paperclip`
-- Repeats in window: 165
+- Repeats in window: 166
 - Sample user requests:
  - [2026-07-22] Paperclip heartbeat Community Manager (таймер, без конкретной задачи).
  - [2026-07-22] Paperclip heartbeat Community Manager — продолжить работу.
@@ -189,7 +189,7 @@
 ## Candidate 15
 
 - Pattern key: `fetch|inbox|shell-задачи|кратко`
-- Repeats in window: 79
+- Repeats in window: 80
 - Sample user requests:
  - [2026-07-22] кратко сообщить результат упавшей shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить про результат упавшей shell-задачи fetch inbox
@@ -228,7 +228,7 @@
 ## Candidate 18
 
 - Pattern key: `head|heartbeat|paperclip|skill`
-- Repeats in window: 61
+- Repeats in window: 62
 - Sample user requests:
  - [2026-07-22] Paperclip heartbeat Head of QA — продолжить работу по skill
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по skill.
