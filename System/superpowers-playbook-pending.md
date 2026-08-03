@@ -20,7 +20,7 @@
 ## Candidate 2
 
 - Pattern key: `executor|haiku|heartbeat|paperclip`
-- Repeats in window: 325
+- Repeats in window: 326
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Haiku (таймер), продолжить работу Paperclip.
  - [2026-07-22] heartbeat Executor Haiku (Paperclip), продолжить работу.
@@ -163,7 +163,7 @@
 ## Candidate 13
 
 - Pattern key: `fetch|identity|inbox|shell`
-- Repeats in window: 108
+- Repeats in window: 109
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог упавшего shell (fetch identity/inbox через туннель).
  - [2026-07-22] кратко сообщить итог упавшего shell (fetch identity/inbox).
