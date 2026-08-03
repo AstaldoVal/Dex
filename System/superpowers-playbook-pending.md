@@ -20,7 +20,7 @@
 ## Candidate 2
 
 - Pattern key: `executor|haiku|heartbeat|paperclip`
-- Repeats in window: 338
+- Repeats in window: 340
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Haiku (таймер), продолжить работу Paperclip.
  - [2026-07-22] heartbeat Executor Haiku (Paperclip), продолжить работу.
@@ -33,7 +33,7 @@
 ## Candidate 3
 
 - Pattern key: `heartbeat|paperclip|продолжить|работу`
-- Repeats in window: 327
+- Repeats in window: 329
 - Sample user requests:
  - [2026-07-22] heartbeat CTO Paperclip — продолжить работу
  - [2026-07-22] heartbeat CPO Paperclip (таймер), продолжить работу.
@@ -46,7 +46,7 @@
 ## Candidate 4
 
 - Pattern key: `executor|heartbeat|opus|paperclip`
-- Repeats in window: 249
+- Repeats in window: 251
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Opus (Paperclip timer), продолжить работу агента.
  - [2026-07-22] heartbeat Executor Opus (Paperclip timer)
@@ -59,7 +59,7 @@
 ## Candidate 5
 
 - Pattern key: `executor|heartbeat|paperclip|sonnet`
-- Repeats in window: 246
+- Repeats in window: 248
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Sonnet (таймер Paperclip).
  - [2026-07-22] heartbeat Executor Sonnet (Paperclip), продолжить работу.
@@ -72,7 +72,7 @@
 ## Candidate 6
 
 - Pattern key: `analyst|data|heartbeat|paperclip`
-- Repeats in window: 244
+- Repeats in window: 245
 - Sample user requests:
  - [2026-07-22] heartbeat Paperclip Data Analyst — продолжить работу по контракту.
  - [2026-07-22] продолжить heartbeat агента Data Analyst (Paperclip)
@@ -98,7 +98,7 @@
 ## Candidate 8
 
 - Pattern key: `fetch|inbox|shell|итог`
-- Repeats in window: 189
+- Repeats in window: 190
 - Sample user requests:
  - [2026-07-22] краткий итог по упавшему фоновому shell (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшего shell (fetch inbox).
@@ -163,7 +163,7 @@
 ## Candidate 13
 
 - Pattern key: `fetch|identity|inbox|shell`
-- Repeats in window: 112
+- Repeats in window: 113
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог упавшего shell (fetch identity/inbox через туннель).
  - [2026-07-22] кратко сообщить итог упавшего shell (fetch identity/inbox).
@@ -176,7 +176,7 @@
 ## Candidate 14
 
 - Pattern key: `head|heartbeat|paperclip|продолжить`
-- Repeats in window: 85
+- Repeats in window: 86
 - Sample user requests:
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по процедуре.
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по процедуре.
@@ -202,7 +202,7 @@
 ## Candidate 16
 
 - Pattern key: `fetch|inbox|shell|кратко`
-- Repeats in window: 80
+- Repeats in window: 81
 - Sample user requests:
  - [2026-07-22] кратко сообщить про результат фонового shell (fetch inbox через туннель).
  - [2026-07-22] кратко сообщить результат упавшего shell (fetch inbox).
@@ -241,7 +241,7 @@
 ## Candidate 19
 
 - Pattern key: `shell-задачи|итог|кратко|сообщить`
-- Repeats in window: 48
+- Repeats in window: 49
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог упавшей фоновой shell-задачи.
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи
@@ -254,7 +254,7 @@
 ## Candidate 20
 
 - Pattern key: `billing|design|handoff|head`
-- Repeats in window: 47
+- Repeats in window: 48
 - Sample user requests:
  - [2026-07-22] Paperclip wake Head of Design — HIR-2074 billing arc 51–54 22:00 night-open Roman handoff
  - [2026-07-22] Paperclip wake Head of Design — HIR-2084 billing arc 51–54 23:00 handoff
@@ -319,7 +319,7 @@
 ## Candidate 25
 
 - Pattern key: `inbox-lite|shell-задачи|кратко|результат`
-- Repeats in window: 34
+- Repeats in window: 35
 - Sample user requests:
  - [2026-07-22] кратко сообщить про результат фоновой shell-задачи inbox-lite.
  - [2026-07-22] кратко сообщить про результат фоновой shell-задачи inbox-lite.
@@ -332,7 +332,7 @@
 ## Candidate 26
 
 - Pattern key: `inbox|shell-задачи|итог|кратко`
-- Repeats in window: 29
+- Repeats in window: 30
 - Sample user requests:
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (inbox через туннель).
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (inbox через туннель).
@@ -357,6 +357,19 @@
 
 ## Candidate 28
 
+- Pattern key: `shell-задач|итог|кратко|сообщить`
+- Repeats in window: 26
+- Sample user requests:
+ - [2026-07-22] кратко сообщить итог фоновых shell-задач
+ - [2026-07-22] кратко сообщить итог фоновых shell-задач.
+ - [2026-07-23] кратко сообщить итог фоновых shell-задач.
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 29
+
 - Pattern key: `fetch|inbox|shell|tunnel`
 - Repeats in window: 25
 - Sample user requests:
@@ -368,23 +381,10 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 29
-
-- Pattern key: `shell-задач|итог|кратко|сообщить`
-- Repeats in window: 25
-- Sample user requests:
- - [2026-07-22] кратко сообщить итог фоновых shell-задач
- - [2026-07-22] кратко сообщить итог фоновых shell-задач.
- - [2026-07-23] кратко сообщить итог фоновых shell-задач.
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
 ## Candidate 30
 
 - Pattern key: `inbox|shell|итог|кратко`
-- Repeats in window: 24
+- Repeats in window: 25
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог упавшего shell (inbox через туннель).
  - [2026-07-22] кратко сообщить итог упавшего shell (inbox через туннель)
@@ -670,7 +670,7 @@
 ## Candidate 52
 
 - Pattern key: `inbox|запроса|итог|кратко`
-- Repeats in window: 12
+- Repeats in window: 13
 - Sample user requests:
  - [2026-07-23] кратко сообщить итог упавшего фонового запроса inbox.
  - [2026-07-23] кратко сообщить итог фонового запроса inbox
@@ -695,6 +695,19 @@
 
 ## Candidate 54
 
+- Pattern key: `identity|inbox|shell-задачи|итог`
+- Repeats in window: 12
+- Sample user requests:
+ - [2026-07-23] кратко сообщить итог упавшей shell-задачи (identity/inbox через туннель).
+ - [2026-07-23] кратко сообщить итог фоновой shell-задачи (identity/inbox).
+ - [2026-07-23] кратко сообщить итог упавшей shell-задачи (identity/inbox через туннель).
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 55
+
 - Pattern key: `checkout|shell-задачи|итог|кратко`
 - Repeats in window: 11
 - Sample user requests:
@@ -706,7 +719,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 55
+## Candidate 56
 
 - Pattern key: `inbox|paperclip|shell-задачи|итог`
 - Repeats in window: 11
@@ -719,7 +732,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 56
+## Candidate 57
 
 - Pattern key: `fetch|heartbeat-context|shell|итог`
 - Repeats in window: 11
@@ -727,19 +740,6 @@
  - [2026-07-23] уведомление о падении shell fetch heartbeat-context; кратко сообщить итог
  - [2026-07-23] кратко сообщить итог упавшего shell (fetch heartbeat-context)
  - [2026-07-26] кратко сообщить итог упавшего shell (fetch heartbeat-context).
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 57
-
-- Pattern key: `identity|inbox|shell-задачи|итог`
-- Repeats in window: 11
-- Sample user requests:
- - [2026-07-23] кратко сообщить итог упавшей shell-задачи (identity/inbox через туннель).
- - [2026-07-23] кратко сообщить итог фоновой shell-задачи (identity/inbox).
- - [2026-07-23] кратко сообщить итог упавшей shell-задачи (identity/inbox через туннель).
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -786,6 +786,19 @@
 
 ## Candidate 61
 
+- Pattern key: `batch|competitor|digest|heartbeat`
+- Repeats in window: 10
+- Sample user requests:
+ - [2026-07-22] Paperclip CM heartbeat HIR-2071 — ночной competitor digest batch #204.
+ - [2026-07-23] Paperclip CM heartbeat HIR-2099 competitor digest batch #207 PUSH 01:00
+ - [2026-07-23] Paperclip CM heartbeat HIR-2112 — competitor digest batch #208.
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 62
+
 - Pattern key: `brief|progress`
 - Repeats in window: 10
 - Sample user requests:
@@ -797,7 +810,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 62
+## Candidate 63
 
 - Pattern key: `inbox-lite|shell|завершении|туннель`
 - Repeats in window: 9
@@ -810,7 +823,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 63
+## Candidate 64
 
 - Pattern key: `head|heartbeat|paperclip|wake`
 - Repeats in window: 9
@@ -823,7 +836,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 64
+## Candidate 65
 
 - Pattern key: `inbox|shell-задачи|кратко|результат`
 - Repeats in window: 9
@@ -831,19 +844,6 @@
  - [2026-07-22] кратко сообщить про результат фоновой shell-задачи (inbox через туннель).
  - [2026-07-23] кратко сообщить результат упавшей shell-задачи (inbox через туннель).
  - [2026-07-23] кратко сообщить результат упавшей фоновой shell-задачи (inbox через туннель).
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 65
-
-- Pattern key: `batch|competitor|digest|heartbeat`
-- Repeats in window: 9
-- Sample user requests:
- - [2026-07-22] Paperclip CM heartbeat HIR-2071 — ночной competitor digest batch #204.
- - [2026-07-23] Paperclip CM heartbeat HIR-2099 competitor digest batch #207 PUSH 01:00
- - [2026-07-23] Paperclip CM heartbeat HIR-2112 — competitor digest batch #208.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -1085,6 +1085,19 @@
 
 ## Candidate 84
 
+- Pattern key: `vault|одной|повторить|снимок`
+- Repeats in window: 7
+- Sample user requests:
+ - [2026-08-02] повторить одной строкой сообщение про снимок vault
+ - [2026-08-02] одной строкой повторить сообщение про снимок vault.
+ - [2026-08-02] одной строкой повторить сообщение про снимок vault.
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 85
+
 - Pattern key: `checked|hir-1412|issue|paperclip`
 - Repeats in window: 6
 - Sample user requests:
@@ -1096,7 +1109,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 85
+## Candidate 86
 
 - Pattern key: `analyst|data|heartbeat|lost`
 - Repeats in window: 6
@@ -1109,7 +1122,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 86
+## Candidate 87
 
 - Pattern key: `heartbeat-context|shell-задачи|кратко|результат`
 - Repeats in window: 6
@@ -1122,7 +1135,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 87
+## Candidate 88
 
 - Pattern key: `heartbeat|paperclip|timer`
 - Repeats in window: 6
@@ -1135,7 +1148,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 88
+## Candidate 89
 
 - Pattern key: `inbox-lite|итог|команды|кратко`
 - Repeats in window: 6
@@ -1148,7 +1161,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 89
+## Candidate 90
 
 - Pattern key: `fetch|heartbeat-context|кратко|сообщить`
 - Repeats in window: 6
@@ -1161,7 +1174,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 90
+## Candidate 91
 
 - Pattern key: `inbox-lite|итог|кратко|сообщить`
 - Repeats in window: 6
@@ -1174,7 +1187,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 91
+## Candidate 92
 
 - Pattern key: `billing|design|friday|handoff`
 - Repeats in window: 6
@@ -1187,7 +1200,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 92
+## Candidate 93
 
 - Pattern key: `checked|hir-1412|issue|wake`
 - Repeats in window: 6
@@ -1200,7 +1213,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 93
+## Candidate 94
 
 - Pattern key: `brief|full|progress|refresh`
 - Repeats in window: 6
@@ -1213,7 +1226,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 94
+## Candidate 95
 
 - Pattern key: `heartbeat|paperclip|очереди|продолжить`
 - Repeats in window: 5
@@ -1226,7 +1239,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 95
+## Candidate 96
 
 - Pattern key: `curl|inbox-lite|завершении|уведомление`
 - Repeats in window: 5
@@ -1239,7 +1252,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 96
+## Candidate 97
 
 - Pattern key: `heartbeat-context|shell|кратко|результат`
 - Repeats in window: 5
@@ -1252,7 +1265,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 97
+## Candidate 98
 
 - Pattern key: `shell-задач|кратко|результат|сообщить`
 - Repeats in window: 5
@@ -1265,7 +1278,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 98
+## Candidate 99
 
 - Pattern key: `inbox-lite|shell-задачи|завершении|уведомление`
 - Repeats in window: 5
@@ -1278,7 +1291,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 99
+## Candidate 100
 
 - Pattern key: `context|fetch|issue|shell-задачи`
 - Repeats in window: 5
@@ -1291,7 +1304,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 100
+## Candidate 101
 
 - Pattern key: `hir-562|nudge|paperclip|sunday`
 - Repeats in window: 5
@@ -1299,19 +1312,6 @@
  - [2026-07-26] Paperclip wake HoD HIR-562 — CEO Sunday 00:00 nudge.
  - [2026-07-26] Paperclip wake HoD HIR-562 — CEO Sunday 01:00 nudge.
  - [2026-07-26] Paperclip wake HoD HIR-562 — CEO Sunday 02:00 nudge.
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 101
-
-- Pattern key: `vault|одной|повторить|снимок`
-- Repeats in window: 5
-- Sample user requests:
- - [2026-08-02] повторить одной строкой сообщение про снимок vault
- - [2026-08-02] одной строкой повторить сообщение про снимок vault.
- - [2026-08-02] одной строкой повторить сообщение про снимок vault.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
