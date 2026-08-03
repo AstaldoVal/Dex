@@ -46,8 +46,10 @@ npm run dex:eval-chat-response -- --stdin --user-message "<последняя р
 - Режим по умолчанию — нет простыни с путями без секции **Детали**.
 - **`file_refs_full_relative_path`** — любое упоминание файла репозитория только с полным относительным путём от корня DEX, не голое имя (`RICE_Prioritized_Hypotheses.md` → fail). Канон: `.cursor/rules/dex-chat-file-paths.mdc`.
 - **A/B readout:** при рекомендации ship/закрытия эксперимента — упоминание аппрува Ihor в слоях 1–2 (`experiment_ship_needs_ihor`). Канон: `.cursor/rules/vegas-bonanza-experiment-readout-conclusion.mdc`.
+- **`no_unglossed_jargon`** — английское слово внутри русской фразы только с расшифровкой в этой же фразе; жаргон русскими буквами (бандл, гейт, деплой, воркер, коннектор) запрещён наравне с английским. Пример fail: «Блок smoke я вытащил из workflow и прогнал против живого staging». Канон: `.claude/reference/plain-language-contract.md`.
+- **`terms_defined_on_first_use`** — имя из кода объясняется при первом появлении. Пример fail: «свободный текст в captureEvent»; pass: «в функции отправки событий аналитики (`captureEvent`)». Обратные кавычки объяснением не считаются.
 
-Полная логика: `.scripts/dex/eval-chat-response-lib.cjs`.
+Полная логика: `.scripts/dex/eval-chat-response-lib.cjs`, детекторы языка — `.scripts/dex/lib/plain-language-terms.cjs`. Тест на реальных примерах: `npm run dex:test-plain-language`.
 
 ## Эталон FAQ «PS на live» (слой 1 — копировать структуру)
 

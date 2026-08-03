@@ -448,6 +448,19 @@
 
 ## Candidate 35
 
+- Pattern key: `community|heartbeat|inbox|manager`
+- Repeats in window: 19
+- Sample user requests:
+ - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
+ - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
+ - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 36
+
 - Pattern key: `context|fetch|heartbeat|shell-задачи`
 - Repeats in window: 18
 - Sample user requests:
@@ -459,7 +472,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 36
+## Candidate 37
 
 - Pattern key: `heartbeat|paperclip|агента|контракту`
 - Repeats in window: 18
@@ -472,7 +485,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 37
+## Candidate 38
 
 - Pattern key: `inbox-lite|shell|кратко|результат`
 - Repeats in window: 18
@@ -480,19 +493,6 @@
  - [2026-07-23] кратко сообщить результат упавшего shell (inbox-lite).
  - [2026-07-23] кратко сообщить результат упавшего shell (inbox-lite через туннель)
  - [2026-07-23] кратко сообщить про результат упавшего shell (inbox-lite).
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 38
-
-- Pattern key: `community|heartbeat|inbox|manager`
-- Repeats in window: 18
-- Sample user requests:
- - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
- - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
- - [2026-07-23] Paperclip heartbeat Community Manager (таймер, пустой inbox).
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -1176,6 +1176,19 @@
 
 ## Candidate 91
 
+- Pattern key: `inbox|paperclip|shell|итог`
+- Repeats in window: 6
+- Sample user requests:
+ - [2026-07-25] краткий итог по упавшему фоновому shell (inbox Paperclip).
+ - [2026-07-27] краткий итог по упавшему фоновому shell (Paperclip env/inbox).
+ - [2026-07-30] кратко сообщить итог фоновых shell (inbox/env Paperclip).
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 92
+
 - Pattern key: `checked|hir-1412|issue|wake`
 - Repeats in window: 6
 - Sample user requests:
@@ -1187,7 +1200,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 92
+## Candidate 93
 
 - Pattern key: `brief|full|progress|refresh`
 - Repeats in window: 6
@@ -1200,7 +1213,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 93
+## Candidate 94
 
 - Pattern key: `heartbeat|paperclip|очереди|продолжить`
 - Repeats in window: 5
@@ -1213,7 +1226,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 94
+## Candidate 95
 
 - Pattern key: `curl|inbox-lite|завершении|уведомление`
 - Repeats in window: 5
@@ -1226,7 +1239,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 95
+## Candidate 96
 
 - Pattern key: `heartbeat-context|shell|кратко|результат`
 - Repeats in window: 5
@@ -1239,7 +1252,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 96
+## Candidate 97
 
 - Pattern key: `shell-задач|кратко|результат|сообщить`
 - Repeats in window: 5
@@ -1252,7 +1265,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 97
+## Candidate 98
 
 - Pattern key: `inbox-lite|shell-задачи|завершении|уведомление`
 - Repeats in window: 5
@@ -1265,7 +1278,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 98
+## Candidate 99
 
 - Pattern key: `context|fetch|issue|shell-задачи`
 - Repeats in window: 5
@@ -1273,19 +1286,6 @@
  - [2026-07-23] кратко сообщить про результат фоновой shell-задачи (fetch issue context)
  - [2026-07-23] кратко сообщить итог упавшей фоновой shell-задачи fetch issue context
  - [2026-07-31] кратко сообщить результат упавшей shell-задачи fetch issue context
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 99
-
-- Pattern key: `inbox|paperclip|shell|итог`
-- Repeats in window: 5
-- Sample user requests:
- - [2026-07-25] краткий итог по упавшему фоновому shell (inbox Paperclip).
- - [2026-07-27] краткий итог по упавшему фоновому shell (Paperclip env/inbox).
- - [2026-07-30] кратко сообщить итог фоновых shell (inbox/env Paperclip).
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:

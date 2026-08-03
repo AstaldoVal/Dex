@@ -34,4 +34,6 @@ alwaysApply: true
 
 Канонический развёрнутый список: `CLAUDE.md` → **USER_EXTENSIONS** → «Формат ответов в чате» (пункты 7–12, включая адресные инструкции, пункт 11 про дубли и скобки, пункт 12 про чистовики).
 
+**Английские слова и термины:** `.claude/reference/plain-language-contract.md` — канон. Английское слово только с русской расшифровкой в том же предложении; термин, не объяснённый при первом появлении, использовать нельзя; жаргон русскими буквами (бандл, гейт, деплой, воркер) запрещён наравне с английским. Проверки `no_unglossed_jargon` и `terms_defined_on_first_use`, тест `npm run dex:test-plain-language`.
+
 **Три слоя и мета-команды:** `.cursor/rules/dex-cognitive-load-budget.mdc` (вердикт → действия → детали; `вердикт` / `действия` / `разверни` / `озвучь`). **Eval перед чатом:** `.cursor/rules/dex-chat-response-eval.mdc`, `npm run dex:eval-chat-response`. **Пути к файлам в чате:** полный относительный путь от корня DEX — `.cursor/rules/dex-chat-file-paths.mdc` (проверка `file_refs_full_relative_path`). **Цепочка терминов в планах и процессах:** `.cursor/rules/dex-term-chain-continuity.mdc` — одно имя на понятие; каждый шаг ссылается на выход предыдущего; хардкод vs данные прогона различать явно.
