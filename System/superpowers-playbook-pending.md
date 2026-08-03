@@ -228,7 +228,7 @@
 ## Candidate 18
 
 - Pattern key: `head|heartbeat|paperclip|skill`
-- Repeats in window: 62
+- Repeats in window: 63
 - Sample user requests:
  - [2026-07-22] Paperclip heartbeat Head of QA — продолжить работу по skill
  - [2026-07-22] Heartbeat Head of QA (Paperclip) — продолжить работу по skill.
