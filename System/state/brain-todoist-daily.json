@@ -2,24 +2,20 @@
   "date": "2026-08-05",
   "project_id": "6gphCXMrMvxmr8g5",
   "project_name": "Brain Protocol",
-  "created": 9,
-  "skipped": 0,
+  "created": 0,
+  "skipped": 9,
   "closed_duplicates": 0,
   "closed_calendar_only": 0,
   "rollover": {
-    "closed_missed": 3,
+    "closed_missed": 0,
     "closed_orphans": 0,
     "deleted_recurring": 0,
-    "affected_days": [
-      "2026-08-04"
-    ],
-    "markdown_updated": [
-      "05-Areas/Cognitive_Performance/brain-daily/2026-08-04.md"
-    ],
+    "affected_days": [],
+    "markdown_updated": [],
     "errors": []
   },
   "errors": [],
   "markdown": "05-Areas/Cognitive_Performance/brain-daily/2026-08-05.md",
   "google_calendar": {},
-  "synced_at": "2026-08-04T23:00:54.865406+00:00"
+  "synced_at": "2026-08-04T23:11:16.891580+00:00"
 }
