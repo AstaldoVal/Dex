@@ -276,3 +276,6 @@
 {"date": "2026-08-03", "event_id": "pool", "status": "missed", "title": "Бассейн с Мией [BRAIN]", "task_id": "6hC7mxcMFh259HJ5", "recorded_at": "2026-08-03T23:03:05.546502+00:00"}
 {"date": "2026-08-03", "event_id": "blc-anchor-mon", "status": "missed", "title": "BLC: сообщение близкому [BRAIN]", "task_id": "6hC7mxcWhPCrhq9X", "recorded_at": "2026-08-03T23:03:06.188916+00:00"}
 {"date": "2026-08-03", "event_id": "diary-mon", "status": "missed", "title": "Дневник [BRAIN]", "task_id": "6hC7mxhChcWxWfQX", "recorded_at": "2026-08-03T23:03:06.803938+00:00"}
+{"date": "2026-08-04", "event_id": "human-garage-28", "status": "missed", "title": "28 Day Life Reset (Human Garage) [BRAIN]", "task_id": "6hCMFfCJcxGVCQ7X", "recorded_at": "2026-08-04T23:00:45.192565+00:00"}
+{"date": "2026-08-04", "event_id": "cognitive-tue", "status": "missed", "title": "Жонглирование + Duolingo [BRAIN]", "task_id": "6hCMFfRCc39j5VJX", "recorded_at": "2026-08-04T23:00:46.196285+00:00"}
+{"date": "2026-08-04", "event_id": "gym-tue", "status": "missed", "title": "Силовая в зале [BRAIN]", "task_id": "6hCMFfchCmP4Q8j5", "recorded_at": "2026-08-04T23:00:46.942938+00:00"}

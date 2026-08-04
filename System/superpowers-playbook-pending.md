@@ -1,13 +1,13 @@
 # Superpowers Playbook Candidates
 
-- Generated at: 2026-08-04
+- Generated at: 2026-08-05
 - Window: last 14 days
 - Threshold: 3 repeats
 
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 439
+- Repeats in window: 440
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -72,7 +72,7 @@
 ## Candidate 6
 
 - Pattern key: `analyst|data|heartbeat|paperclip`
-- Repeats in window: 266
+- Repeats in window: 267
 - Sample user requests:
  - [2026-07-22] heartbeat Paperclip Data Analyst — продолжить работу по контракту.
  - [2026-07-22] продолжить heartbeat агента Data Analyst (Paperclip)
@@ -397,7 +397,7 @@
 ## Candidate 31
 
 - Pattern key: `vault|одной|повторить|снимок`
-- Repeats in window: 24
+- Repeats in window: 25
 - Sample user requests:
  - [2026-08-02] повторить одной строкой сообщение про снимок vault
  - [2026-08-02] одной строкой повторить сообщение про снимок vault.
