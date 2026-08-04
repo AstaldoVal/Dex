@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 423
+- Repeats in window: 424
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -33,7 +33,7 @@
 ## Candidate 3
 
 - Pattern key: `heartbeat|paperclip|продолжить|работу`
-- Repeats in window: 334
+- Repeats in window: 335
 - Sample user requests:
  - [2026-07-22] heartbeat CTO Paperclip — продолжить работу
  - [2026-07-22] heartbeat CPO Paperclip (таймер), продолжить работу.
