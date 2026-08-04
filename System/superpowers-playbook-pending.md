@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 421
+- Repeats in window: 422
 - Sample user requests:
  - [2026-07-22] кратко сообщить итог фоновой shell-задачи (fetch inbox).
  - [2026-07-22] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -59,7 +59,7 @@
 ## Candidate 5
 
 - Pattern key: `executor|heartbeat|paperclip|sonnet`
-- Repeats in window: 259
+- Repeats in window: 260
 - Sample user requests:
  - [2026-07-22] heartbeat Executor Sonnet (таймер Paperclip).
  - [2026-07-22] heartbeat Executor Sonnet (Paperclip), продолжить работу.
@@ -150,7 +150,7 @@
 ## Candidate 12
 
 - Pattern key: `heartbeat|paperclip|агента|продолжить`
-- Repeats in window: 121
+- Repeats in window: 122
 - Sample user requests:
  - [2026-07-22] heartbeat CPO Paperclip — продолжить работу агента.
  - [2026-07-22] heartbeat CPO (Paperclip), продолжить работу агента.
@@ -253,12 +253,12 @@
 
 ## Candidate 20
 
-- Pattern key: `shell-задачи|итог|кратко|сообщить`
-- Repeats in window: 51
+- Pattern key: `inbox-lite|shell-задачи|итог|кратко`
+- Repeats in window: 52
 - Sample user requests:
- - [2026-07-22] кратко сообщить итог упавшей фоновой shell-задачи.
- - [2026-07-22] кратко сообщить итог фоновой shell-задачи
- - [2026-07-22] кратко сообщить итог упавшей фоновой shell-задачи.
+ - [2026-07-22] кратко сообщить итог фоновой shell-задачи (inbox-lite).
+ - [2026-07-22] кратко сообщить итог упавшей shell-задачи (inbox-lite).
+ - [2026-07-22] кратко сообщить итог упавшей shell-задачи inbox-lite.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -266,12 +266,12 @@
 
 ## Candidate 21
 
-- Pattern key: `inbox-lite|shell-задачи|итог|кратко`
+- Pattern key: `shell-задачи|итог|кратко|сообщить`
 - Repeats in window: 51
 - Sample user requests:
- - [2026-07-22] кратко сообщить итог фоновой shell-задачи (inbox-lite).
- - [2026-07-22] кратко сообщить итог упавшей shell-задачи (inbox-lite).
- - [2026-07-22] кратко сообщить итог упавшей shell-задачи inbox-lite.
+ - [2026-07-22] кратко сообщить итог упавшей фоновой shell-задачи.
+ - [2026-07-22] кратко сообщить итог фоновой shell-задачи
+ - [2026-07-22] кратко сообщить итог упавшей фоновой shell-задачи.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
