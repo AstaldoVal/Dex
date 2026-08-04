@@ -27,6 +27,7 @@
       "CHANGELOG.md",
       "AGENTS.md"
     ],
-    "follow_symlinks": false
+    "follow_symlinks": false,
+    "_comment_nested_git": "Nested checkouts under roots (e.g. 04-Projects/Applicator) are skipped by is_git_checkout in md_docx_autosync.py — tracked .docx stay git's business (HIR-3227)."
   }
 }
