@@ -124,7 +124,7 @@
 ## Candidate 10
 
 - Pattern key: `community|heartbeat|manager|paperclip`
-- Repeats in window: 176
+- Repeats in window: 177
 - Sample user requests:
  - [2026-07-22] Paperclip heartbeat Community Manager (таймер, без конкретной задачи).
  - [2026-07-22] Paperclip heartbeat Community Manager — продолжить работу.
@@ -397,7 +397,7 @@
 ## Candidate 31
 
 - Pattern key: `vault|одной|повторить|снимок`
-- Repeats in window: 23
+- Repeats in window: 24
 - Sample user requests:
  - [2026-08-02] повторить одной строкой сообщение про снимок vault
  - [2026-08-02] одной строкой повторить сообщение про снимок vault.
