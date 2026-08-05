@@ -1,0 +1,1 @@
+../../04-Projects/Applicator/docs/engineering/genufit-mcp-connector-directory-runbook.md
