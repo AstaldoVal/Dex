@@ -1059,6 +1059,19 @@
 
 ## Candidate 82
 
+- Pattern key: `heartbeat|paperclip|очереди|продолжить`
+- Repeats in window: 7
+- Sample user requests:
+ - [2026-07-22] Paperclip heartbeat CTO — продолжить работу по очереди.
+ - [2026-07-23] Paperclip heartbeat CTO — продолжить работу по очереди.
+ - [2026-07-23] Paperclip heartbeat CTO — продолжить работу по очереди.
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 83
+
 - Pattern key: `fetch|inbox|задачи|итог`
 - Repeats in window: 7
 - Sample user requests:
@@ -1070,7 +1083,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 83
+## Candidate 84
 
 - Pattern key: `fetch|inbox|paperclip|shell`
 - Repeats in window: 7
@@ -1083,7 +1096,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 84
+## Candidate 85
 
 - Pattern key: `inbox|paperclip|shell|итог`
 - Repeats in window: 7
@@ -1096,7 +1109,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 85
+## Candidate 86
 
 - Pattern key: `checked|heartbeat|hir-70|issue`
 - Repeats in window: 7
@@ -1109,7 +1122,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 86
+## Candidate 87
 
 - Pattern key: `anti-abuse|checked|hir-1412|issue`
 - Repeats in window: 7
@@ -1122,7 +1135,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 87
+## Candidate 88
 
 - Pattern key: `checked|hir-1412|issue|paperclip`
 - Repeats in window: 6
@@ -1130,19 +1143,6 @@
  - [2026-07-22] Paperclip resume HIR-1412 wake issue_checked_out.
  - [2026-07-22] Paperclip HIR-1412 wake issue_checked_out (ночь).
  - [2026-07-23] Paperclip HIR-1412 wake issue_checked_out.
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 88
-
-- Pattern key: `heartbeat|paperclip|очереди|продолжить`
-- Repeats in window: 6
-- Sample user requests:
- - [2026-07-22] Paperclip heartbeat CTO — продолжить работу по очереди.
- - [2026-07-23] Paperclip heartbeat CTO — продолжить работу по очереди.
- - [2026-07-23] Paperclip heartbeat CTO — продолжить работу по очереди.
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
