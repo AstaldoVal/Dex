@@ -33,7 +33,7 @@
 ## Candidate 3
 
 - Pattern key: `heartbeat|paperclip|продолжить|работу`
-- Repeats in window: 343
+- Repeats in window: 344
 - Sample user requests:
  - [2026-07-23] heartbeat CMO Paperclip — продолжить работу
  - [2026-07-23] heartbeat Paperclip CPO — продолжить работу
@@ -72,7 +72,7 @@
 ## Candidate 6
 
 - Pattern key: `analyst|data|heartbeat|paperclip`
-- Repeats in window: 272
+- Repeats in window: 273
 - Sample user requests:
  - [2026-07-23] heartbeat Data Analyst (Paperclip) — продолжить работу.
  - [2026-07-23] Paperclip heartbeat Data Analyst — продолжить работу
@@ -98,7 +98,7 @@
 ## Candidate 8
 
 - Pattern key: `community|heartbeat|manager|paperclip`
-- Repeats in window: 184
+- Repeats in window: 185
 - Sample user requests:
  - [2026-07-23] Paperclip heartbeat Community Manager — продолжить работу
  - [2026-07-23] heartbeat Community Manager (Paperclip timer)
@@ -137,7 +137,7 @@
 ## Candidate 11
 
 - Pattern key: `fetch|identity|inbox|shell-задачи`
-- Repeats in window: 136
+- Repeats in window: 137
 - Sample user requests:
  - [2026-07-23] кратко сообщить итог фоновой shell-задачи (fetch identity/inbox).
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (fetch identity/inbox).
