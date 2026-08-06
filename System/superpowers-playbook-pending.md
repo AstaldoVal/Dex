@@ -358,7 +358,7 @@
 ## Candidate 28
 
 - Pattern key: `vault|одной|повторить|снимок`
-- Repeats in window: 27
+- Repeats in window: 28
 - Sample user requests:
  - [2026-08-02] повторить одной строкой сообщение про снимок vault
  - [2026-08-02] одной строкой повторить сообщение про снимок vault.
