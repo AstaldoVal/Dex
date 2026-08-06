@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 425
+- Repeats in window: 428
 - Sample user requests:
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (fetch inbox).
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -33,7 +33,7 @@
 ## Candidate 3
 
 - Pattern key: `heartbeat|paperclip|продолжить|работу`
-- Repeats in window: 335
+- Repeats in window: 336
 - Sample user requests:
  - [2026-07-23] heartbeat CMO Paperclip — продолжить работу
  - [2026-07-23] heartbeat Paperclip CPO — продолжить работу
@@ -98,7 +98,7 @@
 ## Candidate 8
 
 - Pattern key: `design|head|heartbeat|paperclip`
-- Repeats in window: 178
+- Repeats in window: 179
 - Sample user requests:
  - [2026-07-23] wake Head of Design (Paperclip heartbeat_timer) — продолжить работу.
  - [2026-07-23] Heartbeat Head of Design (Paperclip timer) — продолжить работу.
@@ -124,7 +124,7 @@
 ## Candidate 10
 
 - Pattern key: `content|heartbeat|paperclip|writer`
-- Repeats in window: 166
+- Repeats in window: 167
 - Sample user requests:
  - [2026-07-23] heartbeat Content Writer (Paperclip) — продолжить работу.
  - [2026-07-23] heartbeat Content Writer (Paperclip), продолжить работу.
