@@ -7,7 +7,7 @@
 ## Candidate 1
 
 - Pattern key: `fetch|inbox|shell-задачи|итог`
-- Repeats in window: 446
+- Repeats in window: 447
 - Sample user requests:
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (fetch inbox).
  - [2026-07-23] кратко сообщить итог упавшей shell-задачи (fetch inbox).
@@ -20,7 +20,7 @@
 ## Candidate 2
 
 - Pattern key: `executor|haiku|heartbeat|paperclip`
-- Repeats in window: 366
+- Repeats in window: 367
 - Sample user requests:
  - [2026-07-23] heartbeat Executor Haiku (Paperclip timer).
  - [2026-07-23] heartbeat Executor Haiku (Paperclip) — продолжить работу.
@@ -33,7 +33,7 @@
 ## Candidate 3
 
 - Pattern key: `heartbeat|paperclip|продолжить|работу`
-- Repeats in window: 344
+- Repeats in window: 345
 - Sample user requests:
  - [2026-07-23] heartbeat CMO Paperclip — продолжить работу
  - [2026-07-23] heartbeat Paperclip CPO — продолжить работу
