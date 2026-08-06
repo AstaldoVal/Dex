@@ -721,6 +721,19 @@
 
 ## Candidate 56
 
+- Pattern key: `checkout|shell-задачи|итог|кратко`
+- Repeats in window: 13
+- Sample user requests:
+ - [2026-07-27] кратко сообщить итог фоновой shell-задачи (checkout через туннель).
+ - [2026-07-28] кратко сообщить итог упавшей shell-задачи checkout.
+ - [2026-07-30] кратко сообщить итог упавшей shell-задачи checkout
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 57
+
 - Pattern key: `blocked-lane|heartbeat|hir-1408|hir-1412`
 - Repeats in window: 12
 - Sample user requests:
@@ -732,7 +745,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 57
+## Candidate 58
 
 - Pattern key: `executor|heartbeat|opus|paperclip-работу`
 - Repeats in window: 12
@@ -745,7 +758,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 58
+## Candidate 59
 
 - Pattern key: `fetch|inbox|shell|завершении`
 - Repeats in window: 12
@@ -753,19 +766,6 @@
  - [2026-07-23] уведомление о завершении фонового shell (inbox fetch)
  - [2026-07-24] уведомление о завершении фонового shell (fetch me/inbox через туннель).
  - [2026-07-26] уведомление о завершении фонового shell (inbox fetch).
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 59
-
-- Pattern key: `checkout|shell-задачи|итог|кратко`
-- Repeats in window: 12
-- Sample user requests:
- - [2026-07-27] кратко сообщить итог фоновой shell-задачи (checkout через туннель).
- - [2026-07-28] кратко сообщить итог упавшей shell-задачи checkout.
- - [2026-07-30] кратко сообщить итог упавшей shell-задачи checkout
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -1449,6 +1449,19 @@
 
 ## Candidate 112
 
+- Pattern key: `vault|одной|повтори|снимок`
+- Repeats in window: 5
+- Sample user requests:
+ - [2026-08-02] повтори сообщение про снимок vault одной строкой.
+ - [2026-08-03] повтори снимок vault одной строкой
+ - [2026-08-03] повтори снимок vault одной строкой
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 113
+
 - Pattern key: `fetch|inbox|задачи|кратко`
 - Repeats in window: 4
 - Sample user requests:
@@ -1460,7 +1473,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 113
+## Candidate 114
 
 - Pattern key: `fetch|inbox|кратко|результат`
 - Repeats in window: 4
@@ -1473,7 +1486,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 114
+## Candidate 115
 
 - Pattern key: `batch|heartbeat|hir-63|paperclip`
 - Repeats in window: 4
@@ -1486,7 +1499,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 115
+## Candidate 116
 
 - Pattern key: `head|heartbeat|paperclip|назначенную`
 - Repeats in window: 4
@@ -1499,7 +1512,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 116
+## Candidate 117
 
 - Pattern key: `heartbeat|paperclip|агентским|инструкциям`
 - Repeats in window: 4
@@ -1512,7 +1525,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 117
+## Candidate 118
 
 - Pattern key: `checked|hir-1412|issue|paperclip`
 - Repeats in window: 4
@@ -1525,7 +1538,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 118
+## Candidate 119
 
 - Pattern key: `executor|haiku|heartbeat|lost`
 - Repeats in window: 4
@@ -1538,7 +1551,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 119
+## Candidate 120
 
 - Pattern key: `inbox|shell|кратко|результат`
 - Repeats in window: 4
@@ -1551,7 +1564,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 120
+## Candidate 121
 
 - Pattern key: `inbox|запроса|кратко|результат`
 - Repeats in window: 4
@@ -1564,7 +1577,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 121
+## Candidate 122
 
 - Pattern key: `comment|hir-2243|paperclip|reopen`
 - Repeats in window: 4
@@ -1577,7 +1590,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 122
+## Candidate 123
 
 - Pattern key: `head|heartbeat|paperclip|пробуждение`
 - Repeats in window: 4
@@ -1590,7 +1603,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 123
+## Candidate 124
 
 - Pattern key: `fetch|inbox-lite|shell-задачи|итог`
 - Repeats in window: 4
@@ -1603,7 +1616,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 124
+## Candidate 125
 
 - Pattern key: `fetch|heartbeat-context|shell|завершении`
 - Repeats in window: 4
@@ -1616,7 +1629,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 125
+## Candidate 126
 
 - Pattern key: `genufit|staging|задеплоить|изменения`
 - Repeats in window: 4
@@ -1629,7 +1642,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 126
+## Candidate 127
 
 - Pattern key: `inbox-lite|команды|кратко|результат`
 - Repeats in window: 4
@@ -1642,7 +1655,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 127
+## Candidate 128
 
 - Pattern key: `checkout|shell|кратко|результат`
 - Repeats in window: 4
@@ -1655,7 +1668,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 128
+## Candidate 129
 
 - Pattern key: `follow-up|heartbeat-context|shell|итог`
 - Repeats in window: 4
@@ -1668,7 +1681,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 129
+## Candidate 130
 
 - Pattern key: `2026-07-30|batch|competitor|digest`
 - Repeats in window: 4
@@ -1681,7 +1694,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 130
+## Candidate 131
 
 - Pattern key: `fetch|paperclip|shell-задачи|итог`
 - Repeats in window: 4
@@ -1694,7 +1707,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 131
+## Candidate 132
 
 - Pattern key: `accept|hir-390|paperclip|quiet`
 - Repeats in window: 4
@@ -1707,7 +1720,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 132
+## Candidate 133
 
 - Pattern key: `batch|community|competitor|digest`
 - Repeats in window: 4
@@ -1720,7 +1733,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 133
+## Candidate 134
 
 - Pattern key: `approve|gate|heartbeat|hir-426`
 - Repeats in window: 4
@@ -1728,19 +1741,6 @@
  - [2026-08-02] CTO heartbeat HIR-426 — gate Approve на vector JD patterns (lever 16).
  - [2026-08-04] CTO heartbeat resume HIR-426 — gate Approve на vector JD patterns.
  - [2026-08-05] CTO heartbeat resume HIR-426 — gate Approve на vector JD patterns.
-- Proposed default route:
- - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
-- Action:
- - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
-
-## Candidate 134
-
-- Pattern key: `vault|одной|повтори|снимок`
-- Repeats in window: 4
-- Sample user requests:
- - [2026-08-02] повтори сообщение про снимок vault одной строкой.
- - [2026-08-03] повтори снимок vault одной строкой
- - [2026-08-03] повтори снимок vault одной строкой
 - Proposed default route:
  - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
 - Action:
@@ -2164,6 +2164,19 @@
 
 ## Candidate 167
 
+- Pattern key: `closed|day-open|gates|heartbeat`
+- Repeats in window: 3
+- Sample user requests:
+ - [2026-07-28] Paperclip heartbeat CMO HIR-2510 — Tuesday night CLOSED → day-open Roman gates index.
+ - [2026-08-04] Paperclip heartbeat CMO — HIR-3354 seal Tuesday night CLOSED → day-open Roman gates.
+ - [2026-08-06] Paperclip heartbeat CMO HIR-3610 — night CLOSED → day-open Roman gates.
+- Proposed default route:
+ - `using-superpowers` -> `brainstorming` -> `writing-plans` -> `executing-plans` -> `verification-before-completion`
+- Action:
+ - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
+
+## Candidate 168
+
 - Pattern key: `checked|hir-390|issue|paperclip`
 - Repeats in window: 3
 - Sample user requests:
@@ -2175,7 +2188,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 168
+## Candidate 169
 
 - Pattern key: `accept|hir-390|paperclip|phase`
 - Repeats in window: 3
@@ -2188,7 +2201,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 169
+## Candidate 170
 
 - Pattern key: `follow-up|identity|inbox|paperclip`
 - Repeats in window: 3
@@ -2201,7 +2214,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 170
+## Candidate 171
 
 - Pattern key: `follow-up|shell-задачи|итог|кратко`
 - Repeats in window: 3
@@ -2214,7 +2227,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 171
+## Candidate 172
 
 - Pattern key: `checkout|hir-1412|night`
 - Repeats in window: 3
@@ -2227,7 +2240,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 172
+## Candidate 173
 
 - Pattern key: `checkout|shell|завершении|туннель`
 - Repeats in window: 3
@@ -2240,7 +2253,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 173
+## Candidate 174
 
 - Pattern key: `heartbeat|inbox|paperclip|продолжить`
 - Repeats in window: 3
@@ -2253,7 +2266,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 174
+## Candidate 175
 
 - Pattern key: `paperclip|shell|итог|кратко`
 - Repeats in window: 3
@@ -2266,7 +2279,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 175
+## Candidate 176
 
 - Pattern key: `shell|итог|кратко|сообщить`
 - Repeats in window: 3
@@ -2279,7 +2292,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 176
+## Candidate 177
 
 - Pattern key: `fetch|identity|inbox|paperclip`
 - Repeats in window: 3
@@ -2292,7 +2305,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 177
+## Candidate 178
 
 - Pattern key: `inbox|shell-задач|итог|кратко`
 - Repeats in window: 3
@@ -2305,7 +2318,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 178
+## Candidate 179
 
 - Pattern key: `heartbeat|hir-1349|paperclip|resume`
 - Repeats in window: 3
@@ -2318,7 +2331,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 179
+## Candidate 180
 
 - Pattern key: `heartbeat|hir-421|paperclip|resume`
 - Repeats in window: 3
@@ -2331,7 +2344,7 @@
 - Action:
  - Add this scenario into `.claude/reference/superpowers-operational-playbook.md` with name, skill order, and readiness criteria.
 
-## Candidate 180
+## Candidate 181
 
 - Pattern key: `push|vault|локальная|снимка`
 - Repeats in window: 3
