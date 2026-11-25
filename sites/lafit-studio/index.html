@@ -1,501 +1,1658 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>LA Fit Studio Cascais</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Boutique yoga, aerial yoga and fitness studio in Cascais. Small groups in English, Russian and Ukrainian. Full weekly timetable, prices and online booking.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ExerciseGym","name":"LA Fit Studio","url":"https://lafit.studio","telephone":"+351964193789","address":{"@type":"PostalAddress","streetAddress":"Praça João Martinho de Freitas 292b","postalCode":"2750-388","addressLocality":"Cascais","addressCountry":"PT"},"priceRange":"€15-€45","sameAs":["https://www.instagram.com/la_fit_studio"],"knowsLanguage":["en","ru","uk"]}
-</script>
-<style>
-/* Layout: one long scroll in "bands"; Atlantic ink + sea-glass, saffron only on booking actions; timetable is the centrepiece */
-:root{
-  --bg:#F2F5F4; --surface:#FFFFFF; --ink:#0F2A2F; --muted:#56706F; --line:#D5DFDD;
-  --sea:#227C72; --sea-soft:#DCEDEA; --sun:#E8A13A; --sun-ink:#2A1A00; --band:#0F2A2F; --band-fg:#EAF3F1;
-  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
-  --body:"Manrope", "Segoe UI", system-ui, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
-  --r:14px;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0B1C1F; --surface:#112A2E; --ink:#E6F0EE; --muted:#93AEAB; --line:#22403F;
-  --sea:#4FB8AA; --sea-soft:#173A3A; --sun:#F0B254; --sun-ink:#2A1A00; --band:#071315; --band-fg:#E6F0EE; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0B1C1F; --surface:#112A2E; --ink:#E6F0EE; --muted:#93AEAB; --line:#22403F;
-  --sea:#4FB8AA; --sea-soft:#173A3A; --sun:#F0B254; --sun-ink:#2A1A00; --band:#071315; --band-fg:#E6F0EE; color-scheme:dark}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-a{color:inherit}
-:focus-visible{outline:3px solid var(--sea);outline-offset:3px;border-radius:6px}
-.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--display);line-height:1.05;text-wrap:balance;margin:0}
-h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.02em}
-h3{font-size:1.25rem;font-weight:600}
-p{margin:0}
-.eyebrow{font:500 .75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--sea)}
-.btn{display:inline-flex;align-items:center;gap:.5em;padding:.85em 1.3em;border-radius:999px;font:700 .95rem/1 var(--body);text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s}
-.btn:hover{transform:translateY(-1px)}
-.btn-book{background:var(--sun);color:var(--sun-ink)}
-.btn-ghost{border-color:currentColor;background:transparent}
-.demo{background:var(--sea-soft);color:var(--ink);font-size:.8rem;text-align:center;padding-block:.5rem}
-/* header */
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;gap:1.25rem;padding-block:.8rem}
-.logo{font:800 1.3rem/1 var(--display);text-decoration:none;letter-spacing:-.02em}
-.logo span{color:var(--sea)}
-.nav ul{display:flex;gap:1.1rem;list-style:none;margin:0 0 0 auto;padding:0;font-weight:500;font-size:.93rem}
-.nav ul a{text-decoration:none;color:var(--muted)}
-.nav ul a:hover{color:var(--ink)}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{border:0;background:transparent;color:var(--muted);font:500 .75rem/1 var(--mono);padding:.5em .7em;cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-@media (max-width:820px){.nav ul{display:none}.nav .lang{margin-left:auto}.nav .btn{padding:.7em 1em;font-size:.85rem}}
-/* hero */
-.hero{padding-block:clamp(3rem,7vw,5.5rem) 3rem}
-.hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:2.5rem;align-items:end}
-.hero h1{font-size:clamp(2.7rem,7.5vw,5.6rem);font-weight:800;letter-spacing:-.035em}
-.hero h1 em{font-style:normal;color:var(--sea)}
-.hero .lead{font-size:1.15rem;color:var(--muted);max-width:34em;margin-top:1.3rem}
-.hero .cta{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.8rem}
-.facts{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-top:2rem;font-size:.9rem;color:var(--muted)}
-.facts b{color:var(--ink)}
-.next{background:var(--band);color:var(--band-fg);border-radius:22px;padding:1.6rem;position:relative;overflow:hidden;min-width:0}
-.next::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:38px solid color-mix(in srgb,var(--sea) 55%,transparent)}
-.next .eyebrow{color:color-mix(in srgb,var(--band-fg) 70%,transparent)}
-.next .when{font:500 2.6rem/1 var(--mono);margin-top:1rem;letter-spacing:-.02em}
-.next .what{font:600 1.5rem/1.15 var(--display);margin-top:.4rem}
-.next .meta{font-size:.9rem;opacity:.8;margin-top:.3rem}
-.next ol{list-style:none;margin:1.2rem 0 1.2rem;padding:1rem 0 0;border-top:1px solid color-mix(in srgb,var(--band-fg) 20%,transparent);display:grid;gap:.45rem;font-size:.92rem}
-.next ol li{display:flex;gap:.8rem}
-.next ol .t{font-family:var(--mono);opacity:.75;min-width:6.2em}
-@media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
-/* sections */
-section{padding-block:clamp(3.5rem,8vw,6rem)}
-.sec-head{display:flex;justify-content:space-between;align-items:end;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem}
-.sec-head p{color:var(--muted);max-width:32em}
-/* timetable */
-#timetable{background:var(--surface);border-block:1px solid var(--line)}
-.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
-.chip{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:.45em .95em;font:500 .85rem/1 var(--body);cursor:pointer;display:inline-flex;gap:.45em;align-items:center}
-.chip i{width:.6em;height:.6em;border-radius:50%;background:var(--c)}
-.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
-.tt-scroll{overflow-x:auto}
-.tt{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:.6rem;min-width:900px}
-.day h3{font:500 .78rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:.4rem .2rem .7rem;border-bottom:2px solid var(--line);margin-bottom:.6rem}
-.day.today h3{color:var(--sea);border-color:var(--sea)}
-.slot{display:block;width:100%;text-align:left;border:0;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 12%,var(--surface));color:var(--ink);border-radius:8px;padding:.6rem .7rem;margin-bottom:.5rem;text-decoration:none;font:inherit}
-.slot .t{font:500 .82rem/1 var(--mono)}
-.slot .n{font-weight:700;font-size:.95rem;margin-top:.3rem;line-height:1.2}
-.slot .w{font-size:.78rem;color:var(--muted)}
-.slot[hidden]{display:none}
-.tt-note{font-size:.85rem;color:var(--muted);margin-top:1rem}
-/* classes */
-.classes{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
-.cls{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.cls .ph{aspect-ratio:16/10;max-width:100%;background:
-  radial-gradient(circle at 80% 20%,color-mix(in srgb,var(--c) 55%,transparent) 0 30%,transparent 31%),
-  linear-gradient(135deg,color-mix(in srgb,var(--c) 30%,var(--surface)),color-mix(in srgb,var(--c) 70%,var(--ink)));position:relative}
-.cls .ph img{width:100%;height:100%;object-fit:cover;display:block}
-.cls .ph .tag{position:absolute;left:.8rem;bottom:.8rem;background:var(--surface);color:var(--ink);font:500 .7rem/1 var(--mono);padding:.4em .6em;border-radius:6px;letter-spacing:.06em}
-.cls .bd{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.55rem;flex:1}
-.cls .sub{font-size:.8rem;color:var(--muted);font-family:var(--mono)}
-.cls p{font-size:.93rem;color:var(--muted)}
-.cls .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:.6rem;gap:.5rem}
-.cls .price{font:600 1.1rem/1 var(--display)}
-.cls .row a{font-weight:700;font-size:.9rem;color:var(--sea);text-decoration:none}
-/* prices */
-#prices{background:var(--band);color:var(--band-fg)}
-#prices .eyebrow{color:var(--sun)}
-#prices .sec-head p{color:color-mix(in srgb,var(--band-fg) 70%,transparent)}
-.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-.plan{border:1px solid color-mix(in srgb,var(--band-fg) 18%,transparent);border-radius:var(--r);padding:1.4rem;display:flex;flex-direction:column;gap:.6rem;min-width:0}
-.plan.hl{background:color-mix(in srgb,var(--sea) 25%,transparent);border-color:var(--sea)}
-.plan .amt{font:800 2.6rem/1 var(--display);letter-spacing:-.03em}
-.plan .amt small{font:500 .85rem var(--body);opacity:.7;letter-spacing:0}
-.plan ul{margin:0;padding-left:1.1em;font-size:.9rem;opacity:.85;display:grid;gap:.25rem}
-.plan .btn{margin-top:auto;align-self:flex-start}
-@media (max-width:900px){.plans{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:520px){.plans{grid-template-columns:1fr}}
-.rules{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;margin-top:1.6rem;font-size:.88rem;opacity:.8}
-/* team */
-.team{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-@media (max-width:820px){.team{grid-template-columns:1fr}}
-.coach{display:grid;grid-template-columns:96px 1fr;gap:1rem;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;min-width:0}
-.av{width:96px;height:96px;border-radius:50%;background:var(--sea-soft);display:grid;place-items:center;font:800 2rem/1 var(--display);color:var(--sea);overflow:hidden;position:relative}
-.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.coach .role{font-size:.85rem;color:var(--sea);font-weight:700}
-.coach p{font-size:.9rem;color:var(--muted);margin-top:.4rem}
-.coach .todo{font-size:.75rem;font-family:var(--mono);color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:.3em .5em;margin-top:.6rem;display:inline-block}
-/* first visit + faq */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
-@media (max-width:820px){.two{grid-template-columns:1fr;gap:2rem}}
-.steps{list-style:none;margin:1.5rem 0 0;padding:0;display:grid;gap:1rem;counter-reset:s}
-.steps li{display:grid;grid-template-columns:2.4rem 1fr;gap:.8rem;counter-increment:s}
-.steps li::before{content:counter(s);width:2.4rem;height:2.4rem;border-radius:50%;background:var(--sea-soft);color:var(--sea);display:grid;place-items:center;font:700 1rem/1 var(--mono)}
-.steps b{display:block}
-.steps span{color:var(--muted);font-size:.93rem}
-details{border-bottom:1px solid var(--line);padding-block:1rem}
-summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:1rem}
-summary::after{content:"+";font-family:var(--mono);color:var(--sea)}
-details[open] summary::after{content:"–"}
-details p{color:var(--muted);margin-top:.6rem;font-size:.95rem}
-/* reviews */
-.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-@media (max-width:820px){.quotes{grid-template-columns:1fr}}
-.q{border:1.5px dashed var(--line);border-radius:var(--r);padding:1.3rem;color:var(--muted);font-size:.92rem}
-.q b{color:var(--ink);display:block;margin-bottom:.4rem}
-/* visit */
-#visit{background:var(--surface);border-top:1px solid var(--line)}
-.visit{display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;align-items:stretch}
-@media (max-width:820px){.visit{grid-template-columns:1fr}}
-.map{border-radius:var(--r);min-height:280px;background:
-  repeating-linear-gradient(0deg,transparent 0 38px,var(--line) 38px 39px),
-  repeating-linear-gradient(90deg,transparent 0 38px,var(--line) 38px 39px),
-  linear-gradient(160deg,var(--sea-soft) 0 55%,color-mix(in srgb,var(--sea) 35%,var(--surface)) 55%);
-  position:relative;display:flex;align-items:flex-end;padding:1rem;text-decoration:none}
-.map .pin{position:absolute;left:46%;top:38%;width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--sun);box-shadow:0 0 0 6px color-mix(in srgb,var(--sun) 30%,transparent)}
-.map .open{background:var(--surface);color:var(--ink);border-radius:999px;padding:.6em 1em;font-weight:700;font-size:.9rem}
-.contact{display:grid;gap:1.1rem;align-content:start}
-.contact dt{font:500 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.contact dd{margin:.35rem 0 0;font-size:1.05rem;font-weight:500}
-.contact dd a{text-decoration-color:var(--sea);text-underline-offset:3px}
-footer{padding-block:2rem;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line)}
-footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-/* sticky mobile book bar */
-.mbar{display:none}
-@media (max-width:640px){
-  .mbar{display:flex;gap:.5rem;position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--bg);border-top:1px solid var(--line);
-    padding:.6rem max(16px,env(safe-area-inset-right,0px)) calc(.6rem + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-  .mbar .btn{flex:1;justify-content:center}
-  footer{padding-bottom:6rem}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LA Fit Studio · Yoga, Aerial Yoga &amp; Fitness in Cascais</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Boutique yoga, aerial yoga and fitness studio in Cascais. Small groups in English, Russian and Ukrainian. Weekly timetable, prices from €15 and online booking.">
+  <meta name="theme-color" content="#1a0d2e">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LA Fit Studio · Yoga, Aerial Yoga &amp; Fitness in Cascais">
+  <meta property="og:description" content="Weekly timetable, prices and booking in one place. Small groups in EN, RU and UA.">
+  <meta property="og:image" content="img/hero-bg.jpg">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="img/hero-bg.jpg">
+  <style>
+    /* ─────────────────────────────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────────────────────────────── */
+    :root {
+      --purple-deep:   #1a0d2e;
+      --purple-dark:   #2d1554;
+      --purple-mid:    #5b2d8e;
+      --purple-bright: #8b4fc8;
+      --purple-light:  #c49de0;
+      --purple-pale:   #f0e8f8;
+      --white:         #faf9fc;
+      --off-white:     #f2edf8;
+      --text:          #1a0d2e;
+      --muted:         #695f77;
+      --serif:         'Cormorant Garamond', Georgia, serif;
+      --sans:          'Inter', system-ui, sans-serif;
+      --nav-h:         60px;
+      --sticky-cta-h:  64px;
+      --radius:        2px;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       RESET
+    ───────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      /* Room for sticky bottom bar on mobile */
+      padding-bottom: calc(var(--sticky-cta-h) + env(safe-area-inset-bottom));
+    }
+    img { display: block; width: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: var(--sans); border: none; background: none; }
+
+    /* ─────────────────────────────────────────────────────────────────
+       PAGE LOADER
+    ───────────────────────────────────────────────────────────────── */
+    #loader {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--purple-deep);
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+      transition: opacity .5s, visibility .5s;
+      animation: loaderOut 0s 2.2s forwards;
+    }
+    #loader.gone { opacity: 0; visibility: hidden; }
+    @keyframes loaderOut { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+    .loader-wordmark {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp .6s .2s ease both;
+    }
+    .loader-track { width: 80px; height: 1px; background: rgba(255,255,255,.15); }
+    .loader-fill { height: 100%; background: var(--purple-bright); animation: fill 1.4s .3s ease both; }
+    @keyframes fill { from { width: 0 } to { width: 100% } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+
+    /* ─────────────────────────────────────────────────────────────────
+       SCROLL PROGRESS
+    ───────────────────────────────────────────────────────────────── */
+    #progress {
+      position: fixed; top: 0; left: 0; z-index: 201;
+      height: 2px; width: 0%;
+      background: linear-gradient(90deg, var(--purple-mid), var(--purple-bright), var(--purple-light));
+      pointer-events: none;
+      transition: width .08s linear;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px;
+      transition: background .3s, box-shadow .3s;
+    }
+    #nav.scrolled {
+      background: rgba(26,13,46,.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 1px 0 rgba(255,255,255,.07);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .nav-logo-sub {
+      display: block;
+      font-size: .48rem;
+      letter-spacing: .22em;
+      color: rgba(255,255,255,.38);
+      font-family: var(--sans);
+      font-weight: 300;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-book-link {
+      display: none; /* hidden mobile, shown desktop */
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.35);
+      padding: 8px 20px;
+      transition: background .2s, border-color .2s;
+    }
+    .nav-book-link:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+    .lang-switcher {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .lang-btn {
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.7);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 2px;
+      transition: color .2s;
+      font-family: var(--sans);
+    }
+    .lang-btn.active, .lang-btn:hover { color: var(--white); }
+    .lang-sep { color: rgba(255,255,255,.2); font-size: .6rem; }
+
+    .hamburger {
+      display: flex; flex-direction: column; gap: 5px;
+      width: 36px; height: 36px;
+      align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--white);
+      transition: transform .25s, opacity .25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ─────────────────────────────────────────────────────────────────
+       MOBILE DRAWER
+    ───────────────────────────────────────────────────────────────── */
+    #drawer {
+      position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+      background: rgba(26,13,46,.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 199;
+      display: flex; flex-direction: column;
+      padding: 40px 28px;
+      gap: 0;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+    }
+    #drawer.open { transform: translateX(0); }
+    .drawer-link {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.85);
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .drawer-link:hover { color: var(--purple-light); }
+    .drawer-book {
+      margin-top: 32px;
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: var(--purple-bright);
+      color: var(--white);
+      padding: 16px 36px;
+      align-self: flex-start;
+      transition: background .2s;
+    }
+    .drawer-book:hover { background: var(--purple-mid); }
+    .drawer-social {
+      margin-top: auto;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+    }
+    .drawer-social a { color: var(--purple-light); }
+
+    /* ─────────────────────────────────────────────────────────────────
+       STICKY BOTTOM CTA (mobile only)
+    ───────────────────────────────────────────────────────────────── */
+    #sticky-cta {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 198;
+      background: var(--purple-mid);
+      padding: 14px 20px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom));
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      box-shadow: 0 -1px 0 rgba(255,255,255,.1);
+    }
+    .sticky-cta-text {
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .sticky-cta-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .5; transform: scale(.7); }
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 580px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+      background: var(--purple-deep);
+    }
+    .hero-bg {
+      position: absolute;
+      top: -10%; left: 0; right: 0;
+      height: 120%;
+      background:
+        linear-gradient(170deg, rgba(91,45,142,.3) 0%, rgba(26,13,46,.85) 65%),
+        url('img/hero-bg.jpg') center/cover no-repeat;
+      will-change: transform;
+      animation: kenBurns 18s ease-in-out infinite;
+    }
+    @keyframes kenBurns {
+      0%,100% { transform: scale(1) translate(0,0); }
+      33%     { transform: scale(1.06) translate(-1%,.5%); }
+      66%     { transform: scale(1.03) translate(.5%,-.5%); }
+    }
+    .hero-inner {
+      position: relative; z-index: 2;
+      padding: 0 24px 96px;
+      max-width: 560px;
+    }
+    h1.hero-tag { margin-top: 0; }
+    .hero-tag {
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--purple-light);
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp .6s .4s ease both;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 12vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--white);
+      margin-bottom: 20px;
+      letter-spacing: .02em;
+    }
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+      padding-bottom: .12em; /* prevent descender clip (f, g, y) */
+      margin-bottom: -.12em;
+    }
+    .hero-title .line-inner {
+      display: block;
+      transform: translateY(110%);
+      animation: lineUp .85s cubic-bezier(.16,1,.3,1) both;
+    }
+    .hero-title .line:nth-child(1) .line-inner { animation-delay: .5s; }
+    .hero-title .line:nth-child(2) .line-inner { animation-delay: .68s; }
+    .hero-title .line:nth-child(3) .line-inner { animation-delay: .86s; }
+    .hero-title em { font-style: italic; color: var(--purple-light); }
+    @keyframes lineUp { to { transform: translateY(0); } }
+    .hero-sub {
+      font-size: .85rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,.6);
+      font-weight: 300;
+      max-width: 340px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp .7s 1.1s ease both;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      background: var(--purple-bright);
+      color: var(--white);
+      padding: 16px 32px;
+      opacity: 0;
+      animation: fadeUp .6s 1.25s ease both;
+      transition: background .2s, transform .2s;
+      min-height: 52px;
+    }
+    .hero-cta:active { background: var(--purple-mid); transform: scale(.98); }
+    .hero-scroll-hint {
+      position: absolute; bottom: 100px; right: 24px; z-index: 2;
+      font-size: .6rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      writing-mode: vertical-rl;
+      opacity: 0;
+      animation: fadeUp .6s 1.6s ease both;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       STATS STRIP
+    ───────────────────────────────────────────────────────────────── */
+    #stats {
+      background: var(--purple-deep);
+      display: flex;
+      overflow: hidden;
+      scrollbar-width: none;
+    }
+    #stats::-webkit-scrollbar { display: none; }
+    .stat {
+      flex: 1 1 0;
+      min-width: 0;
+      text-align: center;
+      padding: 24px 12px;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--purple-light);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: .6rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      white-space: normal;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       CLASSES (horizontal scroll on mobile)
+    ───────────────────────────────────────────────────────────────── */
+    #classes { padding: 60px 0 60px; background: var(--white); }
+    .section-head { padding: 0 24px; margin-bottom: 28px; }
+    .eyebrow {
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--purple-mid);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--purple-deep);
+    }
+    .section-title em { font-style: italic; color: var(--purple-mid); }
+    .classes-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 0 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      /* Snap for iOS swipe feel */
+      scroll-snap-type: x mandatory;
+    }
+    .classes-scroll::-webkit-scrollbar { display: none; }
+    .class-card {
+      flex: 0 0 260px;
+      height: 360px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--purple-deep);
+      cursor: pointer;
+      scroll-snap-align: start;
+    }
+    .class-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform .6s cubic-bezier(.25,.46,.45,.94), filter .4s;
+      filter: brightness(.65);
+    }
+    .class-card:hover .class-bg,
+    .class-card:active .class-bg { transform: scale(1.06); filter: brightness(.45); }
+    .class-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(26,13,46,.9) 0%, transparent 100%);
+    }
+    .class-tag {
+      font-size: .58rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--purple-light);
+      margin-bottom: 6px;
+    }
+    .class-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .class-desc {
+      font-size: .75rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,.6);
+      font-weight: 300;
+      display: none; /* shown on desktop hover */
+    }
+    .paused-badge {
+      position: absolute; top: 16px; right: 16px;
+      font-size: .6rem; font-weight: 500;
+      letter-spacing: .15em; text-transform: uppercase;
+      background: rgba(255,255,255,.15);
+      color: rgba(255,255,255,.7);
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      z-index: 2;
+    }
+    /* Scroll indicator dots */
+    .scroll-hint {
+      display: flex; gap: 6px; justify-content: center;
+      margin-top: 20px;
+      padding: 0 24px;
+    }
+    .scroll-dot {
+      width: 18px; height: 2px;
+      background: var(--purple-pale);
+      border-radius: 2px;
+      transition: background .3s, width .3s;
+    }
+    .scroll-dot.active { background: var(--purple-bright); width: 32px; }
+
+    /* ─────────────────────────────────────────────────────────────────
+       BOOKING SECTION
+    ───────────────────────────────────────────────────────────────── */
+    #booking {
+      padding: 60px 0;
+      background: var(--off-white);
+    }
+    .booking-inner { padding: 0 24px; }
+    #gymcatch-container {
+      margin-top: 28px;
+      min-height: 400px;
+      background: var(--white);
+      border: 1px solid rgba(91,45,142,.1);
+      border-radius: var(--radius);
+    }
+    /* Placeholder shown until Gymcatch embed is active */
+    .gymcatch-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      width: 56px; height: 56px;
+      background: var(--purple-pale);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .placeholder-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--purple-deep);
+    }
+    .placeholder-sub {
+      font-size: .8rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 280px;
+      font-weight: 300;
+    }
+    .placeholder-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--purple-mid);
+      padding: 14px 28px;
+      min-height: 48px;
+      transition: background .2s;
+    }
+    .placeholder-link:hover { background: var(--purple-deep); }
+    /* ── Gymcatch embed goes here — uncomment when ready:
+    <div id="gymcatch-web-embed"></div>
+    <script src="https://gymcatch.com/web-embed/embed.js" data-key="YOUR_API_KEY"><\/script>
+    ── */
+
+    /* ─────────────────────────────────────────────────────────────────
+       ABOUT
+    ───────────────────────────────────────────────────────────────── */
+    #about {
+      padding: 60px 24px;
+      background: var(--purple-deep);
+    }
+    .about-eyebrow { color: var(--purple-light) !important; }
+    .about-title { color: var(--white) !important; }
+    .about-title em { color: var(--purple-light) !important; }
+    .about-body {
+      font-size: .88rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,.55);
+      font-weight: 300;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .about-body + .about-body { margin-top: 0; }
+    .about-divider { width: 40px; height: 1px; background: var(--purple-bright); margin: 20px 0; }
+    .about-features { display: flex; flex-direction: column; gap: 20px; margin-top: 28px; }
+    .about-feature { display: flex; gap: 14px; align-items: flex-start; }
+    .feature-icon {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      background: rgba(139,79,200,.2);
+      border: 1px solid rgba(196,157,224,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      color: var(--purple-light);
+    }
+    .feature-text h4 {
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .feature-text p {
+      font-size: .78rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,.4);
+      font-weight: 300;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       CONTACT
+    ───────────────────────────────────────────────────────────────── */
+    #contact { padding: 60px 24px; background: var(--white); }
+    .contact-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-weight: 300;
+      color: var(--purple-deep);
+      margin-top: 12px;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .contact-title em { font-style: italic; color: var(--purple-mid); }
+    .contact-sub {
+      font-size: .83rem;
+      line-height: 1.75;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 28px;
+    }
+    .contact-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--off-white);
+      border: 1px solid rgba(91,45,142,.1);
+      border-radius: var(--radius);
+      min-height: 60px;
+      transition: border-color .2s, background .2s;
+    }
+    .contact-btn:hover, .contact-btn:active {
+      border-color: var(--purple-bright);
+      background: var(--purple-pale);
+    }
+    .contact-btn-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--purple-pale);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      border-radius: 50%;
+    }
+    .contact-btn-label {
+      font-size: .6rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .contact-btn-value {
+      font-size: .88rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .contact-divider {
+      width: 40px; height: 1px;
+      background: rgba(91,45,142,.2);
+      margin: 28px 0;
+    }
+    .map-wrap {
+      margin-top: 20px;
+    }
+    .address-block {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      background: var(--off-white);
+      border: 1px solid rgba(91,45,142,.1);
+      border-left: 3px solid var(--purple-bright);
+      text-decoration: none;
+      color: inherit;
+      transition: background .2s;
+    }
+    .address-block:hover { background: #e8dff5; }
+    .address-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+    .address-name { font-weight: 500; font-size: .9rem; color: var(--text); margin-bottom: 4px; }
+    .address-line { font-size: .82rem; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .address-link { font-size: .75rem; color: var(--purple-bright); font-weight: 500; margin-top: 8px; letter-spacing: .05em; }
+
+    /* ─────────────────────────────────────────────────────────────────
+       INSTAGRAM
+    ───────────────────────────────────────────────────────────────── */
+    #instagram { padding: 60px 16px; background: var(--off-white); }
+    .ig-embed-frame {
+      max-width: 540px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid #dbdbdb;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .ig-embed-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #efefef;
+    }
+    .ig-profile-link {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .ig-avatar {
+      width: 38px; height: 38px; flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+      padding: 2px;
+    }
+    .ig-avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif);
+      font-size: .68rem;
+      font-weight: 400;
+      color: var(--purple-mid);
+      letter-spacing: .04em;
+    }
+    .ig-handle {
+      font-size: .84rem;
+      font-weight: 600;
+      color: #262626;
+      letter-spacing: .01em;
+      line-height: 1.2;
+    }
+    .ig-name {
+      font-size: .7rem;
+      color: #8e8e8e;
+      margin-top: 1px;
+    }
+    .ig-follow-btn {
+      font-size: .8rem;
+      font-weight: 600;
+      color: #0095f6;
+      text-decoration: none;
+      letter-spacing: .01em;
+    }
+    .ig-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .ig-item {
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: #fafafa;
+      position: relative;
+    }
+    .ig-bg {
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform .5s;
+    }
+    .ig-item:hover .ig-bg, .ig-item:active .ig-bg { transform: scale(1.06); }
+    .ig-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.32);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .ig-item:hover .ig-overlay, .ig-item:active .ig-overlay { opacity: 1; }
+    .ig-overlay span {
+      font-size: .65rem;
+      letter-spacing: .06em;
+      color: var(--white);
+      font-weight: 500;
+    }
+    .ig-embed-footer {
+      padding: 12px 16px;
+      border-top: 1px solid #efefef;
+      text-align: center;
+    }
+    .ig-view-more {
+      font-size: .72rem;
+      color: #0095f6;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .ig-view-more:hover { text-decoration: underline; }
+
+    /* ─────────────────────────────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--purple-deep);
+      padding: 40px 24px;
+      padding-bottom: calc(40px + env(safe-area-inset-bottom));
+    }
+    .footer-logo {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .footer-sub {
+      font-size: .75rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,.35);
+      font-weight: 300;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+    .footer-links {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      margin-bottom: 24px;
+    }
+    .footer-links a {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding-top: 20px;
+      font-size: .65rem;
+      color: rgba(255,255,255,.2);
+      font-weight: 300;
+    }
+    .footer-legal {
+      margin-top: 10px;
+      font-size: .58rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,.15);
+      font-weight: 300;
+      max-width: 480px;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       DESKTOP ENHANCEMENTS  (min-width: 768px scales up from mobile)
+    ───────────────────────────────────────────────────────────────── */
+    @media (min-width: 768px) {
+      body { padding-bottom: 0; } /* No sticky bar on desktop */
+      #sticky-cta { display: none; }
+      #nav { padding: 0 48px; }
+      .nav-right { gap: 20px; }
+      .hamburger { display: none; }
+      .nav-book-link { display: inline-block; }
+
+      .hero-inner { padding: 0 80px 120px; max-width: 700px; }
+      .hero-sub { max-width: 460px; }
+
+      #classes { padding: 100px 0; }
+      .section-head { padding: 0 80px; margin-bottom: 40px; }
+      .classes-scroll {
+        padding: 0 80px;
+        gap: 16px;
+        /* On desktop we still allow scroll but cards are larger */
+      }
+      .class-card { flex: 0 0 300px; height: 420px; }
+      .class-desc { display: block; }
+
+      #booking { padding: 100px 0; }
+      .booking-inner { padding: 0 80px; max-width: 960px; }
+
+      #about { padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+      .about-col-img {
+        height: 500px;
+        background: url('img/our-story-hero.jpg') center/cover;
+        border-radius: var(--radius);
+      }
+
+      #contact { padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+      .contact-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start; }
+
+      #instagram { padding: 80px; }
+      .ig-embed-frame { max-width: 680px; }
+
+      footer { padding: 60px 80px 40px; }
+      .footer-sub { max-width: 360px; }
+    }
+
+    @media (min-width: 1024px) {
+      .classes-scroll {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        overflow: visible;
+        padding: 0 80px;
+        gap: 4px;
+      }
+      .class-card { flex: none; height: 480px; }
+      .scroll-hint { display: none; }
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       ADDITIONS (concept). Same tokens, same type, same 2px corners.
+    ═════════════════════════════════════════════════════════════════ */
+    .nav-links { display: none; gap: 22px; }
+    .nav-links a {
+      font-size: .64rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255,255,255,.7); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .lang-btn:focus-visible, .chip:focus-visible, .hero-cta:focus-visible, a:focus-visible, summary:focus-visible {
+      outline: 1px solid var(--purple-light); outline-offset: 3px;
+    }
+
+    /* Hero: next class */
+    .hero-next {
+      margin-top: 22px;
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      font-size: .72rem; color: rgba(255,255,255,.6); font-weight: 300;
+      opacity: 0; animation: fadeUp .6s 1.4s ease both;
+    }
+    .hero-next .hn-label { font-size: .58rem; font-weight: 500; letter-spacing: .25em; text-transform: uppercase; color: var(--purple-light); }
+    .hero-next .hn-time { font-family: var(--serif); font-size: 1.25rem; color: var(--white); }
+    .hero-next .hn-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple-light); animation: pulse 2s infinite; align-self: center; }
+    .next-card { display: none; }
+
+    /* Stats: real facts */
+    #stats { flex-wrap: wrap; }
+    #stats .stat { flex: 1 1 50%; border-bottom: 1px solid rgba(255,255,255,.08); }
+    #stats .stat:nth-child(2n) { border-right: none; }
+    #stats .stat-num { font-size: 1.7rem; }
+
+    /* Class cards: coach + price */
+    .class-meta {
+      font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+    }
+    .class-meta b { color: var(--purple-light); font-weight: 500; }
+
+    /* Timetable */
+    .tt-head { display: flex; flex-direction: column; gap: 14px; }
+    .tt-lead { font-size: .83rem; line-height: 1.75; color: var(--muted); font-weight: 300; max-width: 420px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; }
+    .chip {
+      font-size: .6rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--purple-mid); border: 1px solid rgba(91,45,142,.25); padding: 9px 14px;
+      min-height: 36px; transition: background .2s, color .2s, border-color .2s;
+    }
+    .chip:hover { border-color: var(--purple-bright); }
+    .chip[aria-pressed="true"] { background: var(--purple-mid); border-color: var(--purple-mid); color: var(--white); }
+    .tt { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 2px; }
+    .day {
+      background: var(--white); border: 1px solid rgba(91,45,142,.08);
+      display: grid; grid-template-columns: 52px 1fr; align-items: start;
+    }
+    .day-name {
+      font-size: .62rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); padding: 16px 0 0 14px;
+    }
+    .day.today .day-name { color: var(--purple-bright); }
+    .day.today { border-left: 3px solid var(--purple-bright); }
+    .day-slots { display: flex; flex-wrap: wrap; gap: 0; }
+    .slot {
+      flex: 1 1 140px; padding: 12px 14px; border-left: 1px solid rgba(91,45,142,.08);
+      transition: background .2s; min-height: 58px;
+    }
+    .slot:hover { background: var(--purple-pale); }
+    .slot[hidden] { display: none; }
+    .slot.past { opacity: .42; }
+    .slot-time { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; color: var(--purple-deep); line-height: 1.1; }
+    .slot-name { font-size: .7rem; font-weight: 500; letter-spacing: .06em; color: var(--text); margin-top: 2px; }
+    .slot-coach { font-size: .66rem; color: var(--muted); font-weight: 300; }
+    .slot-wa { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--purple-bright); }
+    .day-empty { font-size: .72rem; color: var(--muted); font-weight: 300; padding: 18px 14px; }
+    .tt-foot { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .tt-note { font-size: .74rem; line-height: 1.7; color: var(--muted); font-weight: 300; max-width: 560px; }
+    .btn-solid {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+      background: var(--purple-bright); color: var(--white); padding: 16px 30px; min-height: 52px;
+      transition: background .2s;
+    }
+    .btn-solid:hover { background: var(--purple-mid); }
+    .btn-line {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--purple-mid); border: 1px solid rgba(91,45,142,.35); padding: 14px 24px; min-height: 48px;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-line:hover { border-color: var(--purple-bright); background: var(--purple-pale); }
+
+    /* Prices */
+    #prices { padding: 60px 24px; background: var(--white); }
+    .plans { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+    .plan {
+      background: var(--off-white); border: 1px solid rgba(91,45,142,.1); border-radius: var(--radius);
+      padding: 28px 24px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .plan .eyebrow { margin-bottom: 0; }
+    .plan-amt { font-family: var(--serif); font-size: 3rem; font-weight: 300; color: var(--purple-deep); line-height: 1; }
+    .plan-amt small { font-family: var(--sans); font-size: .72rem; color: var(--muted); font-weight: 300; letter-spacing: .04em; margin-left: 4px; }
+    .plan ul { list-style: none; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .plan li { font-size: .8rem; line-height: 1.6; color: var(--muted); font-weight: 300; padding-left: 18px; position: relative; }
+    .plan li::before { content: '✦'; position: absolute; left: 0; top: 0; font-size: .6rem; color: var(--purple-bright); line-height: 2.1; }
+    .plan.hl { background: var(--purple-deep); border-color: var(--purple-deep); }
+    .plan.hl .eyebrow { color: var(--purple-light); }
+    .plan.hl .plan-amt { color: var(--white); }
+    .plan.hl .plan-amt small, .plan.hl li { color: rgba(255,255,255,.55); }
+    .plan.hl li::before { color: var(--purple-light); }
+    .plan .btn-solid, .plan .btn-line { align-self: flex-start; }
+    .plan-tag {
+      align-self: flex-start; font-size: .56rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
+      color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 3px 10px;
+    }
+    .rules { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 28px; }
+    .rules span { font-size: .74rem; color: var(--muted); font-weight: 300; display: flex; gap: 10px; align-items: center; }
+    .rules span::before { content: '◈'; color: var(--purple-bright); font-size: .75rem; }
+
+    /* Team */
+    #team { padding: 60px 24px; background: var(--off-white); }
+    .team { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+    .coach {
+      background: var(--white); border: 1px solid rgba(91,45,142,.1); border-radius: var(--radius);
+      display: grid; grid-template-columns: 96px 1fr; gap: 18px; padding: 16px; align-items: start;
+    }
+    .coach-img { aspect-ratio: 3/4; background: var(--purple-pale) center/cover; border-radius: var(--radius); }
+    .coach h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 300; color: var(--purple-deep); line-height: 1.1; }
+    .coach .eyebrow { margin: 6px 0 8px; font-size: .58rem; }
+    .coach p.bio { font-size: .78rem; line-height: 1.65; color: var(--muted); font-weight: 300; }
+
+    /* First visit + FAQ */
+    #faq { padding: 60px 24px; background: var(--white); }
+    .steps { list-style: none; display: flex; flex-direction: column; gap: 22px; margin-top: 28px; }
+    .steps li { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
+    .step-n { font-family: var(--serif); font-size: 2rem; font-weight: 300; font-style: italic; color: var(--purple-light); line-height: 1; }
+    .steps h4 { font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text); margin-bottom: 4px; }
+    .steps p { font-size: .8rem; line-height: 1.65; color: var(--muted); font-weight: 300; }
+    .faq-list { margin-top: 28px; border-top: 1px solid rgba(91,45,142,.12); }
+    .faq-list details { border-bottom: 1px solid rgba(91,45,142,.12); }
+    .faq-list summary {
+      list-style: none; cursor: pointer; padding: 18px 32px 18px 0; position: relative;
+      font-family: var(--serif); font-size: 1.25rem; font-weight: 400; color: var(--purple-deep); line-height: 1.3;
+    }
+    .faq-list summary::-webkit-details-marker { display: none; }
+    .faq-list summary::after {
+      content: '+'; position: absolute; right: 4px; top: 16px; font-family: var(--sans); font-weight: 300;
+      font-size: 1.2rem; color: var(--purple-bright); transition: transform .25s;
+    }
+    .faq-list details[open] summary::after { transform: rotate(45deg); }
+    .faq-list details p { font-size: .82rem; line-height: 1.75; color: var(--muted); font-weight: 300; padding: 0 0 20px; max-width: 560px; }
+    .faq-col + .faq-col { margin-top: 48px; }
+
+    .footer-concept { margin-top: 10px; font-size: .62rem; line-height: 1.6; color: var(--purple-light); opacity: .7; font-weight: 300; max-width: 480px; }
+
+    @media (min-width: 600px) {
+      .plans { grid-template-columns: 1fr 1fr; }
+      .team { grid-template-columns: 1fr; }
+      #stats .stat { flex: 1 1 0; border-bottom: none; }
+      #stats .stat:nth-child(2n) { border-right: 1px solid rgba(255,255,255,.08); }
+      #stats .stat:last-child { border-right: none; }
+    }
+    @media (min-width: 768px) {
+      .tt-head { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+      .booking-inner { max-width: 1280px; }
+      .tt { grid-template-columns: repeat(6, 1fr); gap: 4px; }
+      .day { grid-template-columns: 1fr; align-content: start; border-top: 1px solid rgba(91,45,142,.08); }
+      .day.today { border-left: 1px solid rgba(91,45,142,.08); border-top: 3px solid var(--purple-bright); }
+      .day-name { padding: 16px 14px 10px; border-bottom: 1px solid rgba(91,45,142,.08); }
+      .day-slots { flex-direction: column; }
+      .slot { flex: none; border-left: none; border-bottom: 1px solid rgba(91,45,142,.06); }
+      .tt-foot { flex-direction: row; justify-content: space-between; align-items: center; }
+      #prices, #team, #faq { padding: 100px 80px; }
+      .team { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .coach { grid-template-columns: 1fr; padding: 0; gap: 0; }
+      .coach-img { aspect-ratio: 4/5; border-radius: var(--radius) var(--radius) 0 0; }
+      .coach-body { padding: 22px 22px 26px; }
+      #faq { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; }
+      .faq-col + .faq-col { margin-top: 0; }
+    }
+    @media (min-width: 1024px) {
+      .nav-links { display: flex; }
+      .plans { grid-template-columns: repeat(4, 1fr); gap: 4px; }
+      .hero-next { display: none; }
+      .next-card {
+        display: block; position: absolute; right: 80px; bottom: 120px; z-index: 2; width: 300px;
+        background: rgba(26,13,46,.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,.12); padding: 26px 26px 24px;
+        opacity: 0; animation: fadeUp .7s 1.4s ease both;
+      }
+      .next-card .eyebrow { color: var(--purple-light); display: flex; align-items: center; gap: 8px; }
+      .next-card .nc-when { font-family: var(--serif); font-size: 2.6rem; font-weight: 300; color: var(--white); line-height: 1; margin-top: 6px; }
+      .next-card .nc-what { font-family: var(--serif); font-size: 1.3rem; font-style: italic; color: var(--purple-light); margin-top: 4px; }
+      .next-card .nc-meta { font-size: .72rem; color: rgba(255,255,255,.5); font-weight: 300; margin-top: 4px; }
+      .next-card ol { list-style: none; margin: 18px 0 20px; border-top: 1px solid rgba(255,255,255,.1); }
+      .next-card li { display: flex; justify-content: space-between; gap: 12px; font-size: .72rem; color: rgba(255,255,255,.6); font-weight: 300; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+      .next-card li b { font-weight: 500; color: var(--white); }
+      .next-card .btn-solid { width: 100%; justify-content: center; }
+      .hero-scroll-hint { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+      .hero-title .line-inner { transform: none; }
+    }
+
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HealthClub", "@id": "https://lafit.studio/#studio", "name": "LA Fit Studio", "url": "https://lafit.studio/", "image": "https://lafit.studio/LA%20Fit%20pics/hero-bg.jpg", "logo": "https://lafit.studio/apple-touch-icon.png", "telephone": "+351964193789", "email": "support@lafit.studio", "priceRange": "€12.50–€45", "currenciesAccepted": "EUR", "paymentAccepted": "Credit Card, Apple Pay, Google Pay", "knowsLanguage": ["en", "ru", "uk"], "address": {"@type": "PostalAddress", "streetAddress": "Praça João Martinho de Freitas 292b", "postalCode": "2750-388", "addressLocality": "Cascais", "addressRegion": "Lisboa", "addressCountry": "PT"}, "geo": {"@type": "GeoCoordinates", "latitude": 38.7053734, "longitude": -9.4329449}, "hasMap": "https://maps.app.goo.gl/GAzBik6DGBxoq88Y6", "areaServed": [{"@type": "City", "name": "Cascais"}, {"@type": "City", "name": "Estoril"}, {"@type": "City", "name": "Parede"}, {"@type": "City", "name": "Carcavelos"}, {"@type": "City", "name": "Lisbon"}], "sameAs": ["https://www.instagram.com/la_fit_studio/", "https://maps.app.goo.gl/GAzBik6DGBxoq88Y6"], "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "09:30", "closes": "20:15"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "17:00", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "10:00", "closes": "20:15"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "17:00", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:30", "closes": "20:15"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:30"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Classes and passes", "itemListElement": [{"@type": "Offer", "name": "Single class", "price": "20", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Multipass, per class", "price": "15", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Kids cheerleading, monthly pass per class", "price": "12.50", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Kids cheerleading trial", "price": "15", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Online 1:1 session", "price": "45", "priceCurrency": "EUR"}]}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "I've never tried aerial yoga. Can I join?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Classes are for all levels and the hammock takes your weight from the first session. Age 12+."}}, {"@type": "Question", "name": "Which language is the class in?", "acceptedAnswer": {"@type": "Answer", "text": "Adult classes run in English, Russian and Ukrainian, often mixed. Kids cheerleading is taught in Russian and Ukrainian."}}, {"@type": "Question", "name": "How much is a class?", "acceptedAnswer": {"@type": "Answer", "text": "€20 for a single class, from €15 per class with a multipass. Kids cheerleading from €12.50 with a monthly pass; online 1:1 €45."}}, {"@type": "Question", "name": "How do I cancel?", "acceptedAnswer": {"@type": "Answer", "text": "In the booking app, up to 2 hours before class."}}]}</script>
 </head>
 <body>
 
-<div class="demo" data-i18n="demo">Concept redesign for LA Fit Studio. Preview only, not the official website.</div>
-
-<header>
-  <div class="wrap nav">
-    <a class="logo" href="#top">LA<span>·</span>Fit</a>
-    <ul>
-      <li><a href="#timetable" data-i18n="nav_tt">Timetable</a></li>
-      <li><a href="#classes" data-i18n="nav_classes">Classes</a></li>
-      <li><a href="#prices" data-i18n="nav_prices">Prices</a></li>
-      <li><a href="#team" data-i18n="nav_team">Team</a></li>
-      <li><a href="#visit" data-i18n="nav_visit">Visit</a></li>
-    </ul>
-    <div class="lang" role="group" aria-label="Language">
-      <button type="button" id="l-en" data-lang="en" aria-pressed="true">EN</button>
-      <button type="button" id="l-ru" data-lang="ru" aria-pressed="false">RU</button>
-      <button type="button" id="l-pt" data-lang="pt" aria-pressed="false">PT</button>
-    </div>
-    <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="book">Book a class</a>
+  <div id="loader">
+    <div class="loader-wordmark">LA Fit Studio</div>
+    <div class="loader-track"><div class="loader-fill"></div></div>
   </div>
-</header>
+  <div id="progress"></div>
 
-<main id="top">
-  <div class="wrap hero">
-    <div class="hero-grid">
-      <div>
-        <p class="eyebrow" data-i18n="hero_eyebrow">Boutique studio · Cascais centre</p>
-        <h1 data-i18n-html="hero_h1">Yoga, aerial &amp; strength. <em>Small groups,</em> your language.</h1>
-        <p class="lead" data-i18n="hero_lead">Aerial yoga in silk hammocks, vinyasa, Body Sculpt, an outdoor workout over the Atlantic and cheerleading for kids. Classes in English, Russian and Ukrainian, five minutes from Cascais station.</p>
-        <div class="cta">
-          <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="book_first">Book your first class</a>
-          <a class="btn btn-ghost" href="#timetable" data-i18n="see_tt">See the timetable</a>
-        </div>
-        <div class="facts">
-          <span><b>€20</b> <span data-i18n="f_drop">drop-in</span></span>
-          <span><b data-i18n="f_from">from €15</b> <span data-i18n="f_pass">with a multipass</span></span>
-          <span><b>EN · RU · UA</b></span>
-          <span><b data-i18n="f_cancel_b">2 h</b> <span data-i18n="f_cancel">free cancellation</span></span>
-        </div>
+  <!-- ── Nav ── -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo">LA Fit Studio<span class="nav-logo-sub">Cascais &middot; Portugal</span></a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#booking" data-i18n="nav_tt">Timetable</a>
+        <a href="#classes" data-i18n="nav_classes">Classes</a>
+        <a href="#prices" data-i18n="nav_prices">Prices</a>
+        <a href="#team" data-i18n="nav_team">Team</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
       </div>
-      <aside class="next" aria-live="polite">
-        <p class="eyebrow" id="next-label" data-i18n="next_label">Next class</p>
-        <p class="when" id="next-when">--:--</p>
-        <p class="what" id="next-what">&nbsp;</p>
-        <p class="meta" id="next-meta">&nbsp;</p>
-        <ol id="next-list"></ol>
-        <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="reserve">Reserve a spot</a>
-      </aside>
+      <div class="lang-switcher" id="lang-switcher" role="group" aria-label="Language">
+        <button class="lang-btn active" data-lang="en">EN</button><span class="lang-sep">·</span>
+        <button class="lang-btn" data-lang="ru">RU</button><span class="lang-sep">·</span>
+        <button class="lang-btn" data-lang="ua">UA</button><span class="lang-sep">·</span>
+        <button class="lang-btn" data-lang="pt">PT</button>
+      </div>
+      <a href="#booking" class="nav-book-link" data-i18n="book">Book a Class</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
+  </nav>
+
+  <div id="drawer">
+    <a href="#booking" class="drawer-link" data-i18n="nav_tt">Timetable</a>
+    <a href="#classes" class="drawer-link" data-i18n="nav_classes">Classes</a>
+    <a href="#prices"  class="drawer-link" data-i18n="nav_prices">Prices</a>
+    <a href="#team"    class="drawer-link" data-i18n="nav_team">Team</a>
+    <a href="#contact" class="drawer-link" data-i18n="nav_contact">Contact</a>
+    <a href="#booking" class="drawer-book" data-i18n="book">Book a Class</a>
+    <p class="drawer-social"><span data-i18n="follow">Follow us</span> <a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener">@la_fit_studio</a></p>
   </div>
 
-  <section id="timetable">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow" data-i18n="tt_eyebrow">Weekly timetable</p><h2 data-i18n="tt_h">Every class, one screen</h2></div>
-        <p data-i18n="tt_p">Tap a class to book it. Times are Lisbon time. Filter by what you want to do.</p>
+  <a href="#booking" id="sticky-cta"><span class="sticky-cta-dot"></span><span class="sticky-cta-text" id="sticky-text" data-i18n="book">Book a Class</span></a>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <h1 class="hero-tag" data-i18n="hero_tag">Yoga &amp; Fitness Studio · Cascais · Estoril</h1>
+      <div class="hero-title">
+        <span class="line"><span class="line-inner" data-i18n="hero_l1">Move.</span></span>
+        <span class="line"><span class="line-inner"><em data-i18n="hero_l2">Transform.</em></span></span>
+        <span class="line"><span class="line-inner" data-i18n="hero_l3">Belong.</span></span>
+      </div>
+      <p class="hero-sub" data-i18n="hero_sub">Boutique yoga, aerial yoga &amp; fitness studio in Cascais, near Estoril. Small groups in English, Russian and Ukrainian. Every body. Every level.</p>
+      <a href="#booking" class="hero-cta" data-i18n="see_tt">See the timetable</a>
+      <p class="hero-next" id="hero-next"></p>
+    </div>
+    <aside class="next-card" aria-live="polite">
+      <p class="eyebrow"><span class="sticky-cta-dot"></span><span data-i18n="next_label">Next class</span></p>
+      <p class="nc-when" id="nc-when">--:--</p>
+      <p class="nc-what" id="nc-what">&nbsp;</p>
+      <p class="nc-meta" id="nc-meta">&nbsp;</p>
+      <ol id="nc-list"></ol>
+      <a class="btn-solid" id="nc-btn" href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="reserve">Reserve a spot</a>
+    </aside>
+    <div class="hero-scroll-hint" data-i18n="scroll">Scroll</div>
+  </section>
+
+  <!-- ── Stats: facts instead of slogans ── -->
+  <div id="stats">
+    <div class="stat"><div class="stat-num">€20</div><div class="stat-label" data-i18n="st1">Drop-in class</div></div>
+    <div class="stat"><div class="stat-num" data-i18n="st2n">from €15</div><div class="stat-label" data-i18n="st2">With a multipass</div></div>
+    <div class="stat"><div class="stat-num">EN · RU · UA</div><div class="stat-label" data-i18n="st3">Class languages</div></div>
+    <div class="stat"><div class="stat-num" data-i18n="st4n">2 h</div><div class="stat-label" data-i18n="st4">Free cancellation</div></div>
+  </div>
+
+  <!-- ── Booking: one-screen timetable ── -->
+  <section id="booking">
+    <div class="booking-inner">
+      <div class="tt-head">
+        <div>
+          <p class="eyebrow" data-i18n="tt_eye">Reserve Your Spot</p>
+          <h2 class="section-title" data-i18n-html="tt_title">This <em>Week</em></h2>
+        </div>
+        <p class="tt-lead" data-i18n="tt_lead">Every class on one screen, in Lisbon time. Tap a class to book it.</p>
       </div>
       <div class="chips" id="chips" role="group" aria-label="Filter"></div>
-      <div class="tt-scroll"><div class="tt" id="tt"></div></div>
-      <p class="tt-note" data-i18n="tt_note">Stretching times are published in the booking app. Kids groups: Tiny 3–4, Junior 5–6, Senior 7–13.</p>
+      <div class="tt" id="tt"></div>
+      <div class="tt-foot">
+        <p class="tt-note" data-i18n="tt_note">Studio classes book and pay online in Gymcatch. Cliffside Sculpt and kids cheerleading book on WhatsApp. Kids groups: Tiny 3–4, Junior 5–6, Senior 7–13.</p>
+        <a class="btn-solid" href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="open_booking">Open online booking</a>
+      </div>
     </div>
   </section>
 
+  <!-- ── Classes ── -->
   <section id="classes">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow" data-i18n="cl_eyebrow">Classes</p><h2 data-i18n="cl_h">Pick your way to move</h2></div>
-        <p data-i18n="cl_p">All levels unless noted. Groups are kept small so the coach can correct every person.</p>
-      </div>
-      <div class="classes" id="classes-grid"></div>
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="offer_eye">What We Offer</p>
+      <h2 class="section-title" data-i18n-html="offer_title">Our <em>Classes</em></h2>
     </div>
+    <div class="classes-scroll" id="classes-scroll"></div>
+    <div class="scroll-hint" id="scroll-dots"></div>
   </section>
 
+  <!-- ── Prices ── -->
   <section id="prices">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow" data-i18n="pr_eyebrow">Prices</p><h2 data-i18n="pr_h">Clear prices, no membership trap</h2></div>
-        <p data-i18n="pr_p">Pay per class or save with a pass. Card, Apple Pay and Google Pay at checkout.</p>
+    <p class="eyebrow" data-i18n="pr_eye">Prices</p>
+    <h2 class="section-title" data-i18n-html="pr_title">Simple, <em>honest</em> prices</h2>
+    <div class="plans">
+      <div class="plan">
+        <p class="eyebrow" data-i18n="p1">Single class</p>
+        <p class="plan-amt">€20</p>
+        <ul><li data-i18n="p1a">Any studio class</li><li data-i18n="p1b">Cliffside Sculpt included</li></ul>
+        <a class="btn-line" href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="book">Book a Class</a>
       </div>
-      <div class="plans">
-        <div class="plan">
-          <h3 data-i18n="p1">Single class</h3>
-          <p class="amt">€20</p>
-          <ul><li data-i18n="p1a">Any studio class</li><li data-i18n="p1b">Includes Cliffside Sculpt</li></ul>
-          <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="book">Book a class</a>
-        </div>
-        <div class="plan hl">
-          <h3 data-i18n="p2">Multipass</h3>
-          <p class="amt">€15<small data-i18n="per_class"> / class</small></p>
-          <ul><li data-i18n="p2a">Best value for 2+ classes a week</li><li data-i18n="p2b">Aerial, vinyasa, Body Sculpt, stretching</li></ul>
-          <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="buy_pass">Buy a pass</a>
-        </div>
-        <div class="plan">
-          <h3 data-i18n="p3">Kids cheer</h3>
-          <p class="amt">€12.50<small data-i18n="per_class"> / class</small></p>
-          <ul><li data-i18n="p3a">With a monthly pass</li><li data-i18n="p3b">First trial class €15, single €20</li></ul>
-          <a class="btn btn-ghost" href="https://wa.me/351964193789?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Kids%20Cheerleading%20trial" target="_blank" rel="noopener" data-i18n="book_trial">Book a trial</a>
-        </div>
-        <div class="plan">
-          <h3 data-i18n="p4">Online 1:1</h3>
-          <p class="amt">€45<small data-i18n="per_session"> / session</small></p>
-          <ul><li data-i18n="p4a">Live video with Anastasiia</li><li data-i18n="p4b">Personal written programme</li></ul>
-          <a class="btn btn-ghost" href="https://wa.me/351964193789?text=Hi%2C%20I%27d%20like%20to%20book%20Online%20Training" target="_blank" rel="noopener" data-i18n="ask_wa">Ask on WhatsApp</a>
-        </div>
+      <div class="plan hl">
+        <span class="plan-tag" data-i18n="best">Best value</span>
+        <p class="eyebrow" data-i18n="p2">Multipass</p>
+        <p class="plan-amt"><span data-i18n="from">from</span> €15<small data-i18n="per_class">/ class</small></p>
+        <ul><li data-i18n="p2a">For two or more classes a week</li><li data-i18n="p2b">Aerial, vinyasa, Body Sculpt, stretching</li></ul>
+        <a class="btn-solid" href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="buy_pass">Buy a pass</a>
       </div>
-      <div class="rules">
-        <span data-i18n="r1">Free cancellation up to 2 hours before class</span>
-        <span data-i18n="r2">Arrive 5–10 minutes early</span>
-        <span data-i18n="r3">Mats and hammocks provided</span>
+      <div class="plan">
+        <p class="eyebrow" data-i18n="p3">Kids cheerleading</p>
+        <p class="plan-amt"><span data-i18n="from">from</span> €12.50<small data-i18n="per_class">/ class</small></p>
+        <ul><li data-i18n="p3a">With a monthly pass</li><li data-i18n="p3b">First trial class €15, single €20</li></ul>
+        <a class="btn-line" href="https://wa.me/351964193789?text=Hi%2C%20I%27d%20like%20a%20Kids%20Cheerleading%20trial%20class" target="_blank" rel="noopener" data-i18n="book_trial">Book a trial</a>
+      </div>
+      <div class="plan">
+        <p class="eyebrow" data-i18n="p4">Online 1:1</p>
+        <p class="plan-amt">€45<small data-i18n="per_session">/ session</small></p>
+        <ul><li data-i18n="p4a">Live video with Anastasiia</li><li data-i18n="p4b">Personalised training plan</li></ul>
+        <a class="btn-line" href="https://wa.me/351964193789?text=Hi%2C%20I%27d%20like%20to%20book%20Online%20Training" target="_blank" rel="noopener" data-i18n="ask_wa">Ask on WhatsApp</a>
+      </div>
+    </div>
+    <div class="rules">
+      <span data-i18n="r1">Free cancellation up to 2 hours before class</span>
+      <span data-i18n="r2">Card, Apple Pay and Google Pay</span>
+      <span data-i18n="r3">Mats and hammocks provided</span>
+    </div>
+  </section>
+
+  <!-- ── About (original) ── -->
+  <section id="about">
+    <div class="about-col-img"></div>
+    <div class="about-col-text">
+      <p class="eyebrow about-eyebrow" data-i18n="about_eye">Our Story</p>
+      <h2 class="section-title about-title" data-i18n-html="about_title">Where <em>Cascais</em><br>comes to move</h2>
+      <div class="about-divider"></div>
+      <p class="about-body" data-i18n="about_p1">LA Fit Studio was born from a simple belief: movement is medicine. Community is the cure. We created a space where people of every age and level feel not just welcome, but truly seen.</p>
+      <p class="about-body" data-i18n="about_p2">Our instructors bring expertise, warmth, and a genuine passion for what they teach. Whether you're hanging from silk in Aerial Yoga, building strength above the Atlantic, or watching your child discover what their body can do, you're in the right place.</p>
+      <div class="about-features">
+        <div class="about-feature"><div class="feature-icon">✦</div><div class="feature-text"><h4 data-i18n="feat1_t">Small Group Classes</h4><p data-i18n="feat1_p">Personal attention in every session. Your form, progress, and safety always front of mind.</p></div></div>
+        <div class="about-feature"><div class="feature-icon">◈</div><div class="feature-text"><h4 data-i18n="feat2_t">Community First</h4><p data-i18n="feat2_p">More than a studio, a weekly ritual shared with people who lift each other up.</p></div></div>
+        <div class="about-feature"><div class="feature-icon">◉</div><div class="feature-text"><h4 data-i18n="feat3_t">Premium Equipment</h4><p data-i18n="feat3_p">Professional-grade apparatus and studio kit: everything you need to train well, already here.</p></div></div>
       </div>
     </div>
   </section>
 
+  <!-- ── Team ── -->
   <section id="team">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow" data-i18n="tm_eyebrow">Team</p><h2 data-i18n="tm_h">Coaches who know your name</h2></div>
-      </div>
-      <div class="team">
-        <article class="coach"><div class="av">Y<img src="https://lafit.studio/LA%20Fit%20pics/coach-yana.jpg" alt="Yana" onerror="this.remove()"></div><div><h3>Yana</h3><p class="role" data-i18n="yana_r">Aerial yoga &amp; vinyasa</p><p data-i18n="yana_p">Leads aerial and vinyasa classes on Wednesdays and Saturdays. Teaches in English, Russian and Ukrainian.</p><span class="todo" data-i18n="todo">+ certifications, years of practice</span></div></article>
-        <article class="coach"><div class="av">A<img src="https://lafit.studio/LA%20Fit%20pics/coach-anastasiia.jpg" alt="Anastasiia" onerror="this.remove()"></div><div><h3>Anastasiia</h3><p class="role" data-i18n="ana_r">Body Sculpt, Cliffside &amp; online 1:1</p><p data-i18n="ana_p">Strength and conditioning in the studio, on the cliffs on Saturday mornings, and online wherever you are.</p><span class="todo" data-i18n="todo">+ certifications, years of practice</span></div></article>
-        <article class="coach"><div class="av">L<img src="https://lafit.studio/LA%20Fit%20pics/coach-larysa.jpg" alt="Larysa" onerror="this.remove()"></div><div><h3>Larysa</h3><p class="role" data-i18n="lar_r">Kids cheerleading</p><p data-i18n="lar_p">Runs three age groups from 3 to 13, five afternoons a week. Classes in Russian and Ukrainian.</p><span class="todo" data-i18n="todo">+ certifications, years of practice</span></div></article>
+    <p class="eyebrow" data-i18n="tm_eye">The Team</p>
+    <h2 class="section-title" data-i18n-html="tm_title">Coaches who know <em>your name</em></h2>
+    <div class="team">
+      <article class="coach">
+        <div class="coach-img" style="background-image:url('img/coach-yana.jpg')" role="img" aria-label="Yana"></div>
+        <div class="coach-body"><h3>Yana</h3><p class="eyebrow" data-i18n="yana_r">Aerial yoga · Vinyasa</p><p class="bio" data-i18n="yana_p">Leads aerial and vinyasa classes on Wednesdays and Saturdays, from first-timers to inversions.</p></div>
+      </article>
+      <article class="coach">
+        <div class="coach-img" style="background-image:url('img/coach-anastasiia.jpg')" role="img" aria-label="Anastasiia"></div>
+        <div class="coach-body"><h3>Anastasiia</h3><p class="eyebrow" data-i18n="ana_r">Body Sculpt · Cliffside · Online</p><p class="bio" data-i18n="ana_p">Strength and conditioning in the studio, on the cliffs on Saturday mornings, and online wherever you are.</p></div>
+      </article>
+      <article class="coach">
+        <div class="coach-img" style="background-image:url('img/coach-larysa.jpg')" role="img" aria-label="Larysa"></div>
+        <div class="coach-body"><h3>Larysa</h3><p class="eyebrow" data-i18n="lar_r">Kids cheerleading · Stretching</p><p class="bio" data-i18n="lar_p">Runs three kids groups from age 3, five afternoons a week, plus stretching on Monday and Friday mornings.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── First visit + FAQ ── -->
+  <section id="faq">
+    <div class="faq-col">
+      <p class="eyebrow" data-i18n="fv_eye">First Visit</p>
+      <h2 class="section-title" data-i18n-html="fv_title">New here? <em>Three steps</em></h2>
+      <ol class="steps">
+        <li><span class="step-n">01</span><div><h4 data-i18n="s1">Pick a class</h4><p data-i18n="s1d">Not sure where to start? Vinyasa and Body Sculpt work for any level.</p></div></li>
+        <li><span class="step-n">02</span><div><h4 data-i18n="s2">Book and pay online</h4><p data-i18n="s2d">It takes a minute. You get a reminder and can cancel up to 2 hours before.</p></div></li>
+        <li><span class="step-n">03</span><div><h4 data-i18n="s3">Arrive 10 minutes early</h4><p data-i18n="s3d">Wear close-fitting clothes and bring water. Mats and hammocks are here.</p></div></li>
+      </ol>
+    </div>
+    <div class="faq-col">
+      <p class="eyebrow">FAQ</p>
+      <h2 class="section-title" data-i18n-html="faq_title">Good <em>questions</em></h2>
+      <div class="faq-list">
+        <details><summary data-i18n="q1">I've never tried aerial yoga. Can I join?</summary><p data-i18n="a1">Yes. Classes are for all levels and the hammock takes your weight from the first session. Age 12+. Not suitable during pregnancy or with untreated blood pressure or eye pressure conditions.</p></details>
+        <details><summary data-i18n="q2">Which language is the class in?</summary><p data-i18n="a2">Adult classes run in English, Russian and Ukrainian, often mixed. Kids cheerleading is taught in Russian and Ukrainian.</p></details>
+        <details><summary data-i18n="q3">What if it rains on Cliffside Sculpt?</summary><p data-i18n="a3">The coach confirms the session on WhatsApp on Saturday morning. In bad weather it moves into the studio.</p></details>
+        <details><summary data-i18n="q4">How do I cancel?</summary><p data-i18n="a4">In the booking app, up to 2 hours before class. The credit goes back to your pass.</p></details>
+        <details><summary data-i18n="q5">Is there parking nearby?</summary><p data-i18n="a5">The studio is in central Cascais, a short walk from the train station. Paid street parking and public car parks are close by.</p></details>
       </div>
     </div>
   </section>
 
-  <section id="first">
-    <div class="wrap two">
-      <div>
-        <p class="eyebrow" data-i18n="fv_eyebrow">First visit</p>
-        <h2 data-i18n="fv_h">New here? Three steps.</h2>
-        <ol class="steps">
-          <li><div><b data-i18n="s1">Pick a class in the timetable</b><span data-i18n="s1d">Not sure? Vinyasa and Body Sculpt work for any level.</span></div></li>
-          <li><div><b data-i18n="s2">Book and pay online</b><span data-i18n="s2d">Takes a minute. You get a reminder and can cancel up to 2 hours before.</span></div></li>
-          <li><div><b data-i18n="s3">Come 10 minutes early</b><span data-i18n="s3d">Wear close-fitting clothes, bring water. Indoor trainers for Body Sculpt.</span></div></li>
-        </ol>
+  <!-- ── Contact (original) ── -->
+  <section id="contact">
+    <div class="contact-col-text">
+      <p class="eyebrow" data-i18n="contact_eye">Get In Touch</p>
+      <h2 class="contact-title" data-i18n-html="contact_title">Ready to <em>begin?</em></h2>
+      <p class="contact-sub" data-i18n="contact_sub">Questions about classes, first visits, or kids programmes. Just reach out. We'll take care of you.</p>
+    </div>
+    <div class="contact-col-links">
+      <div class="contact-buttons">
+        <a href="https://wa.me/351964193789" target="_blank" rel="noopener" class="contact-btn"><div class="contact-btn-icon">💬</div><div><div class="contact-btn-label">WhatsApp</div><div class="contact-btn-value">+351 964 193 789</div></div></a>
+        <a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener" class="contact-btn"><div class="contact-btn-icon">📸</div><div><div class="contact-btn-label">Instagram</div><div class="contact-btn-value">@la_fit_studio</div></div></a>
+        <a href="#" class="contact-btn" data-eu="support" data-ed="lafit.studio"><div class="contact-btn-icon">✉</div><div><div class="contact-btn-label" data-i18n="email_label">Email</div><div class="contact-btn-value" data-i18n="reveal">Click to reveal</div></div></a>
+        <a href="https://maps.app.goo.gl/GAzBik6DGBxoq88Y6" target="_blank" rel="noopener" class="contact-btn"><div class="contact-btn-icon">📍</div><div><div class="contact-btn-label" data-i18n="loc_label">Location</div><div class="contact-btn-value">Cascais, Portugal</div></div></a>
       </div>
-      <div>
-        <p class="eyebrow">FAQ</p>
-        <details><summary data-i18n="q1">I have never tried aerial yoga. Can I join?</summary><p data-i18n="a1">Yes. Classes are for all levels and the hammock takes your weight from the start. Age 12+. Not suitable during pregnancy, with untreated high or low blood pressure or eye pressure conditions.</p></details>
-        <details><summary data-i18n="q2">Which language is the class in?</summary><p data-i18n="a2">Adult classes are taught in English, Russian and Ukrainian, often mixed. Kids cheerleading runs in Russian and Ukrainian.</p></details>
-        <details><summary data-i18n="q3">What happens if it rains on Cliffside Sculpt?</summary><p data-i18n="a3">The coach confirms the session on WhatsApp on Saturday morning. If the weather is bad, it moves into the studio.</p></details>
-        <details><summary data-i18n="q4">How do I cancel?</summary><p data-i18n="a4">In the booking app, up to 2 hours before class. The credit returns to your pass.</p></details>
-        <details><summary data-i18n="q5">Is there parking nearby?</summary><p data-i18n="a5">The studio is in the centre of Cascais, a short walk from the train station. Paid street parking and public car parks are nearby.</p></details>
+      <div class="map-wrap">
+        <a href="https://maps.app.goo.gl/GAzBik6DGBxoq88Y6" target="_blank" rel="noopener" class="address-block">
+          <div class="address-icon">📍</div>
+          <div class="address-text">
+            <div class="address-name">LA Fit Studio</div>
+            <div class="address-line">Praça João Martinho de Freitas 292b</div>
+            <div class="address-line">2750-388 Cascais, Portugal</div>
+            <div class="address-line" data-i18n="station">5 min walk from Cascais train station</div>
+            <div class="address-link" data-i18n="open_maps">Open in Maps →</div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
 
-  <section id="reviews" style="padding-top:0">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow" data-i18n="rv_eyebrow">Reviews</p><h2 data-i18n="rv_h">What members say</h2></div><p data-i18n="rv_p">Slot for real Google reviews. Not filled with invented quotes on purpose.</p></div>
-      <div class="quotes">
-        <div class="q"><b data-i18n="rq">Google review #1</b><span data-i18n="rqd">Pull 3 recent 5-star reviews from the Google Business profile.</span></div>
-        <div class="q"><b data-i18n="rq2">Google review #2</b><span data-i18n="rqd">Pull 3 recent 5-star reviews from the Google Business profile.</span></div>
-        <div class="q"><b data-i18n="rq3">Google review #3</b><span data-i18n="rqd">Pull 3 recent 5-star reviews from the Google Business profile.</span></div>
+  <!-- ── Instagram (original) ── -->
+  <section id="instagram">
+    <div class="ig-embed-frame">
+      <div class="ig-embed-header">
+        <a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener" class="ig-profile-link">
+          <div class="ig-avatar"><div class="ig-avatar-inner">LA</div></div>
+          <div><div class="ig-handle">@la_fit_studio</div><div class="ig-name">LA Fit Studio</div></div>
+        </a>
+        <a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener" class="ig-follow-btn">Follow</a>
       </div>
+      <div class="ig-grid" id="ig-grid"></div>
     </div>
   </section>
 
-  <section id="visit">
-    <div class="wrap visit">
-      <a class="map" href="https://maps.app.goo.gl/GAzBik6DGBxoq88Y6" target="_blank" rel="noopener" aria-label="Open in Google Maps"><span class="pin"></span><span class="open" data-i18n="open_maps">Open in Google Maps ↗</span></a>
-      <div class="contact">
-        <p class="eyebrow" data-i18n="vs_eyebrow">Visit</p>
-        <h2 data-i18n="vs_h">Find us in Cascais</h2>
-        <dl class="contact">
-          <div><dt data-i18n="addr">Address</dt><dd>Praça João Martinho de Freitas 292b<br>2750-388 Cascais</dd></div>
-          <div><dt>WhatsApp</dt><dd><a href="https://wa.me/351964193789" target="_blank" rel="noopener">+351 964 193 789</a></dd></div>
-          <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener">@la_fit_studio</a></dd></div>
-          <div><dt>Email</dt><dd data-i18n="email_todo">hello@lafit.studio (to confirm)</dd></div>
-        </dl>
-      </div>
+  <footer>
+    <div class="footer-logo">LA Fit Studio</div>
+    <p class="footer-sub" data-i18n="footer_sub">Boutique yoga, aerial yoga &amp; fitness studio in Cascais, near Estoril, Portugal.</p>
+    <div class="footer-links">
+      <a href="#booking" data-i18n="nav_tt">Timetable</a>
+      <a href="#classes" data-i18n="nav_classes">Classes</a>
+      <a href="#prices" data-i18n="nav_prices">Prices</a>
+      <a href="#about" data-i18n="nav_about">About</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+      <a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://lafit.studio/privacy-policy">Privacy</a>
+      <a href="https://lafit.studio/terms">Terms</a>
     </div>
-  </section>
-</main>
+    <div class="footer-bottom">© 2026 LA Fit Studio · Cascais, Portugal</div>
+    <div class="footer-legal">Online bookings and payments are managed by Wassl OÜ, a company registered in Estonia, acting solely as payment and booking service provider; card payments are processed securely via Stripe. All classes, instruction and in-person services remain provided independently by LA Fit Studio and its instructors.</div>
+    <div class="footer-concept" data-i18n="concept">Concept preview of an improved lafit.studio. Not the official website.</div>
+  </footer>
 
-<footer><div class="wrap"><span>© <span id="yr">2026</span> LA Fit Studio · Cascais</span><span data-i18n="foot">Concept by an independent designer. Booking and payments handled by Gymcatch and Stripe.</span></div></footer>
+  <script>
+  (function () {
+    var BOOK = 'https://gymcatch.com/app/provider/10473';
+    var WA = function (t) { return 'https://wa.me/351964193789?text=' + encodeURIComponent("Hi, I'd like to book " + t); };
 
-<div class="mbar">
-  <a class="btn btn-ghost" href="#timetable" data-i18n="nav_tt">Timetable</a>
-  <a class="btn btn-book" data-book href="https://gymcatch.com/app/provider/10473" target="_blank" rel="noopener" data-i18n="book">Book a class</a>
-</div>
+    /* Classes: real data from lafit.studio class pages (Nov 2026) */
+    var C = {
+      aerial:  { name: 'Aerial Yoga',       coach: 'Yana',       price: '€20',     img: 'aerial-yoga-hero.jpg',       page: 'aerial-yoga',      href: BOOK },
+      vinyasa: { name: 'Vinyasa Yoga',      coach: 'Yana',       price: '€20',     img: 'yoga-hero.jpg',              page: 'yoga',             href: BOOK },
+      sculpt:  { name: 'Body Sculpt',       coach: 'Anastasiia', price: '€20',     img: 'body-sculpt-hero.jpg',       page: 'body-sculpt',      href: BOOK },
+      cliff:   { name: 'Cliffside Sculpt',  coach: 'Anastasiia', price: '€20',     img: 'cliffside-sculpt-hero.jpg',  page: 'cliffside-sculpt', href: WA('Cliffside Sculpt (Saturday 8:00)'), wa: true, pos: 'center 30%' },
+      stretch: { name: 'Stretching',        coach: 'Larysa',     price: '€20',     img: 'stretching-hero.jpg',        page: 'stretching',       href: BOOK },
+      kids:    { name: 'Kids Cheerleading', coach: 'Larysa',     price: '€12.50+', img: 'kids-cheer-hero.jpg',        page: 'kids-cheer',       href: WA('Kids Cheerleading'), wa: true },
+      sound:   { name: 'Sound Healing',     coach: '',           price: '',        img: '',                           page: 'sound-healing',    href: '', soon: true },
+      online:  { name: 'Online Training',   coach: 'Anastasiia', price: '€45',     img: 'body-sculpt-hero.jpg',       page: 'online-training',  href: WA('Online Training'), wa: true }
+    };
+    var ORDER = ['aerial', 'vinyasa', 'sculpt', 'cliff', 'stretch', 'kids', 'sound', 'online'];
+    /* [weekday 1=Mon..6=Sat, time, class, kids group] */
+    var S = [
+      [1,'09:30','sculpt'],[1,'10:30','stretch'],[1,'17:00','kids','junior'],[1,'18:00','kids','senior'],[1,'19:15','sculpt'],
+      [2,'17:00','kids','tiny'],
+      [3,'10:00','aerial'],[3,'11:15','vinyasa'],[3,'18:00','kids','senior'],[3,'19:15','sculpt'],
+      [4,'17:00','kids','tiny'],
+      [5,'09:30','sculpt'],[5,'10:30','stretch'],[5,'17:00','kids','junior'],[5,'18:00','kids','senior'],[5,'19:15','sculpt'],
+      [6,'08:00','cliff'],[6,'10:00','vinyasa'],[6,'11:30','aerial']
+    ];
 
-<script>
-(function(){
-const BOOK="https://gymcatch.com/app/provider/10473";
-const WA=t=>"https://wa.me/351964193789?text="+encodeURIComponent("Hi, I'd like to book "+t);
-const C={
- aerial:{c:"#B05FB0",coach:"Yana",img:"aerial-yoga-hero.jpg",price:"€20",href:BOOK},
- vinyasa:{c:"#2E8F7F",coach:"Yana",img:"yoga-hero.jpg",price:"€20",href:BOOK},
- sculpt:{c:"#D9733B",coach:"Anastasiia",img:"body-sculpt-hero.jpg",price:"€20",href:BOOK},
- cliff:{c:"#2D6FB5",coach:"Anastasiia",img:"cliffside-sculpt-hero.jpg",price:"€20",href:WA("Cliffside Sculpt (Saturdays 8am)")},
- stretch:{c:"#6A8F3A",coach:"",img:"",price:"€20",href:BOOK},
- kids:{c:"#D6457A",coach:"Larysa",img:"kids-cheer-hero.jpg",price:"€12.50+",href:WA("Kids Cheerleading")},
- online:{c:"#5B6472",coach:"Anastasiia",img:"",price:"€45",href:WA("Online Training")}
-};
-// [day 1=Mon..6=Sat, "HH:MM", class, group]
-const S=[[1,"09:30","sculpt"],[1,"17:00","kids","junior"],[1,"18:00","kids","senior"],[1,"19:15","sculpt"],
- [2,"17:00","kids","tiny"],
- [3,"10:00","aerial"],[3,"11:15","vinyasa"],[3,"18:00","kids","senior"],[3,"19:15","sculpt"],
- [4,"17:00","kids","tiny"],
- [5,"09:30","sculpt"],[5,"17:00","kids","junior"],[5,"18:00","kids","senior"],[5,"19:15","sculpt"],
- [6,"08:00","cliff"],[6,"10:00","vinyasa"],[6,"11:30","aerial"]];
-const T={
-en:{days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],today:"Today",tomorrow:"Tomorrow",all:"All",
- n:{aerial:"Aerial Yoga",vinyasa:"Vinyasa Yoga",sculpt:"Body Sculpt",cliff:"Cliffside Sculpt",stretch:"Stretching",kids:"Kids Cheerleading",online:"Online 1:1"},
- g:{tiny:"Tiny 3–4",junior:"Junior 5–6",senior:"Senior 7–13"},
- sub:{aerial:"Float · Flex · Fly · 12+",vinyasa:"Breath · Balance · Flow · 14+",sculpt:"Shape · Strengthen · 14+",cliff:"Outdoors · Saturdays 8:00",stretch:"Mobility · Recovery",kids:"Ages 3–13 · RU/UA",online:"Live video · anywhere"},
- d:{aerial:"Silk hammocks take your weight so you can decompress the spine, go upside down safely and build strength without impact.",
-    vinyasa:"Breath-led flow that builds heat, balance and focus. A good first class if you are new to the studio.",
-    sculpt:"Full-body strength with light weights and bodyweight. Tones, builds endurance and works at your level.",
-    cliff:"The same Body Sculpt energy, outside on the cliffs with Atlantic air. Weather is confirmed on WhatsApp.",
-    stretch:"Slow, deep work on flexibility and mobility. Ideal next to strength days or after a desk week.",
-    kids:"Jumps, stunts, dance and teamwork in three age groups. Builds confidence, coordination and friends.",
-    online:"1:1 strength training by video with a written programme and regular check-ins."},
- book:"Book",ask:"Ask on WhatsApp",with:"with",in_:"in",none:"No more classes this week"},
-ru:{days:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],today:"Сегодня",tomorrow:"Завтра",all:"Все",
- n:{aerial:"Аэройога",vinyasa:"Виньяса-йога",sculpt:"Body Sculpt",cliff:"Cliffside Sculpt",stretch:"Растяжка",kids:"Детский черлидинг",online:"Онлайн 1:1"},
- g:{tiny:"Малыши 3–4",junior:"Младшие 5–6",senior:"Старшие 7–13"},
- sub:{aerial:"Полёт · гибкость · 12+",vinyasa:"Дыхание · баланс · 14+",sculpt:"Сила · рельеф · 14+",cliff:"На улице · суббота 8:00",stretch:"Мобильность · восстановление",kids:"3–13 лет · RU/UA",online:"Видеосвязь · где угодно"},
- d:{aerial:"Гамак держит ваш вес: разгрузка позвоночника, безопасные перевёрнутые позы и сила без ударной нагрузки.",
-    vinyasa:"Динамичная практика в ритме дыхания: тепло, баланс, концентрация. Хороший первый класс в студии.",
-    sculpt:"Силовая на всё тело с лёгкими весами и собственным весом. Тонус и выносливость под ваш уровень.",
-    cliff:"Тот же Body Sculpt, но на скалах у океана. Погоду подтверждаем в WhatsApp.",
-    stretch:"Медленная глубокая работа над гибкостью и подвижностью суставов. Идеально рядом с силовыми днями.",
-    kids:"Прыжки, станты, танец и командная работа в трёх возрастных группах. Уверенность, координация, друзья.",
-    online:"Персональные силовые по видео, письменная программа и регулярная обратная связь."},
- book:"Записаться",ask:"Написать в WhatsApp",with:"с",in_:"через",none:"На этой неделе классов больше нет"},
-pt:{days:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],today:"Hoje",tomorrow:"Amanhã",all:"Todas",
- n:{aerial:"Yoga Aéreo",vinyasa:"Vinyasa Yoga",sculpt:"Body Sculpt",cliff:"Cliffside Sculpt",stretch:"Alongamentos",kids:"Cheerleading Infantil",online:"Online 1:1"},
- g:{tiny:"Tiny 3–4",junior:"Junior 5–6",senior:"Senior 7–13"},
- sub:{aerial:"Flutuar · Fletir · 12+",vinyasa:"Respiração · Equilíbrio · 14+",sculpt:"Força · Resistência · 14+",cliff:"Ao ar livre · sábado 8:00",stretch:"Mobilidade · Recuperação",kids:"3–13 anos · RU/UA",online:"Vídeo ao vivo · em qualquer lugar"},
- d:{aerial:"A rede de seda suporta o seu peso: descomprime a coluna, inversões seguras e força sem impacto.",
-    vinyasa:"Fluxo guiado pela respiração que trabalha calor, equilíbrio e foco. Boa primeira aula.",
-    sculpt:"Força para o corpo todo com pesos leves e peso corporal, ao seu nível.",
-    cliff:"O mesmo Body Sculpt, ao ar livre nas falésias junto ao Atlântico.",
-    stretch:"Trabalho lento e profundo de flexibilidade e mobilidade.",
-    kids:"Saltos, stunts, dança e trabalho de equipa em três grupos de idade.",
-    online:"Treino de força 1:1 por vídeo com plano escrito e acompanhamento."},
- book:"Reservar",ask:"Perguntar no WhatsApp",with:"com",in_:"em",none:"Não há mais aulas esta semana"}
-};
-const UI={
-ru:{demo:"Концепт редизайна для LA Fit Studio. Превью, не официальный сайт.",nav_tt:"Расписание",nav_classes:"Классы",nav_prices:"Цены",nav_team:"Команда",nav_visit:"Контакты",book:"Записаться",
- hero_eyebrow:"Бутик-студия · центр Кашкайша",hero_h1:"Йога, аэро и сила. <em>Маленькие группы,</em> ваш язык.",
- hero_lead:"Аэройога в гамаках, виньяса, Body Sculpt, тренировка на скалах у океана и черлидинг для детей. Занятия на русском, украинском и английском, пять минут от вокзала Кашкайша.",
- book_first:"Записаться на первый класс",see_tt:"Смотреть расписание",f_drop:"разовое",f_from:"от €15",f_pass:"по абонементу",f_cancel_b:"2 ч",f_cancel:"бесплатная отмена",
- next_label:"Ближайший класс",reserve:"Забронировать место",tt_eyebrow:"Расписание на неделю",tt_h:"Все классы на одном экране",tt_p:"Нажмите на класс, чтобы записаться. Время лиссабонское. Фильтр по типу занятия.",
- tt_note:"Время растяжки публикуется в приложении для записи. Детские группы: малыши 3–4, младшие 5–6, старшие 7–13.",
- cl_eyebrow:"Классы",cl_h:"Выберите, как двигаться",cl_p:"Для любого уровня, если не указано иное. Группы маленькие, тренер поправит каждого.",
- pr_eyebrow:"Цены",pr_h:"Понятные цены без обязательного членства",pr_p:"Платите за класс или экономьте с абонементом. Карта, Apple Pay и Google Pay.",
- p1:"Разовое занятие",p1a:"Любой класс в студии",p1b:"Включая Cliffside Sculpt",p2:"Абонемент",per_class:" / класс",p2a:"Выгодно от 2 занятий в неделю",p2b:"Аэро, виньяса, Body Sculpt, растяжка",buy_pass:"Купить абонемент",
- p3:"Детский черлидинг",p3a:"С месячным абонементом",p3b:"Пробное €15, разовое €20",book_trial:"Записаться на пробное",p4:"Онлайн 1:1",per_session:" / сессия",p4a:"Живое видео с Анастасией",p4b:"Персональная письменная программа",ask_wa:"Написать в WhatsApp",
- r1:"Бесплатная отмена за 2 часа",r2:"Приходите за 5–10 минут",r3:"Коврики и гамаки есть в студии",
- tm_eyebrow:"Команда",tm_h:"Тренеры, которые знают вас по имени",yana_r:"Аэройога и виньяса",yana_p:"Ведёт аэро и виньясу по средам и субботам. Говорит на русском, украинском и английском.",
- ana_r:"Body Sculpt, Cliffside и онлайн 1:1",ana_p:"Силовые в студии, на скалах по субботам и онлайн, где бы вы ни были.",lar_r:"Детский черлидинг",lar_p:"Три возрастные группы от 3 до 13 лет, пять дней в неделю. Занятия на русском и украинском.",todo:"+ сертификаты, стаж",
- fv_eyebrow:"Первый визит",fv_h:"Впервые? Три шага.",s1:"Выберите класс в расписании",s1d:"Сомневаетесь? Виньяса и Body Sculpt подходят любому уровню.",s2:"Запишитесь и оплатите онлайн",s2d:"Минута. Придёт напоминание, отменить можно за 2 часа.",s3:"Приходите за 10 минут",s3d:"Облегающая одежда и вода. Для Body Sculpt нужны кроссовки для зала.",
- q1:"Никогда не пробовал(а) аэройогу. Можно?",a1:"Да. Классы для любого уровня, гамак держит ваш вес с первого занятия. С 12 лет. Нельзя при беременности, нелеченом высоком или низком давлении и повышенном глазном давлении.",
- q2:"На каком языке занятия?",a2:"Взрослые классы на русском, украинском и английском, часто вперемешку. Черлидинг на русском и украинском.",
- q3:"Что если на Cliffside Sculpt дождь?",a3:"Тренер подтверждает занятие в WhatsApp утром в субботу. При плохой погоде переносим в студию.",
- q4:"Как отменить запись?",a4:"В приложении, не позже чем за 2 часа. Занятие вернётся на абонемент.",q5:"Есть парковка рядом?",a5:"Студия в центре Кашкайша, пешком от вокзала. Рядом платная уличная парковка и паркинги.",
- rv_eyebrow:"Отзывы",rv_h:"Что говорят участники",rv_p:"Место под настоящие отзывы из Google. Специально не заполнено выдуманными цитатами.",rq:"Отзыв Google №1",rq2:"Отзыв Google №2",rq3:"Отзыв Google №3",rqd:"Подтянуть 3 свежих отзыва на 5 звёзд из Google Business.",
- open_maps:"Открыть в Google Maps ↗",vs_eyebrow:"Контакты",vs_h:"Как нас найти",addr:"Адрес",email_todo:"hello@lafit.studio (уточнить)",foot:"Концепт независимого дизайнера. Запись и оплата через Gymcatch и Stripe."},
-pt:{demo:"Conceito de redesign para o LA Fit Studio. Pré-visualização, não é o site oficial.",nav_tt:"Horário",nav_classes:"Aulas",nav_prices:"Preços",nav_team:"Equipa",nav_visit:"Contactos",book:"Reservar aula",
- hero_eyebrow:"Estúdio boutique · centro de Cascais",hero_h1:"Yoga, aéreo e força. <em>Grupos pequenos,</em> na sua língua.",
- hero_lead:"Yoga aéreo, vinyasa, Body Sculpt, treino nas falésias e cheerleading infantil. Aulas em inglês, russo e ucraniano, a cinco minutos da estação de Cascais.",
- book_first:"Reservar a primeira aula",see_tt:"Ver horário",f_drop:"aula avulsa",f_from:"desde €15",f_pass:"com multipass",f_cancel_b:"2 h",f_cancel:"cancelamento grátis",
- next_label:"Próxima aula",reserve:"Reservar lugar",tt_eyebrow:"Horário semanal",tt_h:"Todas as aulas num ecrã",tt_p:"Toque numa aula para reservar. Hora de Lisboa.",
- tt_note:"O horário de alongamentos é publicado na app de reservas. Grupos infantis: Tiny 3–4, Junior 5–6, Senior 7–13.",
- cl_eyebrow:"Aulas",cl_h:"Escolha como se mexer",cl_p:"Todos os níveis salvo indicação. Grupos pequenos.",pr_eyebrow:"Preços",pr_h:"Preços claros, sem fidelização",pr_p:"Pague por aula ou poupe com um passe.",
- p1:"Aula avulsa",p1a:"Qualquer aula no estúdio",p1b:"Inclui Cliffside Sculpt",p2:"Multipass",per_class:" / aula",p2a:"Para 2+ aulas por semana",p2b:"Aéreo, vinyasa, Body Sculpt, alongamentos",buy_pass:"Comprar passe",
- p3:"Cheerleading infantil",p3a:"Com passe mensal",p3b:"Aula experimental €15, avulsa €20",book_trial:"Marcar experimental",p4:"Online 1:1",per_session:" / sessão",p4a:"Vídeo ao vivo com Anastasiia",p4b:"Plano escrito personalizado",ask_wa:"Perguntar no WhatsApp",
- r1:"Cancelamento grátis até 2 h antes",r2:"Chegue 5–10 minutos antes",r3:"Tapetes e redes disponíveis",tm_eyebrow:"Equipa",tm_h:"Treinadoras que sabem o seu nome",todo:"+ certificações, anos de prática",
- fv_eyebrow:"Primeira visita",fv_h:"Primeira vez? Três passos.",s1:"Escolha uma aula no horário",s2:"Reserve e pague online",s3:"Chegue 10 minutos antes",
- rv_eyebrow:"Avaliações",rv_h:"O que dizem os alunos",open_maps:"Abrir no Google Maps ↗",vs_eyebrow:"Contactos",vs_h:"Encontre-nos em Cascais",addr:"Morada",email_todo:"hello@lafit.studio (a confirmar)"}
-};
-const EN={};document.querySelectorAll("[data-i18n]").forEach(e=>EN[e.dataset.i18n]=e.textContent);
-document.querySelectorAll("[data-i18n-html]").forEach(e=>EN[e.dataset.i18nHtml]=e.innerHTML);
-let lang="en",filter="all";
-try{const s=localStorage.getItem("lafit-lang");if(s&&T[s])lang=s;else if((navigator.language||"").match(/^(ru|uk)/))lang="ru";else if((navigator.language||"").startsWith("pt"))lang="pt";}catch(e){}
+    /* Dynamic strings */
+    var D = {
+      en: { days: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], today: 'Today', tomorrow: 'Tomorrow', all: 'All', kidsF: 'Kids', with: 'with', wa: 'via WhatsApp', none: 'No classes', coming: 'Coming Soon', viewig: 'View on IG',
+        g: { tiny: 'Tiny 3–4', junior: 'Junior 5–6', senior: 'Senior 7–13' },
+        tag: { aerial: 'Float · Flex · Fly', vinyasa: 'Breath · Balance · Flow', sculpt: 'Shape · Strengthen · Endure', cliff: 'Strength · Sea Air · Atlantic Views', stretch: 'Flexibility · Mobility · Balance', kids: 'Energy · Confidence · Ages 3–13', sound: 'Vibration · Restoration', online: 'Anywhere · Anytime · Personal' },
+        desc: { aerial: 'Defy gravity in our silk hammocks. Decompress, strengthen, and soar.', vinyasa: 'Flowing movement anchored in breath. Find your edge.', sculpt: 'High-energy toning with bodyweight and light weights. Sculpt and define.', cliff: 'Body Sculpt with a breathtaking Atlantic view. Saturdays at 8am.', stretch: 'Mobility and flexibility work. Your body will thank you.', kids: 'Tumbling, jumps, teamwork and joy. Sport meets confidence.', sound: 'Crystal bowls and gongs. Deep restoration. Returning soon.', online: '1:1 strength coaching by video, wherever you are. Live calls plus a personalised plan.' } },
+      ru: { days: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'], today: 'Сегодня', tomorrow: 'Завтра', all: 'Все', kidsF: 'Дети', with: 'с', wa: 'через WhatsApp', none: 'Нет занятий', coming: 'Скоро', viewig: 'Открыть в IG',
+        g: { tiny: 'Малыши 3–4', junior: 'Младшие 5–6', senior: 'Старшие 7–13' },
+        tag: { aerial: 'Полёт · Гибкость · Свобода', vinyasa: 'Дыхание · Баланс · Поток', sculpt: 'Форма · Сила · Выносливость', cliff: 'Сила · Морской воздух · Атлантика', stretch: 'Гибкость · Подвижность · Баланс', kids: 'Энергия · Уверенность · 3–13 лет', sound: 'Вибрация · Восстановление', online: 'Где угодно · Когда угодно · Индивидуально' },
+        desc: { aerial: 'Бросьте вызов гравитации в шёлковых гамаках. Расслабьтесь, укрепите тело и взлетите.', vinyasa: 'Плавное движение в ритме дыхания. Найдите свой предел.', sculpt: 'Энергичная проработка тела с собственным весом и лёгкими отягощениями.', cliff: 'Body Sculpt с видом на Атлантику. По субботам в 8:00.', stretch: 'Работа над подвижностью и гибкостью. Ваше тело скажет спасибо.', kids: 'Акробатика, прыжки, командный дух и радость. Спорт, который дарит уверенность.', sound: 'Хрустальные чаши и гонги. Глубокое восстановление. Скоро вернётся.', online: 'Персональные силовые по видео, где бы вы ни были. Живые звонки и индивидуальный план.' } },
+      ua: { days: ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'], today: 'Сьогодні', tomorrow: 'Завтра', all: 'Усі', kidsF: 'Діти', with: 'з', wa: 'через WhatsApp', none: 'Немає занять', coming: 'Незабаром', viewig: 'Відкрити в IG',
+        g: { tiny: 'Малюки 3–4', junior: 'Молодші 5–6', senior: 'Старші 7–13' },
+        tag: { aerial: 'Політ · Гнучкість · Свобода', vinyasa: 'Дихання · Баланс · Потік', sculpt: 'Форма · Сила · Витривалість', cliff: 'Сила · Морське повітря · Атлантика', stretch: 'Гнучкість · Рухливість · Баланс', kids: 'Енергія · Впевненість · 3–13 років', sound: 'Вібрація · Відновлення', online: 'Будь-де · Будь-коли · Індивідуально' },
+        desc: { aerial: 'Киньте виклик гравітації в шовкових гамаках. Розслабтеся, зміцніть тіло та злетіть.', vinyasa: 'Плавний рух у ритмі дихання. Знайдіть свою межу.', sculpt: 'Енергійне опрацювання тіла з власною вагою та легкими обтяженнями.', cliff: 'Body Sculpt з краєвидом на Атлантику. По суботах о 8:00.', stretch: 'Робота над рухливістю та гнучкістю. Ваше тіло подякує.', kids: 'Акробатика, стрибки, командний дух і радість. Спорт, що дарує впевненість.', sound: 'Кришталеві чаші та гонги. Глибоке відновлення. Незабаром повертається.', online: 'Персональні силові по відео, де б ви не були. Живі дзвінки та індивідуальний план.' } },
+      pt: { days: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], today: 'Hoje', tomorrow: 'Amanhã', all: 'Todas', kidsF: 'Crianças', with: 'com', wa: 'via WhatsApp', none: 'Sem aulas', coming: 'Brevemente', viewig: 'Ver no IG',
+        g: { tiny: 'Tiny 3–4', junior: 'Junior 5–6', senior: 'Senior 7–13' },
+        tag: { aerial: 'Voar · Flexibilidade · Leveza', vinyasa: 'Respiração · Equilíbrio · Fluxo', sculpt: 'Definir · Fortalecer · Resistir', cliff: 'Força · Ar do Mar · Atlântico', stretch: 'Flexibilidade · Mobilidade · Equilíbrio', kids: 'Energia · Confiança · 3–13 anos', sound: 'Vibração · Restauração', online: 'Em qualquer lugar · Personalizado' },
+        desc: { aerial: 'Desafie a gravidade nas nossas redes de seda. Descontraia, fortaleça e voe.', vinyasa: 'Movimento fluido guiado pela respiração. Encontre o seu limite.', sculpt: 'Tonificação enérgica com o peso do corpo e pesos leves.', cliff: 'Body Sculpt com vista sobre o Atlântico. Sábados às 8h.', stretch: 'Trabalho de mobilidade e flexibilidade. O seu corpo vai agradecer.', kids: 'Acrobacias, saltos, espírito de equipa e alegria.', sound: 'Taças de cristal e gongos. Restauração profunda. Regressa em breve.', online: 'Treino de força 1:1 por vídeo, onde quer que esteja, com plano personalizado.' } }
+    };
 
-function lisbonNow(){const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Lisbon",weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
- const g=t=>p.find(x=>x.type===t).value;const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(g("weekday"));return{wd,min:(+g("hour")%24)*60+ +g("minute")};}
-const toMin=s=>{const[h,m]=s.split(":");return h*60+ +m};
-const label=(k,g)=>T[lang].n[k]+(g?" · "+T[lang].g[g]:"");
+    /* Static strings (EN is read from the HTML) */
+    var UI = {
+      ru: {
+        nav_tt: 'Расписание', nav_classes: 'Занятия', nav_prices: 'Цены', nav_team: 'Команда', nav_contact: 'Контакты', nav_about: 'О нас', book: 'Записаться', follow: 'Мы в Instagram',
+        hero_tag: 'Йога и фитнес · Кашкайш · Эшторил', hero_l1: 'Двигайся.', hero_l2: 'Меняйся.', hero_l3: 'Своя среди своих.',
+        hero_sub: 'Бутик-студия йоги, аэройоги и фитнеса в Кашкайше, рядом с Эшторилом. Малые группы на русском, украинском и английском. Для любого тела и уровня.',
+        see_tt: 'Смотреть расписание', next_label: 'Ближайшее занятие', reserve: 'Забронировать место', scroll: 'Вниз',
+        st1: 'Разовое занятие', st2n: 'от €15', st2: 'По абонементу', st3: 'Языки занятий', st4n: '2 ч', st4: 'Бесплатная отмена',
+        tt_eye: 'Забронируйте место', tt_title: 'Эта <em>неделя</em>', tt_lead: 'Все занятия на одном экране, время лиссабонское. Нажмите на занятие, чтобы записаться.',
+        tt_note: 'Занятия в студии бронируются и оплачиваются онлайн в Gymcatch. Cliffside Sculpt и детский черлидинг через WhatsApp. Детские группы: малыши 3–4, младшие 5–6, старшие 7–13.',
+        open_booking: 'Открыть онлайн-запись', offer_eye: 'Наши направления', offer_title: 'Наши <em>занятия</em>',
+        pr_eye: 'Цены', pr_title: 'Простые и <em>честные</em> цены', p1: 'Разовое занятие', p1a: 'Любое занятие в студии', p1b: 'Включая Cliffside Sculpt', best: 'Выгоднее всего', p2: 'Абонемент', from: 'от', per_class: '/ занятие',
+        p2a: 'Для двух и более занятий в неделю', p2b: 'Аэро, виньяса, Body Sculpt, растяжка', buy_pass: 'Купить абонемент', p3: 'Детский черлидинг', p3a: 'С месячным абонементом', p3b: 'Пробное €15, разовое €20', book_trial: 'Записаться на пробное',
+        p4: 'Онлайн 1:1', per_session: '/ сессия', p4a: 'Живое видео с Анастасией', p4b: 'Индивидуальный план тренировок', ask_wa: 'Написать в WhatsApp',
+        r1: 'Бесплатная отмена за 2 часа до занятия', r2: 'Карта, Apple Pay и Google Pay', r3: 'Коврики и гамаки есть в студии',
+        about_eye: 'Наша история', about_title: 'Место, куда <em>Кашкайш</em><br>приходит двигаться',
+        about_p1: 'LA Fit Studio выросла из простой мысли: движение лечит, а сообщество исцеляет. Мы создали пространство, где каждый, любого возраста и уровня, чувствует себя не просто желанным гостем, а по-настоящему замеченным.',
+        about_p2: 'Наши тренеры это опыт, тепло и искренняя любовь к своему делу. Парите ли вы в гамаке на аэройоге, тренируетесь на скалах у океана или смотрите, как ваш ребёнок открывает возможности своего тела, вы там, где нужно.',
+        feat1_t: 'Малые группы', feat1_p: 'Личное внимание на каждом занятии. Ваша техника, прогресс и безопасность всегда на первом месте.', feat2_t: 'Сообщество прежде всего', feat2_p: 'Больше чем студия: еженедельный ритуал в кругу людей, которые поддерживают друг друга.', feat3_t: 'Премиум-оборудование', feat3_p: 'Профессиональные гамаки и инвентарь. Всё, что нужно для хорошей тренировки, уже здесь.',
+        tm_eye: 'Команда', tm_title: 'Тренеры, которые знают <em>вас по имени</em>', yana_r: 'Аэройога · Виньяса', yana_p: 'Ведёт аэройогу и виньясу по средам и субботам, от первого занятия до перевёрнутых поз.',
+        ana_r: 'Body Sculpt · Cliffside · Онлайн', ana_p: 'Силовые в студии, на скалах по субботам утром и онлайн, где бы вы ни были.', lar_r: 'Детский черлидинг · Растяжка', lar_p: 'Ведёт три детские группы от 3 лет пять дней в неделю и растяжку по понедельникам и пятницам утром.',
+        fv_eye: 'Первый визит', fv_title: 'Впервые? <em>Три шага</em>', s1: 'Выберите занятие', s1d: 'Не знаете, с чего начать? Виньяса и Body Sculpt подходят любому уровню.', s2: 'Запишитесь и оплатите онлайн', s2d: 'Это минута. Придёт напоминание, отменить можно за 2 часа.', s3: 'Приходите за 10 минут', s3d: 'Облегающая одежда и вода. Коврики и гамаки есть в студии.',
+        faq_title: 'Частые <em>вопросы</em>', q1: 'Никогда не пробовал(а) аэройогу. Можно?', a1: 'Да. Занятия для любого уровня, гамак держит ваш вес с первого раза. С 12 лет. Не подходит при беременности, нелеченом давлении и повышенном глазном давлении.',
+        q2: 'На каком языке занятия?', a2: 'Взрослые занятия на русском, украинском и английском, часто вперемешку. Черлидинг на русском и украинском.', q3: 'Что если на Cliffside Sculpt дождь?', a3: 'Тренер подтверждает занятие в WhatsApp в субботу утром. В плохую погоду переносим в студию.',
+        q4: 'Как отменить запись?', a4: 'В приложении, не позже чем за 2 часа. Занятие вернётся на абонемент.', q5: 'Есть ли парковка рядом?', a5: 'Студия в центре Кашкайша, пешком от вокзала. Рядом платная уличная парковка и паркинги.',
+        contact_eye: 'Свяжитесь с нами', contact_title: 'Готовы <em>начать?</em>', contact_sub: 'Вопросы о занятиях, первом визите или детских программах? Просто напишите нам, мы обо всём позаботимся.',
+        email_label: 'Эл. почта', reveal: 'Показать адрес', loc_label: 'Адрес', station: '5 минут пешком от вокзала Кашкайша', open_maps: 'Открыть в картах →', footer_sub: 'Бутик-студия йоги, аэройоги и фитнеса в Кашкайше, Португалия.',
+        concept: 'Концепт улучшенного lafit.studio. Не официальный сайт.'
+      },
+      ua: {
+        nav_tt: 'Розклад', nav_classes: 'Заняття', nav_prices: 'Ціни', nav_team: 'Команда', nav_contact: 'Контакти', nav_about: 'Про нас', book: 'Записатися', follow: 'Ми в Instagram',
+        hero_tag: 'Йога та фітнес · Кашкайш · Ешторил', hero_l1: 'Рухайся.', hero_l2: 'Змінюйся.', hero_l3: 'Своя серед своїх.',
+        hero_sub: 'Бутик-студія йоги, аеройоги та фітнесу в Кашкайші, поруч з Ешторилом. Малі групи українською, російською та англійською. Для будь-якого тіла й рівня.',
+        see_tt: 'Дивитися розклад', next_label: 'Найближче заняття', reserve: 'Забронювати місце', scroll: 'Вниз',
+        st1: 'Разове заняття', st2n: 'від €15', st2: 'За абонементом', st3: 'Мови занять', st4n: '2 год', st4: 'Безкоштовне скасування',
+        tt_eye: 'Забронюйте місце', tt_title: 'Цей <em>тиждень</em>', tt_lead: 'Усі заняття на одному екрані, час лісабонський. Натисніть на заняття, щоб записатися.',
+        tt_note: 'Заняття в студії бронюються й оплачуються онлайн у Gymcatch. Cliffside Sculpt і дитячий черлідинг через WhatsApp. Дитячі групи: малюки 3–4, молодші 5–6, старші 7–13.',
+        open_booking: 'Відкрити онлайн-запис', offer_eye: 'Наші напрямки', offer_title: 'Наші <em>заняття</em>',
+        pr_eye: 'Ціни', pr_title: 'Прості й <em>чесні</em> ціни', p1: 'Разове заняття', p1a: 'Будь-яке заняття в студії', p1b: 'Включно з Cliffside Sculpt', best: 'Найвигідніше', p2: 'Абонемент', from: 'від', per_class: '/ заняття',
+        p2a: 'Для двох і більше занять на тиждень', p2b: 'Аеро, віньяса, Body Sculpt, розтяжка', buy_pass: 'Купити абонемент', p3: 'Дитячий черлідинг', p3a: 'З місячним абонементом', p3b: 'Пробне €15, разове €20', book_trial: 'Записатися на пробне',
+        p4: 'Онлайн 1:1', per_session: '/ сесія', p4a: 'Живе відео з Анастасією', p4b: 'Індивідуальний план тренувань', ask_wa: 'Написати в WhatsApp',
+        r1: 'Безкоштовне скасування за 2 години до заняття', r2: 'Картка, Apple Pay і Google Pay', r3: 'Килимки й гамаки є в студії',
+        about_eye: 'Наша історія', about_title: 'Місце, куди <em>Кашкайш</em><br>приходить рухатися',
+        about_p1: 'LA Fit Studio виросла з простої думки: рух лікує, а спільнота зцілює. Ми створили простір, де кожен, будь-якого віку та рівня, почувається не просто бажаним гостем, а по-справжньому поміченим.',
+        about_p2: 'Наші тренери це досвід, тепло та щира любов до своєї справи. Чи ширяєте ви в гамаку на аеройозі, тренуєтеся на скелях біля океану, чи дивитеся, як ваша дитина відкриває можливості свого тіла, ви саме там, де треба.',
+        feat1_t: 'Малі групи', feat1_p: 'Особиста увага на кожному занятті. Ваша техніка, прогрес і безпека завжди на першому місці.', feat2_t: 'Спільнота передусім', feat2_p: 'Більше ніж студія: щотижневий ритуал у колі людей, які підтримують одне одного.', feat3_t: 'Преміум-обладнання', feat3_p: 'Професійні гамаки та інвентар. Усе для доброго тренування вже тут.',
+        tm_eye: 'Команда', tm_title: 'Тренерки, які знають <em>вас на імʼя</em>', yana_r: 'Аеройога · Віньяса', yana_p: 'Веде аеройогу та віньясу по середах і суботах, від першого заняття до перевернутих поз.',
+        ana_r: 'Body Sculpt · Cliffside · Онлайн', ana_p: 'Силові в студії, на скелях у суботу зранку та онлайн, де б ви не були.', lar_r: 'Дитячий черлідинг · Розтяжка', lar_p: 'Веде три дитячі групи від 3 років пʼять днів на тиждень і розтяжку в понеділок та пʼятницю зранку.',
+        fv_eye: 'Перший візит', fv_title: 'Вперше? <em>Три кроки</em>', s1: 'Оберіть заняття', s1d: 'Не знаєте, з чого почати? Віньяса та Body Sculpt підходять будь-якому рівню.', s2: 'Запишіться й оплатіть онлайн', s2d: 'Це хвилина. Прийде нагадування, скасувати можна за 2 години.', s3: 'Приходьте за 10 хвилин', s3d: 'Облягаючий одяг і вода. Килимки й гамаки є в студії.',
+        faq_title: 'Часті <em>питання</em>', q1: 'Ніколи не пробував(ла) аеройогу. Можна?', a1: 'Так. Заняття для будь-якого рівня, гамак тримає вашу вагу з першого разу. Від 12 років. Не підходить під час вагітності, при нелікованому тиску та підвищеному очному тиску.',
+        q2: 'Якою мовою заняття?', a2: 'Дорослі заняття українською, російською та англійською, часто впереміш. Черлідинг українською та російською.', q3: 'Що як на Cliffside Sculpt дощ?', a3: 'Тренерка підтверджує заняття у WhatsApp у суботу зранку. У погану погоду переносимо до студії.',
+        q4: 'Як скасувати запис?', a4: 'У застосунку, не пізніше ніж за 2 години. Заняття повернеться на абонемент.', q5: 'Чи є парковка поруч?', a5: 'Студія в центрі Кашкайша, пішки від вокзалу. Поруч платна вулична парковка та паркінги.',
+        contact_eye: 'Звʼяжіться з нами', contact_title: 'Готові <em>розпочати?</em>', contact_sub: 'Питання про заняття, перший візит чи дитячі програми? Просто напишіть нам, ми про все подбаємо.',
+        email_label: 'Ел. пошта', reveal: 'Показати адресу', loc_label: 'Адреса', station: '5 хвилин пішки від вокзалу Кашкайша', open_maps: 'Відкрити на мапі →', footer_sub: 'Бутик-студія йоги, аеройоги та фітнесу в Кашкайші, Португалія.',
+        concept: 'Концепт покращеного lafit.studio. Не офіційний сайт.'
+      },
+      pt: {
+        nav_tt: 'Horário', nav_classes: 'Aulas', nav_prices: 'Preços', nav_team: 'Equipa', nav_contact: 'Contactos', nav_about: 'Sobre nós', book: 'Reservar', follow: 'Siga-nos',
+        hero_tag: 'Yoga e Fitness · Cascais · Estoril', hero_l1: 'Mexe-te.', hero_l2: 'Transforma-te.', hero_l3: 'Faz parte.',
+        hero_sub: 'Estúdio boutique de yoga, yoga aéreo e fitness em Cascais, perto do Estoril. Grupos pequenos em inglês, russo e ucraniano. Para todos os corpos e níveis.',
+        see_tt: 'Ver horário', next_label: 'Próxima aula', reserve: 'Reservar lugar', scroll: 'Descer',
+        st1: 'Aula avulsa', st2n: 'desde €15', st2: 'Com multipass', st3: 'Línguas das aulas', st4n: '2 h', st4: 'Cancelamento grátis',
+        tt_eye: 'Reserve o seu lugar', tt_title: 'Esta <em>semana</em>', tt_lead: 'Todas as aulas num só ecrã, hora de Lisboa. Toque numa aula para reservar.',
+        tt_note: 'As aulas no estúdio reservam-se e pagam-se online no Gymcatch. Cliffside Sculpt e cheerleading infantil por WhatsApp. Grupos infantis: Tiny 3–4, Junior 5–6, Senior 7–13.',
+        open_booking: 'Abrir reservas online', offer_eye: 'O que oferecemos', offer_title: 'As nossas <em>aulas</em>',
+        pr_eye: 'Preços', pr_title: 'Preços <em>claros</em> e simples', p1: 'Aula avulsa', p1a: 'Qualquer aula no estúdio', p1b: 'Inclui Cliffside Sculpt', best: 'Melhor valor', p2: 'Multipass', from: 'desde', per_class: '/ aula',
+        p2a: 'Para duas ou mais aulas por semana', p2b: 'Aéreo, vinyasa, Body Sculpt, alongamentos', buy_pass: 'Comprar passe', p3: 'Cheerleading infantil', p3a: 'Com passe mensal', p3b: 'Aula experimental €15, avulsa €20', book_trial: 'Marcar experimental',
+        p4: 'Online 1:1', per_session: '/ sessão', p4a: 'Vídeo ao vivo com a Anastasiia', p4b: 'Plano de treino personalizado', ask_wa: 'Perguntar no WhatsApp',
+        r1: 'Cancelamento grátis até 2 horas antes', r2: 'Cartão, Apple Pay e Google Pay', r3: 'Tapetes e redes disponíveis',
+        about_eye: 'A nossa história', about_title: 'Onde <em>Cascais</em><br>se vem mover',
+        about_p1: 'O LA Fit Studio nasceu de uma ideia simples: o movimento é remédio e a comunidade é a cura. Criámos um espaço onde pessoas de todas as idades e níveis se sentem não só bem-vindas, mas verdadeiramente vistas.',
+        about_p2: 'Os nossos instrutores trazem experiência, calor humano e paixão genuína pelo que ensinam. Quer esteja suspenso na seda do Yoga Aéreo, a treinar sobre o Atlântico, ou a ver o seu filho descobrir aquilo de que o corpo é capaz, está no sítio certo.',
+        feat1_t: 'Grupos pequenos', feat1_p: 'Atenção personalizada em cada sessão. Postura, progresso e segurança sempre em primeiro lugar.', feat2_t: 'Comunidade em primeiro lugar', feat2_p: 'Mais do que um estúdio, um ritual semanal com pessoas que se apoiam umas às outras.', feat3_t: 'Equipamento premium', feat3_p: 'Redes e material profissionais. Tudo o que precisa para treinar bem, já aqui.',
+        tm_eye: 'A Equipa', tm_title: 'Treinadoras que sabem <em>o seu nome</em>', yana_r: 'Yoga aéreo · Vinyasa', yana_p: 'Dá yoga aéreo e vinyasa às quartas e sábados, da primeira aula às inversões.',
+        ana_r: 'Body Sculpt · Cliffside · Online', ana_p: 'Força no estúdio, nas falésias ao sábado de manhã e online onde quer que esteja.', lar_r: 'Cheerleading infantil · Alongamentos', lar_p: 'Três grupos infantis a partir dos 3 anos, cinco tardes por semana, e alongamentos às segundas e sextas de manhã.',
+        fv_eye: 'Primeira visita', fv_title: 'Primeira vez? <em>Três passos</em>', s1: 'Escolha uma aula', s1d: 'Não sabe por onde começar? Vinyasa e Body Sculpt servem para qualquer nível.', s2: 'Reserve e pague online', s2d: 'Demora um minuto. Recebe um lembrete e pode cancelar até 2 horas antes.', s3: 'Chegue 10 minutos antes', s3d: 'Roupa justa e água. Tapetes e redes estão no estúdio.',
+        faq_title: 'Perguntas <em>frequentes</em>', q1: 'Nunca fiz yoga aéreo. Posso participar?', a1: 'Sim. As aulas são para todos os níveis e a rede suporta o seu peso desde a primeira sessão. A partir dos 12 anos. Não recomendado na gravidez ou com problemas de tensão arterial ou ocular não tratados.',
+        q2: 'Em que língua são as aulas?', a2: 'As aulas de adultos são em inglês, russo e ucraniano, muitas vezes misturados. O cheerleading infantil é em russo e ucraniano.', q3: 'E se chover no Cliffside Sculpt?', a3: 'A treinadora confirma a sessão no WhatsApp no sábado de manhã. Com mau tempo, passa para o estúdio.',
+        q4: 'Como cancelo?', a4: 'Na app de reservas, até 2 horas antes. O crédito volta ao seu passe.', q5: 'Há estacionamento perto?', a5: 'O estúdio fica no centro de Cascais, a pé da estação. Há estacionamento pago na rua e parques públicos perto.',
+        contact_eye: 'Fale connosco', contact_title: 'Pronto para <em>começar?</em>', contact_sub: 'Dúvidas sobre as aulas, a primeira visita ou os programas para crianças? É só dizer. Tratamos de tudo.',
+        email_label: 'Email', reveal: 'Mostrar endereço', loc_label: 'Localização', station: 'A 5 minutos a pé da estação de Cascais', open_maps: 'Abrir no mapa →', footer_sub: 'Estúdio boutique de yoga, yoga aéreo e fitness em Cascais, Portugal.',
+        concept: 'Conceito de um lafit.studio melhorado. Não é o site oficial.'
+      }
+    };
 
-function renderChips(){const ks=["all","aerial","vinyasa","sculpt","cliff","kids"];
- document.getElementById("chips").innerHTML=ks.map(k=>`<button type="button" id="f-${k}" class="chip" data-f="${k}" aria-pressed="${filter===k}" style="--c:${k==="all"?"var(--ink)":C[k].c}">${k==="all"?"":"<i></i>"}${k==="all"?T[lang].all:T[lang].n[k]}</button>`).join("");}
-function renderTT(){const now=lisbonNow();let h="";
- for(let d=1;d<=6;d++){h+=`<div class="day${d===now.wd?" today":""}"><h3>${T[lang].days[d]}${d===now.wd?" · "+T[lang].today:""}</h3>`;
-  S.filter(s=>s[0]===d).forEach(([_,t,k,g])=>{const c=C[k];h+=`<a class="slot" href="${c.href}" target="_blank" rel="noopener" style="--c:${c.c}" ${filter!=="all"&&filter!==k?"hidden":""}><div class="t">${t}</div><div class="n">${label(k,g)}</div><div class="w">${c.coach?T[lang].with+" "+c.coach:""}</div></a>`});
-  h+="</div>";}
- document.getElementById("tt").innerHTML=h;}
-function renderClasses(){const order=["aerial","vinyasa","sculpt","cliff","stretch","kids","online"];
- document.getElementById("classes-grid").innerHTML=order.map(k=>{const c=C[k];const wa=c.href.startsWith("https://wa.me");
-  return `<article class="cls" style="--c:${c.c}"><div class="ph">${c.img?`<img loading="lazy" src="https://lafit.studio/LA%20Fit%20pics/${c.img}" alt="${T[lang].n[k]}" onerror="this.remove()">`:""}<span class="tag">${c.coach?c.coach.toUpperCase():"LA FIT"}</span></div>
-  <div class="bd"><h3>${T[lang].n[k]}</h3><p class="sub">${T[lang].sub[k]}</p><p>${T[lang].d[k]}</p><div class="row"><span class="price">${c.price}</span><a href="${c.href}" target="_blank" rel="noopener">${wa?T[lang].ask:T[lang].book} →</a></div></div></article>`}).join("");}
-function renderNext(){const now=lisbonNow();const up=[];
- for(let off=0;off<7&&up.length<4;off++){const d=(now.wd+off)%7;S.filter(s=>s[0]===d&&(off>0||toMin(s[1])>now.min)).forEach(s=>{if(up.length<4)up.push([off,...s])});}
- if(!up.length){document.getElementById("next-what").textContent=T[lang].none;return;}
- const dayName=o=>o===0?T[lang].today:o===1?T[lang].tomorrow:T[lang].days[(now.wd+o)%7];
- const[o,d,t,k,g]=up[0];document.getElementById("next-when").textContent=t;
- document.getElementById("next-what").textContent=label(k,g);
- document.getElementById("next-meta").textContent=dayName(o)+(C[k].coach?" · "+T[lang].with+" "+C[k].coach:"");
- document.getElementById("next-list").innerHTML=up.slice(1).map(([o,d,t,k,g])=>`<li><span class="t">${dayName(o).slice(0,8)} ${t}</span><span>${label(k,g)}</span></li>`).join("");}
-function applyUI(){const dict=lang==="en"?EN:Object.assign({},EN,UI[lang]);
- document.querySelectorAll("[data-i18n]").forEach(e=>{const v=dict[e.dataset.i18n];if(v!=null)e.textContent=v});
- document.querySelectorAll("[data-i18n-html]").forEach(e=>{const v=dict[e.dataset.i18nHtml];if(v!=null)e.innerHTML=v});
- document.documentElement.lang=lang;document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));}
-function all(){applyUI();renderChips();renderTT();renderClasses();renderNext();}
-document.addEventListener("click",e=>{const l=e.target.closest("[data-lang]");if(l){lang=l.dataset.lang;try{localStorage.setItem("lafit-lang",lang)}catch(_){}all();}
- const f=e.target.closest("[data-f]");if(f){filter=f.dataset.f;renderChips();renderTT();}});
-document.getElementById("yr").textContent=new Date().getFullYear();
-all();setInterval(renderNext,60000);
-})();
-</script>
+    var EN = {}, ENH = {};
+    document.querySelectorAll('[data-i18n]').forEach(function (e) { if (!(e.dataset.i18n in EN)) EN[e.dataset.i18n] = e.textContent; });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (e) { ENH[e.dataset.i18nHtml] = e.innerHTML; });
+
+    var lang = 'en', filter = 'all';
+    try {
+      var saved = localStorage.getItem('lafit_lang');
+      var nl = (navigator.language || '').toLowerCase();
+      if (saved && (saved === 'en' || D[saved])) lang = saved;
+      else if (nl.indexOf('uk') === 0) lang = 'ua';
+      else if (nl.indexOf('ru') === 0) lang = 'ru';
+      else if (nl.indexOf('pt') === 0) lang = 'pt';
+    } catch (e) {}
+
+    function lisbonNow() {
+      var p = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Lisbon', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+      var g = function (t) { return p.find(function (x) { return x.type === t; }).value; };
+      return { wd: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday')), min: (+g('hour') % 24) * 60 + +g('minute') };
+    }
+    var toMin = function (s) { var a = s.split(':'); return a[0] * 60 + +a[1]; };
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    function slotName(k, g) { return C[k].name + (g ? ' · ' + D[lang].g[g] : ''); }
+
+    function renderChips() {
+      var d = D[lang];
+      var ks = [['all', d.all], ['aerial', 'Aerial'], ['vinyasa', 'Vinyasa'], ['sculpt', 'Sculpt'], ['stretch', 'Stretching'], ['kids', d.kidsF]];
+      document.getElementById('chips').innerHTML = ks.map(function (k) {
+        return '<button class="chip" type="button" data-f="' + k[0] + '" aria-pressed="' + (filter === k[0]) + '">' + esc(k[1]) + '</button>';
+      }).join('');
+    }
+    function matches(k) { return filter === 'all' || filter === k || (filter === 'sculpt' && k === 'cliff'); }
+
+    function renderTT() {
+      var now = lisbonNow(), d = D[lang], h = '';
+      for (var day = 1; day <= 6; day++) {
+        var slots = S.filter(function (s) { return s[0] === day; });
+        var vis = slots.filter(function (s) { return matches(s[2]); });
+        h += '<div class="day' + (day === now.wd ? ' today' : '') + '"><div class="day-name">' + d.days[day] + '</div><div class="day-slots">';
+        slots.forEach(function (s) {
+          var c = C[s[2]], past = day === now.wd && toMin(s[1]) + 60 < now.min;
+          h += '<a class="slot' + (past ? ' past' : '') + '" href="' + c.href + '" target="_blank" rel="noopener"' + (matches(s[2]) ? '' : ' hidden') + '>' +
+            '<div class="slot-time">' + s[1] + '</div><div class="slot-name">' + esc(slotName(s[2], s[3])) + '</div>' +
+            '<div class="slot-coach">' + d.with + ' ' + c.coach + '</div>' + (c.wa ? '<div class="slot-wa">' + d.wa + '</div>' : '') + '</a>';
+        });
+        if (!vis.length) h += '<div class="day-empty">' + d.none + '</div>';
+        h += '</div></div>';
+      }
+      document.getElementById('tt').innerHTML = h;
+    }
+
+    function upcoming(n) {
+      var now = lisbonNow(), up = [];
+      for (var off = 0; off < 8 && up.length < n; off++) {
+        var wd = (now.wd + off) % 7;
+        S.filter(function (s) { return s[0] === wd && (off > 0 || toMin(s[1]) > now.min); })
+         .forEach(function (s) { if (up.length < n) up.push({ off: off, wd: wd, s: s }); });
+      }
+      return up;
+    }
+    function dayLabel(u) { var d = D[lang]; return u.off === 0 ? d.today : u.off === 1 ? d.tomorrow : d.days[u.wd]; }
+
+    function renderNext() {
+      var up = upcoming(4); if (!up.length) return;
+      var f = up[0], c = C[f.s[2]], d = D[lang];
+      document.getElementById('nc-when').textContent = dayLabel(f) + ', ' + f.s[1];
+      document.getElementById('nc-what').textContent = slotName(f.s[2], f.s[3]);
+      document.getElementById('nc-meta').textContent = d.with + ' ' + c.coach + ' · ' + c.price;
+      document.getElementById('nc-btn').href = c.href;
+      document.getElementById('nc-list').innerHTML = up.slice(1).map(function (u) {
+        return '<li><span><b>' + dayLabel(u) + '</b> ' + u.s[1] + '</span><span>' + esc(C[u.s[2]].name) + '</span></li>';
+      }).join('');
+      document.getElementById('hero-next').innerHTML = '<span class="hn-dot"></span><span class="hn-label">' + esc(UI[lang] ? UI[lang].next_label : EN.next_label) + '</span>' +
+        '<span class="hn-time">' + dayLabel(f) + ', ' + f.s[1] + '</span><span>' + esc(slotName(f.s[2], f.s[3])) + '</span>';
+    }
+
+    function renderCards() {
+      var d = D[lang];
+      document.getElementById('classes-scroll').innerHTML = ORDER.map(function (k) {
+        var c = C[k];
+        var bg = c.img ? "background-image:url('img/" + c.img + "')" + (c.pos ? ';background-position:' + c.pos : '') : 'background:linear-gradient(160deg,#1a0d2e 0%,#3d1a6e 45%,#2d0a4e 100%)';
+        return '<a class="class-card" href="https://lafit.studio/' + c.page + '" target="_blank" rel="noopener">' +
+          '<div class="class-bg" style="' + bg + '"></div><div class="class-info">' +
+          '<p class="class-tag">' + esc(d.tag[k]) + '</p><h3 class="class-name">' + c.name + '</h3>' +
+          '<p class="class-desc">' + esc(d.desc[k]) + '</p>' +
+          (c.coach ? '<p class="class-meta">' + d.with + ' ' + c.coach + ' · <b>' + c.price + '</b></p>' : '') +
+          '</div>' + (c.soon ? '<div class="paused-badge">' + d.coming + '</div>' : '') + '</a>';
+      }).join('');
+      document.getElementById('scroll-dots').innerHTML = ORDER.map(function (_, i) { return '<div class="scroll-dot' + (i ? '' : ' active') + '"></div>'; }).join('');
+      document.getElementById('ig-grid').innerHTML = [1,2,3,4,5,6].map(function (i) {
+        return '<a href="https://www.instagram.com/la_fit_studio" target="_blank" rel="noopener" class="ig-item"><div class="ig-bg" style="background-image:url(\'img/ig' + i + '.jpg\')"></div><div class="ig-overlay"><span>' + d.viewig + '</span></div></a>';
+      }).join('');
+    }
+
+    function applyLang() {
+      var t = lang === 'en' ? {} : UI[lang];
+      document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+      document.querySelectorAll('[data-i18n]').forEach(function (e) {
+        var k = e.dataset.i18n;
+        if (k === 'reveal' && !e.closest('[data-eu]')) return;
+        var v = t[k] != null ? t[k] : EN[k]; if (v != null) e.textContent = v;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(function (e) {
+        var k = e.dataset.i18nHtml, v = t[k] != null ? t[k] : ENH[k]; if (v != null) e.innerHTML = v;
+      });
+      document.querySelectorAll('.lang-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.lang === lang); b.setAttribute('aria-pressed', b.dataset.lang === lang); });
+      renderChips(); renderTT(); renderNext(); renderCards();
+    }
+
+    document.getElementById('lang-switcher').addEventListener('click', function (e) {
+      var b = e.target.closest('.lang-btn'); if (!b) return;
+      lang = b.dataset.lang; try { localStorage.setItem('lafit_lang', lang); } catch (x) {}
+      applyLang();
+    });
+    document.getElementById('chips').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; renderChips(); renderTT();
+    });
+    setInterval(function () { renderTT(); renderNext(); }, 60000);
+    applyLang();
+
+    /* ── Original behaviour: loader, nav, progress, drawer, dots, anchors ── */
+    var loader = document.getElementById('loader');
+    var hide = function () { loader.classList.add('gone'); };
+    setTimeout(hide, 1200); window.addEventListener('load', function () { setTimeout(hide, 300); });
+    var nav = document.getElementById('nav'), prog = document.getElementById('progress');
+    window.addEventListener('scroll', function () {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+      prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+    }, { passive: true });
+    var hamburger = document.getElementById('hamburger'), drawer = document.getElementById('drawer');
+    function closeDrawer() { drawer.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow = ''; }
+    hamburger.addEventListener('click', function () {
+      var open = drawer.classList.toggle('open'); hamburger.classList.toggle('open', open); document.body.style.overflow = open ? 'hidden' : '';
+    });
+    drawer.addEventListener('click', function (e) { if (e.target.closest('a')) closeDrawer(); });
+    var scroller = document.getElementById('classes-scroll');
+    scroller.addEventListener('scroll', function () {
+      var cards = scroller.querySelectorAll('.class-card'), dots = document.querySelectorAll('.scroll-dot');
+      var idx = Math.round(scroller.scrollLeft / ((cards[0] && cards[0].offsetWidth + 12) || 1));
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+    }, { passive: true });
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+      var id = a.getAttribute('href').slice(1), el = id && document.getElementById(id); if (!el) return;
+      e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+  </script>
+  <script src="lux.js" defer></script>
+  <script src="email-reveal.js" defer></script>
 </body>
 </html>
