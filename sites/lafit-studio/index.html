@@ -89,10 +89,10 @@
     ───────────────────────────────────────────────────────────────── */
     #progress {
       position: fixed; top: 0; left: 0; z-index: 201;
-      height: 2px; width: 0%;
+      height: 2px; width: 100%; transform: scaleX(0); transform-origin: 0 50%;
       background: linear-gradient(90deg, var(--purple-mid), var(--purple-bright), var(--purple-light));
       pointer-events: none;
-      transition: width .08s linear;
+      will-change: transform;
     }
 
     /* ─────────────────────────────────────────────────────────────────
@@ -106,9 +106,7 @@
       transition: background .3s, box-shadow .3s;
     }
     #nav.scrolled {
-      background: rgba(26,13,46,.96);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(26,13,46,.97);
       box-shadow: 0 1px 0 rgba(255,255,255,.07);
     }
     .nav-logo {
@@ -180,9 +178,7 @@
     ───────────────────────────────────────────────────────────────── */
     #drawer {
       position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
-      background: rgba(26,13,46,.98);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(26,13,46,.99);
       z-index: 199;
       display: flex; flex-direction: column;
       padding: 40px 28px;
@@ -1086,7 +1082,7 @@
       .hero-next { display: none; }
       .next-card {
         display: block; position: absolute; right: 80px; bottom: 120px; z-index: 2; width: 300px;
-        background: rgba(26,13,46,.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        background: rgba(26,13,46,.82);
         border: 1px solid rgba(255,255,255,.12); padding: 26px 26px 24px;
         opacity: 0; animation: fadeUp .7s 1.4s ease both;
       }
@@ -1631,8 +1627,20 @@
     var nav = document.getElementById('nav'), prog = document.getElementById('progress');
     window.addEventListener('scroll', function () {
       nav.classList.toggle('scrolled', window.scrollY > 50);
-      prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+      if (!ticking) { ticking = true; requestAnimationFrame(function () {
+        ticking = false;
+        prog.style.transform = 'scaleX(' + Math.min(1, window.scrollY / maxScroll) + ')';
+      }); }
     }, { passive: true });
+    var ticking = false, maxScroll = 1;
+    function measure() { maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
+    measure(); window.addEventListener('resize', measure); window.addEventListener('load', measure);
+    /* Pause the Ken Burns loop when the hero is off screen */
+    try {
+      var hbg = document.querySelector('.hero-bg');
+      new IntersectionObserver(function (es) { hbg.style.animationPlayState = es[0].isIntersecting ? 'running' : 'paused'; })
+        .observe(document.getElementById('hero'));
+    } catch (x) {}
     var hamburger = document.getElementById('hamburger'), drawer = document.getElementById('drawer');
     function closeDrawer() { drawer.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow = ''; }
     hamburger.addEventListener('click', function () {

@@ -138,7 +138,9 @@
 
   /* ── 3. Parallax (background-position, transform-free) ─────────── */
   function setupParallax() {
-    if (REDUCED) return;
+    /* Concept: parallax off. Repainting large background images on every
+       scroll frame was the main cause of scroll jank. */
+    return;
 
     /* Big imagery only — keeps it tasteful and cheap. */
     var targets = [];
